@@ -10,8 +10,13 @@ import(
 	"log"
 )
 
+	type Response struct{
+		id int 
+		flag bool
+	}
 
 func main(){
+
 	routing := mux.NewRouter()
 
 	routing.HandleFunc("/{title}/home", Home)
@@ -35,15 +40,19 @@ func Home(w http.ResponseWriter, r *http.Request){
 		    r.ParseForm()
 			fmt.Println("Url:", r.URL.Path)
 			fmt.Println("Method:" + r.Method)
-			
 			// FILE Upload ....
 			file := UploadFiles(r); if file != "blabla"{
-				print(file)
+				println(file)
 			}else{
 				print("size must be less than 5KB")
+				serverResponse := Response {0, true}
+				println("Server Response:", serverResponse.id, serverResponse.flag)
+				temp.Execute(w,serverResponse)
 			}
+
 			
-		temp.Execute(w,"Dump")
+			
+		 
 
 	}
 
