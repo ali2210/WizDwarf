@@ -3,15 +3,22 @@ package main
 
 
 import(
-	 "fmt"
+	"fmt"
 	"net/http"
 	"github.com/gorilla/mux"
 	"html/template"	
 	"log"
+	"io/ioutil"
+	"os"
 )
 
+	type Response struct{
+		id int 
+		flag bool
+	}
 
 func main(){
+
 	routing := mux.NewRouter()
 
 	routing.HandleFunc("/{title}/home", Home)
@@ -36,14 +43,20 @@ func Home(w http.ResponseWriter, r *http.Request){
 			fmt.Println("Url:", r.URL.Path)
 			fmt.Println("Method:" + r.Method)
 			
+
 			// FILE Upload ....
-			file := UploadFiles(r); if file != "blabla"{
-				print(file)
+			file := UploadFiles(r); if file != nil{
+				println(file)
 			}else{
 				print("size must be less than 5KB")
+				serverResponse := Response {0, true}
+				println("Server Response:", serverResponse.id, serverResponse.flag)
+				temp.Execute(w,serverResponse)
 			}
+
 			
-		temp.Execute(w,"Dump")
+			
+		 
 
 	}
 
@@ -65,17 +78,28 @@ func Dump(w http.ResponseWriter, r *http.Request){
 	temp.Execute(w,"Dump")
 }
 
-func UploadFiles(r *http.Request)(string){
+func UploadFiles(r *http.Request)(*os.File){
 	r.ParseMultipartForm(10 << 50)
 			file , handler, err := r.FormFile("fileSeq"); if err != nil{
 				fmt.Println("Error failed.... retry",err)
-				return handler.Filename
+				return nil
 			}
 			defer file.Close()
 				if(handler.Size <= (50 * 1024)){
 					fmt.Println("File name:" + handler.Filename)
-					return handler.Filename
+					upldFile , err := ioutil.TempFile("user_data", "myFiles-*.txt"); if err != nil{
+					fmt.Println("Error received!", err)
 				}
-				return "blabla"
+				defer upldFile.Close()
+				// file convert into bytes
+				bytesFile , err := ioutil.ReadAll(file); if err != nil{
+					fmt.Println("Error received!", err)
+				}
+				
+				upldFile.Write(bytesFile)
+				fmt.Println("File added on server")
+					return upldFile
+				}
+				return nil
 			
 }
