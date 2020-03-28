@@ -47,16 +47,22 @@ func Home(w http.ResponseWriter, r *http.Request){
 			// FILE Upload ....
 			file := UploadFiles(r); if file != nil{
 				println(file)
+				choose := r.FormValue("choose")
+				print("choose I make:", choose)
+				switch choose{
+				case 0:
+					fmt.Fprintf(w, "Please choose any option ...")
+					break
+				case 1:
+					
+					break
+				}
 			}else{
 				print("size must be less than 5KB")
 				serverResponse := Response {0, true}
 				println("Server Response:", serverResponse.id, serverResponse.flag)
 				temp.Execute(w,serverResponse)
-			}
-
-			
-			
-		 
+			} 
 
 	}
 
@@ -87,7 +93,10 @@ func UploadFiles(r *http.Request)(*os.File){
 			defer file.Close()
 				if(handler.Size <= (50 * 1024)){
 					fmt.Println("File name:" + handler.Filename)
-					upldFile , err := ioutil.TempFile("user_data", "myFiles-*.txt"); if err != nil{
+					if _, err := os.Stat(handler.Filename);os.IsExist(err){
+						fmt.Println("FILE exist ", err)
+					}
+					upldFile , err := ioutil.TempFile("user_data", handler.Filename+"-*.txt"); if err != nil{
 					fmt.Println("Error received!", err)
 				}
 				defer upldFile.Close()
