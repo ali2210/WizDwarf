@@ -1,2 +1,2 @@
 # HealthyTickets
-OPen for Business
+Open for Business
