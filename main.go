@@ -53,12 +53,10 @@ func Home(w http.ResponseWriter, r *http.Request){
 				case "0":
 					fmt.Fprintf(w, "Please choose any option ...")
 				case "1":
-					 FileReadFromDisk();
+					var name string = "Covid-19"
+					 FileReadFromDisk(name);
 
-					// // File , err := os.Stat(); if err != nil{
-					// // 	println("File unable to open", err)
-					// // }
-					// // println("File :" , File)
+					
 				}
 			}else{
 				print("size must be less than 5KB")
@@ -115,8 +113,8 @@ func UploadFiles(r *http.Request)(*os.File){
 				return nil
 }
 
-func FileReadFromDisk(){
-	f , err := os.OpenFile("Covid-19.txt", os.O_RDWR | os.O_CREATE, 0755); if err != nil{
+func FileReadFromDisk(filename string){
+	f , err := os.OpenFile(filename + ".txt", os.O_RDWR | os.O_CREATE, 0755); if err != nil{
 		println("FILE Open Error ... " , err)
 	}
 	print("File Exist...", f)
