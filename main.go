@@ -10,6 +10,8 @@ import(
 	"log"
 	"io/ioutil"
 	"os"
+	"crypto/sha256"
+	"encoding/hex"
 )
 
 	type Response struct{
@@ -131,6 +133,11 @@ func NewUser (w http.ResponseWriter, r *http.Request){
 				temp.Execute(w,"Regsiter")
 			}
 			
+			// security 
+			h := sha256.New()
+			h.Write([]byte(user.email))
+			hashe := h.Sum(nil)
+			fmt.Println("email",hex.EncodeToString(hashe))
 
 			println("Gender:" , user.sir)
 			println("Gender2:", user.madam)
