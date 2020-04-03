@@ -20,52 +20,52 @@
 
     <div class="container" style="padding-left: 30px; padding-top: 100px;">
       <img src="https://www.vippng.com/png/full/3-34898_yellow-biohazard-symbol.png" alt="virus" style="align-self: center; width: 100px; height:  100px; padding-left: 50px;" />
-  <form>
+  <form action="/HealthyTickets/signup" method="post">
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="inputEmail4">Email</label>
-      <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+      <input type="email" class="form-control" id="inputEmail4" placeholder="Email" name="email">
     </div>
     <div class="form-group col-md-6">
       <label for="inputPassword4">Password</label>
-      <input type="password" class="form-control" id="inputPassword4" placeholder="Password">
+      <input type="password" class="form-control" id="inputPassword4" placeholder="Password" name="password">
     </div>
   </div>
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="name">Name</label>
-      <input type="text" class="form-control" id="name" placeholder="First Name">
+      <input type="text" class="form-control" id="name" name="uname" placeholder="First Name">
     </div>
     <div class="form-group col-md-6">
       <label for="fname">Family Name</label>
-      <input type="text" class="form-control" id="fname" placeholder="Family Name">
+      <input type="text" class="form-control" id="fname" name="ufname" placeholder="Family Name">
     </div>
   </div>
   <div class="form-check form-check-inline" style="padding-left: 50px;">
-  <input class="form-check-input" type="checkbox" id="inlineCheckbox1">
+  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="sir">
   <label class="form-check-label" for="inlineCheckbox1">Sir</label>
 </div>
 <div class="form-check form-check-inline" style="padding-left: 50px;">
-  <input class="form-check-input" type="checkbox" id="inlineCheckbox2">
+  <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="madam">
   <label class="form-check-label" for="inlineCheckbox2">Madam</label>
 </div>
 
   <div class="form-group">
     <label for="inputAddress">Address</label>
-    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address">
   </div>
   <div class="form-group">
     <label for="inputAddress2">Address 2</label>
-    <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+    <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" name="address2">
   </div>
   <div class="form-row">
     <div class="form-group col-md-6">
       <label for="inputCity">City</label>
-      <input type="text" class="form-control" id="inputCity">
+      <input type="text" class="form-control" id="inputCity" name="city">
     </div>
     <div class="form-group col-md-4">
       <label for="inputState">Country</label>
-      <select id="inputState" class="form-control">
+      <select id="inputState" class="form-control" name="country">
         <option selected>Choose...</option>
         <option>Afghanistan</option>
         <option>Albania</option>
@@ -259,12 +259,12 @@
     </div>
     <div class="form-group col-md-2">
       <label for="inputZip">Zip</label>
-      <input type="text" class="form-control" id="inputZip">
+      <input type="text" class="form-control" id="inputZip" name="zip">
     </div>
   </div>
   <div class="form-group">
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="gridCheck">
+      <input class="form-check-input" type="checkbox" id="gridCheck" name="check">
       <label class="form-check-label" for="gridCheck">
         Check me out
       </label>
