@@ -13,6 +13,11 @@ import(
 	"crypto/sha256"
 	"encoding/hex"
 	"regexp"
+	"crypto/ecdsa"
+	"crypto/elliptic"
+	"crypto/rand"
+	"math/big"
+
 )
 
 	type Response struct{
@@ -33,6 +38,10 @@ import(
 		check_me_out bool
 		email string
 		password string
+	}
+	type SignedKey struct{
+		reader *big.Int
+		sign *big.Int
 	}
 
 	
@@ -148,17 +157,11 @@ func NewUser (w http.ResponseWriter, r *http.Request){
 
 			
 			// security 
-			if matchE && matchP{
-				h := sha256.New()
-				// h.Write([]byte(user.email))
-				hashe := h.Sum([]byte(user.email))
-				fmt.Println("email",hex.EncodeToString(hashe))
-
-				h1 := sha256.New()
-				// h1.Write([]byte(user.password))
-				hashp := h1.Sum([]byte(user.password))
-				fmt.Println("pass:",hex.EncodeToString(hashp))
+			hashRet := MessageToHash(matchE,matchP,user); if hashRet == false{
+				fmt.Fprintf(w, "Sorry provided data must not match with rules\n. Email must be in Upper or Lower case or some digits, while password must contain Uppercase Letter , lowercase letter")
+				temp.Execute(w,"Regsiter")
 			}
+
 
 			println("Gender:" , user.sir)
 			println("Gender2:", user.madam)
@@ -223,6 +226,41 @@ func FileReadFromDisk(filename string){
 		println("File Info not found" , err)
 	}
 	println("File Info" , finfo.Name())
+}
+
+func MessageToHash(matchE, matchP bool , user Create_User) (bool){
+	encrypted := SignedKey{} 
+	if matchE && matchP{
+				h := sha256.New()
+				// h.Write([]byte(user.email))
+				hashe := h.Sum([]byte(user.email))
+				fmt.Println("email",hex.EncodeToString(hashe))
+
+				h1 := sha256.New()
+				// h1.Write([]byte(user.password))
+				hashp := h1.Sum([]byte(user.password))
+				fmt.Println("pass:",hex.EncodeToString(hashp))
+				encrypted.reader , encrypted.sign = Key(hex.EncodeToString(hashe), hex.EncodeToString(hashp))
+				return true
+	}
+	return false
+}
+
+func Key(h1 , h2 string)(*big.Int, *big.Int){
+
+	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader); if err != nil {
+		panic(err)
+	}
+
+	msg := h1 + h2
+	hash := sha256.Sum256([]byte(msg))
+
+	r, s, err := ecdsa.Sign(rand.Reader, privateKey, hash[:]);if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("signature: (0x%x, 0x%x)\n", r, s)
+	return r, s
 }
 
 
