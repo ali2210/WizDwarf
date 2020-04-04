@@ -16,7 +16,7 @@ import(
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
-	"math/big"
+	//"math/big"
 
 )
 
@@ -40,8 +40,8 @@ import(
 		password string
 	}
 	type SignedKey struct{
-		reader *big.Int
-		sign *big.Int
+		reader string
+		signed string
 	}
 
 	
@@ -229,7 +229,7 @@ func FileReadFromDisk(filename string){
 }
 
 func MessageToHash(matchE, matchP bool , user Create_User) (bool){
-	encrypted := SignedKey{} 
+	code := SignedKey{}
 	if matchE && matchP{
 				h := sha256.New()
 				// h.Write([]byte(user.email))
@@ -240,13 +240,14 @@ func MessageToHash(matchE, matchP bool , user Create_User) (bool){
 				// h1.Write([]byte(user.password))
 				hashp := h1.Sum([]byte(user.password))
 				fmt.Println("pass:",hex.EncodeToString(hashp))
-				encrypted.reader , encrypted.sign = Key(hex.EncodeToString(hashe), hex.EncodeToString(hashp))
+				code.reader , code.signed = Key(hex.EncodeToString(hashe), hex.EncodeToString(hashp))
+				println("data get :", code.reader, code.signed)
 				return true
 	}
 	return false
 }
 
-func Key(h1 , h2 string)(*big.Int, *big.Int){
+func Key(h1 , h2 string)(string , string){
 
 	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader); if err != nil {
 		panic(err)
@@ -258,9 +259,9 @@ func Key(h1 , h2 string)(*big.Int, *big.Int){
 	r, s, err := ecdsa.Sign(rand.Reader, privateKey, hash[:]);if err != nil {
 		panic(err)
 	}
-
-	fmt.Printf("signature: (0x%x, 0x%x)\n", r, s)
-	return r, s
+	fmt.Printf("signature : (0x%x 0x%x)\n", r, s)
+	return fmt.Sprintf("(0x%x)\n", r), fmt.Sprintf("(0x%x)\n", s)
+	
 }
 
 
