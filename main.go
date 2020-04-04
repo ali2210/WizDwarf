@@ -12,6 +12,7 @@ import(
 	"os"
 	"crypto/sha256"
 	"encoding/hex"
+	"regexp"
 )
 
 	type Response struct{
@@ -106,6 +107,9 @@ func Home(w http.ResponseWriter, r *http.Request){
 func NewUser (w http.ResponseWriter, r *http.Request){
 	temp := template.Must(template.ParseFiles("register.html"))
 	user := Create_User{}
+	var emailexp string = "([A-Z][a-z]|[0-9])*[@][a-z]*"
+	var passexp string = "([A-Z][a-z]*[0-9])*"
+
 		if r.Method  ==  "GET"{
 			fmt.Println("Method:" + r.Method)
 			temp.Execute(w,"Regsiter")
@@ -132,12 +136,29 @@ func NewUser (w http.ResponseWriter, r *http.Request){
 				user.madam = false
 				temp.Execute(w,"Regsiter")
 			}
+
+			matchE,err := regexp.MatchString(emailexp, user.email); if err != nil{
+				println("invalid regular expression", err)
+			}
+			println("regexp_email:", matchE)
+			matchP,err := regexp.MatchString(passexp, user.password); if err != nil{
+				println("invalid regular expression", err)
+			}
+			println("regexp_pass:", matchP)
+
 			
 			// security 
-			h := sha256.New()
-			h.Write([]byte(user.email))
-			hashe := h.Sum(nil)
-			fmt.Println("email",hex.EncodeToString(hashe))
+			if matchE && matchP{
+				h := sha256.New()
+				// h.Write([]byte(user.email))
+				hashe := h.Sum([]byte(user.email))
+				fmt.Println("email",hex.EncodeToString(hashe))
+
+				h1 := sha256.New()
+				// h1.Write([]byte(user.password))
+				hashp := h1.Sum([]byte(user.password))
+				fmt.Println("pass:",hex.EncodeToString(hashp))
+			}
 
 			println("Gender:" , user.sir)
 			println("Gender2:", user.madam)
