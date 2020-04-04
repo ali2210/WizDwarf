@@ -17,12 +17,12 @@ Open for Business
 ### 6.CircleCI
 ### 7.Cloud Service
 -----------------------------------------------------
-## Status Codes 
-   #   {200} added , tested , realtimme testing
-   #   {300} added , tested , production testing
-   #   {400} added , tested , devop testing
-   #   {500} added , tested , security testing
-   #   {000x} critical security issue
-   #   {001x} core issue
-   #   {002x} dependency issue
-   #   {003x} minor issue
+# Status Codes 
+   1   {200} added , tested , realtimme testing
+   2   {300} added , tested , production testing
+   3   {400} added , tested , devop testing
+   4   {500} added , tested , security testing
+   5   {000x} critical security issue
+   6   {001x} core issue
+   7   {002x} dependency issue
+   8   {003x} minor issue
