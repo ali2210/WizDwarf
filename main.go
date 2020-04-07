@@ -16,8 +16,9 @@ import(
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
-	//"math/big"
-
+	"context"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 	type Response struct{
@@ -44,17 +45,22 @@ import(
 		signed string
 	}
 
-	
+	var emailexp string = "([A-Z][a-z]|[0-9])*[@][a-z]*"
+	var passexp string = "([A-Z][a-z]*[0-9])*"
+	var ClientDB *mongo.Client
+
 
 func main(){
 
 	routing := mux.NewRouter()
-
+	
+	ClientDB = DB_Client()
+	println("client update:", ClientDB)
 	routing.HandleFunc("/{title}/home", Home)
 	routing.HandleFunc("/{title}/signup", NewUser)
 	routing.HandleFunc("/{title}/login", Existing)
 	routing.HandleFunc("/dummy", Dump)
-
+	
 	log.Println("Listening at 9101 ... please wait...")
 	http.ListenAndServe(":9101",routing)
 
@@ -116,9 +122,6 @@ func Home(w http.ResponseWriter, r *http.Request){
 func NewUser (w http.ResponseWriter, r *http.Request){
 	temp := template.Must(template.ParseFiles("register.html"))
 	user := Create_User{}
-	var emailexp string = "([A-Z][a-z]|[0-9])*[@][a-z]*"
-	var passexp string = "([A-Z][a-z]*[0-9])*"
-
 		if r.Method  ==  "GET"{
 			fmt.Println("Method:" + r.Method)
 			temp.Execute(w,"Regsiter")
@@ -230,11 +233,13 @@ func FileReadFromDisk(filename string){
 
 func MessageToHash(matchE, matchP bool , user Create_User) (bool){
 	code := SignedKey{}
+	println("client gotcha:" , ClientDB)
+
 	if matchE && matchP{
 				h := sha256.New()
 				// h.Write([]byte(user.email))
 				hashe := h.Sum([]byte(user.email))
-				fmt.Println("email",hex.EncodeToString(hashe))
+				fmt.Println("email:",hex.EncodeToString(hashe))
 
 				h1 := sha256.New()
 				// h1.Write([]byte(user.password))
@@ -260,8 +265,22 @@ func Key(h1 , h2 string)(string , string){
 		panic(err)
 	}
 	fmt.Printf("signature : (0x%x 0x%x)\n", r, s)
-	return fmt.Sprintf("(0x%x)\n", r), fmt.Sprintf("(0x%x)\n", s)
+	return fmt.Sprintf("0x%x\n", r), fmt.Sprintf("0x%x\n", s)
 	
 }
+
+func DB_Client()(*mongo.Client){
+	mongoBank := options.Client().ApplyURI("mongodb://localhost:27017")
+	con , err := mongo.Connect(context.TODO(),mongoBank); if err != nil{
+		log.Fatal(err)
+	}
+	err = con.Ping(context.TODO(), nil); if err != nil{
+		log.Fatal(err)
+	}
+	println("Welcome to MongoDB....")
+	return con
+}
+
+
 
 
