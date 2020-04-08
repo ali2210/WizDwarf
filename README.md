@@ -6,7 +6,7 @@ Open for Business
 
 ------------------------Tasks -----------------------
 ### 1. Database
- Mongodb Cloud Failed {000x, 001x, 002x}
+ Mongodb Cloud Failed {001x, 002x}
 ### 2.Security checks
     
     ## 1.User authicate 
