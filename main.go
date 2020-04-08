@@ -17,7 +17,10 @@ import(
 	"crypto/elliptic"
 	"crypto/rand"
 	"context"
+	"time"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/readpref" 
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -49,13 +52,12 @@ import(
 	var passexp string = "([A-Z][a-z]*[0-9])*"
 	var ClientDB *mongo.Client
 
-
 func main(){
 
 	routing := mux.NewRouter()
 	
-	ClientDB = DB_Client()
-	println("client update:", ClientDB)
+	DB_Client()
+	//println("client update:", ClientDB)
 	routing.HandleFunc("/{title}/home", Home)
 	routing.HandleFunc("/{title}/signup", NewUser)
 	routing.HandleFunc("/{title}/login", Existing)
@@ -233,8 +235,6 @@ func FileReadFromDisk(filename string){
 
 func MessageToHash(matchE, matchP bool , user Create_User) (bool){
 	code := SignedKey{}
-	println("client gotcha:" , ClientDB)
-
 	if matchE && matchP{
 				h := sha256.New()
 				// h.Write([]byte(user.email))
@@ -269,17 +269,28 @@ func Key(h1 , h2 string)(string , string){
 	
 }
 
-func DB_Client()(*mongo.Client){
-	mongoBank := options.Client().ApplyURI("mongodb://localhost:27017")
-	con , err := mongo.Connect(context.TODO(),mongoBank); if err != nil{
+func DB_Client(){
+	client , err := mongo.NewClient(options.Client().ApplyURI("mongodb+srv://enigma:wisdom@enigma-hwykp.mongodb.net/test?retryWrites=true&w=majority")); if err != nil{
 		log.Fatal(err)
 	}
-	err = con.Ping(context.TODO(), nil); if err != nil{
+
+	ctx , _ := context.WithTimeout(context.Background() , 10 * time.Second)
+	err = client.Connect(ctx); if err != nil{
 		log.Fatal(err)
 	}
-	println("Welcome to MongoDB....")
-	return con
+	defer client.Disconnect(ctx)
+
+	err = client.Ping(ctx, readpref.Primary()); if err != nil{
+	 	log.Fatal(err)
+	}
+	database , err := client.ListDatabaseNames(ctx, bson.M{}); if err != nil{
+		log.Fatal(err)
+	}
+	println("Welcome to MongoDB....", database)
+	// collection := con.Database("AppsDB").Collection("Users")
+	// println("collection name : " , collection)
 }
+
 
 
 
