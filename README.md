@@ -10,12 +10,14 @@ Open for Business
 ### 2.Security checks
     
     ## 1.User authicate 
-          Yes [Status {200}]
+          [Status (200)]
 
 ### 3.Business Logic
 ### 4.Payement Service
 ### 5.Docker
-### 6.CircleCI
+### 6.AutomatedCI[github]
+        ## .[github("go")]
+            [Status(200)]
 ### 7.Cloud Service
 -----------------------------------------------------
 # Status Codes 
