@@ -1,7 +1,11 @@
 # HealthyTickets
 Open for Business
+[Version]
+    #.  [go(1.14)]
 [Deploy on ] 
     #.  http://localhost:9101/HealthyTickets/home
+[OS]
+    #.  go run main.go
 
 
 ------------------------Tasks -----------------------
@@ -15,9 +19,9 @@ Open for Business
 ### 3.Business Logic
 ### 4.Payement Service
 ### 5.Docker
-### 6.AutomatedCI[github]
+### 6.AutomatedCI
         ## .[github("go")]
-            [Status(200)]
+        ## .[Status(200)]
 ### 7.Cloud Service
 -----------------------------------------------------
 # Status Codes 
