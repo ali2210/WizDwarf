@@ -1,11 +1,13 @@
 # HealthyTickets
 Open for Business
-[Version]
-    #.  [go(1.14)]
-[Deploy on ] 
-    #.  http://localhost:9101/HealthyTickets/home
-[OS]
-    #.  go run main.go
+
+                            ***** Application*****
+#. [Version]
+        [go(1.14)]
+#. [Deploy on ] 
+       http://localhost:9101/HealthyTickets/home
+#. [OS]
+           go run main.go
 
 
 ------------------------Tasks -----------------------
