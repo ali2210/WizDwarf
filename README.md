@@ -2,12 +2,16 @@
 Open for Business
 
                             ***** Application*****
+                            
 #. [Version]
         [go(1.14)]
+        
 #. [Deploy on ] 
        http://localhost:9101/HealthyTickets/home
+       
 #. [OS]
            go run main.go
+           
 
 
 ------------------------Tasks -----------------------
@@ -23,7 +27,7 @@ Open for Business
 ### 5.Docker
 ### 6.AutomatedCI
         ## .[github("go")]
-        ## .[Status(200)]
+                [Status(200)]
 ### 7.Cloud Service
 -----------------------------------------------------
 # Status Codes 
