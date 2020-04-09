@@ -270,7 +270,7 @@ func Key(h1 , h2 string)(string , string){
 }
 
 func DB_Client(){
-	client , err := mongo.NewClient(options.Client().ApplyURI("mongodb+srv://enigma:wisdom@enigma-hwykp.mongodb.net/test?retryWrites=true&w=majority")); if err != nil{
+	client , err := mongo.NewClient(options.Client().ApplyURI("mongodb+srv://thematrix100:thematrix001@healthycluster-2prcv.mongodb.net/test?retryWrites=true&w=majority")); if err != nil{
 		log.Fatal(err)
 	}
 
