@@ -16,12 +16,10 @@ import(
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
-	"context"
-	"time"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/readpref" 
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"golang.org/x/net/context"
+	firebase "firebase.google.com/go"
+	// "firebase.google.com/go/auth"
+	"google.golang.org/api/option"
 )
 
 	type Response struct{
@@ -30,7 +28,7 @@ import(
 	}
 
 	type Create_User struct{
-		name string
+		name string 
 		fname string
 		sir bool
 		madam bool 
@@ -48,20 +46,41 @@ import(
 		signed string
 	}
 
+	type Profile struct{
+		ID string 
+		Name string 
+		FName string
+		Email string 	
+		Password string
+		Address string
+		Address2  string
+		City  string 
+		Country string
+		Zip  string
+		Gender bool 
+	}
+
+
+	type DB_Op interface{
+		SaveData(*Create_User) // Save Data 
+	}
+
+
 	var emailexp string = "([A-Z][a-z]|[0-9])*[@][a-z]*"
 	var passexp string = "([A-Z][a-z]*[0-9])*"
-	var ClientDB *mongo.Client
 
 func main(){
 
 	routing := mux.NewRouter()
 	
-	DB_Client()
 	//println("client update:", ClientDB)
 	routing.HandleFunc("/{title}/home", Home)
 	routing.HandleFunc("/{title}/signup", NewUser)
 	routing.HandleFunc("/{title}/login", Existing)
 	routing.HandleFunc("/dummy", Dump)
+		 // DB_Client()
+	// Set Firestore Credentials
+	SetFirestoreCredentials()
 	
 	log.Println("Listening at 9101 ... please wait...")
 	http.ListenAndServe(":9101",routing)
@@ -268,28 +287,14 @@ func Key(h1 , h2 string)(string , string){
 	return fmt.Sprintf("0x%x\n", r), fmt.Sprintf("0x%x\n", s)
 	
 }
-
-func DB_Client(){
-	client , err := mongo.NewClient(options.Client().ApplyURI("mongodb+srv://thematrix100:thematrix001@healthycluster-2prcv.mongodb.net/test?retryWrites=true&w=majority")); if err != nil{
-		log.Fatal(err)
+func SetFirestoreCredentials(){
+	opt := option.WithCredentialsFile("/home/ali/Desktop/htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json")
+	app , err := firebase.NewApp(context.Background(), nil, opt); if err != nil{
+		log.Fatal("Error in Connection with Firestore", err)
 	}
-
-	ctx , _ := context.WithTimeout(context.Background() , 10 * time.Second)
-	err = client.Connect(ctx); if err != nil{
-		log.Fatal(err)
-	}
-	defer client.Disconnect(ctx)
-
-	err = client.Ping(ctx, readpref.Primary()); if err != nil{
-	 	log.Fatal(err)
-	}
-	database , err := client.ListDatabaseNames(ctx, bson.M{}); if err != nil{
-		log.Fatal(err)
-	}
-	println("Welcome to MongoDB....", database)
-	// collection := con.Database("AppsDB").Collection("Users")
-	// println("collection name : " , collection)
+	println("Connected... Welcome to Firestore", app)
 }
+
 
 
 
