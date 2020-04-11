@@ -20,6 +20,8 @@ import(
 	firebase "firebase.google.com/go"
 	// "firebase.google.com/go/auth"
 	"google.golang.org/api/option"
+	 "./db"
+	// "encoding/json"
 )
 
 	type Response struct{
@@ -46,41 +48,25 @@ import(
 		signed string
 	}
 
-	type Profile struct{
-		ID string 
-		Name string 
-		FName string
-		Email string 	
-		Password string
-		Address string
-		Address2  string
-		City  string 
-		Country string
-		Zip  string
-		Gender bool 
-	}
 
-
-	type DB_Op interface{
-		SaveData(*Create_User) // Save Data 
-	}
-
-
-	var emailexp string = "([A-Z][a-z]|[0-9])*[@][a-z]*"
-	var passexp string = "([A-Z][a-z]*[0-9])*"
+	var (
+		emailexp string = "([A-Z][a-z]|[0-9])*[@][a-z]*"
+		passexp string = "([A-Z][a-z]*[0-9])*"
+			// Set Firestore Credentials
+		AppName *firebase.App = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference] 
+		cloud db.DBFirestore = db.NewCloudInstance()
+	)
 
 func main(){
 
 	routing := mux.NewRouter()
 	
-	//println("client update:", ClientDB)
 	routing.HandleFunc("/{title}/home", Home)
 	routing.HandleFunc("/{title}/signup", NewUser)
 	routing.HandleFunc("/{title}/login", Existing)
+	// routing.HandleFunc("/Vistor", getVistor)
 	routing.HandleFunc("/dummy", Dump)
 		 // DB_Client()
-	// Set Firestore Credentials
-	SetFirestoreCredentials()
 	
 	log.Println("Listening at 9101 ... please wait...")
 	http.ListenAndServe(":9101",routing)
@@ -287,13 +273,15 @@ func Key(h1 , h2 string)(string , string){
 	return fmt.Sprintf("0x%x\n", r), fmt.Sprintf("0x%x\n", s)
 	
 }
-func SetFirestoreCredentials(){
+func SetFirestoreCredentials()*firebase.App{
 	opt := option.WithCredentialsFile("/home/ali/Desktop/htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json")
 	app , err := firebase.NewApp(context.Background(), nil, opt); if err != nil{
 		log.Fatal("Error in Connection with Firestore", err)
 	}
-	println("Connected... Welcome to Firestore", app)
+	println("Connected... Welcome to Firestore")
+	return app
 }
+
 
 
 
