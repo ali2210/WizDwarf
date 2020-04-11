@@ -21,7 +21,7 @@ import(
 	// "firebase.google.com/go/auth"
 	"google.golang.org/api/option"
 	 "./db"
-	// "encoding/json"
+	 "encoding/json"
 )
 
 	type Response struct{
@@ -64,7 +64,7 @@ func main(){
 	routing.HandleFunc("/{title}/home", Home)
 	routing.HandleFunc("/{title}/signup", NewUser)
 	routing.HandleFunc("/{title}/login", Existing)
-	// routing.HandleFunc("/Vistor", getVistor)
+	routing.HandleFunc("/Vistor", getVistor)
 	routing.HandleFunc("/dummy", Dump)
 		 // DB_Client()
 	
@@ -167,10 +167,11 @@ func NewUser (w http.ResponseWriter, r *http.Request){
 
 			
 			// security 
-			hashRet := MessageToHash(matchE,matchP,user); if hashRet == false{
+			hashRet, encrypted := MessageToHash(matchE,matchP,user); if hashRet == false{
 				fmt.Fprintf(w, "Sorry provided data must not match with rules\n. Email must be in Upper or Lower case or some digits, while password must contain Uppercase Letter , lowercase letter")
 				temp.Execute(w,"Regsiter")
 			}
+			println("encryted data", encrypted.reader, encrypted.signed)
 
 
 			println("Gender:" , user.sir)
@@ -238,7 +239,7 @@ func FileReadFromDisk(filename string){
 	println("File Info" , finfo.Name())
 }
 
-func MessageToHash(matchE, matchP bool , user Create_User) (bool){
+func MessageToHash(matchE, matchP bool , user Create_User) (bool,  *SignedKey){
 	code := SignedKey{}
 	if matchE && matchP{
 				h := sha256.New()
@@ -252,9 +253,9 @@ func MessageToHash(matchE, matchP bool , user Create_User) (bool){
 				fmt.Println("pass:",hex.EncodeToString(hashp))
 				code.reader , code.signed = Key(hex.EncodeToString(hashe), hex.EncodeToString(hashp))
 				println("data get :", code.reader, code.signed)
-				return true
+				return true, &code
 	}
-	return false
+	return false, &code
 }
 
 func Key(h1 , h2 string)(string , string){
@@ -281,6 +282,19 @@ func SetFirestoreCredentials()*firebase.App{
 	println("Connected... Welcome to Firestore")
 	return app
 }
+
+func getVistor(response http.ResponseWriter, request *http.Request){
+	response.Header().Set("Content-Type", "application/json")
+	visitor , err := cloud.FindAllData(); if err != nil{
+		response.WriteHeader(http.StatusInternalServerError)
+		response.Write([]byte(`{"error" :"Error getting visitor result"}`))
+	}
+
+	response.WriteHeader(http.StatusOK)
+	json.NewEncoder(response).Encode(visitor)
+
+}
+
 
 
 
