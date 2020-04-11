@@ -171,7 +171,7 @@ func NewUser (w http.ResponseWriter, r *http.Request){
 				fmt.Fprintf(w, "Sorry provided data must not match with rules\n. Email must be in Upper or Lower case or some digits, while password must contain Uppercase Letter , lowercase letter")
 				temp.Execute(w,"Regsiter")
 			}
-			println("encryted data", encrypted.reader, encrypted.signed)
+			println("encryted data", encrypted.reader)
 
 
 			println("Gender:" , user.sir)
@@ -184,6 +184,7 @@ func NewUser (w http.ResponseWriter, r *http.Request){
 			
 			println("check:" , user.check_me_out)
 			println("User record:" , user.name, user.email)
+			addVistor(&user, encrypted, w, r)
 			temp.Execute(w,"Regsiter")
 		}
 
@@ -288,11 +289,29 @@ func getVistor(response http.ResponseWriter, request *http.Request){
 	visitor , err := cloud.FindAllData(); if err != nil{
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(`{"error" :"Error getting visitor result"}`))
+		return
 	}
 
 	response.WriteHeader(http.StatusOK)
 	json.NewEncoder(response).Encode(visitor)
 
+}
+
+func addVistor(user *Create_User, im *SignedKey, response http.ResponseWriter, request *http.Request){
+	response.Header().Set("Content-Type", "application/json")
+	var vistor db.ProfileVistors
+	err := json.NewDecoder(request.Body).Decode(&vistor); if err != nil{
+		response.WriteHeader(http.StatusInternalServerError)
+		response.Write([]byte(`{"error" :"Error in Un marshal Data}`))
+		return 
+	}
+	vistor.Id = im.reader
+	vistor.Name = user.name
+	vistor.Email= user.email
+	vistor.Password = user.password
+	response.WriteHeader(http.StatusOK)
+	cloud.SaveData(&vistor)
+	json.NewEncoder(response).Encode(vistor)
 }
 
 
