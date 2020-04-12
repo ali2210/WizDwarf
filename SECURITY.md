@@ -13,7 +13,7 @@ currently being supported with security updates.
 
 |Error              | Type Status | why this happen                      |
 |-------------------|-------------|--------------------------------------|
-|Unsupported Media  |:t:          | application not supported media type |
+|Unsupported Media  |:white-mark: | application not supported media type |
 |-------------------|-------------|--------------------------------------|
 |EOF Error          |:x:          | request bytes reader still reading   |
 --------------------------------------------------------------------------
