@@ -22,6 +22,8 @@ import(
 	"google.golang.org/api/option"
 	 "./db"
 	 "encoding/json"
+	 "github.com/golang/gddo/httputil/header"
+
 )
 
 	type Response struct{
@@ -297,15 +299,25 @@ func getVistor(response http.ResponseWriter, request *http.Request){
 }
 
 func addVistor(response http.ResponseWriter, request *http.Request){
-	response.Header().Set("Content-Type", "application/json")
+	//response.Header().Set("Content-Type", "application/json")
 	var vistor db.Vistors
-	println("vistor info", &vistor)
-	err := json.NewDecoder(request.Body).Decode(&vistor); if err != nil{
-		response.WriteHeader(http.StatusInternalServerError)
-		response.Write([]byte(`{"error" :"Error unmarshal Data}`))
-		return 
-	}
-	// println("Vistor:", &vistor)
+	if request.Header.Get("Content-Type") != ""{
+		value , _ := header.ParseValueAndParams(request.Header, "Content-Type")
+		if value != "application/json"{
+			msg := "Content-type header is not application/json"
+			http.Error(response, msg , http.StatusUnsupportedMediaType)
+			return	
+		}
+	} 
+	println("Vistor:", vistor.Id)
+
+	// err := json.NewDecoder(request.Body).Decode(&vistor); if err != nil{
+	// 	// response.WriteHeader(http.StatusInternalServerError)
+	// 	// response.Write([]byte(`{"error" :"Error unmarshal Data}`))
+	// 	http.Error(response, err.Error(), http.StatusBadRequest)
+	// 	return 
+	// }
+	// println("Vistor:", vistor.Id)
 	// vistor.Id = im.reader
 	// vistor.Name = user.name
 	// vistor.Email= user.email
