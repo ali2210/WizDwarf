@@ -10,11 +10,12 @@ currently being supported with security updates.
 | 0.1.x   | :x:                |
 --------------------------------
 
+
 |Error              | Type Status | why this happen                      |
 |------------------------------------------------------------------------|
 |Unsupported Media  |:white mark: | application not supported media type |
 |------------------------------------------------------------------------|
-|EOF Error          |:x           | request bytes reader still reading   |
+|EOF Error          |:x:          | request bytes reader still reading   |
 --------------------------------------------------------------------------
 
 
