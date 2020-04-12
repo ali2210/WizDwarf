@@ -300,7 +300,7 @@ func getVistor(response http.ResponseWriter, request *http.Request){
 
 func addVistor(response http.ResponseWriter, request *http.Request){
 	//response.Header().Set("Content-Type", "application/json")
-	var vistor db.Vistors
+
 	if request.Header.Get("Content-Type") != ""{
 		value , _ := header.ParseValueAndParams(request.Header, "Content-Type")
 		if value != "application/json"{
@@ -308,7 +308,17 @@ func addVistor(response http.ResponseWriter, request *http.Request){
 			http.Error(response, msg , http.StatusUnsupportedMediaType)
 			return	
 		}
-	} 
+	}
+	request.Body = http.MaxBytesReader(response, request.Body, 1048576)
+	unknown := json.NewDecoder(request.Body)
+	unknown.DisallowUnknownFields() 
+	var vistor db.Vistors
+	err := unknown.Decode(&vistor); if err != nil{
+		log.Fatal("Error Report:", err)
+		return
+	}
+
+
 	println("Vistor:", vistor.Id)
 
 	// err := json.NewDecoder(request.Body).Decode(&vistor); if err != nil{
