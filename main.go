@@ -64,6 +64,7 @@ func main(){
 	routing.HandleFunc("/{title}/home", Home)
 	routing.HandleFunc("/{title}/signup", NewUser)
 	routing.HandleFunc("/{title}/login", Existing)
+	routing.HandleFunc("/{title}/action", addVistor)
 	routing.HandleFunc("/Vistor", getVistor)
 	routing.HandleFunc("/dummy", Dump)
 		 // DB_Client()
@@ -171,7 +172,7 @@ func NewUser (w http.ResponseWriter, r *http.Request){
 				fmt.Fprintf(w, "Sorry provided data must not match with rules\n. Email must be in Upper or Lower case or some digits, while password must contain Uppercase Letter , lowercase letter")
 				temp.Execute(w,"Regsiter")
 			}
-			println("encryted data", encrypted.reader)
+			 println("encryted data", encrypted.reader)
 
 
 			println("Gender:" , user.sir)
@@ -184,7 +185,6 @@ func NewUser (w http.ResponseWriter, r *http.Request){
 			
 			println("check:" , user.check_me_out)
 			println("User record:" , user.name, user.email)
-			addVistor(&user, encrypted, w, r)
 			temp.Execute(w,"Regsiter")
 		}
 
@@ -289,7 +289,6 @@ func getVistor(response http.ResponseWriter, request *http.Request){
 	visitor , err := cloud.FindAllData(); if err != nil{
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(`{"error" :"Error getting visitor result"}`))
-		return
 	}
 
 	response.WriteHeader(http.StatusOK)
@@ -297,21 +296,24 @@ func getVistor(response http.ResponseWriter, request *http.Request){
 
 }
 
-func addVistor(user *Create_User, im *SignedKey, response http.ResponseWriter, request *http.Request){
+func addVistor(response http.ResponseWriter, request *http.Request){
 	response.Header().Set("Content-Type", "application/json")
-	var vistor db.ProfileVistors
+	var vistor db.Vistors
+	println("vistor info", &vistor)
 	err := json.NewDecoder(request.Body).Decode(&vistor); if err != nil{
 		response.WriteHeader(http.StatusInternalServerError)
-		response.Write([]byte(`{"error" :"Error in Un marshal Data}`))
+		response.Write([]byte(`{"error" :"Error unmarshal Data}`))
 		return 
 	}
-	vistor.Id = im.reader
-	vistor.Name = user.name
-	vistor.Email= user.email
-	vistor.Password = user.password
-	response.WriteHeader(http.StatusOK)
-	cloud.SaveData(&vistor)
-	json.NewEncoder(response).Encode(vistor)
+	// println("Vistor:", &vistor)
+	// vistor.Id = im.reader
+	// vistor.Name = user.name
+	// vistor.Email= user.email
+	// vistor.Password = user.password
+	// println("vistor data", vistor.Id)
+	// response.WriteHeader(http.StatusOK)
+	// cloud.SaveData(&vistor)
+	// json.NewEncoder(response).Encode(vistor)
 }
 
 

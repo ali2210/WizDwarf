@@ -9,7 +9,7 @@ import (
 )
 
 
- type ProfileVistors struct{
+ type Vistors struct{
 	Id string 			`json:"Id"`
 	Name string 		`json:"Name"`
 	Email string    	`json:"Email"`
@@ -23,9 +23,9 @@ const (
 
 
 type DBFirestore interface{
-	SaveData(visitor *ProfileVistors)(*ProfileVistors, error)
+	SaveData(visitor *Vistors)(*Vistors, error)
 	// FindData(user *Create_User, visitor *profile.ProfileVistors)(*profile.ProfileVistors, error)
-	FindAllData()([]ProfileVistors, error)
+	FindAllData()([]Vistors, error)
 }
 
 type cloud_data struct{}
@@ -35,14 +35,15 @@ func NewCloudInstance()  DBFirestore{
 	return &cloud_data{}
 }
 
-func (*cloud_data)SaveData(visitor *ProfileVistors)(*ProfileVistors, error){
+func (*cloud_data)SaveData(visitor *Vistors)(*Vistors, error){
 	ctx := context.Background()
 	client , err := firestore.NewClient(ctx, projectId); if err != nil{
 		log.Fatal("Client Instance Failed to start", err)
 		return nil, err
 	}
+	println("Client info", client)
 	defer client.Close()
-
+	println("Records added in collection")
 	_, _, err = client.Collection(collectionName).Add(ctx, map[string]interface{}{
 		"Id" :	visitor.Id,
 		"Name" : visitor.Name,
@@ -56,7 +57,7 @@ func (*cloud_data)SaveData(visitor *ProfileVistors)(*ProfileVistors, error){
 	return visitor, nil
 }
 
-func (*cloud_data)FindAllData()([]ProfileVistors,error){
+func (*cloud_data)FindAllData()([]Vistors,error){
 	ctx := context.Background()
 	client , err := firestore.NewClient(ctx, projectId); if err != nil{
 		log.Fatal("Client Instance Failed to start", err)
@@ -65,7 +66,7 @@ func (*cloud_data)FindAllData()([]ProfileVistors,error){
 
 	defer client.Close()
 
-	var visitors []ProfileVistors 
+	var visitors []Vistors
 	iterator := client.Collection(collectionName).Documents(ctx)
 	for{
 		doc, err := iterator.Next(); if err != nil{
@@ -73,7 +74,7 @@ func (*cloud_data)FindAllData()([]ProfileVistors,error){
 			return nil, err
 		}
 
-		visitor := ProfileVistors{
+		visitor := Vistors{
 			Id: doc.Data()["ID"].(string),
 			Name : doc.Data()["Name"].(string),
 			Email : doc.Data()["Email"].(string),
