@@ -23,6 +23,9 @@ import(
 	 "./db"
 	 "encoding/json"
 	 "github.com/golang/gddo/httputil/header"
+	 "errors"
+	 "io"
+	 "strings"
 
 )
 
@@ -314,12 +317,40 @@ func addVistor(response http.ResponseWriter, request *http.Request){
 	unknown.DisallowUnknownFields() 
 	var vistor db.Vistors
 	err := unknown.Decode(&vistor); if err != nil{
-		log.Fatal("Error Report:", err)
-		return
+		var syntxError *json.SyntaxError
+		var unmarshalTypeError *json.UnmarshalTypeError
+		switch {
+		case errors.As(err, &syntxError):
+			msg := fmt.Sprintf("maclious formed json body%d", syntxError.Offset)
+			http.Error(response, msg, http.StatusBadRequest)
+		case errors.Is(err, io.ErrUnexpectedEOF):
+			msg:= fmt.Sprintf("Request contain invalid value for the field%q,%d",unmarshalTypeError.Field, unmarshalTypeError.Offset)
+			http.Error(response, msg, http.StatusBadRequest)
+		case strings.HasPrefix(err.Error(), "json: unknown field"):
+			fieldName := strings.TrimPrefix(err.Error(), "json: unknown field")
+			msg := fmt.Sprintf("Request body contain unknown field %s", fieldName)
+			http.Error(response, msg, http.StatusBadRequest)
+		case errors.Is(err,io.EOF):
+			msg := fmt.Sprintf("Request body must not be empty")
+			http.Error(response, msg, http.StatusBadRequest)
+		case err.Error() == "http: request body too large":
+			msg := "Request body must not larger than 1 MB"
+			http.Error(response, msg, http.StatusRequestEntityTooLarge)
+		default:
+			log.Println(err.Error())
+			http.Error(response, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		}
+		return 	
 	}
+	if unknown.More(){
+			msg := "Request body contain single json object"
+			http.Error(response, msg, http.StatusBadRequest)
+			return
+	}
+	fmt.Fprintf(response,"Vistor%+v:", vistor)
 
 
-	println("Vistor:", vistor.Id)
+	
 
 	// err := json.NewDecoder(request.Body).Decode(&vistor); if err != nil{
 	// 	// response.WriteHeader(http.StatusInternalServerError)
