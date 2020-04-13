@@ -17,6 +17,7 @@ Open for Business
 ------------------------Tasks -----------------------
 ### 1. Database
  Mongodb Cloud Failed {001x, 002x}
+ Cloud Firestore functionality {001x} 
 ### 2.Security checks
     
     ## 1.User authicate 
