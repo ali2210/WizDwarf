@@ -81,6 +81,7 @@ func main(){
 }
 
 func Home(w http.ResponseWriter, r *http.Request){
+		println("request body",r.Body)
 	temp := template.Must(template.ParseFiles("index.html"))
 	if r.Method  ==  "GET"{
 		fmt.Println("Method:" + r.Method)
@@ -133,6 +134,7 @@ func Home(w http.ResponseWriter, r *http.Request){
 }
 
 func NewUser (w http.ResponseWriter, r *http.Request){
+	println("request body",r.Body)
 	temp := template.Must(template.ParseFiles("register.html"))
 	user := Create_User{}
 		if r.Method  ==  "GET"{
@@ -196,6 +198,7 @@ func NewUser (w http.ResponseWriter, r *http.Request){
 }
 
 func Existing(w http.ResponseWriter, r *http.Request){
+	println("request body",r.Body)
 	temp := template.Must(template.ParseFiles("login.html"))
 	temp.Execute(w,"Login")
 }
@@ -207,6 +210,7 @@ func Dump(w http.ResponseWriter, r *http.Request){
 }
 
 func UploadFiles(r *http.Request)(*os.File){
+	println("request body",r.Body)
 	r.ParseMultipartForm(10 << 50)
 			file , handler, err := r.FormFile("fileSeq"); if err != nil{
 				fmt.Println("Error failed.... retry",err)
@@ -303,7 +307,7 @@ func getVistor(response http.ResponseWriter, request *http.Request){
 
 func addVistor(response http.ResponseWriter, request *http.Request){
 	//response.Header().Set("Content-Type", "application/json")
-
+		println("request body",request.Body)
 	if request.Header.Get("Content-Type") != ""{
 		value , _ := header.ParseValueAndParams(request.Header, "Content-Type")
 		if value != "application/json"{
@@ -314,9 +318,10 @@ func addVistor(response http.ResponseWriter, request *http.Request){
 	}
 	request.Body = http.MaxBytesReader(response, request.Body, 1048576)
 	unknown := json.NewDecoder(request.Body)
+	println("request getBody:", request.GetBody)
 	unknown.DisallowUnknownFields() 
 	var vistor db.Vistors
-	err := unknown.Decode(&vistor); if err != nil{
+	err := unknown.Decode(&vistor); if err != nil{ 
 		var syntxError *json.SyntaxError
 		var unmarshalTypeError *json.UnmarshalTypeError
 		switch {
@@ -333,6 +338,10 @@ func addVistor(response http.ResponseWriter, request *http.Request){
 		case errors.Is(err,io.EOF):
 			msg := fmt.Sprintf("Request body must not be empty")
 			http.Error(response, msg, http.StatusBadRequest)
+			req , err := http.NewRequest(request.Method,request.URL.String(),request.Body); if err != nil{
+				println("Request failed", err)
+			}
+			println("Request:",req)
 		case err.Error() == "http: request body too large":
 			msg := "Request body must not larger than 1 MB"
 			http.Error(response, msg, http.StatusRequestEntityTooLarge)
