@@ -338,10 +338,14 @@ func addVistor(response http.ResponseWriter, request *http.Request){
 		case errors.Is(err,io.EOF):
 			msg := fmt.Sprintf("Request body must not be empty")
 			http.Error(response, msg, http.StatusBadRequest)
-			req , err := http.NewRequest(request.Method,request.URL.String(),request.Body); if err != nil{
+			req , err := http.NewRequest(request.Method,request.URL.String(),nil); if err != nil{
 				println("Request failed", err)
 			}
 			println("Request:",req)
+			status := request.Close
+			if  status == true{
+				addVistor(response,request)
+			}
 		case err.Error() == "http: request body too large":
 			msg := "Request body must not larger than 1 MB"
 			http.Error(response, msg, http.StatusRequestEntityTooLarge)
