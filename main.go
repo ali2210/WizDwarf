@@ -324,6 +324,7 @@ func addVistor(response http.ResponseWriter, request *http.Request){
 	err := unknown.Decode(&vistor); if err != nil{ 
 		var syntxError *json.SyntaxError
 		var unmarshalTypeError *json.UnmarshalTypeError
+		println("Error:", err)
 		switch {
 		case errors.As(err, &syntxError):
 			msg := fmt.Sprintf("maclious formed json body%d", syntxError.Offset)
@@ -345,7 +346,7 @@ func addVistor(response http.ResponseWriter, request *http.Request){
 			request.Close = true
 			fmt.Fprintf(response,"Work fine")
 			println("new request body :", req.Body)
-			addVistor(response, request)
+			addVistor(response, req)
 		case err.Error() == "http: request body too large":
 			msg := "Request body must not larger than 1 MB"
 			http.Error(response, msg, http.StatusRequestEntityTooLarge)
