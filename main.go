@@ -342,10 +342,7 @@ func addVistor(response http.ResponseWriter, request *http.Request){
 				println("Request failed", err)
 			}
 			println("Request:",req)
-			status := request.Close
-			if  status == true{
-				addVistor(response,request)
-			}
+			request.Close = true
 		case err.Error() == "http: request body too large":
 			msg := "Request body must not larger than 1 MB"
 			http.Error(response, msg, http.StatusRequestEntityTooLarge)
