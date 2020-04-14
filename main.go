@@ -26,6 +26,7 @@ import(
 	 "errors"
 	 "io"
 	 "strings"
+	 
 
 )
 
@@ -307,7 +308,6 @@ func getVistor(response http.ResponseWriter, request *http.Request){
 
 func addVistor(response http.ResponseWriter, request *http.Request){
 	//response.Header().Set("Content-Type", "application/json")
-		println("request body",request.Body)
 	if request.Header.Get("Content-Type") != ""{
 		value , _ := header.ParseValueAndParams(request.Header, "Content-Type")
 		if value != "application/json"{
@@ -318,10 +318,14 @@ func addVistor(response http.ResponseWriter, request *http.Request){
 	}
 	request.Body = http.MaxBytesReader(response, request.Body, 1048576)
 	unknown := json.NewDecoder(request.Body)
-	println("request getBody:", request.GetBody)
+	req , err := ioutil.ReadAll(request.Body); if err != nil{
+		println("Error report:", err)
+	}
+	println("Body:", req)
 	unknown.DisallowUnknownFields() 
 	var vistor db.Vistors
-	err := unknown.Decode(&vistor); if err != nil{ 
+	err = unknown.Decode(vistor); if err != nil{ 
+		println("error :" , err)
 		var syntxError *json.SyntaxError
 		var unmarshalTypeError *json.UnmarshalTypeError
 		switch {
@@ -338,11 +342,6 @@ func addVistor(response http.ResponseWriter, request *http.Request){
 		case errors.Is(err,io.EOF):
 			msg := fmt.Sprintf("Request body must not be empty")
 			http.Error(response, msg, http.StatusBadRequest)
-			req , err := http.NewRequest(request.Method,request.URL.String(),nil); if err != nil{
-				println("Request failed", err)
-			}
-			println("Request:",req)
-			request.Close = true
 		case err.Error() == "http: request body too large":
 			msg := "Request body must not larger than 1 MB"
 			http.Error(response, msg, http.StatusRequestEntityTooLarge)
@@ -350,15 +349,9 @@ func addVistor(response http.ResponseWriter, request *http.Request){
 			log.Println(err.Error())
 			http.Error(response, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		}
-		return 	
+		return 
 	}
-	if unknown.More(){
-			msg := "Request body contain single json object"
-			http.Error(response, msg, http.StatusBadRequest)
-			return
-	}
-	fmt.Fprintf(response,"Vistor%+v:", vistor)
-
+	println("Data:", vistor.Id)
 
 	
 
