@@ -110,7 +110,7 @@ func Home(w http.ResponseWriter, r *http.Request){
 					body ,err := ioutil.ReadFile(svrFile.Name()); if err != nil{
 						println("Error in read file", err)
 					}
-					fmt.Printf("content %v", body)
+					fmt.Printf("content %s: , content in byte :%b", body, body)
 				case "2":
 					var name string = "FlaviDengue"
 					svrFile := FileReadFromDisk(name);
