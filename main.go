@@ -106,23 +106,23 @@ func Home(w http.ResponseWriter, r *http.Request){
 				case "1":
 					var name string = "Covid-19"
 					svrFile := FileReadFromDisk(name);
-					println("Please Wait", svrFile, "...")
+					println("Please Wait", svrFile.Name(), "...")
 				case "2":
 					var name string = "FlaviDengue"
 					svrFile := FileReadFromDisk(name);
-					println("Please Wait", svrFile, "...")
+					println("Please Wait", svrFile.Name(), "...")
 				case "3":
 					var name string = "KenyaEbola"
 					svrFile := FileReadFromDisk(name);
-					println("Please Wait", svrFile, "...")
+					println("Please Wait", svrFile.Name(), "...")
 				case "4":
 					var name string = "ZikaVirusBrazil"
 					svrFile := FileReadFromDisk(name);
-					println("Please Wait", svrFile, "...")
+					println("Please Wait", svrFile.Name(), "...")
 				case "5":
 					var name string = "MersSaudiaArabia"
 					svrFile := FileReadFromDisk(name);
-					println("Please Wait", svrFile, "...")
+					println("Please Wait", svrFile.Name(), "...")
 				default:
 					temFile := template.Must(template.ParseFiles("index.html"))
 					temFile.Execute(w,"Home")
