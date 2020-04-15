@@ -107,6 +107,10 @@ func Home(w http.ResponseWriter, r *http.Request){
 					var name string = "Covid-19"
 					svrFile := FileReadFromDisk(name);
 					println("Please Wait", svrFile.Name(), "...")
+					body ,err := ioutil.ReadFile(svrFile.Name()); if err != nil{
+						println("Error in read file", err)
+					}
+					fmt.Printf("content %v", body)
 				case "2":
 					var name string = "FlaviDengue"
 					svrFile := FileReadFromDisk(name);
