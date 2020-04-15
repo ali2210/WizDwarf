@@ -110,7 +110,7 @@ func Home(w http.ResponseWriter, r *http.Request){
 					seq , err := ReadSequence(svrFile.Name()); if err != nil{
 						println("Error in read file", err)
 					}
-					println("Seq:", seq)
+					fmt.Printf("Seq string:%s\n,Seq in byte %b ", seq, seq)
 				case "2":
 					var name string = "FlaviDengue"
 					svrFile := FileReadFromDisk(name);
@@ -386,7 +386,7 @@ func ReadSequence(filename string)([]byte, error){
 	body ,err := ioutil.ReadFile(filename); if err != nil{
 		return nil, err
 	}
-	fmt.Printf("content %s:", body)
+	// fmt.Printf("content %s:", body)
 	return []byte(body), nil
 }
 
