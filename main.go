@@ -107,10 +107,10 @@ func Home(w http.ResponseWriter, r *http.Request){
 					var name string = "Covid-19"
 					svrFile := FileReadFromDisk(name);
 					println("Please Wait", svrFile.Name(), "...")
-					body ,err := ioutil.ReadFile(svrFile.Name()); if err != nil{
+					seq , err := ReadSequence(svrFile.Name()); if err != nil{
 						println("Error in read file", err)
 					}
-					fmt.Printf("content %s: , content in byte :%b", body, body)
+					println("Seq:", seq)
 				case "2":
 					var name string = "FlaviDengue"
 					svrFile := FileReadFromDisk(name);
@@ -380,6 +380,14 @@ func addVistor(response http.ResponseWriter, request *http.Request){
 	// response.WriteHeader(http.StatusOK)
 	// cloud.SaveData(&vistor)
 	// json.NewEncoder(response).Encode(vistor)
+}
+
+func ReadSequence(filename string)([]byte, error){
+	body ,err := ioutil.ReadFile(filename); if err != nil{
+		return nil, err
+	}
+	fmt.Printf("content %s:", body)
+	return []byte(body), nil
 }
 
 
