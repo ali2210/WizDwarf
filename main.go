@@ -405,7 +405,9 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 		println("Error in read file", err)
 	}
 	fmt.Printf("User Seq string:%s\n", Useq)
-
+	for i, _ := range seq{
+		fmtPrintf("Seq:%s",  seq[i] ) // print bytes of array
+	}
 
 }
 
