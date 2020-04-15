@@ -110,23 +110,48 @@ func Home(w http.ResponseWriter, r *http.Request){
 					seq , err := ReadSequence(svrFile.Name()); if err != nil{
 						println("Error in read file", err)
 					}
-					fmt.Printf("Seq string:%s\n,Seq in byte %b ", seq, seq)
+					fmt.Printf("Seq string:%s\n", seq)
+					Useq , err := ReadSequence(file.Name()); if err != nil{
+						println("Error in read file", err)
+					}
+					fmt.Printf("User Seq string:%s\n", Useq)
+
 				case "2":
 					var name string = "FlaviDengue"
 					svrFile := FileReadFromDisk(name);
 					println("Please Wait", svrFile.Name(), "...")
+					seq , err := ReadSequence(svrFile.Name()); if err != nil{
+						println("Error in read file", err)
+					}
+					fmt.Printf("Seq string:%s\n", seq)
+
 				case "3":
 					var name string = "KenyaEbola"
 					svrFile := FileReadFromDisk(name);
 					println("Please Wait", svrFile.Name(), "...")
+					seq , err := ReadSequence(svrFile.Name()); if err != nil{
+						println("Error in read file", err)
+					}
+					fmt.Printf("Seq string:%s\n", seq)
+
 				case "4":
 					var name string = "ZikaVirusBrazil"
 					svrFile := FileReadFromDisk(name);
 					println("Please Wait", svrFile.Name(), "...")
+					seq , err := ReadSequence(svrFile.Name()); if err != nil{
+						println("Error in read file", err)
+					}
+					fmt.Printf("Seq string:%s\n", seq)
+
 				case "5":
 					var name string = "MersSaudiaArabia"
 					svrFile := FileReadFromDisk(name);
 					println("Please Wait", svrFile.Name(), "...")
+					seq , err := ReadSequence(svrFile.Name()); if err != nil{
+						println("Error in read file", err)
+					}
+					fmt.Printf("Seq string:%s\n", seq)
+
 				default:
 					temFile := template.Must(template.ParseFiles("index.html"))
 					temFile.Execute(w,"Home")
@@ -229,15 +254,15 @@ func UploadFiles(r *http.Request)(*os.File){
 				if(handler.Size <= (50 * 1024)){
 					fmt.Println("File name:" + handler.Filename)
 					if _, err := os.Stat(handler.Filename);os.IsExist(err){
-						fmt.Println("FILE exist ", err)
+						fmt.Println("File not exist ", err)
 					}
 					upldFile , err := ioutil.TempFile("user_data", handler.Filename+"-*.txt"); if err != nil{
-					fmt.Println("Error received!", err)
+					fmt.Println("Error received while uploading!", err)
 				}
 				defer upldFile.Close()
 				// file convert into bytes
 				bytesFile , err := ioutil.ReadAll(file); if err != nil{
-					fmt.Println("Error received!", err)
+					fmt.Println("Error received while reading!", err)
 				}
 				
 				upldFile.Write(bytesFile)
