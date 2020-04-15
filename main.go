@@ -105,19 +105,24 @@ func Home(w http.ResponseWriter, r *http.Request){
 					temFile.Execute(w,"Home")
 				case "1":
 					var name string = "Covid-19"
-					 FileReadFromDisk(name);
+					svrFile := FileReadFromDisk(name);
+					println("Please Wait", svrFile, "...")
 				case "2":
 					var name string = "FlaviDengue"
-					 FileReadFromDisk(name);
+					svrFile := FileReadFromDisk(name);
+					println("Please Wait", svrFile, "...")
 				case "3":
 					var name string = "KenyaEbola"
-					 FileReadFromDisk(name);
+					svrFile := FileReadFromDisk(name);
+					println("Please Wait", svrFile, "...")
 				case "4":
 					var name string = "ZikaVirusBrazil"
-					 FileReadFromDisk(name);
+					svrFile := FileReadFromDisk(name);
+					println("Please Wait", svrFile, "...")
 				case "5":
 					var name string = "MersSaudiaArabia"
-					 FileReadFromDisk(name);
+					svrFile := FileReadFromDisk(name);
+					println("Please Wait", svrFile, "...")
 				default:
 					temFile := template.Must(template.ParseFiles("index.html"))
 					temFile.Execute(w,"Home")
@@ -238,7 +243,7 @@ func UploadFiles(r *http.Request)(*os.File){
 				return nil
 }
 
-func FileReadFromDisk(filename string){
+func FileReadFromDisk(filename string)os.FileInfo{
 	f , err := os.OpenFile(filename + ".txt", os.O_RDWR | os.O_CREATE, 0755); if err != nil{
 		println("FILE Open Error ... " , err)
 	}
@@ -247,6 +252,7 @@ func FileReadFromDisk(filename string){
 		println("File Info not found" , err)
 	}
 	println("File Info" , finfo.Name())
+	return finfo
 }
 
 func MessageToHash(matchE, matchP bool , user Create_User) (bool,  *SignedKey){
