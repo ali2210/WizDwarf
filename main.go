@@ -82,7 +82,6 @@ func main(){
 }
 
 func Home(w http.ResponseWriter, r *http.Request){
-		println("request body",r.Body)
 	temp := template.Must(template.ParseFiles("index.html"))
 	if r.Method  ==  "GET"{
 		fmt.Println("Method:" + r.Method)
@@ -324,7 +323,7 @@ func addVistor(response http.ResponseWriter, request *http.Request){
 	println("Body:", req)
 	unknown.DisallowUnknownFields() 
 	var vistor db.Vistors
-	err = unknown.Decode(vistor); if err != nil{ 
+	err = unknown.Decode(&vistor); if err != nil{ 
 		println("error :" , err)
 		var syntxError *json.SyntaxError
 		var unmarshalTypeError *json.UnmarshalTypeError
@@ -342,6 +341,7 @@ func addVistor(response http.ResponseWriter, request *http.Request){
 		case errors.Is(err,io.EOF):
 			msg := fmt.Sprintf("Request body must not be empty")
 			http.Error(response, msg, http.StatusBadRequest)
+			fmt.Printf("Error:%v", err)
 		case err.Error() == "http: request body too large":
 			msg := "Request body must not larger than 1 MB"
 			http.Error(response, msg, http.StatusRequestEntityTooLarge)
