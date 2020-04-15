@@ -82,7 +82,6 @@ func main(){
 }
 
 func Home(w http.ResponseWriter, r *http.Request){
-		println("request body",r.Body)
 	temp := template.Must(template.ParseFiles("index.html"))
 	if r.Method  ==  "GET"{
 		fmt.Println("Method:" + r.Method)
@@ -106,19 +105,28 @@ func Home(w http.ResponseWriter, r *http.Request){
 					temFile.Execute(w,"Home")
 				case "1":
 					var name string = "Covid-19"
-					 FileReadFromDisk(name);
+					svrFile := FileReadFromDisk(name);
+					println("Please Wait", svrFile.Name(), "...")
+					body ,err := ioutil.ReadFile(svrFile.Name()); if err != nil{
+						println("Error in read file", err)
+					}
+					fmt.Printf("content %v", body)
 				case "2":
 					var name string = "FlaviDengue"
-					 FileReadFromDisk(name);
+					svrFile := FileReadFromDisk(name);
+					println("Please Wait", svrFile.Name(), "...")
 				case "3":
 					var name string = "KenyaEbola"
-					 FileReadFromDisk(name);
+					svrFile := FileReadFromDisk(name);
+					println("Please Wait", svrFile.Name(), "...")
 				case "4":
 					var name string = "ZikaVirusBrazil"
-					 FileReadFromDisk(name);
+					svrFile := FileReadFromDisk(name);
+					println("Please Wait", svrFile.Name(), "...")
 				case "5":
 					var name string = "MersSaudiaArabia"
-					 FileReadFromDisk(name);
+					svrFile := FileReadFromDisk(name);
+					println("Please Wait", svrFile.Name(), "...")
 				default:
 					temFile := template.Must(template.ParseFiles("index.html"))
 					temFile.Execute(w,"Home")
@@ -239,7 +247,7 @@ func UploadFiles(r *http.Request)(*os.File){
 				return nil
 }
 
-func FileReadFromDisk(filename string){
+func FileReadFromDisk(filename string)os.FileInfo{
 	f , err := os.OpenFile(filename + ".txt", os.O_RDWR | os.O_CREATE, 0755); if err != nil{
 		println("FILE Open Error ... " , err)
 	}
@@ -248,6 +256,7 @@ func FileReadFromDisk(filename string){
 		println("File Info not found" , err)
 	}
 	println("File Info" , finfo.Name())
+	return finfo
 }
 
 func MessageToHash(matchE, matchP bool , user Create_User) (bool,  *SignedKey){
@@ -324,7 +333,7 @@ func addVistor(response http.ResponseWriter, request *http.Request){
 	println("Body:", req)
 	unknown.DisallowUnknownFields() 
 	var vistor db.Vistors
-	err = unknown.Decode(vistor); if err != nil{ 
+	err = unknown.Decode(&vistor); if err != nil{ 
 		println("error :" , err)
 		var syntxError *json.SyntaxError
 		var unmarshalTypeError *json.UnmarshalTypeError
@@ -342,6 +351,7 @@ func addVistor(response http.ResponseWriter, request *http.Request){
 		case errors.Is(err,io.EOF):
 			msg := fmt.Sprintf("Request body must not be empty")
 			http.Error(response, msg, http.StatusBadRequest)
+			fmt.Printf("Error:%v", err)
 		case err.Error() == "http: request body too large":
 			msg := "Request body must not larger than 1 MB"
 			http.Error(response, msg, http.StatusRequestEntityTooLarge)
