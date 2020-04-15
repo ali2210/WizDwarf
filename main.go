@@ -105,52 +105,32 @@ func Home(w http.ResponseWriter, r *http.Request){
 					temFile.Execute(w,"Home")
 				case "1":
 					var name string = "Covid-19"
-					svrFile := FileReadFromDisk(name);
+					svrFile := FileReadFromDisk(name)
 					println("Please Wait", svrFile.Name(), "...")
-					seq , err := ReadSequence(svrFile.Name()); if err != nil{
-						println("Error in read file", err)
-					}
-					fmt.Printf("Seq string:%s\n", seq)
-					Useq , err := ReadSequence(file.Name()); if err != nil{
-						println("Error in read file", err)
-					}
-					fmt.Printf("User Seq string:%s\n", Useq)
+					SequenceAligmentTable(file, svrFile)			
 
 				case "2":
 					var name string = "FlaviDengue"
-					svrFile := FileReadFromDisk(name);
-					println("Please Wait", svrFile.Name(), "...")
-					seq , err := ReadSequence(svrFile.Name()); if err != nil{
-						println("Error in read file", err)
-					}
-					fmt.Printf("Seq string:%s\n", seq)
+					svrFile := FileReadFromDisk(name)
+					SequenceAligmentTable(file,svrFile)
 
 				case "3":
 					var name string = "KenyaEbola"
-					svrFile := FileReadFromDisk(name);
+					svrFile := FileReadFromDisk(name)
 					println("Please Wait", svrFile.Name(), "...")
-					seq , err := ReadSequence(svrFile.Name()); if err != nil{
-						println("Error in read file", err)
-					}
-					fmt.Printf("Seq string:%s\n", seq)
+					SequenceAligmentTable(file,svrFile)
 
 				case "4":
 					var name string = "ZikaVirusBrazil"
-					svrFile := FileReadFromDisk(name);
+					svrFile := FileReadFromDisk(name)
 					println("Please Wait", svrFile.Name(), "...")
-					seq , err := ReadSequence(svrFile.Name()); if err != nil{
-						println("Error in read file", err)
-					}
-					fmt.Printf("Seq string:%s\n", seq)
+					SequenceAligmentTable(file,svrFile)
 
 				case "5":
 					var name string = "MersSaudiaArabia"
-					svrFile := FileReadFromDisk(name);
+					svrFile := FileReadFromDisk(name)
 					println("Please Wait", svrFile.Name(), "...")
-					seq , err := ReadSequence(svrFile.Name()); if err != nil{
-						println("Error in read file", err)
-					}
-					fmt.Printf("Seq string:%s\n", seq)
+					SequenceAligmentTable(file,svrFile)
 
 				default:
 					temFile := template.Must(template.ParseFiles("index.html"))
@@ -415,6 +395,19 @@ func ReadSequence(filename string)([]byte, error){
 	return []byte(body), nil
 }
 
+func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
+	// [][]AlignTable int64{} 
+	seq , err := ReadSequence(userFile.Name()); if err != nil{
+						println("Error in read file", err)
+	}
+	fmt.Printf("Seq string:%s\n", seq)
+	Useq , err := ReadSequence(serverFile.Name()); if err != nil{
+		println("Error in read file", err)
+	}
+	fmt.Printf("User Seq string:%s\n", Useq)
+
+
+}
 
 
 
