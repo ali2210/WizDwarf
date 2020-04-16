@@ -407,19 +407,21 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 	fmt.Printf("User Seq string:%s\n", Useq)
 	for _, v := range seq{
 		fmt.Printf("Seq:%v \t",  v ) // print bytes of array
-		DoAscii(v)
+		space := DoAscii(v); if space == ""{
+			println("Error")
+		}
+		println("seq letter:", space)
 	}
 
 
 
 }
 
-func DoAscii(seq byte){
+func DoAscii(seq byte) string{
 		if seq >= 65 && seq < 81{
-			fmt.Printf (" This is a letter%v", seq)
-		}else if seq >= 0 && seq < 10{
-			fmt.Printf("This is space%v", seq)
+		 return string (seq)
 		}
+		return ""
 }
 
 
