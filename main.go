@@ -426,13 +426,10 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 	var align [10][10]string                       
 		for i := 0; i < m ; i++{
 			var j int  = 0
-			align[i][j] = space
-		}
-
-		for i := 0; i < m; i++ {
-			for j := 0; j < m; j++ {
-				println(align[i][j])
+			if space != "---"{
+				align[i][j] = space
 			}
+			println(align[i][j])
 		}
 
 
