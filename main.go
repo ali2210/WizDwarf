@@ -418,7 +418,7 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 }
 
 func DoAscii(seq byte) string{
-		if seq >= 65 && seq < 81{
+		if seq >= 65 && seq < 91{
 		 return string (seq)
 		}
 		return ""
