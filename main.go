@@ -422,16 +422,8 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 
 
 	//  AlignTable[M][N] = AGCT
-	var m int = 10
-	var align [10][10]string                       
-		for i := 0; i < m ; i++{
-			var j int  = 0
-			if space != "---"{
-				align[i][j] = space
-			}
-			println(align[i][j])
-		}
-
+	// var m int = 10
+	// var align [10][10]string                       
 
 
 }
@@ -442,10 +434,3 @@ func DoAscii(seq byte) string{
 		}
 		return "---"
 }
-
-
-
-
-
-
-
