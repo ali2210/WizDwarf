@@ -400,17 +400,28 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 	seq , err := ReadSequence(userFile.Name()); if err != nil{
 						println("Error in read file", err)
 	}
-	fmt.Printf("Seq string:%s\n", seq)
+	// fmt.Printf("Seq string:%s\n", seq)
 	Useq , err := ReadSequence(serverFile.Name()); if err != nil{
 		println("Error in read file", err)
 	}
 	fmt.Printf("User Seq string:%s\n", Useq)
 	for _, v := range seq{
-		fmt.Printf("Seq:%v \t",  v ) // print bytes of array
+		// fmt.Printf("Seq:%v \t",  v ) // print bytes of array
+		space := DoAscii(v); if space == ""{
+			fmt.Printf("%s\t:", space)
+		}
+		fmt.Printf("%s\t:", space)
 	}
 
 
 
+}
+
+func DoAscii(seq byte) string{
+		if seq >= 65 && seq < 91{
+		 return string (seq)
+		}
+		return ""
 }
 
 
