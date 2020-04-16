@@ -408,9 +408,9 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 	for _, v := range seq{
 		fmt.Printf("Seq:%v \t",  v ) // print bytes of array
 		space := DoAscii(v); if space == ""{
-			println("Error")
+		fmt.Printf("space letter%s:", space)
 		}
-		println("seq letter:", space)
+		fmt.Printf("seq letter%s:", space)
 	}
 
 
