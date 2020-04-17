@@ -32,21 +32,17 @@ func (q QueueList)Enque(ele string)QueueList{
 
 
 func (q QueueList)DeQueue()QueueList{
-	
-	queue := QueueList{}
-	
-	if q.isCapacityFull(){
-		return q
-	}
 
-	return queue
-	
-
+	return q
 }
 
-func (q QueueList)isCapacityFull()(bool){
+func (q QueueList)Print(){
+	println("Data print:", q.ELement)
+}
 
-	if q.Length == 	10{
+func (q QueueList)isCapacityFull(len int)(bool){
+
+	if q.Length == 	len{
 		return true
 	}
 	return false
