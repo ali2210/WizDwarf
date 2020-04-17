@@ -61,6 +61,7 @@ import(
 			// Set Firestore Credentials
 		AppName *firebase.App = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference] 
 		cloud db.DBFirestore = db.NewCloudInstance()
+		
 	)
 
 func main(){
@@ -407,25 +408,19 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 	println("Virus Dna sequence :")
 	for _, v := range seq{
 		// fmt.Printf("Seq:%v \t",  v ) // print bytes of array
-		space = DoAscii(v); if space == ""{
+		space = DoAscii(v); if space == "---"{
 			fmt.Printf("%s\t", space)
 		}
 		fmt.Printf("%s\t", space)
 	}
 	println("Your Dna sequence :")
 	for _, v := range Useq{
-		uDna := DoAscii(v); if uDna == ""{
+		uDna := DoAscii(v); if uDna == "---"{
 			fmt.Printf("%s\t", uDna)
 		}
 		fmt.Printf("%s\t", uDna)
 	}
-
-
-	//  AlignTable[M][N] = AGCT
-	// var m int = 10
-	// var align [10][10]string                       
-
-
+	                      
 }
 
 func DoAscii(seq byte) string{
