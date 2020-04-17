@@ -61,6 +61,7 @@ import(
 			// Set Firestore Credentials
 		AppName *firebase.App = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference] 
 		cloud db.DBFirestore = db.NewCloudInstance()
+		
 	)
 
 func main(){
@@ -395,8 +396,8 @@ func ReadSequence(filename string)([]byte, error){
 	return []byte(body), nil
 }
 
-func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
-	// [][]AlignTable int64{} 
+func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){ 
+	var space string
 	seq , err := ReadSequence(userFile.Name()); if err != nil{
 						println("Error in read file", err)
 	}
@@ -404,29 +405,27 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 	Useq , err := ReadSequence(serverFile.Name()); if err != nil{
 		println("Error in read file", err)
 	}
-	fmt.Printf("User Seq string:%s\n", Useq)
+	println("Virus Dna sequence :")
 	for _, v := range seq{
 		// fmt.Printf("Seq:%v \t",  v ) // print bytes of array
-		space := DoAscii(v); if space == ""{
-			fmt.Printf("%s\t:", space)
+		space = DoAscii(v); if space == "---"{
+			fmt.Printf("%s\t", space)
 		}
-		fmt.Printf("%s\t:", space)
+		fmt.Printf("%s\t", space)
 	}
-
-
-
+	println("Your Dna sequence :")
+	for _, v := range Useq{
+		uDna := DoAscii(v); if uDna == "---"{
+			fmt.Printf("%s\t", uDna)
+		}
+		fmt.Printf("%s\t", uDna)
+	}
+	                      
 }
 
 func DoAscii(seq byte) string{
 		if seq >= 65 && seq < 91{
 		 return string (seq)
 		}
-		return ""
+		return "---"
 }
-
-
-
-
-
-
-
