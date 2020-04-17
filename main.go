@@ -21,6 +21,7 @@ import(
 	// "firebase.google.com/go/auth"
 	"google.golang.org/api/option"
 	 "./db"
+	 "./GoStruct"
 	 "encoding/json"
 	 "github.com/golang/gddo/httputil/header"
 	 "errors"
@@ -397,7 +398,7 @@ func ReadSequence(filename string)([]byte, error){
 }
 
 func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){ 
-	var space string
+	
 	seq , err := ReadSequence(userFile.Name()); if err != nil{
 						println("Error in read file", err)
 	}
@@ -408,10 +409,10 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 	println("Virus Dna sequence :")
 	for _, v := range seq{
 		// fmt.Printf("Seq:%v \t",  v ) // print bytes of array
-		space = DoAscii(v); if space == "---"{
+		space := DoAscii(v); if space == "---"{
 			fmt.Printf("%s\t", space)
 		}
-		fmt.Printf("%s\t", space)
+		// fmt.Printf("%s\t", space)
 	}
 	println("Your Dna sequence :")
 	for _, v := range Useq{
