@@ -19,7 +19,7 @@ Open for Business
 ### 1. Design 
   Configure[Bootstrap4(CDN)]
 ### 2. Database
-   # Cloud Firestore
+   Cloud Firestore
       CONFIG[Status(200)]
 ### 3. Security
     ## 1. User authicate 
@@ -31,8 +31,8 @@ Open for Business
         ## 1.[github("go")]
                 [Status(200)]
 ### 8.Cloud Service
-   # 1. Mongodb Cloud Service Failed
-   # 2. Firestore Cloud Configure but enable to read
+    1. Mongodb Cloud Service Failed
+    2. Firestore Cloud Configure but enable to read
 -----------------------------------------------------
 # Status Codes 
    1   {200} added , tested , realtimme testing
