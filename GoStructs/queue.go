@@ -36,6 +36,10 @@ func (q QueueList)DeQueue()QueueList{
 	return q
 }
 
+func (q QueueList)Print(){
+	println("Data print:", q.ELement)
+}
+
 func (q QueueList)isCapacityFull()(bool){
 
 	if q.Length == 	10{

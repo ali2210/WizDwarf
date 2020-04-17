@@ -414,18 +414,18 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 		space := DoAscii(v); if space == "---"{
 			fmt.Printf("%s\t", space)
 		}
-		QList := queue.Enque(space)
-		list =list.Add(QList)
-		println("QList Ref:",&QList)
-		println("List Ref:",&list)
-		// fmt.Printf("%s\t", space)
+		 fmt.Printf("%s\t", space)
 	}
 	println("Your Dna sequence :")
 	for _, v := range Useq{
 		uDna := DoAscii(v); if uDna == "---"{
 			fmt.Printf("%s\t", uDna)
 		}
-		fmt.Printf("%s\t", uDna)
+		// fmt.Printf("%s\t", uDna)
+		QList := queue.Enque(uDna)
+		list =list.Add(QList)
+		QList.Print()
+		println("List Ref:",&list)
 	}                      
 }
 
