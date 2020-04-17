@@ -16,7 +16,7 @@ type List struct{
 
 
 
-func (q QueueList)Enque(ele string){
+func (q QueueList)Enque(ele string)QueueList{
 	// Enque Code
 
 	if q.isQueueNil(){
@@ -32,11 +32,15 @@ func (q QueueList)Enque(ele string){
 
 
 func (q QueueList)DeQueue()QueueList{
-
+	
+	queue := QueueList{}
+	
 	if q.isCapacityFull(){
 		return q
 	}
-	return nil
+
+	return queue
+	
 
 }
 
@@ -65,11 +69,11 @@ func (l List)Add(q QueueList) List{
 		  	l.len +=2
 		  	len = 0 
 		  	mylist.QueueList = q
-		  	mylist.QueueList = len
+		  	mylist.len = len
 		}
 	len +=1
 			mylist.QueueList = q
-		  	mylist.QueueList = len
+		  	mylist.len = len
 	return mylist
 }
 
@@ -77,15 +81,15 @@ func (l List)Add(q QueueList) List{
 func (l List)Delete(q QueueList) *List{
 
 	if l.Find(q) {
-		l.QueueList.q = ""
-		l.QueueList.len -=1 
+		l.QueueList.ELement = ""
+		l.QueueList.Length-=1 
 	}
 	return &l
 }
 
 func (l List)Find(q QueueList)bool{
 	
-	if l.QueueList.q == q{
+	if l.QueueList == q{
 		return true
 	}
 	return false 
