@@ -40,9 +40,9 @@ func (q QueueList)Print(){
 	println("Data print:", q.ELement)
 }
 
-func (q QueueList)isCapacityFull()(bool){
+func (q QueueList)isCapacityFull(len int)(bool){
 
-	if q.Length == 	10{
+	if q.Length == 	len{
 		return true
 	}
 	return false

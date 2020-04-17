@@ -398,8 +398,8 @@ func ReadSequence(filename string)([]byte, error){
 }
 
 func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){ 
-	list := GoStructs.List{}
-	queue := GoStructs.QueueList{}
+	list, listDna := GoStructs.List{}, GoStructs.List{}
+	queue, queueDna := GoStructs.QueueList{}, GoStructs.QueueList{} 
 	seq , err := ReadSequence(userFile.Name()); if err != nil{
 						println("Error in read file", err)
 	}
@@ -412,20 +412,26 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 	for _, v := range seq{
 		// fmt.Printf("Seq:%v \t",  v ) // print bytes of array
 		space := DoAscii(v); if space == "---"{
-			fmt.Printf("%s\t", space)
+			// fmt.Printf("%s\t", space)
+			queueDna = queueDna.Enque(space)
 		}
-		 fmt.Printf("%s\t", space)
+		queueDna = queueDna.Enque(space)
+		listDna =listDna.Add(queueDna)
+		println("List Ref:",&listDna)
+		queueDna.Print()
+		 // fmt.Printf("%s\t", space)
 	}
 	println("Your Dna sequence :")
 	for _, v := range Useq{
 		uDna := DoAscii(v); if uDna == "---"{
-			fmt.Printf("%s\t", uDna)
+			// fmt.Printf("%s\t", uDna)
+			queue = queue.Enque(uDna)
 		}
 		// fmt.Printf("%s\t", uDna)
-		QList := queue.Enque(uDna)
-		list =list.Add(QList)
-		QList.Print()
+		queue = queue.Enque(uDna)
+		list =list.Add(queue)
 		println("List Ref:",&list)
+		queue.Print()
 	}                      
 }
 
