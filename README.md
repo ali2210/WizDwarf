@@ -15,21 +15,24 @@ Open for Business
 
 
 ------------------------Tasks -----------------------
-### 1. Database
- Mongodb Cloud Failed {001x, 002x}
- Cloud Firestore functionality {001x} 
-### 2.Security checks
-    
-    ## 1.User authicate 
-          [Status (200)]
 
-### 3.Business Logic
-### 4.Payement Service
-### 5.Docker
-### 6.AutomatedCI
-        ## .[github("go")]
+### 1. Design 
+  Configure[Bootstrap4(CDN)]
+### 2. Database
+   ## Cloud Firestore
+      CONFIG[Status(200)]
+### 3. Security
+    ## 1. User authicate 
+          [Status (200)]
+### 4.Business Logic
+### 5.Payement Service
+### 6.Docker
+### 7.AutomatedCI
+        ## 1.[github("go")]
                 [Status(200)]
-### 7.Cloud Service
+### 8.Cloud Service
+   ## 1. Mongodb Cloud Service Failed
+   ## 2. Firestore Cloud Configure but enable to read
 -----------------------------------------------------
 # Status Codes 
    1   {200} added , tested , realtimme testing
