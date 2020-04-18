@@ -24,12 +24,12 @@ func (q QueueList)Enque(ele string)QueueList{
 		q.Length = q.Length + 0
 	}
 	q.Length = q.Length + 1
-
+	println("len", q.Length)
 	return q
 }
 
 
-func (q QueueList)DeQueue()(string, int){
+func (q QueueList)DeQueue()(string){
 
 	if q.isCapacityFull(q.Length){
 		q.Length = (q.Length -1) 
@@ -39,7 +39,8 @@ func (q QueueList)DeQueue()(string, int){
 		}
 		q.Length = (q.Length -1)
 	}
-	return q.ELement, q.Length
+	println("len", q.Length)
+	return q.ELement
 
 }
 
