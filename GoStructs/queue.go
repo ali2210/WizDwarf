@@ -6,7 +6,6 @@ package GoStructs
 type QueueList struct{
 	ELement string
 	Length int
-	next string
 }
 
 	
@@ -23,25 +22,24 @@ func (q QueueList)Enque(ele string)QueueList{
 	if q.isQueueNil(){
 		q.ELement = ele
 		q.Length = q.Length + 0
-	}else{
-		q.ELement = ele
-		q.Length = q.Length + 1
 	}
-
+	q.Length = q.Length + 1
+	println("len queue:", q.Length)
 	return q
 }
 
 
-func (q QueueList)DeQueue()string{
+func (q QueueList)DeQueue()(string){
 
-	if q.isCapacityFull(q.Length){
-		q.Length = q.Length -1 
+	if q.isCapacityFull(q.Length+1){
+		q.Length = (q.Length -1) 
 	}else{
 		if q.isQueueNil() {
 			q.Length = 0
 		}
-		q.Length = q.Length -1
+		q.Length = (q.Length -1)
 	}
+	println("len DeQueue:", q.Length)
 	return q.ELement
 
 }
@@ -67,20 +65,16 @@ func (q QueueList)isQueueNil()(bool){
 }
 
 
-func (l List)Add(q QueueList) List{
-
-	var len int = 0
-	mylist := List{}
+func (l List)Add(q QueueList) (List, int){
+	// mylist := List{}
 		if l.len == 0{
-		  	l.len +=2
-		  	len = 0 
-		  	mylist.QueueList = q
-		  	mylist.len = len
+		  	l.len = l.len + 1
+		  	l.QueueList = q
+		}else{
+			l.len = l.len +1
+			l.QueueList = q
 		}
-	len +=1
-			mylist.QueueList = q
-		  	mylist.len = len
-	return mylist
+	return l, l.len
 }
 
 
@@ -90,6 +84,7 @@ func (l List)Delete(q QueueList) *List{
 		l.QueueList.ELement = ""
 		l.QueueList.Length-=1 
 	}
+	l.len= l.len -1
 	return &l
 }
 
