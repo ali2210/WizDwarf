@@ -22,7 +22,7 @@ func (q QueueList)Enque(ele string)QueueList{
 
 	if q.isQueueNil(){
 		q.ELement = ele
-		q.Length = q.Length + 1
+		q.Length = q.Length + 0
 	}else{
 		q.ELement = ele
 		q.Length = q.Length + 1
@@ -32,12 +32,17 @@ func (q QueueList)Enque(ele string)QueueList{
 }
 
 
-func (q QueueList)DeQueue()QueueList{
+func (q QueueList)DeQueue()string{
 
-	if q.ELement != "---"{
-		q.next = "nil"
+	if q.isCapacityFull(q.Length){
+		q.Length = q.Length -1 
+	}else{
+		if q.isQueueNil() {
+			q.Length = 0
+		}
+		q.Length = q.Length -1
 	}
-	return q
+	return q.ELement
 
 }
 
