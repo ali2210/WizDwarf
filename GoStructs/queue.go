@@ -22,10 +22,10 @@ func (q QueueList)Enque(ele string)QueueList{
 
 	if q.isQueueNil(){
 		q.ELement = ele
-		q.Length = 0
+		q.Length = q.Length + 1
 	}else{
 		q.ELement = ele
-		q.Length+=1
+		q.Length = q.Length + 1
 	}
 
 	return q
