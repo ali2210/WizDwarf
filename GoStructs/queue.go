@@ -65,19 +65,15 @@ func (q QueueList)isQueueNil()(bool){
 
 
 func (l List)Add(q QueueList) (List, int){
-
-	var len int = 0
-	mylist := List{}
+	// mylist := List{}
 		if l.len == 0{
-		  	l.len +=2
-		  	len = 0 
-		  	mylist.QueueList = q
-		  	mylist.len = len
+		  	l.len = l.len + 0
+		  	l.QueueList = q
+		}else{
+			l.len = l.len +1
+			l.QueueList = q
 		}
-	len +=1
-			mylist.QueueList = q
-		  	mylist.len = len
-	return mylist, len
+	return l, l.len
 }
 
 
