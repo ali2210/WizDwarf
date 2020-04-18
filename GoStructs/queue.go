@@ -6,6 +6,7 @@ package GoStructs
 type QueueList struct{
 	ELement string
 	Length int
+	next string
 }
 
 	
@@ -33,7 +34,11 @@ func (q QueueList)Enque(ele string)QueueList{
 
 func (q QueueList)DeQueue()QueueList{
 
+	if q.ELement != "---"{
+		q.next = "nil"
+	}
 	return q
+
 }
 
 func (q QueueList)Print(){

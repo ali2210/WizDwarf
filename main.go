@@ -431,7 +431,8 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 		queue = queue.Enque(uDna)
 		list =list.Add(queue)
 		println("List Ref:",&list)
-		queue.Print()
+		// queue.Print()
+		queue.DeQueue()
 	}                      
 }
 
