@@ -432,7 +432,8 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 		list =list.Add(queue)
 		// println("List Ref:",&list)
 		// queue.Print()
-		fmt.Println("Data we get :", queue.DeQueue())
+		ele , len := queue.DeQueue()
+		fmt.Println("Data we get :", ele, len)
 	}                      
 }
 
