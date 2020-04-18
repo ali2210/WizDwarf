@@ -417,7 +417,7 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 		}
 		queueDna = queueDna.Enque(space)
 		listDna =listDna.Add(queueDna)
-		println("List Ref:",&listDna)
+		// println("List Ref:",&listDna)
 		// queueDna.Print()
 		 // fmt.Printf("%s\t", space)
 	}
@@ -430,8 +430,9 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 		// fmt.Printf("%s\t", uDna)
 		queue = queue.Enque(uDna)
 		list =list.Add(queue)
-		println("List Ref:",&list)
-		queue.Print()
+		// println("List Ref:",&list)
+		// queue.Print()
+		fmt.Println("Data we get :", queue.DeQueue())
 	}                      
 }
 
