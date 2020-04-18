@@ -24,7 +24,7 @@ func (q QueueList)Enque(ele string)QueueList{
 		q.Length = q.Length + 0
 	}
 	q.Length = q.Length + 1
-	println("len", q.Length)
+	println("len queue:", q.Length)
 	return q
 }
 
@@ -39,7 +39,7 @@ func (q QueueList)DeQueue()(string){
 		}
 		q.Length = (q.Length -1)
 	}
-	println("len", q.Length)
+	println("len DeQueue:", q.Length)
 	return q.ELement
 
 }
