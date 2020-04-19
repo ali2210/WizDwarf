@@ -7,7 +7,7 @@ Version[Go[1.14]]
 
                         **** Application*****
                         
- #. Milestones
+ ##. Milestones
   # [.] Design
         Bootstrap4 CDN
   # [i] Cloud Services
@@ -23,7 +23,12 @@ Version[Go[1.14]]
   
   
   
-  Follow us Twitter [https://twitter.com/WisdomEnigma]
+  #. Follow us 
+            
+            Twitter [https://twitter.com/WisdomEnigma]
+            
             LinkedIn [https://www.linkedin.com/in/ali-hassan-7998b2167/]
+            
             Facebook [https://www.facebook.com/profile.php?id=100006859572521]
-  Email Address : Alideveloper95@gmail.com
+  ###. 
+          Email Address : Alideveloper95@gmail.com
