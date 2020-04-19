@@ -7,21 +7,23 @@ Version[Go[1.14]]
 
                         **** Application*****
                         
- ##  Milestones
-  ### [.] Design
-        Bootstrap4 CDN
-  ### [i] Cloud Services
-        Firestore Cloud[added but incomplete]
-  ### [x] Database
-  ### [x] Security
-  ### [x] Payement
-  ### [.] CI/CD
-       githubAction(Ok)
-  ### [x] Compressed Files
-  ### [i] BioInformatics
-          Algorithm [working]
-  
-  
+ ##  Milestones [27.5%]
+  ### [.] Design [70%]
+        Bootstrap4 CDN  [70%]
+  ### [i] Cloud Services [10%]
+        Firestore Cloud [10%]
+  ### [x] Database [0%]
+        Firestore Cloud [0%]
+  ### [x] Security [50%]
+         Strong Authentication [100%]
+         Security checks [0%]
+  ### [x] Payement [0%]
+  ### [.] Automation  [50%]
+       githubAction(Ok) [100%]
+       Containers[0%]
+  ### [x] Compressed Files [0%]
+  ### [i] BioInformatics [40%]
+          Algorithm [working] [40%]
   
   # Follow us 
             
