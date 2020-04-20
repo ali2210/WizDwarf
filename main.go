@@ -398,9 +398,13 @@ func ReadSequence(filename string)([]byte, error){
 }
 
 func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){ 
+	
+		//local variables but large life span
 	list, listDna := GoStructs.List{}, GoStructs.List{}
 	queue, queueDna := GoStructs.QueueList{}, GoStructs.QueueList{} 
-	// var chunk []string
+
+
+		// local variable liitle scoope
 	seq , err := ReadSequence(userFile.Name()); if err != nil{
 		println("Error in read file", err)
 	}
@@ -408,6 +412,8 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 	Useq , err := ReadSequence(serverFile.Name()); if err != nil{
 		println("Error in read file", err)
 	}
+
+
 	println("Virus Dna sequence :")
 	
 	for _, v := range seq{
@@ -425,12 +431,12 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 	println("Your Dna sequence :")
 	for _, v := range Useq{
 		uDna := DoAscii(v); if uDna == "---"{
-			 fmt.Printf("%s\t", uDna)
+			fmt.Printf("%s", uDna)
 			ele := queue.DeQueue()
-			println(ele)
+			println("Element:", ele)
 			// queue = queue.Enque(uDna)
 		}
-		// fmt.Printf("%s\t", uDna)
+		fmt.Printf("%s\t", uDna)
 		queue  = queue.Enque(uDna)
 		list=list.Add(queue)
 		// println("List Ref:",&list,  leng)
