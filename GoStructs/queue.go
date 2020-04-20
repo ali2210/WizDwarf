@@ -31,7 +31,7 @@ func (q QueueList)Enque(ele string)QueueList{
 
 func (q QueueList)DeQueue()(string){
 
-	if q.isCapacityFull(q.Length+1){
+	if q.isCapacityFull(q.Length){
 		q.Length = (q.Length -1) 
 	}else{
 		if q.isQueueNil() {
