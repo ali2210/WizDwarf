@@ -402,7 +402,6 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 		//local variables but large life span
 	list, listDna := GoStructs.List{}, GoStructs.List{}
 	queue, queueDna := GoStructs.QueueList{}, GoStructs.QueueList{} 
-	var ele []string 
 
 
 		// local variable liitle scoope
@@ -430,11 +429,11 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 		 // fmt.Printf("%s\t", space)
 	}
 	println("Your Dna sequence :")
-	for i, v := range Useq{
+	for _, v := range Useq{
 		uDna := DoAscii(v); if uDna == "---"{
 			 fmt.Printf("%s\t", uDna)
-			ele[i] = queue.DeQueue()
-			println("ELement :" , i, ele[i])
+			ele := queue.DeQueue()
+			println(ele)
 			// queue = queue.Enque(uDna)
 		}
 		// fmt.Printf("%s\t", uDna)
