@@ -33,13 +33,12 @@ func (q QueueList)DeQueue()(string){
 
 	if q.isCapacityFull(q.Length){
 		q.Length = q.Length -1 
+
+		println("Length [this]:", q.Length)
 	}else{
-		if q.isQueueNil() {
-			q.Length = 0
-		}
 		q.Length = q.Length -1
+		println("this Length:", q.Length)
 	}
-	println("len DeQueue:", q.Length)
 	return q.ELement
 
 }
