@@ -35,21 +35,13 @@ func (q QueueList)DeQueue()(string){
 		q.Length = q.Length -1 
 		println("Length [this]:", q.Length)
 	}else{
-		// q.Length = q.Length -1
-		q.Length = q.Recursion(q.Length)
+		q.Length = q.Length -1
 		println("this Length:", q.Length)
 	}
 	return q.ELement
 
 }
 
-func (q QueueList)Recursion(int)int{
-	if q.Length == 0{
-		return 0
-	}
-	return q.Recursion(q.Length-1)
-
-}
 
 
 func (q QueueList)Print(){
