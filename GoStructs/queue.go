@@ -30,16 +30,17 @@ func (q QueueList)Enque(ele string)QueueList{
 
 
 func (q QueueList)DeQueue()(string){
-
+	var x string
 	if q.isCapacityFull(q.Length+1){
 		q.Length = q.Length -1 
 		println("Length [this]:", q.Length)
 	}else{
-		q.Length = q.Length
 		println("this Length:", q.Length)
 		q.Length = q.Length - 1
+		x = q.ELement
+		q.ELement = "_"
 	}
-	return q.ELement
+	return x
 
 }
 
