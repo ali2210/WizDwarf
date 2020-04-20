@@ -38,9 +38,10 @@ func (q QueueList)DeQueue()(string){
 		println("this Length:", q.Length)
 		q.Length = q.Length - 1
 		x = q.ELement
-		q.ELement = "_"
+		q.ELement = "*"
+		println("ELement:", q.ELement, "x:", x)
 	}
-	return x
+	return q.ELement
 
 }
 
