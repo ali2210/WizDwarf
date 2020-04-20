@@ -24,7 +24,7 @@ func (q QueueList)Enque(ele string)QueueList{
 		q.Length = q.Length + 0
 	}
 	q.Length = q.Length + 1
-	println("len queue:", q.Length)
+	println("\nlen queue:", q.Length)
 	return q
 }
 
@@ -32,16 +32,25 @@ func (q QueueList)Enque(ele string)QueueList{
 func (q QueueList)DeQueue()(string){
 
 	if q.isCapacityFull(q.Length+1){
-		q.Length = (q.Length -1) 
+		q.Length = q.Length -1 
+		println("Length [this]:", q.Length)
 	}else{
-		if q.isQueueNil() {
-			q.Length = 0
-		}
-		q.Length = (q.Length -1)
+		q.Length = q.Length -1
+		println("this Length:", q.Length)
 	}
-	println("len DeQueue:", q.Length)
 	return q.ELement
 
+}
+
+func (q QueueList)DequeueChunk(){
+	myqueue := []QueueList{}
+	len:=0
+	if q.isCapacityFull(q.Length+1){
+		println("Queue Capacity full")
+	}	
+		 myqueue[len].ELement = q.ELement
+		 println(myqueue[len].ELement)
+		 len = len + 1
 }
 
 func (q QueueList)Print(){
@@ -65,7 +74,7 @@ func (q QueueList)isQueueNil()(bool){
 }
 
 
-func (l List)Add(q QueueList) (List, int){
+func (l List)Add(q QueueList) (List){
 	// mylist := List{}
 		if l.len == 0{
 		  	l.len = l.len + 1
@@ -74,7 +83,7 @@ func (l List)Add(q QueueList) (List, int){
 			l.len = l.len +1
 			l.QueueList = q
 		}
-	return l, l.len
+	return l
 }
 
 
