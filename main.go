@@ -402,7 +402,7 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 	queue, queueDna := GoStructs.QueueList{}, GoStructs.QueueList{} 
 	leng := 0 
 	seq , err := ReadSequence(userFile.Name()); if err != nil{
-						println("Error in read file", err)
+		println("Error in read file", err)
 	}
 	// fmt.Printf("Seq string:%s\n", seq)
 	Useq , err := ReadSequence(serverFile.Name()); if err != nil{
@@ -413,11 +413,11 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 	for _, v := range seq{
 		// fmt.Printf("Seq:%v \t",  v ) // print bytes of array
 		space := DoAscii(v); if space == "---"{
-			// fmt.Printf("%s\t", space)
-			queueDna = queueDna.Enque(space)
+			fmt.Printf("%s\t", space)
+			// queueDna = queueDna.Enque(space)
 		}
 		queueDna = queueDna.Enque(space)
-		listDna, leng =listDna.Add(queueDna)
+		listDna = listDna.Add(queueDna)
 		// println("List Ref:",&listDna)
 		// queueDna.Print()
 		 // fmt.Printf("%s\t", space)
@@ -425,12 +425,12 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 	println("Your Dna sequence :")
 	for _, v := range Useq{
 		uDna := DoAscii(v); if uDna == "---"{
-			// fmt.Printf("%s\t", uDna)
-			queue = queue.Enque(uDna)
+			 fmt.Printf("%s\t", uDna)
+			// queue = queue.Enque(uDna)
 		}
 		// fmt.Printf("%s\t", uDna)
 		queue  = queue.Enque(uDna)
-		list, leng =list.Add(queue)
+		list=list.Add(queue)
 		println("List Ref:",&list,  leng)
 		// queue.Print()
 		ele := queue.DeQueue()
