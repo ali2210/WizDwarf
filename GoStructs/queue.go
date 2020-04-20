@@ -47,6 +47,8 @@ func (q QueueList)DequeueChunk(){
 	// len:=0
 	if q.isCapacityFull(q.Length+1){
 		println("Queue Capacity full")
+	}else{
+		println("Queue have some thing")
 	}	
 		 /*myqueue[len].ELement = q.ELement
 		 println(myqueue[len].ELement)
