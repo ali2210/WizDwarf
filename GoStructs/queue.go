@@ -24,7 +24,7 @@ func (q QueueList)Enque(ele string)QueueList{
 		q.Length = q.Length + 0
 	}
 	q.Length = q.Length + 1
-	println("\nlen queue:", q.Length)
+	// println("\nlen queue:", q.Length)
 	return q
 }
 
@@ -35,23 +35,22 @@ func (q QueueList)DeQueue()(string){
 		q.Length = q.Length -1 
 		println("Length [this]:", q.Length)
 	}else{
-		q.Length = q.Length -1
+		// q.Length = q.Length -1
+		q.Length = q.Recursion(q.Length)
 		println("this Length:", q.Length)
 	}
 	return q.ELement
 
 }
 
-func (q QueueList)DequeueChunk(){
-	myqueue := []QueueList{}
-	len:=0
-	if q.isCapacityFull(q.Length+1){
-		println("Queue Capacity full")
-	}	
-		 myqueue[len].ELement = q.ELement
-		 println(myqueue[len].ELement)
-		 len = len + 1
+func (q QueueList)Recursion(int)int{
+	if q.Length == 0{
+		return 0
+	}
+	return q.Recursion(q.Length-1)
+
 }
+
 
 func (q QueueList)Print(){
 	println("Data print:", q.ELement)
