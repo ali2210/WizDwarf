@@ -21,7 +21,6 @@ import(
 	// "firebase.google.com/go/auth"
 	"google.golang.org/api/option"
 	 "./db"
-	 // "./GoStructs"
 	 "encoding/json"
 	 "github.com/golang/gddo/httputil/header"
 	 "errors"
@@ -435,6 +434,7 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 			// queue = queue.Enque(uDna)
 		}
 		fmt.Printf("%s\t", uDna)
+		ArrayString(uDna, len(uDna))	
 		// queue  = queue.Enque(uDna)
 		// list=list.Add(queue)
 		// println("List Ref:",&list,  leng)
@@ -449,4 +449,14 @@ func DoAscii(seq byte) string{
 		 return string (seq)
 		}
 		return "---"
+}
+
+func ArrayString(sq string, len int){
+	arr := make([]string, len)
+	for i, _ := range arr {
+		arr [i] = sq
+		println("array :", arr[i])
+		fmt.Printf("%t type:", arr)
+	}
+
 }
