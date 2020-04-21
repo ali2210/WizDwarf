@@ -36,22 +36,13 @@ func (q QueueList)DeQueue()(string){
 		println("Length [this]:", q.Length)
 	}else{
 		println("this Length:", q.Length)
-		// q.Length = q.Length - 1
-		MerageArray(q.ELement, q.Length-1)
+		q.Length = q.Length - 1
 	}
 	return q.ELement
 
 }
 
-func MerageArray(ele string, len int){
-	if len >=0 {
-		sequence := make([]string, len)
-			for i := 0; i < len; i++{
-				sequence[i] = ele
-				println(":\t", sequence[i])
-			}
-	}
-}
+
 
 
 
