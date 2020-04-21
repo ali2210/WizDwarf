@@ -21,7 +21,7 @@ import(
 	// "firebase.google.com/go/auth"
 	"google.golang.org/api/option"
 	 "./db"
-	 "./GoStructs"
+	 // "./GoStructs"
 	 "encoding/json"
 	 "github.com/golang/gddo/httputil/header"
 	 "errors"
@@ -400,8 +400,8 @@ func ReadSequence(filename string)([]byte, error){
 func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){ 
 	
 		//local variables but large life span
-	list, listDna := GoStructs.List{}, GoStructs.List{}
-	queue, queueDna := GoStructs.QueueList{}, GoStructs.QueueList{} 
+	// list, listDna := GoStructs.List{}, GoStructs.List{}
+	// queue, queueDna := GoStructs.QueueList{}, GoStructs.QueueList{} 
 
 
 		// local variable liitle scoope
@@ -419,14 +419,14 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 	for _, v := range seq{
 		// fmt.Printf("Seq:%v \t",  v ) // print bytes of array
 		space := DoAscii(v); if space == "---"{
-			// fmt.Printf("%s\t", space)
+			 fmt.Printf("%s\t", space)
 			// queueDna = queueDna.Enque(space)
 		}
-		queueDna = queueDna.Enque(space)
-		listDna = listDna.Add(queueDna)
+		// queueDna = queueDna.Enque(space)
+		// listDna = listDna.Add(queueDna)
 		// println("List Ref:",&listDna)
 		// queueDna.Print()
-		 // fmt.Printf("%s\t", space)
+		 fmt.Printf("%s\t", space)
 	}
 	println("Your Dna sequence :")
 	for _, v := range Useq{
@@ -435,12 +435,12 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 			// queue = queue.Enque(uDna)
 		}
 		fmt.Printf("%s\t", uDna)
-		queue  = queue.Enque(uDna)
-		list=list.Add(queue)
+		// queue  = queue.Enque(uDna)
+		// list=list.Add(queue)
 		// println("List Ref:",&list,  leng)
 		// queue.Print()
-		ele := queue.DeQueue()
-		fmt.Println("Data we get :", ele )
+		// ele := queue.DeQueue()
+		// fmt.Println("Data we get :", ele )
 	}                      
 }
 
