@@ -434,7 +434,8 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 			// queue = queue.Enque(uDna)
 		}
 		fmt.Printf("%s\t", uDna)
-		ArrayString(uDna, len(uDna))	
+		seqDNA := ArrayString(uDna, len(uDna))	
+		println(seqDNA)
 		// queue  = queue.Enque(uDna)
 		// list=list.Add(queue)
 		// println("List Ref:",&list,  leng)
@@ -451,12 +452,10 @@ func DoAscii(seq byte) string{
 		return "---"
 }
 
-func ArrayString(sq string, len int){
+func ArrayString(sq string, len int)[]string{
 	arr := make([]string, len)
 	for i, _ := range arr {
 		arr [i] = sq
-		println("array :", arr[i])
-		fmt.Printf("%T type:", arr)
 	}
-
+	return arr
 }
