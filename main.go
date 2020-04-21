@@ -427,20 +427,18 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 		 // fmt.Printf("%s\t", space)
 	}
 	println("Your Dna sequence :")
-	for i, v := range Useq{
+	for _, v := range Useq{
 		uDna := DoAscii(v); if uDna == "---"{
 			fmt.Printf("%s", uDna)
 			// queue = queue.Enque(uDna)
 		}
 		// fmt.Printf("%s\t", uDna)
-		seqDNA := ArrayString(uDna, len(uDna))	
 		// queue  = queue.Enque(uDna)
 		// list=list.Add(queue)
 		// println("List Ref:",&list,  leng)
 		// queue.Print()
 		// ele := queue.DeQueue()
 		// fmt.Println("Data we get :", ele )
-		println("data :", seqDNA[i])
 	}                    
 }
 
@@ -451,10 +449,5 @@ func DoAscii(seq byte) string{
 		return "---"
 }
 
-func ArrayString(sq string, len int)[]string{
-	arr := make([]string, len)
-	for i, _ := range arr {
-		arr [i] = sq
-	}
-	return arr
-}
+
+
