@@ -30,19 +30,27 @@ func (q QueueList)Enque(ele string)QueueList{
 
 
 func (q QueueList)DeQueue()(string){
-	var x string
+
 	if q.isCapacityFull(q.Length+1){
 		q.Length = q.Length -1 
 		println("Length [this]:", q.Length)
 	}else{
 		println("this Length:", q.Length)
-		q.Length = q.Length - 1
-		x = q.ELement
-		q.ELement = "*"
-		println("ELement:", q.ELement, "x:", x)
+		// q.Length = q.Length - 1
+		MerageArray(q.ELement, q.Length-1)
 	}
 	return q.ELement
 
+}
+
+func MerageArray(ele string, len int){
+	if len >=0 {
+		sequence := make([]string, len)
+			for i := 0; i < len; i++{
+				sequence[i] = ele
+				println(":\t", sequence[i])
+			}
+	}
 }
 
 
