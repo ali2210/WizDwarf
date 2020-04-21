@@ -432,8 +432,6 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 	for _, v := range Useq{
 		uDna := DoAscii(v); if uDna == "---"{
 			fmt.Printf("%s", uDna)
-			ele := queue.DeQueue()
-			println("Element:", ele)
 			// queue = queue.Enque(uDna)
 		}
 		fmt.Printf("%s\t", uDna)
@@ -441,8 +439,8 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 		list=list.Add(queue)
 		// println("List Ref:",&list,  leng)
 		// queue.Print()
-		// ele := queue.DeQueue()
-		// fmt.Println("Data we get :", ele )
+		ele := queue.DeQueue()
+		fmt.Println("Data we get :", ele )
 	}                      
 }
 
