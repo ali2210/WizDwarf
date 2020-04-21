@@ -428,7 +428,7 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 		 // fmt.Printf("%s\t", space)
 	}
 	println("Your Dna sequence :")
-	for _, v := range Useq{
+	for i, v := range Useq{
 		uDna := DoAscii(v); if uDna == "---"{
 			fmt.Printf("%s", uDna)
 			// queue = queue.Enque(uDna)
@@ -441,10 +441,8 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 		// queue.Print()
 		// ele := queue.DeQueue()
 		// fmt.Println("Data we get :", ele )
-	}
-	for i,_ := range seqDNA{
-		println("squence data :", seqDNA[i])
-	}                      
+		println("data :", seqDNA[i])
+	}                    
 }
 
 func DoAscii(seq byte) string{
