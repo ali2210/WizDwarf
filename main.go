@@ -456,7 +456,7 @@ func ArrayString(sq string, len int){
 	for i, _ := range arr {
 		arr [i] = sq
 		println("array :", arr[i])
-		fmt.Printf("%t type:", arr)
+		fmt.Printf("%T type:", arr)
 	}
 
 }
