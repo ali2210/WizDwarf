@@ -350,12 +350,11 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 	// }
 	// var p []Profile
 	data, err := json.Marshal(user); if err != nil{
-		println("Error in Marshall", err)
+		println("Error in Marshall:", err)
 	}
-	fmt.Printf("Json Data%v\n:", data)
-	var p db.Vistors 
+	var p []db.Vistors 
 	err = json.Unmarshal(data, &p); if err != nil{
-		fmt.Printf("Error%v:\n", err)
+		fmt.Printf("Error%v:", err)
 	}
 	fmt.Printf("value%+v:", p)
 
