@@ -356,7 +356,7 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 	err = json.Unmarshal(data, &p); if err != nil{
 		fmt.Printf("Error%v:", err)
 	}
-	fmt.Printf("value%+v:", p.Id, p.Name)
+	fmt.Printf("id%+v:name%v", p.Id, p.Name)
 
 
 
