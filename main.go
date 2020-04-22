@@ -341,13 +341,14 @@ func addVistor(response http.ResponseWriter, request *http.Request){
 	}
 	]`)
 
-	type Profile struct{
-		Id string
-		Name string
-		Email string
-		Password string
-	}
-	var p []Profile 
+	// type Profile struct{
+	// 	Id string
+	// 	Name string
+	// 	Email string
+	// 	Password string
+	// }
+	// var p []Profile
+	var p []db.Vistors 
 	err := json.Unmarshal(data, &p); if err != nil{
 		println("Error", err)
 	}
