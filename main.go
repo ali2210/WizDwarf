@@ -349,7 +349,7 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 	// 	Password string
 	// }
 	// var p []Profile
-	data, err := json.Marshal(user); if err != nil{
+	data, err := json.Marshal((*user).name); if err != nil{
 		println("Error in Marshall:", err)
 	}
 	var p db.Vistors 
