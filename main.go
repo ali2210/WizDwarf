@@ -352,11 +352,11 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 	data, err := json.Marshal(user); if err != nil{
 		println("Error in Marshall:", err)
 	}
-	var p []db.Vistors 
+	var p db.Vistors 
 	err = json.Unmarshal(data, &p); if err != nil{
 		fmt.Printf("Error%v:", err)
 	}
-	fmt.Printf("value%+v:", p)
+	fmt.Printf("value%+v:", p.Id, p.Name)
 
 
 
