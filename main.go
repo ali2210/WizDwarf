@@ -22,10 +22,10 @@ import(
 	"google.golang.org/api/option"
 	 "./db"
 	 "encoding/json"
-	 "github.com/golang/gddo/httputil/header"
-	 "errors"
-	 "io"
-	 "strings"
+	 // "github.com/golang/gddo/httputil/header"
+	 // "errors"
+	 // "io"
+	 // "strings"
 	 
 
 )
@@ -71,7 +71,7 @@ func main(){
 	routing.HandleFunc("/{title}/home", Home)
 	routing.HandleFunc("/{title}/signup", NewUser)
 	routing.HandleFunc("/{title}/login", Existing)
-	routing.HandleFunc("/{title}/action", addVistor)
+	// routing.HandleFunc("/{title}/action", addVistor)
 	routing.HandleFunc("/Vistor", getVistor)
 	routing.HandleFunc("/dummy", Dump)
 		 // DB_Client()
@@ -207,7 +207,8 @@ func NewUser (w http.ResponseWriter, r *http.Request){
 			
 			println("check:" , user.check_me_out)
 			println("User record:" , user.name, user.email)
-			temp.Execute(w,"Regsiter")
+			addVistor(w,r,&user)
+			// temp.Execute(w,"Regsiter")
 		}
 
 }
@@ -321,57 +322,86 @@ func getVistor(response http.ResponseWriter, request *http.Request){
 
 }
 
-func addVistor(response http.ResponseWriter, request *http.Request){
-	//response.Header().Set("Content-Type", "application/json")
-	if request.Header.Get("Content-Type") != ""{
-		value , _ := header.ParseValueAndParams(request.Header, "Content-Type")
-		if value != "application/json"{
-			msg := "Content-type header is not application/json"
-			http.Error(response, msg , http.StatusUnsupportedMediaType)
-			return	
-		}
+func addVistor(response http.ResponseWriter, request *http.Request ,user *Create_User){
+	response.Header().Set("Content-Type", "application/json")
+	// if request.Header.Get("Content-Type") != ""{
+	// 	value , _ := header.ParseValueAndParams(request.Header, "Content-Type")
+	// 	println("Value:", value)
+	// 	if value != "application/json"{
+	// 		msg := "Content-type header is not application/json"
+	// 		http.Error(response, msg , http.StatusUnsupportedMediaType)	
+	// 	}
+	// }
+
+	// var data = []byte(`[
+	// 	{
+	// 	"Id" : "00x", 
+	// 	"Name" : "Ali", 
+	// 	"Email" : "alideveloper95@gmail.com", 
+	// 	"Password" : "0000"
+	// }
+	// ]`)
+
+	// type Profile struct{
+	// 	Id string
+	// 	Name string
+	// 	Email string
+	// 	Password string
+	// }
+	// var p []Profile
+	data, err := json.Marshal(user); if err != nil{
+		println("Error in Marshall:", err)
 	}
-	request.Body = http.MaxBytesReader(response, request.Body, 1048576)
-	unknown := json.NewDecoder(request.Body)
-	req , err := ioutil.ReadAll(request.Body); if err != nil{
-		println("Error report:", err)
+	var p db.Vistors 
+	err = json.Unmarshal(data, &p); if err != nil{
+		fmt.Printf("Error%v:", err)
 	}
-	println("Body:", req)
-	unknown.DisallowUnknownFields() 
-	var vistor db.Vistors
-	err = unknown.Decode(&vistor); if err != nil{ 
-		println("error :" , err)
-		var syntxError *json.SyntaxError
-		var unmarshalTypeError *json.UnmarshalTypeError
-		switch {
-		case errors.As(err, &syntxError):
-			msg := fmt.Sprintf("maclious formed json body%d", syntxError.Offset)
-			http.Error(response, msg, http.StatusBadRequest)
-		case errors.Is(err, io.ErrUnexpectedEOF):
-			msg:= fmt.Sprintf("Request contain invalid value for the field%q,%d",unmarshalTypeError.Field, unmarshalTypeError.Offset)
-			http.Error(response, msg, http.StatusBadRequest)
-		case strings.HasPrefix(err.Error(), "json: unknown field"):
-			fieldName := strings.TrimPrefix(err.Error(), "json: unknown field")
-			msg := fmt.Sprintf("Request body contain unknown field %s", fieldName)
-			http.Error(response, msg, http.StatusBadRequest)
-		case errors.Is(err,io.EOF):
-			msg := fmt.Sprintf("Request body must not be empty")
-			http.Error(response, msg, http.StatusBadRequest)
-			fmt.Printf("Error:%v", err)
-		case err.Error() == "http: request body too large":
-			msg := "Request body must not larger than 1 MB"
-			http.Error(response, msg, http.StatusRequestEntityTooLarge)
-		default:
-			log.Println(err.Error())
-			http.Error(response, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		}
-		return 
-	}
-	println("Data:", vistor.Id)
+	fmt.Printf("id%+v:name%v", p.Id, p.Name)
+
+
+
+
+	// request.Body = http.MaxBytesReader(response, request.Body, 1048576)
+	// unknown := json.NewDecoder(request.Body)
+	//  req , err := ioutil.ReadAll(request.Body); if err != nil{
+	// 	println("Error report:", err)
+	// }
+	// unknown.DisallowUnknownFields() 
+	// var vistor db.Vistors
+	// err = unknown.Decode(&vistor); if err != nil{ 
+	// 	println("error :" , err)
+	// 	var syntxError *json.SyntaxError
+	// 	var unmarshalTypeError *json.UnmarshalTypeError
+	// 	switch {
+	// 	case errors.As(err, &syntxError):
+	// 		msg := fmt.Sprintf("maclious formed json body%d", syntxError.Offset)
+	// 		http.Error(response, msg, http.StatusBadRequest)
+	// 	case errors.Is(err, io.ErrUnexpectedEOF):
+	// 		msg:= fmt.Sprintf("Request contain invalid value for the field%q,%d",unmarshalTypeError.Field, unmarshalTypeError.Offset)
+	// 		http.Error(response, msg, http.StatusBadRequest)
+	// 	case strings.HasPrefix(err.Error(), "json: unknown field"):
+	// 		fieldName := strings.TrimPrefix(err.Error(), "json: unknown field")
+	// 		msg := fmt.Sprintf("Request body contain unknown field %s", fieldName)
+	// 		http.Error(response, msg, http.StatusBadRequest)
+	// 	case errors.Is(err,io.EOF):
+	// 		msg := fmt.Sprintf("Request body must not be empty")
+	// 		http.Error(response, msg, http.StatusBadRequest)
+	// 		fmt.Printf("Error:%v", err)
+	// 	case err.Error() == "http: request body too large":
+	// 		msg := "Request body must not larger than 1 MB"
+	// 		http.Error(response, msg, http.StatusRequestEntityTooLarge)
+	// 	default:
+	// 		log.Println(err.Error())
+	// 		http.Error(response, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	// 	}
+	// 	return 
+	// }
+	// println("Data:", vistor.Id)
 
 	
 
 	// err := json.NewDecoder(request.Body).Decode(&vistor); if err != nil{
+	// println("Body:", req)
 	// 	// response.WriteHeader(http.StatusInternalServerError)
 	// 	// response.Write([]byte(`{"error" :"Error unmarshal Data}`))
 	// 	http.Error(response, err.Error(), http.StatusBadRequest)
