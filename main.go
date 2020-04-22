@@ -71,7 +71,7 @@ func main(){
 	routing.HandleFunc("/{title}/home", Home)
 	routing.HandleFunc("/{title}/signup", NewUser)
 	routing.HandleFunc("/{title}/login", Existing)
-	routing.HandleFunc("/{title}/action", addVistor)
+	// routing.HandleFunc("/{title}/action", addVistor)
 	routing.HandleFunc("/Vistor", getVistor)
 	routing.HandleFunc("/dummy", Dump)
 		 // DB_Client()
@@ -207,6 +207,7 @@ func NewUser (w http.ResponseWriter, r *http.Request){
 			
 			println("check:" , user.check_me_out)
 			println("User record:" , user.name, user.email)
+			addVistor(w,r,&user)
 			temp.Execute(w,"Regsiter")
 		}
 
@@ -321,7 +322,7 @@ func getVistor(response http.ResponseWriter, request *http.Request){
 
 }
 
-func addVistor(response http.ResponseWriter, request *http.Request){
+func addVistor(response http.ResponseWriter, request *http.Request ,user *Create_User){
 	//response.Header().Set("Content-Type", "application/json")
 	if request.Header.Get("Content-Type") != ""{
 		value , _ := header.ParseValueAndParams(request.Header, "Content-Type")
@@ -332,14 +333,14 @@ func addVistor(response http.ResponseWriter, request *http.Request){
 		}
 	}
 
-	var data = []byte(`[
-		{
-		"Id" : "00x", 
-		"Name" : "Ali", 
-		"Email" : "alideveloper95@gmail.com", 
-		"Password" : "0000"
-	}
-	]`)
+	// var data = []byte(`[
+	// 	{
+	// 	"Id" : "00x", 
+	// 	"Name" : "Ali", 
+	// 	"Email" : "alideveloper95@gmail.com", 
+	// 	"Password" : "0000"
+	// }
+	// ]`)
 
 	// type Profile struct{
 	// 	Id string
@@ -348,8 +349,11 @@ func addVistor(response http.ResponseWriter, request *http.Request){
 	// 	Password string
 	// }
 	// var p []Profile
+	marshal, err := json.Marshal(user); if err != nil{
+		println("Error in Marshall", err)
+	}
 	var p []db.Vistors 
-	err := json.Unmarshal(data, &p); if err != nil{
+	err = json.Unmarshal(marshal, &p); if err != nil{
 		println("Error", err)
 	}
 	fmt.Printf("value%+v", p)
