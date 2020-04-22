@@ -22,7 +22,7 @@ import(
 	"google.golang.org/api/option"
 	 "./db"
 	 "encoding/json"
-	 "github.com/golang/gddo/httputil/header"
+	 // "github.com/golang/gddo/httputil/header"
 	 // "errors"
 	 // "io"
 	 // "strings"
@@ -323,15 +323,15 @@ func getVistor(response http.ResponseWriter, request *http.Request){
 }
 
 func addVistor(response http.ResponseWriter, request *http.Request ,user *Create_User){
-	//response.Header().Set("Content-Type", "application/json")
-	if request.Header.Get("Content-Type") != ""{
-		value , _ := header.ParseValueAndParams(request.Header, "Content-Type")
-		println("Value:", value)
-		if value != "application/json"{
-			msg := "Content-type header is not application/json"
-			http.Error(response, msg , http.StatusUnsupportedMediaType)	
-		}
-	}
+	response.Header().Set("Content-Type", "application/json")
+	// if request.Header.Get("Content-Type") != ""{
+	// 	value , _ := header.ParseValueAndParams(request.Header, "Content-Type")
+	// 	println("Value:", value)
+	// 	if value != "application/json"{
+	// 		msg := "Content-type header is not application/json"
+	// 		http.Error(response, msg , http.StatusUnsupportedMediaType)	
+	// 	}
+	// }
 
 	// var data = []byte(`[
 	// 	{
