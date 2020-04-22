@@ -326,10 +326,10 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 	//response.Header().Set("Content-Type", "application/json")
 	if request.Header.Get("Content-Type") != ""{
 		value , _ := header.ParseValueAndParams(request.Header, "Content-Type")
+		println("Value:", value)
 		if value != "application/json"{
 			msg := "Content-type header is not application/json"
-			http.Error(response, msg , http.StatusUnsupportedMediaType)
-			return	
+			http.Error(response, msg , http.StatusUnsupportedMediaType)	
 		}
 	}
 
