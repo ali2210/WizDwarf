@@ -208,7 +208,7 @@ func NewUser (w http.ResponseWriter, r *http.Request){
 			println("check:" , user.check_me_out)
 			println("User record:" , user.name, user.email)
 			addVistor(w,r,&user)
-			temp.Execute(w,"Regsiter")
+			// temp.Execute(w,"Regsiter")
 		}
 
 }
