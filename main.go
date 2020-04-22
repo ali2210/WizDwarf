@@ -23,9 +23,9 @@ import(
 	 "./db"
 	 "encoding/json"
 	 "github.com/golang/gddo/httputil/header"
-	 "errors"
-	 "io"
-	 "strings"
+	 // "errors"
+	 // "io"
+	 // "strings"
 	 
 
 )
@@ -331,47 +331,66 @@ func addVistor(response http.ResponseWriter, request *http.Request){
 			return	
 		}
 	}
-	request.Body = http.MaxBytesReader(response, request.Body, 1048576)
-	unknown := json.NewDecoder(request.Body)
-	req , err := ioutil.ReadAll(request.Body); if err != nil{
-		println("Error report:", err)
+
+	var data = []byte(`[
+		{
+		"Id" : "00x", 
+		"Name" : "Ali", 
+		"Email" : "alideveloper95@gmail.com", 
+		"Password" : "0000"
 	}
-	println("Body:", req)
-	unknown.DisallowUnknownFields() 
-	var vistor db.Vistors
-	err = unknown.Decode(&vistor); if err != nil{ 
-		println("error :" , err)
-		var syntxError *json.SyntaxError
-		var unmarshalTypeError *json.UnmarshalTypeError
-		switch {
-		case errors.As(err, &syntxError):
-			msg := fmt.Sprintf("maclious formed json body%d", syntxError.Offset)
-			http.Error(response, msg, http.StatusBadRequest)
-		case errors.Is(err, io.ErrUnexpectedEOF):
-			msg:= fmt.Sprintf("Request contain invalid value for the field%q,%d",unmarshalTypeError.Field, unmarshalTypeError.Offset)
-			http.Error(response, msg, http.StatusBadRequest)
-		case strings.HasPrefix(err.Error(), "json: unknown field"):
-			fieldName := strings.TrimPrefix(err.Error(), "json: unknown field")
-			msg := fmt.Sprintf("Request body contain unknown field %s", fieldName)
-			http.Error(response, msg, http.StatusBadRequest)
-		case errors.Is(err,io.EOF):
-			msg := fmt.Sprintf("Request body must not be empty")
-			http.Error(response, msg, http.StatusBadRequest)
-			fmt.Printf("Error:%v", err)
-		case err.Error() == "http: request body too large":
-			msg := "Request body must not larger than 1 MB"
-			http.Error(response, msg, http.StatusRequestEntityTooLarge)
-		default:
-			log.Println(err.Error())
-			http.Error(response, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		}
-		return 
+	]`)
+
+	var profile db.Vistors
+	err := json.Unmarshal(data, &profile); if err != nil{
+		println("Error", err)
 	}
-	println("Data:", vistor.Id)
+	fmt.Printf("value%+v", profile)
+
+
+
+
+	// request.Body = http.MaxBytesReader(response, request.Body, 1048576)
+	// unknown := json.NewDecoder(request.Body)
+	//  req , err := ioutil.ReadAll(request.Body); if err != nil{
+	// 	println("Error report:", err)
+	// }
+	// unknown.DisallowUnknownFields() 
+	// var vistor db.Vistors
+	// err = unknown.Decode(&vistor); if err != nil{ 
+	// 	println("error :" , err)
+	// 	var syntxError *json.SyntaxError
+	// 	var unmarshalTypeError *json.UnmarshalTypeError
+	// 	switch {
+	// 	case errors.As(err, &syntxError):
+	// 		msg := fmt.Sprintf("maclious formed json body%d", syntxError.Offset)
+	// 		http.Error(response, msg, http.StatusBadRequest)
+	// 	case errors.Is(err, io.ErrUnexpectedEOF):
+	// 		msg:= fmt.Sprintf("Request contain invalid value for the field%q,%d",unmarshalTypeError.Field, unmarshalTypeError.Offset)
+	// 		http.Error(response, msg, http.StatusBadRequest)
+	// 	case strings.HasPrefix(err.Error(), "json: unknown field"):
+	// 		fieldName := strings.TrimPrefix(err.Error(), "json: unknown field")
+	// 		msg := fmt.Sprintf("Request body contain unknown field %s", fieldName)
+	// 		http.Error(response, msg, http.StatusBadRequest)
+	// 	case errors.Is(err,io.EOF):
+	// 		msg := fmt.Sprintf("Request body must not be empty")
+	// 		http.Error(response, msg, http.StatusBadRequest)
+	// 		fmt.Printf("Error:%v", err)
+	// 	case err.Error() == "http: request body too large":
+	// 		msg := "Request body must not larger than 1 MB"
+	// 		http.Error(response, msg, http.StatusRequestEntityTooLarge)
+	// 	default:
+	// 		log.Println(err.Error())
+	// 		http.Error(response, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	// 	}
+	// 	return 
+	// }
+	// println("Data:", vistor.Id)
 
 	
 
 	// err := json.NewDecoder(request.Body).Decode(&vistor); if err != nil{
+	// println("Body:", req)
 	// 	// response.WriteHeader(http.StatusInternalServerError)
 	// 	// response.Write([]byte(`{"error" :"Error unmarshal Data}`))
 	// 	http.Error(response, err.Error(), http.StatusBadRequest)
