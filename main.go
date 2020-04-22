@@ -402,7 +402,6 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 	// list, listDna := GoStructs.List{}, GoStructs.List{}
 	// queue, queueDna := GoStructs.QueueList{}, GoStructs.QueueList{} 
 
-
 		// local variable liitle scoope
 	seq , err := ReadSequence(userFile.Name()); if err != nil{
 		println("Error in read file", err)
@@ -425,7 +424,7 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 		// listDna = listDna.Add(queueDna)
 		// println("List Ref:",&listDna)
 		// queueDna.Print()
-		 fmt.Printf("%s\t", space)
+		 // fmt.Printf("%s\t", space)
 	}
 	println("Your Dna sequence :")
 	for _, v := range Useq{
@@ -433,16 +432,14 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo){
 			fmt.Printf("%s", uDna)
 			// queue = queue.Enque(uDna)
 		}
-		fmt.Printf("%s\t", uDna)
-		seqDNA := ArrayString(uDna, len(uDna))	
-		println(seqDNA)
+		// fmt.Printf("%s\t", uDna)
 		// queue  = queue.Enque(uDna)
 		// list=list.Add(queue)
 		// println("List Ref:",&list,  leng)
 		// queue.Print()
 		// ele := queue.DeQueue()
 		// fmt.Println("Data we get :", ele )
-	}                      
+	}                    
 }
 
 func DoAscii(seq byte) string{
@@ -452,10 +449,5 @@ func DoAscii(seq byte) string{
 		return "---"
 }
 
-func ArrayString(sq string, len int)[]string{
-	arr := make([]string, len)
-	for i, _ := range arr {
-		arr [i] = sq
-	}
-	return arr
-}
+
+
