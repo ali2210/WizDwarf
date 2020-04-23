@@ -72,7 +72,7 @@ func main(){
 	routing.HandleFunc("/{title}/signup", NewUser)
 	routing.HandleFunc("/{title}/login", Existing)
 	// routing.HandleFunc("/{title}/action", addVistor)
-	routing.HandleFunc("/Vistor", getVistor)
+	routing.HandleFunc("/title/Data", getVistor)
 	routing.HandleFunc("/dummy", Dump)
 		 // DB_Client()
 	
