@@ -402,7 +402,7 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 	
 
 	err = json.NewDecoder(request.Body).Decode(&p); if err != nil{
-		println("Error : " , err )
+		fmt.Printf("Error %v: " , err )
 	}
 
 
