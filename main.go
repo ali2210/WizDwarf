@@ -72,7 +72,7 @@ func main(){
 	routing.HandleFunc("/{title}/signup", NewUser)
 	routing.HandleFunc("/{title}/login", Existing)
 	// routing.HandleFunc("/{title}/action", addVistor)
-	routing.HandleFunc("/Vistor", getVistor)
+	routing.HandleFunc("/{title}/data", getVistor)
 	routing.HandleFunc("/dummy", Dump)
 		 // DB_Client()
 	
@@ -310,6 +310,8 @@ func SetFirestoreCredentials()*firebase.App{
 	return app
 }
 
+
+
 func getVistor(response http.ResponseWriter, request *http.Request){
 	response.Header().Set("Content-Type", "application/json")
 	visitor , err := cloud.FindAllData(); if err != nil{
@@ -349,23 +351,24 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 	// 	Password string
 	// }
 	// var p []Profile
-	data, err := json.Marshal(user); if err != nil{
-		println("Error in Marshall:", err)
-	}
+	// data, err := json.Marshal(user); if err != nil{
+	// 	println("Error in Marshall:", err)
+	// }
 	var p db.Vistors 
-	err = json.Unmarshal(data, &p); if err != nil{
-		fmt.Printf("Error%v:", err)
-	}
-	fmt.Printf("id%+v:name%v", p.Id, p.Name)
+	// err = json.Unmarshal(data, &p); if err != nil{
+	// 	fmt.Printf("Error%v:", err)
+	// }
+	// fmt.Printf("id%+v:name%v", p.Id, p.Name)
 
 
 
 
 	// request.Body = http.MaxBytesReader(response, request.Body, 1048576)
 	// unknown := json.NewDecoder(request.Body)
-	//  req , err := ioutil.ReadAll(request.Body); if err != nil{
-	// 	println("Error report:", err)
-	// }
+	 _ , err := ioutil.ReadAll(request.Body); if err != nil{
+		println("Error report:", err)
+	 }
+
 	// unknown.DisallowUnknownFields() 
 	// var vistor db.Vistors
 	// err = unknown.Decode(&vistor); if err != nil{ 
@@ -400,9 +403,16 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 
 	
 
-	// err := json.NewDecoder(request.Body).Decode(&vistor); if err != nil{
+	err = json.NewDecoder(request.Body).Decode(&p); if err != nil{
+		fmt.Printf("Error %v: " , err )
+	}
+
+
+	println("Vistors:" , p.Id)
+
 	// println("Body:", req)
-	// 	// response.WriteHeader(http.StatusInternalServerError)
+	
+	//response.WriteHeader(http.StatusInternalServerError)
 	// 	// response.Write([]byte(`{"error" :"Error unmarshal Data}`))
 	// 	http.Error(response, err.Error(), http.StatusBadRequest)
 	// 	return 
