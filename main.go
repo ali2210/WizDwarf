@@ -26,9 +26,9 @@ import(
 	 // "errors"
 	 // "io"
 	 // "strings"
-	"cloud.google.com/go/storage"
-	cloudkms "google.golang.org/api/cloudkms/v1"
-	"google.golang.org/api/iterator"
+	// "cloud.google.com/go/storage"
+	// cloudkms "google.golang.org/api/cloudkms/v1"
+	// "google.golang.org/api/iterator"
 	 
 
 )
@@ -64,6 +64,7 @@ import(
 			// Set Firestore Credentials
 		AppName *firebase.App = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference] 
 		cloud db.DBFirestore = db.NewCloudInstance()
+		Google_Credentials string = "/home/ali/Desktop/htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
 		
 	)
 
@@ -256,32 +257,32 @@ func UploadFiles(r *http.Request)(*os.File){
 }
 
 
-func implicit(){
-	project := "project-id"
-	ctx := context.Background()
+// func implicit(){
+// 	project := "project-id"
+// 	ctx := context.Background()
 
-	storageClient , err := storage.NewClient(ctx); if err != nil{
-		log.Fatal("Error", err)
-	}
-	it := storageClient.Buckets(ctx, project)
-	for{
-		BucktsAtrr , err := it.Next(); if err == iterator.Done {
-			break
-		}
-		if err != nil{
-			log.Fatal("Error in BucktsAtrr", err)
-		}
-		fmt.Println(BucktsAtrr.Name)
-	}
+// 	storageClient , err := storage.NewClient(ctx); if err != nil{
+// 		log.Fatal("Error", err)
+// 	}
+// 	it := storageClient.Buckets(ctx, project)
+// 	for{
+// 		BucktsAtrr , err := it.Next(); if err == iterator.Done {
+// 			break
+// 		}
+// 		if err != nil{
+// 			log.Fatal("Error in BucktsAtrr", err)
+// 		}
+// 		fmt.Println(BucktsAtrr.Name)
+// 	}
 
-	kmsService, err := cloudkms.NewService(ctx)
-        if err != nil {
-                log.Fatal(err)
-        }
+// 	kmsService, err := cloudkms.NewService(ctx)
+//         if err != nil {
+//                 log.Fatal(err)
+//         }
 
-        _ = kmsService
+//         _ = kmsService
 
-}
+// }
 
 func FileReadFromDisk(filename string)os.FileInfo{
 	f , err := os.OpenFile(filename + ".txt", os.O_RDWR | os.O_CREATE, 0755); if err != nil{
@@ -331,12 +332,15 @@ func Key(h1 , h2 string)(string , string){
 	
 }
 func SetFirestoreCredentials()*firebase.App{
-	opt := option.WithCredentialsFile("/home/ali/Desktop/htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json")
-	app , err := firebase.NewApp(context.Background(), nil, opt); if err != nil{
+
+	projectId := "htickets-cb4d0"
+	// set credentials
+	conf := &firebase.Config{ProjectID:projectId}
+	opt := option.WithCredentialsFile(Google_Credentials)
+	app , err := firebase.NewApp(context.Background(), conf, opt); if err != nil{
 		log.Fatal("Error in Connection with Firestore", err)
 	}
 	println("Connected... Welcome to Firestore")
-	implicit()
 	return app
 }
 
