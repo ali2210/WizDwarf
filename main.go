@@ -152,7 +152,6 @@ func Home(w http.ResponseWriter, r *http.Request){
 }
 
 func NewUser (w http.ResponseWriter, r *http.Request){
-	println("request body",r.Body)
 	temp := template.Must(template.ParseFiles("register.html"))
 	user := Create_User{}
 		if r.Method  ==  "GET"{
@@ -217,7 +216,6 @@ func NewUser (w http.ResponseWriter, r *http.Request){
 }
 
 func Existing(w http.ResponseWriter, r *http.Request){
-	println("request body",r.Body)
 	temp := template.Must(template.ParseFiles("login.html"))
 	temp.Execute(w,"Login")
 }
@@ -338,6 +336,7 @@ func SetFirestoreCredentials()*firebase.App{
 		log.Fatal("Error in Connection with Firestore", err)
 	}
 	println("Connected... Welcome to Firestore")
+	implicit()
 	return app
 }
 
