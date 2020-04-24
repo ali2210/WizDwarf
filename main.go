@@ -33,6 +33,9 @@ import(
 
 )
 
+
+	// Struts 
+
 	type Response struct{
 		id int 
 		flag bool
@@ -58,18 +61,26 @@ import(
 	}
 
 
+	// Variables 
+
 	var (
 		emailexp string = "([A-Z][a-z]|[0-9])*[@][a-z]*"
 		passexp string = "([A-Z][a-z]*[0-9])*"
-			// Set Firestore Credentials
 		AppName *firebase.App = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference] 
 		cloud db.DBFirestore = db.NewCloudInstance()
-		Google_Credentials string = "/home/ali/Desktop/htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
 		
 	)
 
+	const(
+				projectId string = "htickets-cb4d0"	
+				Google_Credentials string = "/home/ali/Desktop/htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
+	)
+
+	// Functions 
+
 func main(){
 
+	// Routing
 	routing := mux.NewRouter()
 	
 	routing.HandleFunc("/{title}/home", Home)
@@ -333,7 +344,6 @@ func Key(h1 , h2 string)(string , string){
 }
 func SetFirestoreCredentials()*firebase.App{
 
-	projectId := "htickets-cb4d0"
 	// set credentials
 	conf := &firebase.Config{ProjectID:projectId}
 	opt := option.WithCredentialsFile(Google_Credentials)
@@ -346,9 +356,10 @@ func SetFirestoreCredentials()*firebase.App{
 
 
 
+
 func getVistor(response http.ResponseWriter, request *http.Request){
 	response.Header().Set("Content-Type", "application/json")
-	visitor , err := cloud.FindAllData(); if err != nil{
+	visitor , err := cloud.FindAllData(AppName); if err != nil{
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(`{"error" :"Error getting visitor result"}`))
 	}
