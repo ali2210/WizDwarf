@@ -26,6 +26,9 @@ import(
 	 // "errors"
 	 // "io"
 	 // "strings"
+	"cloud.google.com/go/storage"
+	// cloudkms "google.golang.org/api/cloudkms/v1"
+	"google.golang.org/api/iterator"
 	 
 
 )
@@ -252,6 +255,27 @@ func UploadFiles(r *http.Request)(*os.File){
 					return upldFile
 				}
 				return nil
+}
+
+
+func implicit(){
+	project := "project-id"
+	ctx := context.Background()
+
+	storageClient , err := storage.NewClient(ctx); if err != nil{
+		log.Fatal("Error", err)
+	}
+	it := storageClient.Buckets(ctx, project)
+	for{
+		BucktsAtrr , err := it.Next(); if err == iterator.Done {
+			break
+		}
+		if err != nil{
+			log.Fatal("Error in BucktsAtrr", err)
+		}
+		fmt.Println(BucktsAtrr.Name)
+	}
+
 }
 
 func FileReadFromDisk(filename string)os.FileInfo{
