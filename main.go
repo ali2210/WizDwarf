@@ -310,6 +310,8 @@ func SetFirestoreCredentials()*firebase.App{
 	return app
 }
 
+
+
 func getVistor(response http.ResponseWriter, request *http.Request){
 	response.Header().Set("Content-Type", "application/json")
 	visitor , err := cloud.FindAllData(); if err != nil{
