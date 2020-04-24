@@ -4,7 +4,8 @@ package db
 import (
 	"context"
 	"log"
-	"cloud.google.com/go/firestore"
+	firebase "firebase.google.com/go"
+	// "cloud.google.com/go/firestore"
 	// "../record"
 )
 
@@ -17,15 +18,15 @@ type Vistors struct{
 }
 
 const (
-	projectId string = "htickets-cb4d0"
+	// projectId string = "htickets-cb4d0"
 	collectionName string = "ProfileVistors"
 )
 
 
 type DBFirestore interface{
-	SaveData(visitor *Vistors)(*Vistors, error)
+	SaveData(visitor *Vistors, app *firebase.App)(*Vistors, error)
 	// FindData(user *Create_User, visitor *profile.ProfileVistors)(*profile.ProfileVistors, error)
-	FindAllData()([]Vistors, error)
+	FindAllData(app *firebase.App)([]Vistors, error)
 }
 
 type cloud_data struct{}
@@ -35,9 +36,9 @@ func NewCloudInstance()  DBFirestore{
 	return &cloud_data{}
 }
 
-func (*cloud_data)SaveData(visitor *Vistors)(*Vistors, error){
+func (*cloud_data)SaveData(visitor *Vistors, app *firebase.App)(*Vistors, error){
 	ctx := context.Background()
-	client , err := firestore.NewClient(ctx, projectId); if err != nil{
+	client , err := app.Firestore(ctx); if err != nil{
 		log.Fatal("Client Instance Failed to start", err)
 		return nil, err
 	}
@@ -57,9 +58,9 @@ func (*cloud_data)SaveData(visitor *Vistors)(*Vistors, error){
 	return visitor, nil
 }
 
-func (*cloud_data)FindAllData()([]Vistors,error){
+func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 	ctx := context.Background()
-	client , err := firestore.NewClient(ctx, projectId); if err != nil{
+	client , err := app.Firestore(ctx); if err != nil{
 		log.Fatal("Client Instance Failed to start", err)
 		return nil, err
 	}

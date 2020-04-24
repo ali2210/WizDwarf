@@ -26,9 +26,15 @@ import(
 	 // "errors"
 	 // "io"
 	 // "strings"
+	// "cloud.google.com/go/storage"
+	// cloudkms "google.golang.org/api/cloudkms/v1"
+	// "google.golang.org/api/iterator"
 	 
 
 )
+
+
+	// Struts 
 
 	type Response struct{
 		id int 
@@ -55,17 +61,26 @@ import(
 	}
 
 
+	// Variables 
+
 	var (
 		emailexp string = "([A-Z][a-z]|[0-9])*[@][a-z]*"
 		passexp string = "([A-Z][a-z]*[0-9])*"
-			// Set Firestore Credentials
 		AppName *firebase.App = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference] 
 		cloud db.DBFirestore = db.NewCloudInstance()
 		
 	)
 
+	const(
+				projectId string = "htickets-cb4d0"	
+				Google_Credentials string = "/home/ali/Desktop/htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
+	)
+
+	// Functions 
+
 func main(){
 
+	// Routing
 	routing := mux.NewRouter()
 	
 	routing.HandleFunc("/{title}/home", Home)
@@ -149,7 +164,6 @@ func Home(w http.ResponseWriter, r *http.Request){
 }
 
 func NewUser (w http.ResponseWriter, r *http.Request){
-	println("request body",r.Body)
 	temp := template.Must(template.ParseFiles("register.html"))
 	user := Create_User{}
 		if r.Method  ==  "GET"{
@@ -214,7 +228,6 @@ func NewUser (w http.ResponseWriter, r *http.Request){
 }
 
 func Existing(w http.ResponseWriter, r *http.Request){
-	println("request body",r.Body)
 	temp := template.Must(template.ParseFiles("login.html"))
 	temp.Execute(w,"Login")
 }
@@ -253,6 +266,34 @@ func UploadFiles(r *http.Request)(*os.File){
 				}
 				return nil
 }
+
+
+// func implicit(){
+// 	project := "project-id"
+// 	ctx := context.Background()
+
+// 	storageClient , err := storage.NewClient(ctx); if err != nil{
+// 		log.Fatal("Error", err)
+// 	}
+// 	it := storageClient.Buckets(ctx, project)
+// 	for{
+// 		BucktsAtrr , err := it.Next(); if err == iterator.Done {
+// 			break
+// 		}
+// 		if err != nil{
+// 			log.Fatal("Error in BucktsAtrr", err)
+// 		}
+// 		fmt.Println(BucktsAtrr.Name)
+// 	}
+
+// 	kmsService, err := cloudkms.NewService(ctx)
+//         if err != nil {
+//                 log.Fatal(err)
+//         }
+
+//         _ = kmsService
+
+// }
 
 func FileReadFromDisk(filename string)os.FileInfo{
 	f , err := os.OpenFile(filename + ".txt", os.O_RDWR | os.O_CREATE, 0755); if err != nil{
@@ -302,8 +343,11 @@ func Key(h1 , h2 string)(string , string){
 	
 }
 func SetFirestoreCredentials()*firebase.App{
-	opt := option.WithCredentialsFile("/home/ali/Desktop/htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json")
-	app , err := firebase.NewApp(context.Background(), nil, opt); if err != nil{
+
+	// set credentials
+	conf := &firebase.Config{ProjectID:projectId}
+	opt := option.WithCredentialsFile(Google_Credentials)
+	app , err := firebase.NewApp(context.Background(), conf, opt); if err != nil{
 		log.Fatal("Error in Connection with Firestore", err)
 	}
 	println("Connected... Welcome to Firestore")
@@ -312,9 +356,10 @@ func SetFirestoreCredentials()*firebase.App{
 
 
 
+
 func getVistor(response http.ResponseWriter, request *http.Request){
 	response.Header().Set("Content-Type", "application/json")
-	visitor , err := cloud.FindAllData(); if err != nil{
+	visitor , err := cloud.FindAllData(AppName); if err != nil{
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(`{"error" :"Error getting visitor result"}`))
 	}
