@@ -27,7 +27,7 @@ import(
 	 // "io"
 	 // "strings"
 	"cloud.google.com/go/storage"
-	// cloudkms "google.golang.org/api/cloudkms/v1"
+	cloudkms "google.golang.org/api/cloudkms/v1"
 	"google.golang.org/api/iterator"
 	 
 
@@ -275,6 +275,13 @@ func implicit(){
 		}
 		fmt.Println(BucktsAtrr.Name)
 	}
+
+	kmsService, err := cloudkms.NewService(ctx)
+        if err != nil {
+                log.Fatal(err)
+        }
+
+        _ = kmsService
 
 }
 
