@@ -60,6 +60,7 @@ func (*cloud_data)SaveData(visitor *Vistors, app *firebase.App)(*Vistors, error)
 
 func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 	ctx := context.Background()
+	println(ctx)
 	client , err := app.Firestore(ctx); if err != nil{
 		log.Fatal("Client Instance Failed to start", err)
 		return nil, err
