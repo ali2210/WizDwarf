@@ -7,13 +7,15 @@ Version[Go[1.14]]
 
                         **** Application*****
                         
- ##  Milestones [27.5%]
+ ##  Milestones [33.333%]
   ### [.] Design [70%]
         Bootstrap4 CDN  [70%]
-  ### [i] Cloud Services [10%]
-        Firestore Cloud [10%]
-  ### [x] Database [0%]
-        Firestore Cloud [0%]
+  ### [i] Cloud Services [45%]
+        Firestore Cloud [45%]
+  ### [x] Database [45%]
+        Firestore Cloud [45%]
+        Add(70%)
+        Get(20%)
   ### [x] Security [50%]
          Strong Authentication [100%]
          Security checks [0%]
