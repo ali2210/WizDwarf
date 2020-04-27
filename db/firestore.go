@@ -82,11 +82,11 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 			Email : doc.Data()["Email"].(string),
 			Password: doc.Data()["Password"].(string),
 		} 
-		println("Data_id:", visitor.Id)
-		println("Data_name:", visitor.Name)
-		println("Data_email:", visitor.Email)
-		println("Data_password:", visitor.Password)
-		// visit = append(visit, visitor)
+		// println("Data_id:", visitor.Id)
+		// println("Data_name:", visitor.Name)
+		// println("Data_email:", visitor.Email)
+		// println("Data_password:", visitor.Password)
+		visit = append(visit, visitor)
 	}
 	return visit, nil
 
