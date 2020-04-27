@@ -221,7 +221,7 @@ func NewUser (w http.ResponseWriter, r *http.Request){
 			
 			println("check:" , user.check_me_out)
 			println("User record:" , user.name, user.email)
-			addVistor(w,r,&user)
+			addVistor(w,r,&user, encrypted.reader)
 			// temp.Execute(w,"Regsiter")
 		}
 
@@ -364,12 +364,12 @@ func getVistor(response http.ResponseWriter, request *http.Request){
 		response.Write([]byte(`{"error" :"Error getting visitor result"}`))
 	}
 
-	response.WriteHeader(http.StatusOK)
+	// response.WriteHeader(http.StatusOK)
 	json.NewEncoder(response).Encode(visitor)
 
 }
 
-func addVistor(response http.ResponseWriter, request *http.Request ,user *Create_User){
+func addVistor(response http.ResponseWriter, request *http.Request ,user *Create_User, im string){
 	response.Header().Set("Content-Type", "application/json")
 	var member db.Vistors 
 
@@ -378,12 +378,12 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(`{"error" :"Error Unmarshal "}`))
 	}
-	 // vistor.Id = im.reader
+	 member.Id = im
 	 member.Name = user.name
 	 member.Email= user.email
 	 member.Password = user.password
 	 cloud.SaveData(&member,AppName)
-	 response.WriteHeader(http.StatusOK)
+	 // response.WriteHeader(http.StatusOK)
 	 json.NewEncoder(response).Encode(member)
 
 
