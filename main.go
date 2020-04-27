@@ -371,6 +371,26 @@ func getVistor(response http.ResponseWriter, request *http.Request){
 
 func addVistor(response http.ResponseWriter, request *http.Request ,user *Create_User){
 	response.Header().Set("Content-Type", "application/json")
+	var member db.Vistors 
+
+	err := json.NewDecoder(request.Body).Decode(&member); if err != nil{
+		fmt.Printf("Error %v: " , err )
+		response.WriteHeader(http.StatusInternalServerError)
+		response.Write([]byte(`{"error" :"Error Unmarshal "}`))
+	}
+	 // vistor.Id = im.reader
+	 member.Name = user.name
+	 member.Email= user.email
+	 member.Password = user.password
+	 cloud.SaveData(&member,AppName)
+	 response.WriteHeader(http.StatusOK)
+	 json.NewEncoder(response).Encode(member)
+
+
+
+	//println("Vistors:" , p.Id)
+
+
 	// if request.Header.Get("Content-Type") != ""{
 	// 	value , _ := header.ParseValueAndParams(request.Header, "Content-Type")
 	// 	println("Value:", value)
@@ -399,7 +419,7 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 	// data, err := json.Marshal(user); if err != nil{
 	// 	println("Error in Marshall:", err)
 	// }
-	var p db.Vistors 
+	
 	// err = json.Unmarshal(data, &p); if err != nil{
 	// 	fmt.Printf("Error%v:", err)
 	// }
@@ -410,9 +430,9 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 
 	// request.Body = http.MaxBytesReader(response, request.Body, 1048576)
 	// unknown := json.NewDecoder(request.Body)
-	 _ , err := ioutil.ReadAll(request.Body); if err != nil{
-		println("Error report:", err)
-	 }
+	 // _ , err := ioutil.ReadAll(request.Body); if err != nil{
+		// println("Error report:", err)
+	 // }
 
 	// unknown.DisallowUnknownFields() 
 	// var vistor db.Vistors
@@ -448,12 +468,7 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 
 	
 
-	err = json.NewDecoder(request.Body).Decode(&p); if err != nil{
-		fmt.Printf("Error %v: " , err )
-	}
-
-
-	println("Vistors:" , p.Id)
+	
 
 	// println("Body:", req)
 	
@@ -462,15 +477,6 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 	// 	http.Error(response, err.Error(), http.StatusBadRequest)
 	// 	return 
 	// }
-	// println("Vistor:", vistor.Id)
-	// vistor.Id = im.reader
-	// vistor.Name = user.name
-	// vistor.Email= user.email
-	// vistor.Password = user.password
-	// println("vistor data", vistor.Id)
-	// response.WriteHeader(http.StatusOK)
-	// cloud.SaveData(&vistor)
-	// json.NewEncoder(response).Encode(vistor)
 }
 
 func ReadSequence(filename string)([]byte, error){

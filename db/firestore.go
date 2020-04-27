@@ -64,6 +64,7 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 		log.Fatal("Client Instance Failed to start", err)
 		return nil, err
 	}
+	println("Client Instance", client)
 
 	defer client.Close()
 
