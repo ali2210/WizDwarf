@@ -69,7 +69,6 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 
 	var visit []Vistors
 	iterator := client.Collection(collectionName).Documents(ctx)
-	println("Iterator:", iterator)
 	for{
 		doc, err := iterator.Next(); if err != nil{
 			log.Fatal("Iterator Failed on Vistor: ", err)
