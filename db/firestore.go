@@ -77,14 +77,16 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 		}
 
 		visitor := Vistors {
-			// Id: doc.Data()["Id"].(string),
-			// Name : doc.Data()["Name"].(string),
-			// Email : doc.Data()["Email"].(string),
-			// Password: doc.Data()["Password"].(string),
 			Id : doc.Data()["Id"].(string),
+			Name : doc.Data()["Name"].(string),
+			Email : doc.Data()["Email"].(string),
+			Password: doc.Data()["Password"].(string),
 		} 
-		println("Data:", visitor.Id)
-		//visit = append(visit, visitor)
+		println("Data_id:", visitor.Id)
+		println("Data_name:", visitor.Name)
+		println("Data_email:", visitor.Email)
+		println("Data_password:", visitor.Password)
+		// visit = append(visit, visitor)
 	}
 	return visit, nil
 
