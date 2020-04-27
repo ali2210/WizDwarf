@@ -339,7 +339,7 @@ func Key(h1 , h2 string)(string , string){
 		panic(err)
 	}
 	fmt.Printf("signature : (0x%x 0x%x)\n", r, s)
-	return fmt.Sprintf("0x%x\n", r), fmt.Sprintf("0x%x\n", s)
+	return fmt.Sprintf("0x%x", r), fmt.Sprintf("0x%x", s)
 	
 }
 func SetFirestoreCredentials()*firebase.App{
