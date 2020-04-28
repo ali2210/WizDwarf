@@ -378,9 +378,9 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 	}
 	fmt.Printf("Data:\n\t%s", data)
 	
-	// err = json.Unmarshal(data, &p); if err != nil{
-	// 	fmt.Printf("Error%v:", err)
-	// }
+	 err = json.Unmarshal(data, &member); if err != nil{
+		fmt.Printf("Error%v:", err)
+	 }
 	err = json.NewDecoder(request.Body).Decode(&member); if err != nil{
 		fmt.Printf("Error %v: " , err )
 		response.WriteHeader(http.StatusInternalServerError)
@@ -395,7 +395,12 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 	data_new, err := json.Marshal(member); if err != nil{
 		println("Error in Marshall:", err)
 	}
-	fmt.Printf("Firestore Data:\n\t%s", data_new)
+	fmt.Printf("Firestore Data:%s\n", data_new)
+	 
+	 err = json.Unmarshal(data_new, &member); if err != nil{
+	 	fmt.Printf("Error%v:", err)
+	}
+
 	 // response.WriteHeader(http.StatusOK)
 	 json.NewEncoder(response).Encode(member)
 
