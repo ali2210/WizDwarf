@@ -373,36 +373,31 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 	response.Header().Set("Content-Type", "application/json")
 	var member db.Vistors 
 
-	data, err := json.Marshal(member); if err != nil{
-		println("Error in Marshall:", err)
-	}
-	fmt.Printf("Data:\n\t%s", data)
-	
-	 /*err = json.Unmarshal(data, &member); if err != nil{
-		fmt.Printf("Error%v:", err)
-	 }*/
-	/*err = json.NewDecoder(request.Body).Decode(&member); if err != nil{
+	decode := json.NewDecoder(request.Body)
+
+	body, err := decode.Token() 
+	err = decode.Decode(&member); if err != nil{
 		fmt.Printf("Error %v: " , err )
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(`{"error" :"Error marshal "}`))
-	}*/
+	}
+	println("Start Delim", body)
+
+	ok := decode.More(); if ok {
 	 member.Id = im
 	 member.Name = user.name
 	 member.Email= user.email
 	 member.Password = user.password
 	 cloud.SaveData(&member,AppName)
-
-	// data_new, err := json.Marshal(member); if err != nil{
-	// 	println("Error in Marshall:", err)
-	// }
-	// fmt.Printf("Firestore Data:%s\n", data_new)
-	 
-	err = json.NewDecoder(request.Body).Decode(&member); if err != nil{
+	}
+	fmt.Printf("Data:%s", member)
+	body, err = decode.Token()
+	err = decode.Decode(&member); if err != nil{
 		fmt.Printf("Error %v: " , err )
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(`{"error" :"Error marshal "}`))
 	}
-
+	println("End Delim:", body)
 	 // response.WriteHeader(http.StatusOK)
 	 json.NewEncoder(response).Encode(member)
 
