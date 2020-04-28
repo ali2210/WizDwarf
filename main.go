@@ -378,27 +378,29 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 	}
 	fmt.Printf("Data:\n\t%s", data)
 	
-	 err = json.Unmarshal(data, &member); if err != nil{
+	 /*err = json.Unmarshal(data, &member); if err != nil{
 		fmt.Printf("Error%v:", err)
-	 }
-	err = json.NewDecoder(request.Body).Decode(&member); if err != nil{
+	 }*/
+	/*err = json.NewDecoder(request.Body).Decode(&member); if err != nil{
 		fmt.Printf("Error %v: " , err )
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(`{"error" :"Error marshal "}`))
-	}
+	}*/
 	 member.Id = im
 	 member.Name = user.name
 	 member.Email= user.email
 	 member.Password = user.password
 	 cloud.SaveData(&member,AppName)
 
-	data_new, err := json.Marshal(member); if err != nil{
-		println("Error in Marshall:", err)
-	}
-	fmt.Printf("Firestore Data:%s\n", data_new)
+	// data_new, err := json.Marshal(member); if err != nil{
+	// 	println("Error in Marshall:", err)
+	// }
+	// fmt.Printf("Firestore Data:%s\n", data_new)
 	 
-	 err = json.Unmarshal(data_new, &member); if err != nil{
-	 	fmt.Printf("Error%v:", err)
+	err = json.NewDecoder(request.Body).Decode(&member); if err != nil{
+		fmt.Printf("Error %v: " , err )
+		response.WriteHeader(http.StatusInternalServerError)
+		response.Write([]byte(`{"error" :"Error marshal "}`))
 	}
 
 	 // response.WriteHeader(http.StatusOK)
