@@ -373,7 +373,15 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 	response.Header().Set("Content-Type", "application/json")
 	var member db.Vistors 
 
-	err := json.NewDecoder(request.Body).Decode(&member); if err != nil{
+	data, err := json.Marshal(member); if err != nil{
+		println("Error in Marshall:", err)
+	}
+	fmt.Printf("Data:%s", data)
+	
+	// err = json.Unmarshal(data, &p); if err != nil{
+	// 	fmt.Printf("Error%v:", err)
+	// }
+	err = json.NewDecoder(request.Body).Decode(&member); if err != nil{
 		fmt.Printf("Error %v: " , err )
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(`{"error" :"Error Unmarshal "}`))
@@ -416,13 +424,7 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 	// 	Password string
 	// }
 	// var p []Profile
-	// data, err := json.Marshal(user); if err != nil{
-	// 	println("Error in Marshall:", err)
-	// }
-	
-	// err = json.Unmarshal(data, &p); if err != nil{
-	// 	fmt.Printf("Error%v:", err)
-	// }
+	// 
 	// fmt.Printf("id%+v:name%v", p.Id, p.Name)
 
 
