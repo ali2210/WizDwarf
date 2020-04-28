@@ -373,34 +373,19 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 	response.Header().Set("Content-Type", "application/json")
 	var member db.Vistors 
 
-	decode := json.NewDecoder(request.Body)
-
-	body, err := decode.Token() 
-	err = decode.Decode(&member); if err != nil{
+	err := json.NewDecoder(request.Body).Decode(&member); if err != nil{
 		fmt.Printf("Error %v: " , err )
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(`{"error" :"Error marshal "}`))
 	}
-	println("Start Delim", body)
-
-	ok := decode.More(); if ok {
+	println("Member", &member)
 	 member.Id = im
 	 member.Name = user.name
 	 member.Email= user.email
 	 member.Password = user.password
 	 cloud.SaveData(&member,AppName)
-	}
-	fmt.Printf("Data:%s", member)
-	body, err = decode.Token()
-	err = decode.Decode(&member); if err != nil{
-		fmt.Printf("Error %v: " , err )
-		response.WriteHeader(http.StatusInternalServerError)
-		response.Write([]byte(`{"error" :"Error marshal "}`))
-	}
-	println("End Delim:", body)
 	 // response.WriteHeader(http.StatusOK)
 	 json.NewEncoder(response).Encode(member)
-
 
 
 	//println("Vistors:" , p.Id)
