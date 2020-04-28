@@ -373,7 +373,7 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 	response.Header().Set("Content-Type", "application/json")
 	var member db.Vistors 
 
-	err := json.NewDecoder(request.Body).Decode(&member); if err != nil{
+	err := json.NewDecoder(request.Body).Decode(&member); if err == nil{
 		fmt.Printf("Error %v: " , err )
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(`{"error" :"Error marshal "}`))
