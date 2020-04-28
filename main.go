@@ -376,7 +376,7 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 	data, err := json.Marshal(member); if err != nil{
 		println("Error in Marshall:", err)
 	}
-	fmt.Printf("Data:%s", data)
+	fmt.Printf("Data:%s\n", data)
 	
 	// err = json.Unmarshal(data, &p); if err != nil{
 	// 	fmt.Printf("Error%v:", err)
@@ -390,9 +390,17 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 	 member.Name = user.name
 	 member.Email= user.email
 	 member.Password = user.password
-	 cloud.SaveData(&member,AppName)
+	 newdata, err := cloud.SaveData(&member,AppName); if err != nil{
+	 	fmt.Printf("Error %v: " , err )
+	 }
+	 println("New Data:", newdata)
+
+	 data_new, err := json.Marshal(member); if err != nil{
+		println("Error in Marshall:", err)
+	}
+	fmt.Printf("Firestore Data:%s\n", data_new)
 	 // response.WriteHeader(http.StatusOK)
-	 json.NewEncoder(response).Encode(member)
+	 // json.NewEncoder(response).Encode(member)
 
 
 
