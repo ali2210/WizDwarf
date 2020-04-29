@@ -77,6 +77,7 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 			log.Fatal("Iterator Failed on Vistor: ", err)
 			return nil, err
 		}
+		fmt.Printf("Data:%v", doc.Data())
 
 		visit := Vistors {
 			Id : doc.Data()["Id"].(string),
@@ -85,6 +86,9 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 			Password: doc.Data()["Password"].(string),
 		} 
 		visits = append(visits, visit)
+		if err == nil{
+			break
+		}
 	}
 	return visits, nil
 
