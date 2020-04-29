@@ -60,7 +60,6 @@ func (*cloud_data)SaveData(visitor *Vistors, app *firebase.App)(*Vistors, error)
 
 func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 	ctx := context.Background()
-	println(ctx)
 	client , err := app.Firestore(ctx); if err != nil{
 		log.Fatal("Client Instance Failed to start", err)
 		return nil, err
@@ -68,7 +67,7 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 
 	defer client.Close()
 
-	var visit []Vistors
+	var visits []Vistors
 	iterator := client.Collection(collectionName).Documents(ctx)
 	for{
 		doc, err := iterator.Next(); if err != nil{
@@ -76,7 +75,7 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 			return nil, err
 		}
 
-		visitor := Vistors {
+		visit := Vistors {
 			Id : doc.Data()["Id"].(string),
 			Name : doc.Data()["Name"].(string),
 			Email : doc.Data()["Email"].(string),
@@ -86,8 +85,8 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 		// println("Data_name:", visitor.Name)
 		// println("Data_email:", visitor.Email)
 		// println("Data_password:", visitor.Password)
-		visit = append(visit, visitor)
+		visits = append(visits, visit)
 	}
-	return visit, nil
+	return visits, nil
 
 }
