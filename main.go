@@ -384,22 +384,26 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		// }
 		data, err  := json.Marshal(member); if err != nil{
 			fmt.Printf("Error in Marshal%v\n", err)
-			response.Write([]byte(`{error: Error IN Marshal}`))
+			response.Write([]byte(`{error: Marshal}`))
 			return
 		}
 		println("Json Data:" , data)
 		err = json.Unmarshal(data, &member); if err != nil{
 			fmt.Printf("Error%v\n", err)
-			response.Write([]byte(`{error: Error IN UnMarshal}`))
+			response.Write([]byte(`{error:  UnMarshal}`))
 			return	
 		}
 		member.Id = im
 		member.Name = user.name
 		member.Email = user.email
 		member.Password = user.password
-		cloud.SaveData(&member, AppName)
+		record ,err := cloud.SaveData(&member, AppName); if err != nil{
+			fmt.Printf("Error%v\n", err)
+			response.Write([]byte(`{error: records }`))
+			return		
+		}
 		// response.WriteHeader(http.StatusOK)
-		json.NewEncoder(response).Encode(&member)
+		json.NewEncoder(response).Encode(record)
 
 	}
 	//println("Vistors:" , p.Id)
