@@ -373,7 +373,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		fmt.Println("Method:" + request.Method)
 	} else {
 		var member *db.Vistors
-		fmt.Printf("Raw Data%s", request.Body)
+		fmt.Printf("Raw Data%+v\n", request.Body)
 		getVistor(response, request)
 		err := json.NewDecoder(request.Body).Decode(member)
 		if err != nil {
