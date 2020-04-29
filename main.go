@@ -360,7 +360,7 @@ func getVistor(response http.ResponseWriter, request *http.Request) {
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(`{"error" :"Error getting visitor result"}`))
 	}
-	fmt.Printf("Vistors array", visitor)
+	fmt.Printf("Vistors array%v", visitor)
 
 	// response.WriteHeader(http.StatusOK)
 	json.NewEncoder(response).Encode(visitor)
