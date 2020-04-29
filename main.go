@@ -375,12 +375,21 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		var member *db.Vistors
 		fmt.Printf("Raw Data%+v\n", request.Body)
 		getVistor(response, request)
-		err := json.NewDecoder(request.Body).Decode(member)
-		if err != nil {
-			fmt.Printf("Error %v: ", err)
-			response.WriteHeader(http.StatusInternalServerError)
-			response.Write([]byte(`{"error" :"Error marshal "}`))
+		// err := json.NewDecoder(request.Body).Decode(member)
+		// if err != nil {
+		// 	fmt.Printf("Error %v: ", err)
+		// 	response.WriteHeader(http.StatusInternalServerError)
+		// 	response.Write([]byte(`{"error" :"Error marshal "}`))
+		// 	return
+		// }
+		data, err  := json.Marshal(member); if err != nil{
+			fmt.Printf("Error%v", err)
 			return
+		}
+		println("Json Data:" , data)
+		err = json.Unmarshal(data, member); if err != nil{
+			fmt.Printf("Error%v", err)
+			return	
 		}
 		member.Id = im
 		member.Name = user.name
