@@ -87,7 +87,7 @@ func main(){
 	routing.HandleFunc("/{title}/signup", NewUser)
 	routing.HandleFunc("/{title}/login", Existing)
 	// routing.HandleFunc("/{title}/action", addVistor)
-	routing.HandleFunc("/{title}/data", getVistor)
+	// routing.HandleFunc("/{title}/data", getVistor)
 	routing.HandleFunc("/dummy", Dump)
 		 // DB_Client()
 	
@@ -363,6 +363,7 @@ func getVistor(response http.ResponseWriter, request *http.Request){
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(`{"error" :"Error getting visitor result"}`))
 	}
+	fmt.Printf("Vistors array", visitor)
 
 	// response.WriteHeader(http.StatusOK)
 	json.NewEncoder(response).Encode(visitor)
@@ -387,6 +388,7 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 	 	member.Email= user.email
 	 	member.Password = user.password
 	 	cloud.SaveData(member,AppName)
+	 	getVistor(response,request)
 	 // response.WriteHeader(http.StatusOK)
 	 	json.NewEncoder(response).Encode(member)
 
