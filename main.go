@@ -371,6 +371,9 @@ func getVistor(response http.ResponseWriter, request *http.Request){
 
 func addVistor(response http.ResponseWriter, request *http.Request ,user *Create_User, im string){
 	response.Header().Set("Content-Type", "application/json")
+	if request.Method  ==  "GET"{
+			fmt.Println("Method:" + request.Method)
+	}else{
 	var member *db.Vistors 
 
 	err := json.NewDecoder(request.Body).Decode(member); if err != nil{
@@ -379,16 +382,15 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 		response.Write([]byte(`{"error" :"Error marshal "}`))
 		return
 	}
-	println("Member", member)
-	 member.Id = im
-	 member.Name = user.name
-	 member.Email= user.email
-	 member.Password = user.password
-	 cloud.SaveData(member,AppName)
+	 	member.Id = im
+	 	member.Name = user.name
+	 	member.Email= user.email
+	 	member.Password = user.password
+	 	cloud.SaveData(member,AppName)
 	 // response.WriteHeader(http.StatusOK)
-	 json.NewEncoder(response).Encode(member)
+	 	json.NewEncoder(response).Encode(member)
 
-
+	}
 	//println("Vistors:" , p.Id)
 
 
