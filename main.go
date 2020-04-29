@@ -377,18 +377,18 @@ func addVistor(response http.ResponseWriter, request *http.Request ,user *Create
 	}else{
 	var member *db.Vistors 
 
+	getVistor(response, request)
 	err := json.NewDecoder(request.Body).Decode(member); if err != nil{
 		fmt.Printf("Error %v: " , err )
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(`{"error" :"Error marshal "}`))
-		return
+		// return
 	}
 	 	member.Id = im
 	 	member.Name = user.name
 	 	member.Email= user.email
 	 	member.Password = user.password
 	 	cloud.SaveData(member,AppName)
-	 	getVistor(response,request)
 	 // response.WriteHeader(http.StatusOK)
 	 	json.NewEncoder(response).Encode(member)
 
