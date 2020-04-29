@@ -4,6 +4,7 @@ package db
 import (
 	"context"
 	"log"
+	"fmt"
 	firebase "firebase.google.com/go"
 	// "cloud.google.com/go/firestore"
 	// "../record"
@@ -42,7 +43,6 @@ func (*cloud_data)SaveData(visitor *Vistors, app *firebase.App)(*Vistors, error)
 		log.Fatal("Client Instance Failed to start", err)
 		return nil, err
 	}
-	println("Client info", client)
 	defer client.Close()
 	println("Records added in collection")
 	_, _, err = client.Collection(collectionName).Add(ctx, map[string]interface{}{
@@ -60,34 +60,32 @@ func (*cloud_data)SaveData(visitor *Vistors, app *firebase.App)(*Vistors, error)
 
 func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 	ctx := context.Background()
-	println(ctx)
 	client , err := app.Firestore(ctx); if err != nil{
 		log.Fatal("Client Instance Failed to start", err)
 		return nil, err
 	}
+	fmt.Printf("Documents:%v\n", ctx)
 
 	defer client.Close()
 
-	var visit []Vistors
+	var visits []Vistors
 	iterator := client.Collection(collectionName).Documents(ctx)
+	fmt.Printf("Iterator:%+v\n", iterator)
+	defer iterator.Stop()
 	for{
-		doc, err := iterator.Next(); if err != nil{
+		doc, err := iterator.Next();if err != nil{
 			log.Fatal("Iterator Failed on Vistor: ", err)
 			return nil, err
 		}
 
-		visitor := Vistors {
+		visit := Vistors {
 			Id : doc.Data()["Id"].(string),
 			Name : doc.Data()["Name"].(string),
 			Email : doc.Data()["Email"].(string),
 			Password: doc.Data()["Password"].(string),
 		} 
-		// println("Data_id:", visitor.Id)
-		// println("Data_name:", visitor.Name)
-		// println("Data_email:", visitor.Email)
-		// println("Data_password:", visitor.Password)
-		visit = append(visit, visitor)
+		visits = append(visits, visit)
 	}
-	return visit, nil
+	return visits, nil
 
 }
