@@ -4,6 +4,7 @@ package db
 import (
 	"context"
 	"log"
+	"fmt"
 	firebase "firebase.google.com/go"
 	// "cloud.google.com/go/firestore"
 	// "../record"
@@ -63,12 +64,13 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 		log.Fatal("Client Instance Failed to start", err)
 		return nil, err
 	}
-	println("Documents:", ctx)
+	fmt.Printf("Documents:%v", ctx)
 
 	defer client.Close()
 
 	var visits []Vistors
 	iterator := client.Collection(collectionName).Documents(ctx)
+	fmt.Printf("Iterator:%v", iterator)
 	for{
 		doc, err := iterator.Next(); if err != nil{
 			log.Fatal("Iterator Failed on Vistor: ", err)
