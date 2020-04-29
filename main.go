@@ -387,7 +387,6 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		member.Email = user.email
 		member.Password = user.password
 		cloud.SaveData(member, AppName)
-		getVistor(response, request)
 		// response.WriteHeader(http.StatusOK)
 		json.NewEncoder(response).Encode(member)
 
