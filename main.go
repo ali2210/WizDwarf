@@ -372,7 +372,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 	if request.Method == "GET" {
 		fmt.Println("Method:" + request.Method)
 	} else {
-		var member *db.Vistors
+		var member db.Vistors
 		fmt.Printf("Raw Data%+v\n", request.Body)
 		getVistor(response, request)
 		// err := json.NewDecoder(request.Body).Decode(member)
@@ -383,21 +383,23 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		// 	return
 		// }
 		data, err  := json.Marshal(member); if err != nil{
-			fmt.Printf("Error%v", err)
+			fmt.Printf("Error in Marshal%v\n", err)
+			response.Write([]byte(`{error: Error IN Marshal}`))
 			return
 		}
 		println("Json Data:" , data)
-		err = json.Unmarshal(data, member); if err != nil{
-			fmt.Printf("Error%v", err)
+		err = json.Unmarshal(data, &member); if err != nil{
+			fmt.Printf("Error%v\n", err)
+			response.Write([]byte(`{error: Error IN UnMarshal}`))
 			return	
 		}
 		member.Id = im
 		member.Name = user.name
 		member.Email = user.email
 		member.Password = user.password
-		cloud.SaveData(member, AppName)
+		cloud.SaveData(&member, AppName)
 		// response.WriteHeader(http.StatusOK)
-		json.NewEncoder(response).Encode(member)
+		json.NewEncoder(response).Encode(&member)
 
 	}
 	//println("Vistors:" , p.Id)
