@@ -42,7 +42,6 @@ func (*cloud_data)SaveData(visitor *Vistors, app *firebase.App)(*Vistors, error)
 		log.Fatal("Client Instance Failed to start", err)
 		return nil, err
 	}
-	println("Client info", client)
 	defer client.Close()
 	println("Records added in collection")
 	_, _, err = client.Collection(collectionName).Add(ctx, map[string]interface{}{
@@ -64,6 +63,7 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 		log.Fatal("Client Instance Failed to start", err)
 		return nil, err
 	}
+	println("Documents:", ctx)
 
 	defer client.Close()
 
@@ -81,10 +81,6 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 			Email : doc.Data()["Email"].(string),
 			Password: doc.Data()["Password"].(string),
 		} 
-		// println("Data_id:", visitor.Id)
-		// println("Data_name:", visitor.Name)
-		// println("Data_email:", visitor.Email)
-		// println("Data_password:", visitor.Password)
 		visits = append(visits, visit)
 	}
 	return visits, nil
