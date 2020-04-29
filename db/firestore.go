@@ -64,13 +64,13 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 		log.Fatal("Client Instance Failed to start", err)
 		return nil, err
 	}
-	fmt.Printf("Documents:%v", ctx)
+	fmt.Printf("Documents:%v\n", ctx)
 
 	defer client.Close()
 
 	var visits []Vistors
 	iterator := client.Collection(collectionName).Documents(ctx)
-	fmt.Printf("Iterator:%v", iterator)
+	fmt.Printf("Iterator:%s\n", iterator)
 	for{
 		doc, err := iterator.Next(); if err != nil{
 			log.Fatal("Iterator Failed on Vistor: ", err)
