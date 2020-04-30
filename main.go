@@ -24,9 +24,6 @@ import (
 	// "errors"
 	// "io"
 	// "strings"
-	// "cloud.google.com/go/storage"
-	// cloudkms "google.golang.org/api/cloudkms/v1"
-	// "google.golang.org/api/iterator"
 )
 
 // Struts
@@ -82,7 +79,6 @@ func main() {
 	// routing.HandleFunc("/{title}/action", addVistor)
 	// routing.HandleFunc("/{title}/data", getVistor)
 	routing.HandleFunc("/dummy", Dump)
-	// DB_Client()
 
 	log.Println("Listening at 9101 ... please wait...")
 	http.ListenAndServe(":9101", routing)
@@ -262,32 +258,7 @@ func UploadFiles(r *http.Request) *os.File {
 	return nil
 }
 
-// func implicit(){
-// 	project := "project-id"
-// 	ctx := context.Background()
 
-// 	storageClient , err := storage.NewClient(ctx); if err != nil{
-// 		log.Fatal("Error", err)
-// 	}
-// 	it := storageClient.Buckets(ctx, project)
-// 	for{
-// 		BucktsAtrr , err := it.Next(); if err == iterator.Done {
-// 			break
-// 		}
-// 		if err != nil{
-// 			log.Fatal("Error in BucktsAtrr", err)
-// 		}
-// 		fmt.Println(BucktsAtrr.Name)
-// 	}
-
-// 	kmsService, err := cloudkms.NewService(ctx)
-//         if err != nil {
-//                 log.Fatal(err)
-//         }
-
-//         _ = kmsService
-
-// }
 
 func FileReadFromDisk(filename string) os.FileInfo {
 	f, err := os.OpenFile(filename+".txt", os.O_RDWR|os.O_CREATE, 0755)
@@ -382,6 +353,10 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		// 	response.Write([]byte(`{"error" :"Error marshal "}`))
 		// 	return
 		// }
+		body , err := ioutil.ReadAll(request.Body); if err != nil{
+			println("Error report:", err)
+		}
+		fmt.Printf("Body%v:\n", body)
 		data, err  := json.Marshal(member); if err != nil{
 			fmt.Printf("Error in Marshal%v\n", err)
 			response.Write([]byte(`{error: Marshal}`))
@@ -439,9 +414,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 
 	// request.Body = http.MaxBytesReader(response, request.Body, 1048576)
 	// unknown := json.NewDecoder(request.Body)
-	// _ , err := ioutil.ReadAll(request.Body); if err != nil{
-	// println("Error report:", err)
-	// }
+	// 
 
 	// unknown.DisallowUnknownFields()
 	// var vistor db.Vistors
@@ -495,9 +468,6 @@ func ReadSequence(filename string) ([]byte, error) {
 
 func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo) {
 
-	//local variables but large life span
-	// list, listDna := GoStructs.List{}, GoStructs.List{}
-	// queue, queueDna := GoStructs.QueueList{}, GoStructs.QueueList{}
 
 	// local variable liitle scoope
 	seq, err := ReadSequence(userFile.Name())
@@ -517,12 +487,7 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo) {
 		space := DoAscii(v)
 		if space == "---" {
 			fmt.Printf("%s\t", space)
-			// queueDna = queueDna.Enque(space)
 		}
-		// queueDna = queueDna.Enque(space)
-		// listDna = listDna.Add(queueDna)
-		// println("List Ref:",&listDna)
-		// queueDna.Print()
 		// fmt.Printf("%s\t", space)
 	}
 	println("Your Dna sequence :")
@@ -530,15 +495,10 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo) {
 		uDna := DoAscii(v)
 		if uDna == "---" {
 			fmt.Printf("%s", uDna)
-			// queue = queue.Enque(uDna)
+			
 		}
 		// fmt.Printf("%s\t", uDna)
-		// queue  = queue.Enque(uDna)
-		// list=list.Add(queue)
-		// println("List Ref:",&list,  leng)
-		// queue.Print()
-		// ele := queue.DeQueue()
-		// fmt.Println("Data we get :", ele )
+
 	}
 }
 
