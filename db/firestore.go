@@ -17,6 +17,13 @@ type Vistors struct{
 	Name string 		`json:"Name"`
 	Email string    	`json:"Email"`
 	Password string  	`json:"Password"`
+	FName string        `json:"FName"`
+	City string         `json:"City"`
+	Zip  string         `json:"Zip"`
+	Address string      `json:"Address"`
+	LAddress string     `json:"LAddress"`
+	Country  string     `json:"Country"`
+	Gender bool    		`json:"Gender"`
 }
 
 const (
@@ -53,6 +60,13 @@ func (*cloud_data)SaveData(visitor *Vistors, app *firebase.App)(*Vistors, error)
 		"Name" : visitor.Name,
 		"Email" : visitor.Email,
 		"Password": visitor.Password,
+		"FName": visitor.FName,
+		"Gender": visitor.Gender,
+		"Address":visitor.Address,
+		"LAddress":visitor.LAddress,
+		"City" : visitor.City,
+		"Zip": visitor.Zip,
+		"Country": visitor.Country,
 	}); if err != nil{
 		log.Fatal("Failed to retrive Vistor Record:", err)
 		return nil, err
@@ -91,7 +105,7 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 			Password: doc.Data()["Password"].(string),
 		} 
 		visits = append(visits, visit)
-		if err == nil{
+		if doc.Data() == nil{
 			break
 		}
 		fmt.Println("Process complete ...", t.Sub(timerStrt))
