@@ -181,6 +181,14 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 			temp.Execute(w, "Regsiter")
 		}
 
+		// println("Gender:", user.sir)
+		// println("Gender2:", user.madam)
+		if r.FormValue("check") == "on" {
+			user.check_me_out = true
+		} else {
+			user.check_me_out = false
+		}
+
 		matchE, err := regexp.MatchString(emailexp, user.email)
 		if err != nil {
 			println("invalid regular expression", err)
@@ -199,15 +207,12 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 			temp.Execute(w, "Regsiter")
 		}
 		println("encryted data", encrypted.reader)
-
-		println("Gender:", user.sir)
-		println("Gender2:", user.madam)
-		if r.FormValue("check") == "on" {
-			user.check_me_out = true
-		} else {
-			user.check_me_out = false
-		}
-
+		println("FamilyName:", user.fname)
+		println("Address", user.address)
+		println("Address2", user.address2)
+		println("City", user.city)
+		println("Zip", user.zip)
+		println("Country", user.country)
 		println("check:", user.check_me_out)
 		println("User record:", user.name, user.email)
 		addVistor(w, r, &user, encrypted.reader)
@@ -218,7 +223,13 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 
 func Existing(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("login.html"))
-	temp.Execute(w, "Login")
+	if r.Method == "GET"{
+		fmt.Printf("Method:%s", r.Method)
+		temp.Execute(w, "Login")	
+	}else{
+		// r.ParseForm()
+		fmt.Printf("Method:%s", r.Method)
+	}
 }
 
 func Dump(w http.ResponseWriter, r *http.Request) {
@@ -345,7 +356,6 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 	} else {
 		var member db.Vistors
 		// fmt.Printf("Raw Data%+v\n", request.Body)
-		getVistor(response, request)
 		// err := json.NewDecoder(request.Body).Decode(member)
 		// if err != nil {
 		// 	fmt.Printf("Error %v: ", err)
@@ -353,10 +363,10 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		// 	response.Write([]byte(`{"error" :"Error marshal "}`))
 		// 	return
 		// }
-		body , err := ioutil.ReadAll(request.Body); if err != nil{
-			println("Error report:", err)
-		}
-		fmt.Printf("Body%v:\n", body)
+		// body , err := ioutil.ReadAll(request.Body); if err != nil{
+		// 	println("Error report:", err)
+		// }
+		// fmt.Printf("Body%v:\n", body)
 		data, err  := json.Marshal(member); if err != nil{
 			fmt.Printf("Error in Marshal%v\n", err)
 			response.Write([]byte(`{error: Marshal}`))
@@ -378,6 +388,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 			return		
 		}
 		println("Record:", record)
+		getVistor(response, request)
 		// response.WriteHeader(http.StatusOK)
 		// json.NewEncoder(response).Encode(record)
 

@@ -27,7 +27,7 @@ const (
 
 type DBFirestore interface{
 	SaveData(visitor *Vistors, app *firebase.App)(*Vistors, error)
-	// FindData(user *Create_User, visitor *profile.ProfileVistors)(*profile.ProfileVistors, error)
+	FindData(id string, visitor *Vistors, app *firebase.App)(*Vistors, error)
 	FindAllData(app *firebase.App)([]Vistors, error)
 }
 
@@ -99,3 +99,41 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 	return visits, nil
 
 }
+
+func (*cloud_data)FindData(id string, visitor *Vistors, app *firebase.App)(*Vistors, error){
+	ctx := context.Background()
+	client , err := app.Firestore(ctx); if err != nil{
+		log.Fatal("Client Instance Failed to start", err)
+		return nil, err
+	}
+	timerStrt := time.Now()
+	t := time.Now()
+	fmt.Println("Please wait ...", t)
+
+	defer client.Close()
+
+	var visits Vistors
+	iterator := client.Collection(collectionName).Where("Id", "==", id).Documents(ctx)
+	defer iterator.Stop()
+	for{
+		doc, err := iterator.Next();if err != nil{
+			log.Fatal("Iterator Failed on Vistor: ", err)
+			return nil, err
+		}
+		fmt.Printf("Data:%v", doc.Data())
+		visits = Vistors {
+			Id : doc.Data()["Id"].(string),
+			Name : doc.Data()["Name"].(string),
+			Email : doc.Data()["Email"].(string),
+			Password: doc.Data()["Password"].(string),
+		}
+		if err == nil{
+			break
+		}
+		fmt.Println("Process complete ...", t.Sub(timerStrt))
+	}
+	return &visits, nil
+}
+
+
+
