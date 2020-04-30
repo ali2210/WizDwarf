@@ -17,6 +17,13 @@ type Vistors struct{
 	Name string 		`json:"Name"`
 	Email string    	`json:"Email"`
 	Password string  	`json:"Password"`
+	FName string        `json:"FName"`
+	City string         `json:"City"`
+	Zip  string         `json:"Zip"`
+	Address string      `json:"Address"`
+	LAddress string     `json:"LAddress"`
+	Country  string     `json:"Country"`
+	Eve bool    		`json:"Eve"`
 }
 
 const (
@@ -27,7 +34,7 @@ const (
 
 type DBFirestore interface{
 	SaveData(visitor *Vistors, app *firebase.App)(*Vistors, error)
-	// FindData(user *Create_User, visitor *profile.ProfileVistors)(*profile.ProfileVistors, error)
+	FindData(id string, visitor *Vistors, app *firebase.App)(*Vistors, error)
 	FindAllData(app *firebase.App)([]Vistors, error)
 }
 
@@ -53,6 +60,13 @@ func (*cloud_data)SaveData(visitor *Vistors, app *firebase.App)(*Vistors, error)
 		"Name" : visitor.Name,
 		"Email" : visitor.Email,
 		"Password": visitor.Password,
+		"FName": visitor.FName,
+		"Eve": visitor.Eve,
+		"Address":visitor.Address,
+		"LAddress":visitor.LAddress,
+		"City" : visitor.City,
+		"Zip": visitor.Zip,
+		"Country": visitor.Country,
 	}); if err != nil{
 		log.Fatal("Failed to retrive Vistor Record:", err)
 		return nil, err
@@ -75,7 +89,7 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 
 	var visits []Vistors
 	iterator := client.Collection(collectionName).Documents(ctx)
-	//fmt.Printf("Iterator:%+v\n", iterator)
+	fmt.Printf("Iterator:%+v\n", iterator)
 	defer iterator.Stop()
 	for{
 		doc, err := iterator.Next();if err != nil{
@@ -91,7 +105,7 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 			Password: doc.Data()["Password"].(string),
 		} 
 		visits = append(visits, visit)
-		if err == nil{
+		if doc == nil{
 			break
 		}
 		fmt.Println("Process complete ...", t.Sub(timerStrt))
@@ -99,3 +113,41 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 	return visits, nil
 
 }
+
+func (*cloud_data)FindData(id string, visitor *Vistors, app *firebase.App)(*Vistors, error){
+	ctx := context.Background()
+	client , err := app.Firestore(ctx); if err != nil{
+		log.Fatal("Client Instance Failed to start", err)
+		return nil, err
+	}
+	timerStrt := time.Now()
+	t := time.Now()
+	fmt.Println("Please wait ...", t)
+
+	defer client.Close()
+
+	var visits Vistors
+	iterator := client.Collection(collectionName).Where("Id", "==", id).Documents(ctx)
+	defer iterator.Stop()
+	for{
+		doc, err := iterator.Next();if err != nil{
+			log.Fatal("Iterator Failed on Vistor: ", err)
+			return nil, err
+		}
+		fmt.Printf("Data:%v", doc.Data())
+		visits = Vistors {
+			Id : doc.Data()["Id"].(string),
+			Name : doc.Data()["Name"].(string),
+			Email : doc.Data()["Email"].(string),
+			Password: doc.Data()["Password"].(string),
+		}
+		if err == nil{
+			break
+		}
+		fmt.Println("Process complete ...", t.Sub(timerStrt))
+	}
+	return &visits, nil
+}
+
+
+
