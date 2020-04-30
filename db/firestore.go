@@ -71,7 +71,7 @@ func (*cloud_data)SaveData(visitor *Vistors, app *firebase.App)(*Vistors, error)
 		log.Fatal("Failed to retrive Vistor Record:", err)
 		return nil, err
 	}
-	fmt.Println("Process complete ...", t.Sub(timerStrt))
+	fmt.Println("Process complete ...\n", t.Sub(timerStrt), "Record added")
 	return visitor, nil
 }
 
@@ -105,8 +105,9 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 			Password: doc.Data()["Password"].(string),
 		} 
 		visits = append(visits, visit)
-		if doc == nil{
-			break
+		if err != nil{
+			fmt.Printf("Sorry Iterator move on ")
+			return nil, err
 		}
 		fmt.Println("Process complete ...", t.Sub(timerStrt))
 	}
