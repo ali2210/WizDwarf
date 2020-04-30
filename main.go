@@ -36,7 +36,6 @@ type Response struct {
 type Create_User struct {
 	name         string
 	fname        string
-	sir          bool
 	madam        bool
 	address      string // World Coodinates
 	address2     string // local coodinates
@@ -171,13 +170,11 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		user.email = r.FormValue("email")
 		user.password = r.FormValue("password")
 		if r.FormValue("sir") == "on" {
-			user.sir = true
+			user.madam = false
 		} else if r.FormValue("madam") == "on" {
 			user.madam = true
 		} else {
 			fmt.Fprintf(w, "Select any option")
-			user.sir = false
-			user.madam = false
 			temp.Execute(w, "Regsiter")
 		}
 
@@ -212,6 +209,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		println("Address2", user.address2)
 		println("City", user.city)
 		println("Zip", user.zip)
+		println("Female", user.madam)
 		println("Country", user.country)
 		println("check:", user.check_me_out)
 		println("User record:", user.name, user.email)
@@ -355,6 +353,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		fmt.Println("Method:" + request.Method)
 	} else {
 		var member db.Vistors
+		getVistor(response, request)
 		// fmt.Printf("Raw Data%+v\n", request.Body)
 		// err := json.NewDecoder(request.Body).Decode(member)
 		// if err != nil {
@@ -382,13 +381,24 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		member.Name = user.name
 		member.Email = user.email
 		member.Password = user.password
+		member.FName = user.fname
+		if user.madam {
+			member.Eve = user.madam
+		}else{
+			member.Eve = user.madam
+		}
+		member.Address = user.address
+		member.LAddress = user.address2
+		member.City = user.city
+		member.Zip = user.zip
+		member.Country = user.country
+
 		record ,err := cloud.SaveData(&member, AppName); if err != nil{
 			fmt.Printf("Error%v\n", err)
 			response.Write([]byte(`{error: records }`))
 			return		
 		}
 		println("Record:", record)
-		getVistor(response, request)
 		// response.WriteHeader(http.StatusOK)
 		// json.NewEncoder(response).Encode(record)
 

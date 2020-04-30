@@ -23,7 +23,7 @@ type Vistors struct{
 	Address string      `json:"Address"`
 	LAddress string     `json:"LAddress"`
 	Country  string     `json:"Country"`
-	Gender bool    		`json:"Gender"`
+	Eve bool    		`json:"Eve"`
 }
 
 const (
@@ -61,7 +61,7 @@ func (*cloud_data)SaveData(visitor *Vistors, app *firebase.App)(*Vistors, error)
 		"Email" : visitor.Email,
 		"Password": visitor.Password,
 		"FName": visitor.FName,
-		"Gender": visitor.Gender,
+		"Eve": visitor.Eve,
 		"Address":visitor.Address,
 		"LAddress":visitor.LAddress,
 		"City" : visitor.City,
@@ -89,7 +89,7 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 
 	var visits []Vistors
 	iterator := client.Collection(collectionName).Documents(ctx)
-	//fmt.Printf("Iterator:%+v\n", iterator)
+	fmt.Printf("Iterator:%+v\n", iterator)
 	defer iterator.Stop()
 	for{
 		doc, err := iterator.Next();if err != nil{
