@@ -76,7 +76,7 @@ func main() {
 	routing.HandleFunc("/{title}/signup", NewUser)
 	routing.HandleFunc("/{title}/login", Existing)
 	// routing.HandleFunc("/{title}/action", addVistor)
-	// routing.HandleFunc("/{title}/data", getVistor)
+	routing.HandleFunc("/{title}/data", getVistor)
 	routing.HandleFunc("/dummy", Dump)
 
 	log.Println("Listening at 9101 ... please wait...")
@@ -343,7 +343,7 @@ func getVistor(response http.ResponseWriter, request *http.Request) {
 	fmt.Printf("Vistors array%v", visitor)
 
 	// response.WriteHeader(http.StatusOK)
-	// json.NewEncoder(response).Encode(visitor)
+	json.NewEncoder(response).Encode(visitor)
 
 }
 
@@ -353,7 +353,6 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		fmt.Println("Method:" + request.Method)
 	} else {
 		var member db.Vistors
-		getVistor(response, request)
 		// fmt.Printf("Raw Data%+v\n", request.Body)
 		// err := json.NewDecoder(request.Body).Decode(member)
 		// if err != nil {
