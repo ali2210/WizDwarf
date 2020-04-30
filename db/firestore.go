@@ -105,7 +105,7 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 			Password: doc.Data()["Password"].(string),
 		} 
 		visits = append(visits, visit)
-		if doc.Data() == nil{
+		if doc == nil{
 			break
 		}
 		fmt.Println("Process complete ...", t.Sub(timerStrt))
