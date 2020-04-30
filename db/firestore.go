@@ -90,26 +90,22 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 	var visits []Vistors
 	iterator := client.Collection(collectionName).Documents(ctx)
 	fmt.Printf("Iterator:%+v\n", iterator)
-	defer iterator.Stop()
+	// defer iterator.Stop()
 	for{
 		doc, err := iterator.Next();if err != nil{
 			log.Fatal("Iterator Failed on Vistor: ", err)
 			return nil, err
 		}
-		// fmt.Printf("Data:%v", doc.Data())
+		 fmt.Printf("Data:%v", doc.Data())
 
-		visit := Vistors {
-			Id : doc.Data()["Id"].(string),
-			Name : doc.Data()["Name"].(string),
-			Email : doc.Data()["Email"].(string),
-			Password: doc.Data()["Password"].(string),
-		} 
-		visits = append(visits, visit)
-		if err != nil{
-			fmt.Printf("Sorry Iterator move on ")
-			return nil, err
-		}
-		fmt.Println("Process complete ...", t.Sub(timerStrt))
+			visit := Vistors {
+				Id : doc.Data()["Id"].(string),
+				Name : doc.Data()["Name"].(string),
+				Email : doc.Data()["Email"].(string),
+				Password: doc.Data()["Password"].(string),
+			} 
+			visits = append(visits, visit)
+			fmt.Println("Process complete ...", t.Sub(timerStrt))
 	}
 	return visits, nil
 
