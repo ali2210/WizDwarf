@@ -34,7 +34,7 @@ const (
 
 type DBFirestore interface{
 	SaveData(visitor *Vistors, app *firebase.App)(*Vistors, error)
-	FindData(id string, visitor *Vistors, app *firebase.App)(*Vistors, error)
+	FindData(id string, app *firebase.App)(*Vistors, error)
 	FindAllData(app *firebase.App)([]Vistors, error)
 }
 
@@ -111,7 +111,7 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 
 }
 
-func (*cloud_data)FindData(id string, visitor *Vistors, app *firebase.App)(*Vistors, error){
+func (*cloud_data)FindData(id string, app *firebase.App)(*Vistors, error){
 	ctx := context.Background()
 	client , err := app.Firestore(ctx); if err != nil{
 		log.Fatal("Client Instance Failed to start", err)

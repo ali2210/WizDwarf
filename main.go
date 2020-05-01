@@ -45,6 +45,7 @@ type Create_User struct {
 	check_me_out bool
 	email        string
 	password     string
+	sesssion  bool
 }
 type SignedKey struct {
 	reader string
@@ -52,7 +53,7 @@ type SignedKey struct {
 }
 
 // Variables
-
+ 
 var (
 	emailexp string         = "([A-Z][a-z]|[0-9])*[@][a-z]*"
 	passexp  string         = "([A-Z][a-z]*[0-9])*"
@@ -76,7 +77,7 @@ func main() {
 	routing.HandleFunc("/{title}/signup", NewUser)
 	routing.HandleFunc("/{title}/login", Existing)
 	// routing.HandleFunc("/{title}/action", addVistor)
-	routing.HandleFunc("/{title}/data", getVistor)
+	routing.HandleFunc("/{title}/data", getVistorData)
 	routing.HandleFunc("/dummy", Dump)
 
 	log.Println("Listening at 9101 ... please wait...")
@@ -221,12 +222,32 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 
 func Existing(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("login.html"))
+	user := Create_User{}
+
 	if r.Method == "GET"{
 		fmt.Printf("Method:%s", r.Method)
 		temp.Execute(w, "Login")	
 	}else{
-		// r.ParseForm()
-		fmt.Printf("Method:%s", r.Method)
+		r.ParseForm()
+		fmt.Println("Method:%s", r.Method)
+		user.email = r.FormValue("email")
+		user.password = r.FormValue("password")
+		if r.FormValue("check") == "on"{
+			user.sesssion = true
+		}else{
+			user.sesssion = false
+		}
+		println("Login form data[", user.email, user.password, user.sesssion,"]")
+
+	}
+}
+
+func SearchDB(w http.ResponseWriter, r *http.Request){
+	w.Header().Set("Content-Type", "application/json")
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+	} else {
+		fmt.Println("Method:" + r.Method)
 	}
 }
 
@@ -333,7 +354,7 @@ func SetFirestoreCredentials() *firebase.App {
 	return app
 }
 
-func getVistor(response http.ResponseWriter, request *http.Request) {
+func getVistorData(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("Content-Type", "application/json")
 	visitor, err := cloud.FindAllData(AppName)
 	if err != nil {
@@ -494,7 +515,7 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo) {
 	if err != nil {
 		println("Error in read file", err)
 	}
-	// fmt.Printf("Seq string:%s\n", seq)
+	                                          // fmt.Printf("Seq string:%s\n", seq)
 	Useq, err := ReadSequence(serverFile.Name())
 	if err != nil {
 		println("Error in read file", err)
