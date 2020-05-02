@@ -239,15 +239,35 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		}
 		println("Login form data[", user.email, user.password, user.sesssion,"]")
 
+
+		matchE, err := regexp.MatchString(emailexp, user.email)
+		if err != nil {
+			println("invalid regular expression", err)
+		}
+		println("regexp_email:", matchE)
+		matchP, err := regexp.MatchString(passexp, user.password)
+		if err != nil {
+			println("invalid regular expression", err)
+		}
+		println("regexp_pass:", matchP)
+
+		// security
+		hashRet, cipher := MessageToHash(matchE, matchP, user)
+		if hashRet == false {
+			fmt.Fprintf(w, "Sorry provided data must not match with rules\n. Email must be in Upper or Lower case or some digits, while password must contain Uppercase Letter , lowercase letter")
+			temp.Execute(w, "Login")
+		}
+		SearchDB(w, r, cipher.reader)
 	}
 }
 
-func SearchDB(w http.ResponseWriter, r *http.Request){
+func SearchDB(w http.ResponseWriter, r *http.Request, key string){
 	w.Header().Set("Content-Type", "application/json")
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
 	} else {
 		fmt.Println("Method:" + r.Method)
+		cloud.FindData(key, AppName)
 	}
 }
 
@@ -317,7 +337,7 @@ func MessageToHash(matchE, matchP bool, user Create_User) (bool, *SignedKey) {
 		hashp := h1.Sum([]byte(user.password))
 		fmt.Println("pass:", hex.EncodeToString(hashp))
 		code.reader, code.signed = Key(hex.EncodeToString(hashe), hex.EncodeToString(hashp))
-		println("data get :", code.reader, code.signed)
+		// println("data get :", code.reader, code.signed)
 		return true, &code
 	}
 	return false, &code
@@ -330,9 +350,13 @@ func Key(h1, h2 string) (string, string) {
 		panic(err)
 	}
 
+	println("privateKey:", privateKey)
+	println("Reader:",rand.Reader)
+
 	msg := h1 + h2
 	hash := sha256.Sum256([]byte(msg))
 
+	fmt.Println("hash:",hash)
 	r, s, err := ecdsa.Sign(rand.Reader, privateKey, hash[:])
 	if err != nil {
 		panic(err)
