@@ -24,6 +24,7 @@ import (
 	// "errors"
 	// "io"
 	// "strings"
+	"math/big"
 )
 
 // Struts
@@ -339,7 +340,7 @@ func MessageToHash(matchE, matchP bool, user Create_User) (bool, *SignedKey) {
 		// h1.Write([]byte(user.password))
 		hashp := h1.Sum([]byte(user.password))
 		fmt.Println("pass:", hex.EncodeToString(hashp))
-		code.reader, code.signed, code.tx = Key(hex.EncodeToString(hashe), hex.EncodeToString(hashp)); if code.tx !=nil{
+		code.reader, code.signed, code.tx = Key(hex.EncodeToString(hashe), hex.EncodeToString(hashp)); if code.tx == nil{
 			fmt.Printf("Error in hash %v",code.tx)
 		}
 		// println("data get :", code.reader, code.signed)
@@ -352,6 +353,8 @@ func MessageToHash(matchE, matchP bool, user Create_User) (bool, *SignedKey) {
 
 func Key(h1, h2 string) (string, string, *ecdsa.PrivateKey) {
 
+		var r *big.Int
+		var s *big.Int
 		privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 		if err != nil {
 			panic(err)
@@ -362,7 +365,7 @@ func Key(h1, h2 string) (string, string, *ecdsa.PrivateKey) {
 		hash := sha256.Sum256([]byte(msg))
 
 		fmt.Println("hash:",hash)
-		r, s, err := ecdsa.Sign(rand.Reader, privateKey, hash[:])
+		r, s, err = ecdsa.Sign(rand.Reader, privateKey, hash[:])
 		if err != nil {
 			panic(err)
 		}
