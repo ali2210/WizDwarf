@@ -24,6 +24,7 @@ import (
 	// "errors"
 	// "io"
 	// "strings"
+	"math/big"
 )
 
 // Struts
@@ -50,6 +51,7 @@ type Create_User struct {
 type SignedKey struct {
 	reader string
 	signed string
+	tx *ecdsa.PrivateKey
 }
 
 // Variables
@@ -59,6 +61,7 @@ var (
 	passexp  string         = "([A-Z][a-z]*[0-9])*"
 	AppName  *firebase.App  = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
 	cloud    db.DBFirestore = db.NewCloudInstance()
+	tx *ecdsa.PrivateKey
 )
 
 const (
@@ -204,6 +207,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "Sorry provided data must not match with rules\n. Email must be in Upper or Lower case or some digits, while password must contain Uppercase Letter , lowercase letter")
 			temp.Execute(w, "Regsiter")
 		}
+		tx = encrypted.tx
 		println("encryted data", encrypted.reader)
 		println("FamilyName:", user.fname)
 		println("Address", user.address)
@@ -336,33 +340,40 @@ func MessageToHash(matchE, matchP bool, user Create_User) (bool, *SignedKey) {
 		// h1.Write([]byte(user.password))
 		hashp := h1.Sum([]byte(user.password))
 		fmt.Println("pass:", hex.EncodeToString(hashp))
-		code.reader, code.signed = Key(hex.EncodeToString(hashe), hex.EncodeToString(hashp))
+		code.reader, code.signed, code.tx = Key(hex.EncodeToString(hashe), hex.EncodeToString(hashp)); if code.tx == nil{
+			fmt.Printf("Error in hash %v",code.tx)
+		}
 		// println("data get :", code.reader, code.signed)
 		return true, &code
 	}
 	return false, &code
 }
 
-func Key(h1, h2 string) (string, string) {
 
-	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
-	if err != nil {
-		panic(err)
-	}
 
-	println("privateKey:", privateKey)
-	println("Reader:",rand.Reader)
+func Key(h1, h2 string) (string, string, *ecdsa.PrivateKey) {
 
-	msg := h1 + h2
-	hash := sha256.Sum256([]byte(msg))
+		var r *big.Int
+		var s *big.Int
+		privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+		if err != nil {
+			panic(err)
+		}
 
-	fmt.Println("hash:",hash)
-	r, s, err := ecdsa.Sign(rand.Reader, privateKey, hash[:])
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("signature : (0x%x 0x%x)\n", r, s)
-	return fmt.Sprintf("0x%x", r), fmt.Sprintf("0x%x", s)
+
+		msg := h1 + h2
+		hash := sha256.Sum256([]byte(msg))
+
+		fmt.Println("hash:",hash)
+		r, s, err = ecdsa.Sign(rand.Reader, privateKey, hash[:])
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Printf("Reader %T:\t Signed %T", r, s )
+		fmt.Printf("signature : (0x%x 0x%x)\n", r, s)
+		return fmt.Sprintf("0x%x", r), fmt.Sprintf("0x%x", s),privateKey
+
 
 }
 func SetFirestoreCredentials() *firebase.App {
