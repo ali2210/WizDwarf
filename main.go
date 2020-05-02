@@ -337,7 +337,7 @@ func MessageToHash(matchE, matchP bool, user Create_User) (bool, *SignedKey) {
 		hashp := h1.Sum([]byte(user.password))
 		fmt.Println("pass:", hex.EncodeToString(hashp))
 		code.reader, code.signed = Key(hex.EncodeToString(hashe), hex.EncodeToString(hashp))
-		println("data get :", code.reader, code.signed)
+		// println("data get :", code.reader, code.signed)
 		return true, &code
 	}
 	return false, &code
@@ -350,9 +350,13 @@ func Key(h1, h2 string) (string, string) {
 		panic(err)
 	}
 
+	println("privateKey:", privateKey)
+	println("Reader:",rand.Reader)
+
 	msg := h1 + h2
 	hash := sha256.Sum256([]byte(msg))
 
+	fmt.Println("hash:",hash)
 	r, s, err := ecdsa.Sign(rand.Reader, privateKey, hash[:])
 	if err != nil {
 		panic(err)
