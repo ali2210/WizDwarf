@@ -352,15 +352,11 @@ func MessageToHash(matchE, matchP bool, user Create_User) (bool, *SignedKey) {
 
 func Key(h1, h2 string) (string, string, *ecdsa.PrivateKey) {
 
-
-	if tx != nil{
 		privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 		if err != nil {
 			panic(err)
 		}
 
-		fmt.Printf("privateKey:%T", privateKey)
-		println("Reader:",rand.Reader)
 
 		msg := h1 + h2
 		hash := sha256.Sum256([]byte(msg))
@@ -370,21 +366,11 @@ func Key(h1, h2 string) (string, string, *ecdsa.PrivateKey) {
 		if err != nil {
 			panic(err)
 		}
+
+		fmt.Printf("Reader %T:\t Signed %T", r, s )
 		fmt.Printf("signature : (0x%x 0x%x)\n", r, s)
 		return fmt.Sprintf("0x%x", r), fmt.Sprintf("0x%x", s),privateKey
-	}else{
-		msg := h1 + h2
-		hash := sha256.Sum256([]byte(msg))
 
-		fmt.Println("hash:",hash)
-		r, s, err := ecdsa.Sign(rand.Reader, tx, hash[:])
-		if err != nil {
-			panic(err)
-		}
-		fmt.Printf("signature : (0x%x 0x%x)\n", r, s)
-		return fmt.Sprintf("0x%x", r), fmt.Sprintf("0x%x", s),tx
-	}
-	return "", "", nil
 
 }
 func SetFirestoreCredentials() *firebase.App {
