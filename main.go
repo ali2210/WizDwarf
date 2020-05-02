@@ -350,7 +350,7 @@ func Key(h1, h2 string) (string, string) {
 		panic(err)
 	}
 
-	println("privateKey:", privateKey)
+	fmt.Printf("privateKey:%T", privateKey)
 	println("Reader:",rand.Reader)
 
 	msg := h1 + h2
