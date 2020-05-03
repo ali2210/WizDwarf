@@ -60,6 +60,7 @@ var (
 	passexp  string         = "([A-Z][a-z]*[0-9])*"
 	AppName  *firebase.App  = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
 	cloud    db.DBFirestore = db.NewCloudInstance()
+	count int = 0
 )
 
 const (
@@ -216,6 +217,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		println("check:", user.check_me_out)
 		println("User record:", user.name, user.email)
 		// println("phase:", KeyTx)
+		count = count + 1
 		addVistor(w, r, &user, encrypted.reader)
 		
 		// temp.Execute(w,"Regsiter")
@@ -271,7 +273,7 @@ func SearchDB(w http.ResponseWriter, r *http.Request, key string){
 		fmt.Println("Method:" + r.Method)
 	} else {
 		fmt.Println("Method:" + r.Method)
-		cloud.FindData(key, AppName)
+		cloud.FindData(key, AppName, count)
 	}
 }
 
@@ -377,9 +379,6 @@ func Key(h1, h2 string) (string, string, *ecdsa.PrivateKey) {
 }
 
 
-func UnlockAccount(){
-
-}
 
 
 func SetFirestoreCredentials() *firebase.App {
@@ -397,7 +396,7 @@ func SetFirestoreCredentials() *firebase.App {
 
 func getVistorData(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("Content-Type", "application/json")
-	visitor, err := cloud.FindAllData(AppName)
+	visitor, err := cloud.FindAllData(AppName, count)
 	if err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(`{"error" :"Error getting visitor result"}`))
