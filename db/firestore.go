@@ -111,7 +111,7 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 
 }
 
-func (*cloud_data)FindData(id string, app *firebase.App)(*Vistors, error){
+func (*cloud_data)FindData(email string, app *firebase.App)(*Vistors, error){
 	ctx := context.Background()
 	client , err := app.Firestore(ctx); if err != nil{
 		log.Fatal("Client Instance Failed to start", err)
@@ -124,7 +124,8 @@ func (*cloud_data)FindData(id string, app *firebase.App)(*Vistors, error){
 	defer client.Close()
 
 	var visits Vistors
-	iterator := client.Collection(collectionName).Where("Id", "==", id).Documents(ctx)
+	iterator := client.Collection(collectionName).Documents(ctx)
+	fmt.Printf("Iterator%v", iterator)
 	for{
 		doc, err := iterator.Next();if err != nil{
 			log.Fatal("Iterator Failed on Vistor: ", err)
