@@ -354,18 +354,19 @@ func Key(h1, h2 string) (string, string, *ecdsa.PrivateKey) {
 		var r *big.Int
 		var s *big.Int
 
-	if tx != nil{
+	if tx == nil{
 		privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 		if err != nil {
 			panic(err)
 		}
 
-
+		println("PrivateKey", privateKey)
 		msg := h1 + h2
 		hash := sha256.Sum256([]byte(msg))
 
 		fmt.Println("hash:",hash)
 		r, s, err = ecdsa.Sign(rand.Reader, privateKey, hash[:])
+		println("Reader_reg:", rand.Reader)
 		if err != nil {
 			panic(err)
 		}
@@ -373,11 +374,13 @@ func Key(h1, h2 string) (string, string, *ecdsa.PrivateKey) {
 		return fmt.Sprintf("0x%x", r), fmt.Sprintf("0x%x", s),privateKey
 	}else{
 
+		println("Tx",tx)
 		msg := h1 + h2
 		hash := sha256.Sum256([]byte(msg))
 
 		fmt.Println("hash:",hash)
 		r, s, err := ecdsa.Sign(rand.Reader, tx, hash[:])
+		println("Reader_log:", rand.Reader)
 		if err != nil {
 			panic(err)
 		}
