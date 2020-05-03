@@ -124,8 +124,9 @@ func (*cloud_data)FindData(email string, app *firebase.App)(*Vistors, error){
 	defer client.Close()
 
 	var visits Vistors
-	iterator := client.Collection(collectionName).Documents(ctx)
+	iterator := client.Collection(collectionName).Where("Email", "==", email).Documents(ctx)
 	fmt.Printf("Iterator%v", iterator)
+	defer iterator.Stop()
 	for{
 		doc, err := iterator.Next();if err != nil{
 			log.Fatal("Iterator Failed on Vistor: ", err)
@@ -140,7 +141,7 @@ func (*cloud_data)FindData(email string, app *firebase.App)(*Vistors, error){
 		}
 		fmt.Println("Process complete ...", t.Sub(timerStrt))
 	}
-	// defer iterator.Stop()
+
 	return &visits, nil
 }
 
