@@ -273,7 +273,7 @@ func SearchDB(w http.ResponseWriter, r *http.Request, key string){
 		fmt.Println("Method:" + r.Method)
 	} else {
 		fmt.Println("Method:" + r.Method)
-		cloud.FindData(key, AppName, count)
+		cloud.FindData(key, AppName,count+1)
 	}
 }
 
@@ -396,7 +396,7 @@ func SetFirestoreCredentials() *firebase.App {
 
 func getVistorData(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("Content-Type", "application/json")
-	visitor, err := cloud.FindAllData(AppName, count)
+	visitor, err := cloud.FindAllData(AppName)
 	if err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(`{"error" :"Error getting visitor result"}`))
