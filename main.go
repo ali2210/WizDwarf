@@ -362,6 +362,7 @@ func Key(h1, h2 string) (string, string, *ecdsa.PrivateKey) {
 
 		println("PrivateKey", privateKey)
 		msg := h1 + h2
+		println("message_reg:", msg)
 		hash := sha256.Sum256([]byte(msg))
 
 		fmt.Println("hash:",hash)
@@ -376,6 +377,7 @@ func Key(h1, h2 string) (string, string, *ecdsa.PrivateKey) {
 
 		println("Tx",tx)
 		msg := h1 + h2
+		println("message_log:", msg)
 		hash := sha256.Sum256([]byte(msg))
 
 		fmt.Println("hash:",hash)
