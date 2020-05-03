@@ -356,7 +356,7 @@ func Key(h1, h2 string) (string, string, *ecdsa.PrivateKey) {
 		var r *big.Int
 		var s *big.Int
 
-	if tx == nil{
+	if tx != nil{
 		privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 		if err != nil {
 			panic(err)
@@ -371,8 +371,6 @@ func Key(h1, h2 string) (string, string, *ecdsa.PrivateKey) {
 		if err != nil {
 			panic(err)
 		}
-
-		fmt.Printf("Reader %T:\t Signed %T", r, s )
 		fmt.Printf("signature : (0x%x 0x%x)\n", r, s)
 		return fmt.Sprintf("0x%x", r), fmt.Sprintf("0x%x", s),privateKey
 	}
