@@ -255,13 +255,13 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		// println("regexp_pass:", matchP)
 
 		// security
-		 hashRet, cipher := MessageToHash(matchE, matchP, user)
+		 hashRet, _ := MessageToHash(matchE, matchP, user)
 		 if hashRet == false {
 		 	fmt.Fprintf(w, "Sorry provided data must not match with rules\n. Email must be in Upper or Lower case or some digits, while password must contain Uppercase Letter , lowercase letter")
 		 	temp.Execute(w, "Login")
 		 }
-		 println(cipher)
-		// SearchDB(w, r, user.email)
+		 // println(cipher)
+		 SearchDB(w, r, user.email)
 	}
 }
 
