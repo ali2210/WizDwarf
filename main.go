@@ -340,9 +340,7 @@ func MessageToHash(matchE, matchP bool, user Create_User) (bool, *SignedKey) {
 		// h1.Write([]byte(user.password))
 		hashp := h1.Sum([]byte(user.password))
 		fmt.Println("pass:", hex.EncodeToString(hashp))
-		code.reader, code.signed, code.tx = Key(hex.EncodeToString(hashe), hex.EncodeToString(hashp)); if code.tx == nil{
-			fmt.Printf("Error in hash %v",code.tx)
-		}
+		code.reader, code.signed, code.tx = Key(hex.EncodeToString(hashe), hex.EncodeToString(hashp))
 		// println("data get :", code.reader, code.signed)
 		return true, &code
 	}
@@ -373,8 +371,20 @@ func Key(h1, h2 string) (string, string, *ecdsa.PrivateKey) {
 		}
 		fmt.Printf("signature : (0x%x 0x%x)\n", r, s)
 		return fmt.Sprintf("0x%x", r), fmt.Sprintf("0x%x", s),privateKey
+	}else{
+
+		msg := h1 + h2
+		hash := sha256.Sum256([]byte(msg))
+
+		fmt.Println("hash:",hash)
+		r, s, err := ecdsa.Sign(rand.Reader, tx, hash[:])
+		if err != nil {
+			panic(err)
+		}
+		fmt.Printf("signature : (0x%x 0x%x)\n", r, s)
 	}
-	return "", "", nil
+	return fmt.Sprintf("0x%x", r), fmt.Sprintf("0x%x", s),tx
+	
 
 }
 func SetFirestoreCredentials() *firebase.App {
