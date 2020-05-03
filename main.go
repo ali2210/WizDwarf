@@ -61,7 +61,7 @@ var (
 	passexp  string         = "([A-Z][a-z]*[0-9])*"
 	AppName  *firebase.App  = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
 	cloud    db.DBFirestore = db.NewCloudInstance()
-	tx *ecdsa.PrivateKey
+	tx *ecdsa.PrivateKey = nil
 )
 
 const (
@@ -355,6 +355,8 @@ func Key(h1, h2 string) (string, string, *ecdsa.PrivateKey) {
 
 		var r *big.Int
 		var s *big.Int
+
+	if tx == nil{
 		privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 		if err != nil {
 			panic(err)
@@ -373,7 +375,8 @@ func Key(h1, h2 string) (string, string, *ecdsa.PrivateKey) {
 		fmt.Printf("Reader %T:\t Signed %T", r, s )
 		fmt.Printf("signature : (0x%x 0x%x)\n", r, s)
 		return fmt.Sprintf("0x%x", r), fmt.Sprintf("0x%x", s),privateKey
-
+	}
+	return "", "", nil
 
 }
 func SetFirestoreCredentials() *firebase.App {
