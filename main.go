@@ -9,6 +9,7 @@ import (
 	firebase "firebase.google.com/go"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 	"golang.org/x/net/context"
 	"html/template"
 	"io/ioutil"
@@ -45,7 +46,7 @@ type Create_User struct {
 	check_me_out bool
 	email        string
 	password     string
-	sesssion  bool
+	secure  bool
 }
 type SignedKey struct {
 	reader string
@@ -183,11 +184,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 
 		// println("Gender:", user.sir)
 		// println("Gender2:", user.madam)
-		if r.FormValue("check") == "on" {
-			user.check_me_out = true
-		} else {
-			user.check_me_out = false
-		}
+
 
 		matchE, err := regexp.MatchString(emailexp, user.email)
 		if err != nil {
@@ -219,7 +216,12 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		// println("phase:", KeyTx)
 		count = count + 1
 		addVistor(w, r, &user, encrypted.reader)
-		
+		if r.FormValue("check") == "on" {
+			user.secure = true
+			// fmt.Printf("sesssion:%T",SessionsInit(data.Id))
+		} else {
+			user.secure = false
+		}		
 		// temp.Execute(w,"Regsiter")
 	}
 
@@ -238,11 +240,11 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		user.email = r.FormValue("email")
 		user.password = r.FormValue("password")
 		if r.FormValue("check") == "on"{
-			user.sesssion = true
+			user.secure = true
 		}else{
-			user.sesssion = false
+			user.secure = false
 		}
-		println("Login form data[", user.email, user.password, user.sesssion,"]")
+		println("Login form data[", user.email, user.password, user.secure,"]")
 
 
 		_, err := regexp.MatchString(emailexp, user.email)
@@ -263,21 +265,31 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 // 	temp.Execute(w, "Login")
 		 //}
 		 // println(cipher)
-		 SearchDB(w, r, user.email,user.password)
+		  SearchDB(w, r, user.email,user.password)
+		 if user.secure {
+		 	// sessId , _ := sess.Get(w, "cookies-name")
+		 	// sessId.Values["authenticated"] = true
+		 	// sessId.Save(r,w)
+		 }
+
 	}
 }
 
+func SessionsInit(unique string){
+	fmt.Printf("sesssion:%t", sessions.NewCookieStore([]byte(unique)))
+}
+
+
 func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string){
+	
+	// var data db.Vistors
+	// var err error
 	w.Header().Set("Content-Type", "application/json")
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
 	} else {
 		fmt.Println("Method:" + r.Method)
-		data ,err := cloud.FindData(email,pass, AppName,count+1); if err != nil{
-			log.Fatal("Error:", err)
-			return
-		}
-		fmt.Printf("Data:%v%v[", data.Email, data.Name, "]")
+		cloud.FindData(email,pass, AppName,count+1)
 	}
 }
 
@@ -413,6 +425,8 @@ func getVistorData(response http.ResponseWriter, request *http.Request) {
 }
 
 func addVistor(response http.ResponseWriter, request *http.Request, user *Create_User, im string) {
+	
+	// var err error
 	response.Header().Set("Content-Type", "application/json")
 	if request.Method == "GET" {
 		fmt.Println("Method:" + request.Method)
@@ -433,13 +447,13 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		data, err  := json.Marshal(member); if err != nil{
 			fmt.Printf("Error in Marshal%v\n", err)
 			response.Write([]byte(`{error: Marshal}`))
-			return
+			return  
 		}
 		println("Json Data:" , data)
 		err = json.Unmarshal(data, &member); if err != nil{
 			fmt.Printf("Error%v\n", err)
 			response.Write([]byte(`{error:  UnMarshal}`))
-			return	
+			return 
 		}
 		member.Id = im
 		member.Name = user.name
@@ -460,12 +474,12 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		record ,err := cloud.SaveData(&member, AppName); if err != nil{
 			fmt.Printf("Error%v\n", err)
 			response.Write([]byte(`{error: records }`))
-			return		
+			return 		
 		}
 		println("Record:", record)
 		// response.WriteHeader(http.StatusOK)
 		// json.NewEncoder(response).Encode(record)
-
+		// return record, nil
 	}
 	//println("Vistors:" , p.Id)
 
