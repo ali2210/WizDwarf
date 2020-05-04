@@ -218,7 +218,6 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		addVistor(w, r, &user, encrypted.reader)
 		if r.FormValue("check") == "on" {
 			user.secure = true
-			// fmt.Printf("sesssion:%T",SessionsInit(data.Id))
 		} else {
 			user.secure = false
 		}		
@@ -476,6 +475,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 			response.Write([]byte(`{error: records }`))
 			return 		
 		}
+		SessionsInit(member.Id)
 		println("Record:", record)
 		// response.WriteHeader(http.StatusOK)
 		// json.NewEncoder(response).Encode(record)
