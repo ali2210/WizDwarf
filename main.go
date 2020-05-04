@@ -245,23 +245,23 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		println("Login form data[", user.email, user.password, user.sesssion,"]")
 
 
-		matchE, err := regexp.MatchString(emailexp, user.email)
+		_, err := regexp.MatchString(emailexp, user.email)
 		if err != nil {
 			println("invalid regular expression", err)
 		}
 		// println("regexp_email:", matchE)
-		matchP, err := regexp.MatchString(passexp, user.password)
+		_, err = regexp.MatchString(passexp, user.password)
 		if err != nil {
 			println("invalid regular expression", err)
 		}
 		// println("regexp_pass:", matchP)
 
 		// security
-		 hashRet, _ := MessageToHash(matchE, matchP, user)
-		 if hashRet == false {
-		 	fmt.Fprintf(w, "Sorry provided data must not match with rules\n. Email must be in Upper or Lower case or some digits, while password must contain Uppercase Letter , lowercase letter")
-		 	temp.Execute(w, "Login")
-		 }
+		 // hashRet, _ := MessageToHash(matchE, matchP, user)
+		 // if hashRet == false {
+		 // 	fmt.Fprintf(w, "Sorry provided data must not match with rules\n. Email must be in Upper or Lower case or some digits, while password must contain Uppercase Letter , lowercase letter")
+		 // 	temp.Execute(w, "Login")
+		 //}
 		 // println(cipher)
 		 SearchDB(w, r, user.email,user.password)
 	}
@@ -273,7 +273,11 @@ func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string){
 		fmt.Println("Method:" + r.Method)
 	} else {
 		fmt.Println("Method:" + r.Method)
-		cloud.FindData(email,pass, AppName,count+1)
+		data ,err := cloud.FindData(email,pass, AppName,count+1); if err != nil{
+			log.Fatal("Error:", err)
+			return
+		}
+		fmt.Printf("Data:%v%v[", data.Email, data.Name, "]")
 	}
 }
 
