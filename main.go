@@ -62,7 +62,7 @@ var (
 	AppName  *firebase.App  = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
 	cloud    db.DBFirestore = db.NewCloudInstance()
 	count int = 0
-	
+	userSessions *sessions.CookieStore = nil
 )
 
 const (
@@ -269,17 +269,29 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	log.Fatal("Error", err)
 		 }
 		 println("Search Data:", data)
-		 if user.secure {
-		 	// sessId , _ := sess.Get(w, "cookies-name")
-		 	// sessId.Values["authenticated"] = true
-		 	// sessId.Save(r,w)
+		 if user.secure && userSessions == nil {
+		 	userSessions = SessionsInit(data.Id)
+		 	sessId , _ := userSessions.Get(r, "session-name")
+		 	sessId.Values["authenticated"] = true
+		 	err = sessId.Save(r,w); if err != nil{
+		 		log.Fatal("Error", err)
+		 	}
+		 }else if user.secure {
+		 	sessId , _ := userSessions.Get(r, "session-name")
+		 	sessId.Values["authenticated"] = true
+		 	err = sessId.Save(r,w); if err != nil{
+		 		log.Fatal("Error", err)
+		 	}
+		 }else{
+		 	log.Fatal("Error in sessions")
+
 		 }
 
 	}
 }
 
-func SessionsInit(unique string){
-	fmt.Printf("%t", sessions.NewCookieStore([]byte(unique)))
+func SessionsInit(unique string)(*sessions.CookieStore){
+	return sessions.NewCookieStore([]byte(unique))
 }
 
 
@@ -477,12 +489,12 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		member.City = user.city
 		member.Zip = user.zip
 		member.Country = user.country
-		SessionsInit(member.Id)
 		record ,err := cloud.SaveData(&member, AppName); if err != nil{
 			fmt.Printf("Error%v\n", err)
 			response.Write([]byte(`{error: records }`))
 			return 		
 		}
+		userSessions = SessionsInit(record.Id)
 		println("Record:", record)
 		// response.WriteHeader(http.StatusOK)
 		// json.NewEncoder(response).Encode(record)
