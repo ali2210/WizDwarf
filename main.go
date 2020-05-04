@@ -276,12 +276,14 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	err = sessId.Save(r,w); if err != nil{
 		 		log.Fatal("Error", err)
 		 	}
+		 	println("Id :", sessId, "user:", userSessions)
 		 }else if user.secure {
 		 	sessId , _ := userSessions.Get(r, "session-name")
 		 	sessId.Values["authenticated"] = true
 		 	err = sessId.Save(r,w); if err != nil{
 		 		log.Fatal("Error", err)
 		 	}
+		 	println("Id :", sessId)
 		 }else{
 		 	log.Fatal("Error in sessions")
 
