@@ -62,6 +62,7 @@ var (
 	AppName  *firebase.App  = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
 	cloud    db.DBFirestore = db.NewCloudInstance()
 	count int = 0
+	
 )
 
 const (
@@ -264,7 +265,10 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 // 	temp.Execute(w, "Login")
 		 //}
 		 // println(cipher)
-		  SearchDB(w, r, user.email,user.password)
+		 data, err := SearchDB(w, r, user.email,user.password); if err != nil{
+		 	log.Fatal("Error", err)
+		 }
+		 println("Search Data:", data)
 		 if user.secure {
 		 	// sessId , _ := sess.Get(w, "cookies-name")
 		 	// sessId.Values["authenticated"] = true
@@ -275,21 +279,25 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 }
 
 func SessionsInit(unique string){
-	fmt.Printf("sesssion:%t", sessions.NewCookieStore([]byte(unique)))
+	fmt.Printf("%t", sessions.NewCookieStore([]byte(unique)))
 }
 
 
-func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string){
+func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string)(*db.Vistors, error){
 	
-	// var data db.Vistors
-	// var err error
+	var data *db.Vistors
+	var err error
 	w.Header().Set("Content-Type", "application/json")
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
 	} else {
 		fmt.Println("Method:" + r.Method)
-		cloud.FindData(email,pass, AppName,count+1)
+		data , err = cloud.FindData(email,pass, AppName,count+1); if err != nil{
+			log.Fatal("Error", err)
+			return nil, err
+		}
 	}
+	return data, err
 }
 
 func Dump(w http.ResponseWriter, r *http.Request) {
