@@ -263,17 +263,17 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	temp.Execute(w, "Login")
 		 }
 		 // println(cipher)
-		 SearchDB(w, r, user.email)
+		 SearchDB(w, r, user.email,user.password)
 	}
 }
 
-func SearchDB(w http.ResponseWriter, r *http.Request, key string){
+func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string){
 	w.Header().Set("Content-Type", "application/json")
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
 	} else {
 		fmt.Println("Method:" + r.Method)
-		cloud.FindData(key, AppName,count+1)
+		cloud.FindData(email,pass, AppName,count+1)
 	}
 }
 
@@ -283,7 +283,7 @@ func Dump(w http.ResponseWriter, r *http.Request) {
 }
 
 func UploadFiles(r *http.Request) *os.File {
-	println("request body", r.Body)
+	// println("request body", r.Body)
 	r.ParseMultipartForm(10 << 50)
 	file, handler, err := r.FormFile("fileSeq")
 	if err != nil {
