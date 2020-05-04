@@ -139,8 +139,8 @@ func (*cloud_data)FindData(email string , pass string, app *firebase.App, count 
 			Password: doc.Data()["Password"].(string),
 		}
 		fmt.Println("Process complete ...", t.Sub(timerStrt))
+		defer iterator.Stop()
 	}
-	defer iterator.Stop()
 	return &visits, nil
 }
 
