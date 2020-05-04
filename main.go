@@ -24,7 +24,6 @@ import (
 	// "errors"
 	// "io"
 	// "strings"
-	"math/big"
 )
 
 // Struts
@@ -61,7 +60,7 @@ var (
 	passexp  string         = "([A-Z][a-z]*[0-9])*"
 	AppName  *firebase.App  = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
 	cloud    db.DBFirestore = db.NewCloudInstance()
-	tx *ecdsa.PrivateKey
+	count int = 0
 )
 
 const (
@@ -207,7 +206,6 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "Sorry provided data must not match with rules\n. Email must be in Upper or Lower case or some digits, while password must contain Uppercase Letter , lowercase letter")
 			temp.Execute(w, "Regsiter")
 		}
-		tx = encrypted.tx
 		println("encryted data", encrypted.reader)
 		println("FamilyName:", user.fname)
 		println("Address", user.address)
@@ -218,7 +216,10 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		println("Country", user.country)
 		println("check:", user.check_me_out)
 		println("User record:", user.name, user.email)
+		// println("phase:", KeyTx)
+		count = count + 1
 		addVistor(w, r, &user, encrypted.reader)
+		
 		// temp.Execute(w,"Regsiter")
 	}
 
@@ -248,20 +249,21 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			println("invalid regular expression", err)
 		}
-		println("regexp_email:", matchE)
+		// println("regexp_email:", matchE)
 		matchP, err := regexp.MatchString(passexp, user.password)
 		if err != nil {
 			println("invalid regular expression", err)
 		}
-		println("regexp_pass:", matchP)
+		// println("regexp_pass:", matchP)
 
 		// security
-		hashRet, cipher := MessageToHash(matchE, matchP, user)
-		if hashRet == false {
-			fmt.Fprintf(w, "Sorry provided data must not match with rules\n. Email must be in Upper or Lower case or some digits, while password must contain Uppercase Letter , lowercase letter")
-			temp.Execute(w, "Login")
-		}
-		SearchDB(w, r, cipher.reader)
+		 hashRet, _ := MessageToHash(matchE, matchP, user)
+		 if hashRet == false {
+		 	fmt.Fprintf(w, "Sorry provided data must not match with rules\n. Email must be in Upper or Lower case or some digits, while password must contain Uppercase Letter , lowercase letter")
+		 	temp.Execute(w, "Login")
+		 }
+		 // println(cipher)
+		 SearchDB(w, r, user.email)
 	}
 }
 
@@ -271,7 +273,7 @@ func SearchDB(w http.ResponseWriter, r *http.Request, key string){
 		fmt.Println("Method:" + r.Method)
 	} else {
 		fmt.Println("Method:" + r.Method)
-		cloud.FindData(key, AppName)
+		cloud.FindData(key, AppName,count+1)
 	}
 }
 
@@ -340,9 +342,7 @@ func MessageToHash(matchE, matchP bool, user Create_User) (bool, *SignedKey) {
 		// h1.Write([]byte(user.password))
 		hashp := h1.Sum([]byte(user.password))
 		fmt.Println("pass:", hex.EncodeToString(hashp))
-		code.reader, code.signed, code.tx = Key(hex.EncodeToString(hashe), hex.EncodeToString(hashp)); if code.tx == nil{
-			fmt.Printf("Error in hash %v",code.tx)
-		}
+		code.reader, code.signed, code.tx = Key(hex.EncodeToString(hashe), hex.EncodeToString(hashp))
 		// println("data get :", code.reader, code.signed)
 		return true, &code
 	}
@@ -353,29 +353,34 @@ func MessageToHash(matchE, matchP bool, user Create_User) (bool, *SignedKey) {
 
 func Key(h1, h2 string) (string, string, *ecdsa.PrivateKey) {
 
-		var r *big.Int
-		var s *big.Int
+
 		privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 		if err != nil {
 			panic(err)
 		}
 
+		// 0x40fa6d8c32594a971b692c44c0c56b19c32613deb1c6200c26ea4fe33d34a5fd
+		// 0xd6757aaa4d16998cddd6dd511f4666daefad3085aec3a0f05e555eef0a1959f7
 
+		println("PrivateKey", privateKey)
 		msg := h1 + h2
 		hash := sha256.Sum256([]byte(msg))
 
+
 		fmt.Println("hash:",hash)
-		r, s, err = ecdsa.Sign(rand.Reader, privateKey, hash[:])
+		r, s, err := ecdsa.Sign(rand.Reader, privateKey, hash[:])
+		println("Reader_reg:", rand.Reader)
 		if err != nil {
 			panic(err)
 		}
-
-		fmt.Printf("Reader %T:\t Signed %T", r, s )
 		fmt.Printf("signature : (0x%x 0x%x)\n", r, s)
 		return fmt.Sprintf("0x%x", r), fmt.Sprintf("0x%x", s),privateKey
 
-
 }
+
+
+
+
 func SetFirestoreCredentials() *firebase.App {
 
 	// set credentials
