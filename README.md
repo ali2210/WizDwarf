@@ -12,7 +12,7 @@ Language [GO(1.14/Linux)]
              .Bootstrap CDN [70%]
      ###   .Firestore DB
              .Add(70%)
-             .Get(20%)
+             .Get(50%)
      ###   .Security
              .Authorization [Strong](50%)
              .Checks(0%)
