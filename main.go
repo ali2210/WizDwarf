@@ -273,7 +273,7 @@ func SearchDB(w http.ResponseWriter, r *http.Request, key string){
 		fmt.Println("Method:" + r.Method)
 	} else {
 		fmt.Println("Method:" + r.Method)
-		cloud.FindData(key, AppName,count+1)
+		cloud.FindData(key, AppName,count+2)
 	}
 }
 
@@ -283,7 +283,7 @@ func Dump(w http.ResponseWriter, r *http.Request) {
 }
 
 func UploadFiles(r *http.Request) *os.File {
-	println("request body", r.Body)
+	// println("request body", r.Body)
 	r.ParseMultipartForm(10 << 50)
 	file, handler, err := r.FormFile("fileSeq")
 	if err != nil {
