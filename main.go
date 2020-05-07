@@ -84,8 +84,9 @@ func main() {
 	// routing.HandleFunc("/{title}/action", addVistor)
 	routing.HandleFunc("/{title}/data", getVistorData)
 	images := http.StripPrefix("/images/", http.FileServer(http.Dir("./images")))
-	fmt.Println("Images:", images)
 	routing.PathPrefix("/images/").Handler(images)
+	scss := http.StripPrefix("/scss/", http.FileServer(http.Dir("./scss")))
+	routing.PathPrefix("/scss/").Handler(scss)
 	routing.HandleFunc("/dummy", Dump)
 
 	log.Println("Listening at 9101 ... please wait...")
