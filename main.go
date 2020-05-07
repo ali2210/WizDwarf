@@ -244,11 +244,11 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 	user := Create_User{}
 
 	if r.Method == "GET"{
-		fmt.Printf("Method:%s", r.Method)
+		fmt.Printf("Method:%s\n", r.Method)
 		temp.Execute(w, "Login")	
 	}else{
 		r.ParseForm()
-		fmt.Println("Method:%s", r.Method)
+		fmt.Println("Method:%s\n", r.Method)
 		user.email = r.FormValue("email")
 		user.password = r.FormValue("password")
 		if r.FormValue("check") == "on"{
