@@ -80,8 +80,10 @@ func main() {
 	routing.HandleFunc("/{title}/home", Home)
 	routing.HandleFunc("/{title}/signup", NewUser)
 	routing.HandleFunc("/{title}/login", Existing)
+	routing.HandleFunc("/{title}/dashboard",Dashboard)
 	// routing.HandleFunc("/{title}/action", addVistor)
 	routing.HandleFunc("/{title}/data", getVistorData)
+	routing.Handle("/images/",http.StripPrefix("/images/", http.FileServer(http.Dir("./images"))))
 	routing.HandleFunc("/dummy", Dump)
 
 	log.Println("Listening at 9101 ... please wait...")
@@ -89,11 +91,22 @@ func main() {
 
 }
 
-func Home(w http.ResponseWriter, r *http.Request) {
+
+
+func Home(w http.ResponseWriter, r *http.Request){
 	temp := template.Must(template.ParseFiles("index.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
+		fmt.Fprintf(w, "<img src='images/logo.png' alt='logo'/>")
 		temp.Execute(w, "Home")
+	}
+
+}
+func Dashboard(w http.ResponseWriter, r *http.Request) {
+	temp := template.Must(template.ParseFiles("dashboard.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		temp.Execute(w, "Dashboard")
 	} else {
 		temp := template.Must(template.ParseFiles("dump.html"))
 		r.ParseForm()
@@ -232,11 +245,11 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 	user := Create_User{}
 
 	if r.Method == "GET"{
-		fmt.Printf("Method:%s", r.Method)
+		fmt.Printf("Method:%s\n", r.Method)
 		temp.Execute(w, "Login")	
 	}else{
 		r.ParseForm()
-		fmt.Println("Method:%s", r.Method)
+		fmt.Println("Method:%s\n", r.Method)
 		user.email = r.FormValue("email")
 		user.password = r.FormValue("password")
 		if r.FormValue("check") == "on"{
