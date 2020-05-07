@@ -83,9 +83,7 @@ func main() {
 	routing.HandleFunc("/{title}/dashboard",Dashboard)
 	// routing.HandleFunc("/{title}/action", addVistor)
 	routing.HandleFunc("/{title}/data", getVistorData)
-	file := http.FileServer(http.Dir("./images"))
-	fmt.Println("Data:", http.StripPrefix("/images/",file))
-	// routing.Handle("/images",http.StripPrefix("/images/", file))
+	routing.Handle("/images/",http.StripPrefix("/images/", http.FileServer(http.Dir("./images"))))
 	routing.HandleFunc("/dummy", Dump)
 
 	log.Println("Listening at 9101 ... please wait...")
@@ -99,6 +97,7 @@ func Home(w http.ResponseWriter, r *http.Request){
 	temp := template.Must(template.ParseFiles("index.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
+		fmt.Fprintf(w, "<img src='images/logo.png' alt='logo'/>")
 		temp.Execute(w, "Home")
 	}
 
