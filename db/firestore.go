@@ -34,7 +34,7 @@ const (
 
 type DBFirestore interface{
 	SaveData(visitor *Vistors, app *firebase.App)(*Vistors, error)
-	FindData(email string, pass string , app *firebase.App, count int)(*Vistors, error)
+	FindData(email string, pass string , app *firebase.App)(*Vistors, error)
 	FindAllData(app *firebase.App)([]Vistors, error)
 }
 
@@ -111,7 +111,7 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 
 }
 
-func (*cloud_data)FindData(email string , pass string, app *firebase.App, count int)(*Vistors, error){
+func (*cloud_data)FindData(email string , pass string, app *firebase.App)(*Vistors, error){
 	ctx := context.Background()
 	client , err := app.Firestore(ctx); if err != nil{
 		log.Fatal("Client Instance Failed to start", err)
@@ -122,7 +122,6 @@ func (*cloud_data)FindData(email string , pass string, app *firebase.App, count 
 	fmt.Println("Please wait ...", t)
 
 	defer client.Close()
-	fmt.Printf("count:%d", count)
 	var visits Vistors
 	iterator := client.Collection(collectionName).Where("Email", "==", email).Where("Password", "==" , pass).Documents(ctx)
 	fmt.Printf("Iterator%v\n", iterator)
