@@ -1,283 +1,285 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
-    <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>WizDwarfs</title>
-  </head>
-  <body>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/register.css">
+  <title>WizDwarfs</title>
+</head>
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
-<div class="container" style="padding-left: 30px; padding-top: 100px;">
-  
-  <img src="/images/logo.png" alt="WizDwarfs" style="width : 25%; height: 20%; margin-left: 240px; padding-bottom: 0px;" />
-  <h4 style="text-align: center; font-family: 'Roboto Mono', monospace; color: #424242; padding-bottom: 20px; margin-right:30px; ">Register</h4>
-  <form action="/WizDwarf/signup" method="post" style="margin-bottom: 100px; text-align: center; text-rendering: auto;" >
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputEmail4">Email</label>
-      <input type="email" class="form-control" id="inputEmail4" placeholder="Email" name="email"style="border-radius: 25px;">
-    </div>
-    <div class="form-group col-md-6">
-      <label for="inputPassword4">Password</label>
-      <input type="password" class="form-control" id="inputPassword4" placeholder="Password" name="password" style="border-radius: 25px;">
-    </div>
+<body>
+  <div class="register-main-div">
+    <form action="/WizDwarf/signup" method="post" class="register-form">
+      <div class="image-div">
+        <img src="/images/logo.png" alt="WizDwarfs" class="logo"/>
+      </div>
+      <div class="form-row custom-form-row ">
+        <div class="form-group col-12 col-md-6">
+          <label for="inputEmail4" class="custom-label">Email</label>
+          <input type="email" class="form-control" id="inputEmail4" placeholder="Email" name="email" required>
+        </div>
+        <div class="form-group col-12 col-md-6">
+          <label for="inputPassword4" class="custom-label">Password</label>
+          <input type="password" class="form-control" id="inputPassword4" placeholder="Password" name="password" required>
+        </div>
+      </div>
+      <div class="form-row custom-form-row ">
+        <div class="form-group col-12 col-md-6">
+          <label for="name" class="custom-label">Name</label>
+          <input type="text" class="form-control" id="name" name="uname" placeholder="First Name">
+        </div>
+        <div class="form-group col-12 col-md-6">
+          <label for="fname" class="custom-label">Family Name</label>
+          <input type="text" class="form-control" id="fname" name="ufname" placeholder="Family Name">
+        </div>
+      </div>
+      <div class="form-row ml-1">
+        <div class="form-check form-check-inline gender-box">
+          <input type="radio" id="madam" name="gender" value="female" class="custom-radio">
+          <label for="madam">Female</label>
+        </div>
+        <div class="form-check form-check-inline gender-box">
+          <input type="radio" id="madam" name="gender" value="male" class="custom-radio">
+          <label for="madam">Male</label>
+        </div>
+      </div>
+      <div class="form-row custom-form-row mb-1">
+        <div class="form-group col-12">
+          <label for="inputAddress" class="custom-label">Address</label>
+          <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address">
+        </div>
+      </div>
+      <div class="form-row custom-form-row ">
+        <div class="form-group col-12">
+          <label for="inputAddress2" class="custom-label">Address 2</label>
+          <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" name="add">
+        </div>
+      </div>
+      <div class="form-row custom-form-row ">
+        <div class="form-group  col-12 col-sm-12 col-md-4">
+          <label for="inputCity" class="custom-label">City</label>
+          <input type="text" class="form-control" id="inputCity" name=>
+        </div>
+        <div class="form-group col-12 col-sm-12 col-md-4">
+          <label for="inputState" class="custom-label">Country</label>
+          <select id="inputState" class="form-control" name="co">
+            <option selected>Choose...</option>
+            <option>Afghanistan</option>
+            <option>Albania</option>
+            <option>Algeria</option>
+            <option>Andora</option>
+            <option>Antigua and Barbuda</option>
+            <option>Argentina</option>
+            <option>Armenia</option>
+            <option>Australia</option>
+            <option>Austria</option>
+            <option>Azerbaijan</option>
+            <option>Bahamas</option>
+            <option>Bahrain</option>
+            <option>Bangladesh</option>
+            <option>Barbados</option>
+            <option>Belarus</option>
+            <option>Belgium</option>
+            <option>Belize</option>
+            <option>Benin</option>
+            <option>Bhutan</option>
+            <option>Bolivia</option>
+            <option>Bosnia & Herzegovina</option>
+            <option>Botswana</option>
+            <option>Brazil</option>
+            <option>Brunei Darussalam</option>
+            <option>Bulgaria</option>
+            <option>Burkina Faso</option>
+            <option>Burundi</option>
+            <option>Cabo Verde</option>
+            <option>Cambodia</option>
+            <option>Cameroon</option>
+            <option>Canada</option>
+            <option>Central Africa Republic</option>
+            <option>Chad</option>
+            <option>Chile</option>
+            <option>China</option>
+            <option>Colombia</option>
+            <option>Comoros</option>
+            <option>Congo</option>
+            <option>Cook Islands</option>
+            <option>Costa Rica</option>
+            <option>Croatia</option>
+            <option>Cuba</option>
+            <option>Cyprus</option>
+            <option>Czechia</option>
+            <option>Cote d'Ivoire</option>
+            <option>Democratic People's Republic of Korea</option>
+            <option>Democratic Republic of the Congo</option>
+            <option>Denmark</option>
+            <option>Djibouti</option>
+            <option>Dominica</option>
+            <option>Dominica Republic</option>
+            <option>Ecuador</option>
+            <option>Egypt</option>
+            <option>El Salvador</option>
+            <option>Equator Guinea</option>
+            <option>Eritrea</option>
+            <option>Estonia</option>
+            <option>Eswatini</option>
+            <option>Ethiopia</option>
+            <option>Faroe Islands</option>
+            <option>Fiji</option>
+            <option>Finland</option>
+            <option>France</option>
+            <option>Gabon</option>
+            <option>Gambia</option>
+            <option>Georgia</option>
+            <option>Ghana</option>
+            <option>Greece</option>
+            <option>Grenada</option>
+            <option>Guatemala</option>
+            <option>Guinea</option>
+            <option>Guinea-Bissau</option>
+            <option>Guyana</option>
+            <option>Haiti</option>
+            <option>Honduras</option>
+            <option>Iceland</option>
+            <option>India</option>
+            <option>Indonesia</option>
+            <option>Iran</option>
+            <option>Iraq</option>
+            <option>Ireland</option>
+            <option>Israel</option>
+            <option>Italy</option>
+            <option>Jamaica</option>
+            <option>Japan</option>
+            <option>Jordan</option>
+            <option>Kazahistan</option>
+            <option>Kenya</option>
+            <option>Kiribati</option>
+            <option>Kuwait</option>
+            <option>Kyrgyztan</option>
+            <option>Lao People's Democratic Republic</option>
+            <option>Latvia</option>
+            <option>Lebanon</option>
+            <option>Lesotho</option>
+            <option>Liberia</option>
+            <option>Libya</option>
+            <option>Lithuania</option>
+            <option>Luxembourg</option>
+            <option>Madagascar</option>
+            <option>Malawi</option>
+            <option>Malaysia</option>
+            <option>Maldives</option>
+            <option>Mali</option>
+            <option>Malta</option>
+            <option>Marshall Islands</option>
+            <option>Mauritania</option>
+            <option>Mauritius</option>
+            <option>Mexico</option>
+            <option>Micronesia</option>
+            <option>Monaco</option>
+            <option>Mozambique</option>
+            <option>Myanmar</option>
+            <option>Namibia</option>
+            <option>Nauru</option>
+            <option>Nepal</option>
+            <option>Netherlands</option>
+            <option>New Zealand</option>
+            <option>Nicaragua</option>
+            <option>Niger</option>
+            <option>Nigeria</option>
+            <option>Niue</option>
+            <option>North Macedonia</option>
+            <option>Norway</option>
+            <option>Pakistan</option>
+            <option>Palau</option>
+            <option>Panama</option>
+            <option>Papua New Guinea</option>
+            <option>Paraguay</option>
+            <option>Peru</option>
+            <option>Philippines</option>
+            <option>Poland</option>
+            <option>Portugal</option>
+            <option>Qatar</option>
+            <option>Republic of Korea</option>
+            <option>Republic of Moldova</option>
+            <option>Romania</option>
+            <option>Russia Federation</option>
+            <option>Rwanda</option>
+            <option>Saint Kitts & Nevis</option>
+            <option>Saint Lucia</option>
+            <option>Saint Vincent & the Grenadines</option>
+            <option>Somoa</option>
+            <option>San Marino</option>
+            <option>Sao Tome & Principe </option>
+            <option>Saudia Arabia</option>
+            <option>Senegal</option>
+            <option>Serbia</option>
+            <option>Sychelles</option>
+            <option>Sierra Leone</option>
+            <option>Singapore</option>
+            <option>Slovnia</option>
+            <option>Solomon Islands </option>
+            <option>Somalia</option>
+            <option>South Africa</option>
+            <option>South Sudan</option>
+            <option>Spain</option>
+            <option>Sri Lanka</option>
+            <option>Sudan</option>
+            <option>Suriname</option>
+            <option>Sweden</option>
+            <option>Switzerland</option>
+            <option>Syrian Arabic Republic</option>
+            <option>Tajikistan</option>
+            <option>Thailand</option>
+            <option>Timor-Leste</option>
+            <option>Togo</option>
+            <option>Tokelau</option>
+            <option>Tonga</option>
+            <option>Trinidad & Tobago</option>
+            <option>Tunsia</option>
+            <option>Turkey</option>
+            <option>Turkmenistan</option>
+            <option>Tuvalu</option>
+            <option>Uganda</option>
+            <option>Ukraine</option>
+            <option>United Arab Emirates</option>
+            <option>United Kingdom & Northern Ireland</option>
+            <option>United Republic of Tanzania</option>
+            <option>United State of America</option>
+            <option>Uruguay</option>
+            <option>Uzbekistan</option>
+            <option>Vanuatu</option>
+            <option>Venezuela</option>
+            <option>Vietnam</option>
+            <option>Yemen</option>
+            <option>Zambia</option>
+            <option>Zimbabwe</option>
+          </select>
+        </div>
+        <div class="form-group  col-12 col-sm-12 col-md-4">
+          <label for="inputZip" class="custom-label">Zip</label>
+          <input type="text" class="form-control" id="inputZip" name>
+        </div>
+      </div>
+      <div class="submit-form-div">
+        <button type="submit" class="btn mb-2 submit-button">Sign in</button>
+      </div>
+    </form>
   </div>
-  <div class="form-row" style="margin-top: 40px;">
-    <div class="form-group col-md-6">
-      <label for="name">Name</label>
-      <input type="text" class="form-control" id="name" name="uname" placeholder="First Name" style="border-radius: 25px;">
-    </div>
-    <div class="form-group col-md-6">
-      <label for="fname">Family Name</label>
-      <input type="text" class="form-control" id="fname" name="ufname" placeholder="Family Name" style="border-radius: 25px;">
-    </div>
-  </div>
-  <div class="form-check form-check-inline" style="padding-left: 50px; margin-top: 40px;">
-  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="sir" style="text-rendering: geometricPrecision; border-radius: 5px;">
-  <label class="form-check-label" for="inlineCheckbox1">Sir</label>
-</div>
-<div class="form-check form-check-inline" style="padding-left: 50px;">
-  <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="madam" style ="text-rendering: geometricPrecision; border-radius: 5px;">
-  <label class="form-check-label" for="inlineCheckbox2">Madam</label>
-</div>
-
-  <div class="form-group" style="margin-top: 40px;">
-    <label for="inputAddress">Address</label>
-    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address" style="border-radius: 25px;">
-  </div>
-  <div class="form-group" style="margin-top: 40px;">
-    <label for="inputAddress2">Address 2</label>
-    <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" name="address2" style="border-radius: 25px;">
-  </div>
-  <div class="form-row">
-    <div class="form-group col-md-6" style="margin-top: 40px;">
-      <label for="inputCity">City</label>
-      <input type="text" class="form-control" id="inputCity" name="city" style="border-radius: 25px;">
-    </div>
-    <div class="form-group col-md-4" style="margin-top: 40px;">
-      <label for="inputState">Country</label>
-      <select id="inputState" class="form-control" name="country" style="border-radius: 25px;">
-        <option selected>Choose...</option>
-        <option>Afghanistan</option>
-        <option>Albania</option>
-        <option>Algeria</option>
-        <option>Andora</option>
-        <option>Antigua and Barbuda</option>
-        <option>Argentina</option>
-        <option>Armenia</option>
-        <option>Australia</option>
-        <option>Austria</option>
-        <option>Azerbaijan</option>
-        <option>Bahamas</option>
-        <option>Bahrain</option>
-        <option>Bangladesh</option>
-        <option>Barbados</option>
-        <option>Belarus</option>
-        <option>Belgium</option>
-        <option>Belize</option>
-        <option>Benin</option>
-        <option>Bhutan</option>
-        <option>Bolivia</option>
-        <option>Bosnia & Herzegovina</option>
-        <option>Botswana</option>
-        <option>Brazil</option>
-        <option>Brunei Darussalam</option>
-        <option>Bulgaria</option>
-        <option>Burkina Faso</option>
-        <option>Burundi</option>
-        <option>Cabo Verde</option>
-        <option>Cambodia</option>
-        <option>Cameroon</option>
-        <option>Canada</option>
-        <option>Central Africa Republic</option>
-        <option>Chad</option>
-        <option>Chile</option>
-        <option>China</option>
-        <option>Colombia</option>
-        <option>Comoros</option>
-        <option>Congo</option>
-        <option>Cook Islands</option>
-        <option>Costa Rica</option>
-        <option>Croatia</option>
-        <option>Cuba</option>
-        <option>Cyprus</option>
-        <option>Czechia</option>
-        <option>Cote d'Ivoire</option>
-        <option>Democratic People's Republic of Korea</option>
-        <option>Democratic Republic of the Congo</option>
-        <option>Denmark</option>
-        <option>Djibouti</option>
-        <option>Dominica</option>
-        <option>Dominica Republic</option>
-        <option>Ecuador</option>
-        <option>Egypt</option>
-        <option>El Salvador</option>
-        <option>Equator Guinea</option>
-        <option>Eritrea</option>
-        <option>Estonia</option>
-        <option>Eswatini</option>
-        <option>Ethiopia</option>
-        <option>Faroe Islands</option>
-        <option>Fiji</option>
-        <option>Finland</option>
-        <option>France</option>
-        <option>Gabon</option>
-        <option>Gambia</option>
-        <option>Georgia</option>
-        <option>Ghana</option>
-        <option>Greece</option>
-        <option>Grenada</option>
-        <option>Guatemala</option>
-        <option>Guinea</option>
-        <option>Guinea-Bissau</option>
-        <option>Guyana</option>
-        <option>Haiti</option>
-        <option>Honduras</option>
-        <option>Iceland</option>
-        <option>India</option>
-        <option>Indonesia</option>
-        <option>Iran</option>
-        <option>Iraq</option>
-        <option>Ireland</option>
-        <option>Israel</option>
-        <option>Italy</option>
-        <option>Jamaica</option>
-        <option>Japan</option>
-        <option>Jordan</option>
-        <option>Kazahistan</option>
-        <option>Kenya</option>
-        <option>Kiribati</option>
-        <option>Kuwait</option>
-        <option>Kyrgyztan</option>
-        <option>Lao People's Democratic Republic</option>
-        <option>Latvia</option>
-        <option>Lebanon</option>
-        <option>Lesotho</option>
-        <option>Liberia</option>
-        <option>Libya</option>
-        <option>Lithuania</option>
-        <option>Luxembourg</option>
-        <option>Madagascar</option>
-        <option>Malawi</option>
-        <option>Malaysia</option>
-        <option>Maldives</option>
-        <option>Mali</option>
-        <option>Malta</option>
-        <option>Marshall Islands</option>
-        <option>Mauritania</option>
-        <option>Mauritius</option>
-        <option>Mexico</option>
-        <option>Micronesia</option>
-        <option>Monaco</option>
-        <option>Mozambique</option>
-        <option>Myanmar</option>
-        <option>Namibia</option>
-        <option>Nauru</option>
-        <option>Nepal</option>
-        <option>Netherlands</option>
-        <option>New Zealand</option>
-        <option>Nicaragua</option>
-        <option>Niger</option>
-        <option>Nigeria</option>
-        <option>Niue</option>
-        <option>North Macedonia</option>
-        <option>Norway</option>
-        <option>Pakistan</option>
-        <option>Palau</option>
-        <option>Panama</option>
-        <option>Papua New Guinea</option>
-        <option>Paraguay</option>
-        <option>Peru</option>
-        <option>Philippines</option>
-        <option>Poland</option>
-        <option>Portugal</option>
-        <option>Qatar</option>
-        <option>Republic of Korea</option>
-        <option>Republic of Moldova</option>
-        <option>Romania</option>
-        <option>Russia Federation</option>
-        <option>Rwanda</option>
-        <option>Saint Kitts & Nevis</option>
-        <option>Saint Lucia</option>
-        <option>Saint Vincent & the Grenadines</option>
-        <option>Somoa</option>
-        <option>San Marino</option>
-        <option>Sao Tome & Principe </option>
-        <option>Saudia Arabia</option>
-        <option>Senegal</option>
-        <option>Serbia</option>
-        <option>Sychelles</option>
-        <option>Sierra Leone</option>
-        <option>Singapore</option>
-        <option>Slovnia</option>
-        <option>Solomon Islands </option>
-        <option>Somalia</option>
-        <option>South Africa</option>
-        <option>South Sudan</option>
-        <option>Spain</option>
-        <option>Sri Lanka</option>
-        <option>Sudan</option>
-        <option>Suriname</option>
-        <option>Sweden</option>
-        <option>Switzerland</option>
-        <option>Syrian Arabic Republic</option>
-        <option>Tajikistan</option>
-        <option>Thailand</option>
-        <option>Timor-Leste</option>
-        <option>Togo</option>
-        <option>Tokelau</option>
-        <option>Tonga</option>
-        <option>Trinidad & Tobago</option>
-        <option>Tunsia</option>
-        <option>Turkey</option>
-        <option>Turkmenistan</option>
-        <option>Tuvalu</option>
-        <option>Uganda</option>
-        <option>Ukraine</option>
-        <option>United Arab Emirates</option>
-        <option>United Kingdom & Northern Ireland</option>
-        <option>United Republic of Tanzania</option>
-        <option>United State of America</option>
-        <option>Uruguay</option>
-        <option>Uzbekistan</option>
-        <option>Vanuatu</option>
-        <option>Venezuela</option>
-        <option>Vietnam</option>
-        <option>Yemen</option>
-        <option>Zambia</option>
-        <option>Zimbabwe</option>
-      </select>
-    </div>
-    <div class="form-group col-md-2" style="margin-top: 40px;">
-      <label for="inputZip">Zip</label>
-      <input type="text" class="form-control" id="inputZip" name="zip"style="border-radius: 25px;">
-    </div>
-  </div>
-  <div class="form-group" style="margin-top: 40px;">
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="gridCheck" name="check">
-      <label class="form-check-label" for="gridCheck" style="border-radius: 5px;">
-        Check me out
-      </label>
-    </div>
-  </div>
-  <button type="submit" class="btn btn-primary" style="border-style: 25px; margin-top: 40px;">Sign in</button>
-</form>
-</div>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+  </script>
 </body>
-    
+
 </html>
