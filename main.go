@@ -323,7 +323,7 @@ func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string)(*db.Vis
 		fmt.Println("Method:" + r.Method)
 	} else {
 		fmt.Println("Method:" + r.Method)
-		data , err = cloud.FindData(email,pass, AppName,count+1); if err != nil{
+		data , err = cloud.FindData(email,pass, AppName); if err != nil{
 			log.Fatal("Error", err)
 			return nil, err
 		}
@@ -470,18 +470,6 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		fmt.Println("Method:" + request.Method)
 	} else {
 		var member db.Vistors
-		// fmt.Printf("Raw Data%+v\n", request.Body)
-		// err := json.NewDecoder(request.Body).Decode(member)
-		// if err != nil {
-		// 	fmt.Printf("Error %v: ", err)
-		// 	response.WriteHeader(http.StatusInternalServerError)
-		// 	response.Write([]byte(`{"error" :"Error marshal "}`))
-		// 	return
-		// }
-		// body , err := ioutil.ReadAll(request.Body); if err != nil{
-		// 	println("Error report:", err)
-		// }
-		// fmt.Printf("Body%v:\n", body)
 		data, err  := json.Marshal(member); if err != nil{
 			fmt.Printf("Error in Marshal%v\n", err)
 			response.Write([]byte(`{error: Marshal}`))
@@ -530,27 +518,6 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 	// 	}
 	// }
 
-	// var data = []byte(`[
-	// 	{
-	// 	"Id" : "00x",
-	// 	"Name" : "Ali",
-	// 	"Email" : "alideveloper95@gmail.com",
-	// 	"Password" : "0000"
-	// }
-	// ]`)
-
-	// type Profile struct{
-	// 	Id string
-	// 	Name string
-	// 	Email string
-	// 	Password string
-	// }
-	// var p []Profile
-	//
-	// fmt.Printf("id%+v:name%v", p.Id, p.Name)
-
-	// request.Body = http.MaxBytesReader(response, request.Body, 1048576)
-	// unknown := json.NewDecoder(request.Body)
 	// 
 
 	// unknown.DisallowUnknownFields()
@@ -611,7 +578,7 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo) {
 	if err != nil {
 		println("Error in read file", err)
 	}
-	                                          // fmt.Printf("Seq string:%s\n", seq)
+  // fmt.Printf("Seq string:%s\n", seq)
 	Useq, err := ReadSequence(serverFile.Name())
 	if err != nil {
 		println("Error in read file", err)
@@ -625,7 +592,7 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo) {
 		if space == "---" {
 			fmt.Printf("%s\t", space)
 		}
-		// fmt.Printf("%s\t", space)
+		fmt.Printf("%s\t", space)
 	}
 	println("Your Dna sequence :")
 	for _, v := range Useq {
@@ -634,7 +601,7 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo) {
 			fmt.Printf("%s", uDna)
 			
 		}
-		// fmt.Printf("%s\t", uDna)
+		fmt.Printf("%s\t", uDna)
 
 	}
 }
