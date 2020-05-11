@@ -61,7 +61,6 @@ var (
 	passexp  string         = "([A-Z][a-z]*[0-9])*"
 	AppName  *firebase.App  = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
 	cloud    db.DBFirestore = db.NewCloudInstance()
-	count int = 0
 	userSessions *sessions.CookieStore = nil
 )
 
@@ -126,7 +125,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 			switch choose {
 			case "0":
 				fmt.Fprintf(w, "Please choose any option ...")
-				temFile := template.Must(template.ParseFiles("index.html"))
+				temFile := template.Must(template.ParseFiles("dashboard.html"))
 				temFile.Execute(w, "Home")
 			case "1":
 				var name string = "Covid-19"
@@ -158,8 +157,8 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				SequenceAligmentTable(file, svrFile)
 
 			default:
-				temFile := template.Must(template.ParseFiles("index.html"))
-				temFile.Execute(w, "Home")
+				temFile := template.Must(template.ParseFiles("dashboard.html"))
+				temFile.Execute(w, "Dashboard")
 			}
 		} else {
 			print("size must be less than 5KB")
@@ -185,10 +184,10 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		user.name = r.FormValue("uname")
 		user.fname = r.FormValue("ufname")
 		user.address = r.FormValue("address")
-		user.address2 = r.FormValue("address2")
-		user.city = r.FormValue("city")
-		user.country = r.FormValue("country")
-		user.zip = r.FormValue("zip")
+		user.address2 = r.FormValue("add")
+		user.city = r.FormValue("inputCity")
+		user.country = r.FormValue("co")
+		user.zip = r.FormValue("inputZip")
 		user.email = r.FormValue("email")
 		user.password = r.FormValue("password")
 		if r.FormValue("sir") == "on" {
@@ -229,16 +228,15 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		println("Zip", user.zip)
 		println("Female", user.madam)
 		println("Country", user.country)
-		println("check:", user.check_me_out)
+		// println("check:", user.check_me_out)
 		println("User record:", user.name, user.email)
 		// println("phase:", KeyTx)
-		count = count + 1
 		addVistor(w, r, &user, encrypted.reader)
-		if r.FormValue("check") == "on" {
-			user.secure = true
-		} else {
-			user.secure = false
-		}		
+		// if r.FormValue("check") == "on" {
+		// 	user.secure = true
+		// } else {
+		// 	user.secure = false
+		// }		
 		// temp.Execute(w,"Regsiter")
 	}
 
@@ -286,7 +284,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	log.Fatal("Error", err)
 		 }
 		 println("Search Data:", data)
-		 if user.secure && userSessions == nil {
+		 if userSessions == nil {
 		 	userSessions = SessionsInit(data.Id)
 		 	sessId , _ := userSessions.Get(r, "session-name")
 		 	sessId.Values["authenticated"] = true
@@ -294,18 +292,14 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 		log.Fatal("Error", err)
 		 	}
 		 	println("Id :", sessId, "user:", userSessions)
-		 }else if user.secure {
+		 }else{
 		 	sessId , _ := userSessions.Get(r, "session-name")
 		 	sessId.Values["authenticated"] = true
 		 	err = sessId.Save(r,w); if err != nil{
 		 		log.Fatal("Error", err)
 		 	}
 		 	println("Id :", sessId)
-		 }else{
-		 	log.Fatal("Error in sessions")
-
 		 }
-
 	}
 }
 
@@ -475,7 +469,6 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 			response.Write([]byte(`{error: Marshal}`))
 			return  
 		}
-		println("Json Data:" , data)
 		err = json.Unmarshal(data, &member); if err != nil{
 			fmt.Printf("Error%v\n", err)
 			response.Write([]byte(`{error:  UnMarshal}`))
@@ -502,6 +495,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 			return 		
 		}
 		userSessions = SessionsInit(record.Id)
+		println("Your Session :", userSessions)
 		println("Record:", record)
 		// response.WriteHeader(http.StatusOK)
 		// json.NewEncoder(response).Encode(record)
