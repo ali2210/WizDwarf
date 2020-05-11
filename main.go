@@ -300,7 +300,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	}
 		 	println("Id :", sessId)
 		 }
-
+		 Dashboard(w, r)
 	}
 }
 
