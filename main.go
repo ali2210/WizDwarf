@@ -484,7 +484,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		cloudData , err := SearchDB(response, request , user.email,user.password); if err != nil{
 			fmt.Println("Error :", err)
 		}
-		if cloudData == nil{
+		fmt.Println("Cloud Data:", cloudData)
 		member.Id = im
 		member.Name = user.name
 		member.Email = user.email
@@ -507,9 +507,6 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		}
 		userSessions = SessionsInit(record.Id)
 		println("Record:", record)
-	}else{
-		response.Write([]byte(`{Already added}`))
-	}
 		// response.WriteHeader(http.StatusOK)
 		// json.NewEncoder(response).Encode(record)
 		// return record, nil
