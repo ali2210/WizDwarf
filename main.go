@@ -61,7 +61,6 @@ var (
 	passexp  string         = "([A-Z][a-z]*[0-9])*"
 	AppName  *firebase.App  = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
 	cloud    db.DBFirestore = db.NewCloudInstance()
-	count int = 0
 	userSessions *sessions.CookieStore = nil
 )
 
@@ -229,10 +228,9 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		println("Zip", user.zip)
 		println("Female", user.madam)
 		println("Country", user.country)
-		println("check:", user.check_me_out)
+		// println("check:", user.check_me_out)
 		println("User record:", user.name, user.email)
 		// println("phase:", KeyTx)
-		count = count + 1
 		addVistor(w, r, &user, encrypted.reader)
 		// if r.FormValue("check") == "on" {
 		// 	user.secure = true
@@ -475,7 +473,6 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 			response.Write([]byte(`{error: Marshal}`))
 			return  
 		}
-		println("Json Data:" , data)
 		err = json.Unmarshal(data, &member); if err != nil{
 			fmt.Printf("Error%v\n", err)
 			response.Write([]byte(`{error:  UnMarshal}`))
@@ -502,6 +499,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 			return 		
 		}
 		userSessions = SessionsInit(record.Id)
+		println("Your Session :", userSessions)
 		println("Record:", record)
 		// response.WriteHeader(http.StatusOK)
 		// json.NewEncoder(response).Encode(record)
