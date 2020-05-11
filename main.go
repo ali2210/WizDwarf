@@ -234,11 +234,11 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		// println("phase:", KeyTx)
 		count = count + 1
 		addVistor(w, r, &user, encrypted.reader)
-		if r.FormValue("check") == "on" {
-			user.secure = true
-		} else {
-			user.secure = false
-		}		
+		// if r.FormValue("check") == "on" {
+		// 	user.secure = true
+		// } else {
+		// 	user.secure = false
+		// }		
 		// temp.Execute(w,"Regsiter")
 	}
 
@@ -481,6 +481,10 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 			response.Write([]byte(`{error:  UnMarshal}`))
 			return 
 		}
+		cloudData , err := SearchDB(response, request , user.email,user.password); if err != nil{
+			fmt.Println("Error :", err)
+		}
+		if cloudData == nil{
 		member.Id = im
 		member.Name = user.name
 		member.Email = user.email
@@ -503,6 +507,9 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		}
 		userSessions = SessionsInit(record.Id)
 		println("Record:", record)
+	}else{
+		response.Write([]byte(`{Already added}`))
+	}
 		// response.WriteHeader(http.StatusOK)
 		// json.NewEncoder(response).Encode(record)
 		// return record, nil
