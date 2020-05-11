@@ -491,12 +491,12 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		member.Country = user.country
 		record ,err := cloud.SaveData(&member, AppName); if err != nil{
 			fmt.Printf("Error%v\n", err)
-			response.Write([]byte(`{error: records }`))
-			return 		
+			// response.Write([]byte(`{error: records }`))
+			// return 		
 		}
 /*		userSessions = SessionsInit(record.Id)
 		println("Your Session :", userSessions)*/
-		println("Record:", record)
+		println("Record:", record.Id)
 		// response.WriteHeader(http.StatusOK)
 		// json.NewEncoder(response).Encode(record)
 		// return record, nil
