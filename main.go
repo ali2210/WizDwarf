@@ -284,7 +284,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	log.Fatal("Error", err)
 		 }
 		 println("Search Data:", data)
-		 if user.secure && userSessions == nil {
+		 if userSessions == nil {
 		 	userSessions = SessionsInit(data.Id)
 		 	sessId , _ := userSessions.Get(r, "session-name")
 		 	sessId.Values["authenticated"] = true
@@ -292,16 +292,13 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 		log.Fatal("Error", err)
 		 	}
 		 	println("Id :", sessId, "user:", userSessions)
-		 }else if user.secure {
+		 }else{
 		 	sessId , _ := userSessions.Get(r, "session-name")
 		 	sessId.Values["authenticated"] = true
 		 	err = sessId.Save(r,w); if err != nil{
 		 		log.Fatal("Error", err)
 		 	}
 		 	println("Id :", sessId)
-		 }else{
-		 	log.Fatal("Error in sessions")
-
 		 }
 
 	}
