@@ -494,8 +494,8 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 			response.Write([]byte(`{error: records }`))
 			return 		
 		}
-		userSessions = SessionsInit(record.Id)
-		println("Your Session :", userSessions)
+/*		userSessions = SessionsInit(record.Id)
+		println("Your Session :", userSessions)*/
 		println("Record:", record)
 		// response.WriteHeader(http.StatusOK)
 		// json.NewEncoder(response).Encode(record)
