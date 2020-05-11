@@ -125,7 +125,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 			switch choose {
 			case "0":
 				fmt.Fprintf(w, "Please choose any option ...")
-				temFile := template.Must(template.ParseFiles("index.html"))
+				temFile := template.Must(template.ParseFiles("dashboard.html"))
 				temFile.Execute(w, "Home")
 			case "1":
 				var name string = "Covid-19"
@@ -157,8 +157,8 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				SequenceAligmentTable(file, svrFile)
 
 			default:
-				temFile := template.Must(template.ParseFiles("index.html"))
-				temFile.Execute(w, "Home")
+				temFile := template.Must(template.ParseFiles("dashboard.html"))
+				temFile.Execute(w, "Dashboard")
 			}
 		} else {
 			print("size must be less than 5KB")
@@ -300,7 +300,6 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	}
 		 	println("Id :", sessId)
 		 }
-		 Dashboard(w, r)
 	}
 }
 
