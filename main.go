@@ -185,10 +185,10 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		user.name = r.FormValue("uname")
 		user.fname = r.FormValue("ufname")
 		user.address = r.FormValue("address")
-		user.address2 = r.FormValue("address2")
-		user.city = r.FormValue("city")
-		user.country = r.FormValue("country")
-		user.zip = r.FormValue("zip")
+		user.address2 = r.FormValue("add")
+		user.city = r.FormValue("inputCity")
+		user.country = r.FormValue("co")
+		user.zip = r.FormValue("inputZip")
 		user.email = r.FormValue("email")
 		user.password = r.FormValue("password")
 		if r.FormValue("sir") == "on" {
@@ -481,10 +481,6 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 			response.Write([]byte(`{error:  UnMarshal}`))
 			return 
 		}
-		cloudData , err := SearchDB(response, request , user.email,user.password); if err != nil{
-			fmt.Println("Error :", err)
-		}
-		fmt.Println("Cloud Data:", cloudData)
 		member.Id = im
 		member.Name = user.name
 		member.Email = user.email
