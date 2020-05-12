@@ -21,10 +21,6 @@ import (
 	"./db"
 	"encoding/json"
 	"google.golang.org/api/option"
-	// "github.com/golang/gddo/httputil/header"
-	// "errors"
-	// "io"
-	// "strings"
 )
 
 // Struts
@@ -64,6 +60,9 @@ var (
 	userSessions *sessions.CookieStore = nil
 )
 
+
+// Constants
+
 const (
 	projectId          string = "htickets-cb4d0"
 	Google_Credentials string = "/home/ali/Desktop/htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
@@ -76,10 +75,14 @@ func main() {
 	// Routing
 	routing := mux.NewRouter()
 
+	// Links 
 	routing.HandleFunc("/{title}/home", Home)
 	routing.HandleFunc("/{title}/signup", NewUser)
 	routing.HandleFunc("/{title}/login", Existing)
 	routing.HandleFunc("/{title}/dashboard",Dashboard)
+	routing.HandleFunc("/{title}/logout", Logout)
+
+		// Static Files
 	// routing.HandleFunc("/{title}/action", addVistor)
 	// routing.HandleFunc("/{title}/data", getVistorData)
 	images := http.StripPrefix("/images/", http.FileServer(http.Dir("./images")))
@@ -90,12 +93,13 @@ func main() {
 	routing.PathPrefix("/js/").Handler(js)
 	routing.HandleFunc("/dummy", Dump)
 
+		// Server
 	log.Println("Listening at 9101 ... please wait...")
 	http.ListenAndServe(":9101", routing)
 
 }
 
-
+// Routes Handle
 
 func Home(w http.ResponseWriter, r *http.Request){
 	temp := template.Must(template.ParseFiles("index.html"))
@@ -105,6 +109,7 @@ func Home(w http.ResponseWriter, r *http.Request){
 	}
 
 }
+
 func Dashboard(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("dashboard.html"))
 	if r.Method == "GET" {
@@ -304,10 +309,24 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func SessionsInit(unique string)(*sessions.CookieStore){
-	return sessions.NewCookieStore([]byte(unique))
+func Dump(w http.ResponseWriter, r *http.Request) {
+	temp := template.Must(template.ParseFiles("dump.html"))
+	temp.Execute(w, "Dump")
 }
 
+func Logout(w http.ResponseWriter, r *http.Request){
+	// temp := template.Must(template.ParseFiles("login.html"))
+
+	println("Request:", r.Method )
+
+	if r.Method == "GET"{
+		// temp.Execute(w,"Login")
+		println("User Session:", userSessions)
+	}
+}
+
+
+//  Advance Functions 
 
 func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string)(*db.Vistors, error){
 	
@@ -327,136 +346,6 @@ func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string)(*db.Vis
 	return data, err
 }
 
-func Dump(w http.ResponseWriter, r *http.Request) {
-	temp := template.Must(template.ParseFiles("dump.html"))
-	temp.Execute(w, "Dump")
-}
-
-func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
-	// println("request body", r.Body)
-	r.ParseMultipartForm(10 << 50)
-	file, handler, err := r.FormFile("fileSeq")
-	if err != nil {
-		fmt.Println("Error failed.... retry", err)
-		 w.Write([]byte(`{error: File upload }`))
-		return nil
-	}
-	defer file.Close()
-	if handler.Size <= (50 * 1024) {
-		fmt.Println("File name:" + handler.Filename)
-		if _, err := os.Stat(handler.Filename); os.IsExist(err) {
-			fmt.Println("File not exist ", err)
-			 w.Write([]byte(`{error: Dir Not Found }`))
-			return nil
-		}
-		upldFile, err := ioutil.TempFile("user_data", handler.Filename+"-*.txt")
-		if err != nil {
-			fmt.Println("Error received while uploading!", err)
-			w.Write([]byte(`{error: Invalid extension , File must be .txt  }`))
-			return nil 
-		}
-		defer upldFile.Close()
-		// file convert into bytes
-		bytesFile, err := ioutil.ReadAll(file)
-		if err != nil {
-			fmt.Println("Error received while reading!", err)
-			w.Write([]byte(`{error: File Unable to Read, Wrong Format }`))
-			return nil
-		}
-
-		upldFile.Write(bytesFile)
-		fmt.Println("File added on server")
-		return upldFile
-	}
-	return nil
-}
-
-
-
-func FileReadFromDisk(w http.ResponseWriter, filename string) os.FileInfo {
-	f, err := os.OpenFile(filename+".txt", os.O_RDWR|os.O_CREATE, 0755)
-	if err != nil {
-		println("FILE Open Error ... ", err)
-		w.Write([]byte(`{error:File not Found}`))
-		return nil
-	}
-	println("File Exist...", f)
-	finfo, err := f.Stat()
-	if err != nil {
-		println("File Info not found", err)
-		w.Write([]byte(`{error: File have No Infomation }`))
-		return nil
-	}
-	println("File Info", finfo.Name())
-	return finfo
-}
-
-func MessageToHash(w http.ResponseWriter,matchE, matchP bool, user Create_User) (bool, *SignedKey) {
-	code := SignedKey{}
-	if matchE && matchP {
-		h := sha256.New()
-		// h.Write([]byte(user.email))
-		hashe := h.Sum([]byte(user.email))
-		fmt.Println("email:", hex.EncodeToString(hashe))
-
-		h1 := sha256.New()
-		// h1.Write([]byte(user.password))
-		hashp := h1.Sum([]byte(user.password))
-		fmt.Println("pass:", hex.EncodeToString(hashp))
-		code.reader, code.signed, code.tx = Key(w,hex.EncodeToString(hashe), hex.EncodeToString(hashp))
-		// println("data get :", code.reader, code.signed)
-		return true, &code
-	}
-	return false, &code
-}
-
-
-
-func Key(w http.ResponseWriter, h1, h2 string) (string, string, *ecdsa.PrivateKey) {
-
-
-		privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
-		if err != nil {
-			panic(err)
-		}
-
-		// 0x40fa6d8c32594a971b692c44c0c56b19c32613deb1c6200c26ea4fe33d34a5fd
-		// 0xd6757aaa4d16998cddd6dd511f4666daefad3085aec3a0f05e555eef0a1959f7
-
-		println("PrivateKey", privateKey)
-		msg := h1 + h2
-		hash := sha256.Sum256([]byte(msg))
-
-
-		fmt.Println("hash:",hash)
-		r, s, err := ecdsa.Sign(rand.Reader, privateKey, hash[:])
-		println("Reader_reg:", rand.Reader)
-		if err != nil {
-			w.Write([]byte(`{error: Generate data }`))
-			panic(err)
-		}
-		fmt.Printf("signature : (0x%x 0x%x)\n", r, s)
-		return fmt.Sprintf("0x%x", r), fmt.Sprintf("0x%x", s),privateKey
-
-}
-
-
-
-
-func SetFirestoreCredentials() *firebase.App {
-
-	// set credentials
-	conf := &firebase.Config{ProjectID: projectId}
-	opt := option.WithCredentialsFile(Google_Credentials)
-	app, err := firebase.NewApp(context.Background(), conf, opt)
-	if err != nil {
-		log.Fatal("Error in Connection with Firestore", err)
-		// w.Write([]byte(`{error: Make sure You're Connected }`))
-		return nil
-	}
-	println("Connected... Welcome to Firestore")
-	return app
-}
 
 func getVistorData(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("Content-Type", "application/json")
@@ -517,58 +406,75 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		request.Method = "GET"
 		Existing(response,request)
 	}
-	//println("Vistors:" , p.Id)
+	
+}
 
-	// if request.Header.Get("Content-Type") != ""{
-	// 	value , _ := header.ParseValueAndParams(request.Header, "Content-Type")
-	// 	println("Value:", value)
-	// 	if value != "application/json"{
-	// 		msg := "Content-type header is not application/json"
-	// 		http.Error(response, msg , http.StatusUnsupportedMediaType)
-	// 	}
-	// }
 
-	// 
 
-	// unknown.DisallowUnknownFields()
-	// var vistor db.Vistors
-	// err = unknown.Decode(&vistor); if err != nil{
-	// 	println("error :" , err)
-	// 	var syntxError *json.SyntaxError
-	// 	var unmarshalTypeError *json.UnmarshalTypeError
-	// 	switch {
-	// 	case errors.As(err, &syntxError):
-	// 		msg := fmt.Sprintf("maclious formed json body%d", syntxError.Offset)
-	// 		http.Error(response, msg, http.StatusBadRequest)
-	// 	case errors.Is(err, io.ErrUnexpectedEOF):
-	// 		msg:= fmt.Sprintf("Request contain invalid value for the field%q,%d",unmarshalTypeError.Field, unmarshalTypeError.Offset)
-	// 		http.Error(response, msg, http.StatusBadRequest)
-	// 	case strings.HasPrefix(err.Error(), "json: unknown field"):
-	// 		fieldName := strings.TrimPrefix(err.Error(), "json: unknown field")
-	// 		msg := fmt.Sprintf("Request body contain unknown field %s", fieldName)
-	// 		http.Error(response, msg, http.StatusBadRequest)
-	// 	case errors.Is(err,io.EOF):
-	// 		msg := fmt.Sprintf("Request body must not be empty")
-	// 		http.Error(response, msg, http.StatusBadRequest)
-	// 		fmt.Printf("Error:%v", err)
-	// 	case err.Error() == "http: request body too large":
-	// 		msg := "Request body must not larger than 1 MB"
-	// 		http.Error(response, msg, http.StatusRequestEntityTooLarge)
-	// 	default:
-	// 		log.Println(err.Error())
-	// 		http.Error(response, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-	// 	}
-	// 	return
-	// }
-	// println("Data:", vistor.Id)
+// Functions
 
-	// println("Body:", req)
+func SetFirestoreCredentials() *firebase.App {
 
-	//response.WriteHeader(http.StatusInternalServerError)
-	// 	// response.Write([]byte(`{"error" :"Error unmarshal Data}`))
-	// 	http.Error(response, err.Error(), http.StatusBadRequest)
-	// 	return
-	// }
+	// set credentials
+	conf := &firebase.Config{ProjectID: projectId}
+	opt := option.WithCredentialsFile(Google_Credentials)
+	app, err := firebase.NewApp(context.Background(), conf, opt)
+	if err != nil {
+		log.Fatal("Error in Connection with Firestore", err)
+		// w.Write([]byte(`{error: Make sure You're Connected }`))
+		return nil
+	}
+	println("Connected... Welcome to Firestore")
+	return app
+}
+
+func SessionsInit(unique string)(*sessions.CookieStore){
+	return sessions.NewCookieStore([]byte(unique))
+}
+
+func FileReadFromDisk(w http.ResponseWriter, filename string) os.FileInfo {
+	f, err := os.OpenFile(filename+".txt", os.O_RDWR|os.O_CREATE, 0755)
+	if err != nil {
+		println("FILE Open Error ... ", err)
+		w.Write([]byte(`{error:File not Found}`))
+		return nil
+	}
+	println("File Exist...", f)
+	finfo, err := f.Stat()
+	if err != nil {
+		println("File Info not found", err)
+		w.Write([]byte(`{error: File have No Infomation }`))
+		return nil
+	}
+	println("File Info", finfo.Name())
+	return finfo
+}
+
+func Key(w http.ResponseWriter, h1, h2 string) (string, string, *ecdsa.PrivateKey) {
+
+
+		privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+		if err != nil {
+			panic(err)
+		}
+
+		// 0x40fa6d8c32594a971b692c44c0c56b19c32613deb1c6200c26ea4fe33d34a5fd
+
+		println("PrivateKey", privateKey)
+		msg := h1 + h2
+		hash := sha256.Sum256([]byte(msg))
+
+
+		fmt.Println("hash:",hash)
+		r, s, err := ecdsa.Sign(rand.Reader, privateKey, hash[:])
+		println("Reader_reg:", rand.Reader)
+		if err != nil {
+			w.Write([]byte(`{error: Generate data }`))
+			panic(err)
+		}
+		fmt.Printf("signature : (0x%x 0x%x)\n", r, s)
+		return fmt.Sprintf("0x%x", r), fmt.Sprintf("0x%x", s),privateKey
+
 }
 
 func ReadSequence(filename string) ([]byte, error) {
@@ -579,6 +485,64 @@ func ReadSequence(filename string) ([]byte, error) {
 	}
 	// fmt.Printf("content %s:", body)
 	return []byte(body), nil
+}
+
+func MessageToHash(w http.ResponseWriter,matchE, matchP bool, user Create_User) (bool, *SignedKey) {
+	code := SignedKey{}
+	if matchE && matchP {
+		h := sha256.New()
+		// h.Write([]byte(user.email))
+		hashe := h.Sum([]byte(user.email))
+		fmt.Println("email:", hex.EncodeToString(hashe))
+
+		h1 := sha256.New()
+		// h1.Write([]byte(user.password))
+		hashp := h1.Sum([]byte(user.password))
+		fmt.Println("pass:", hex.EncodeToString(hashp))
+		code.reader, code.signed, code.tx = Key(w,hex.EncodeToString(hashe), hex.EncodeToString(hashp))
+		// println("data get :", code.reader, code.signed)
+		return true, &code
+	}
+	return false, &code
+}
+
+func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
+	// println("request body", r.Body)
+	r.ParseMultipartForm(10 << 50)
+	file, handler, err := r.FormFile("fileSeq")
+	if err != nil {
+		fmt.Println("Error failed.... retry", err)
+		 w.Write([]byte(`{error: File upload }`))
+		return nil
+	}
+	defer file.Close()
+	if handler.Size <= (50 * 1024) {
+		fmt.Println("File name:" + handler.Filename)
+		if _, err := os.Stat(handler.Filename); os.IsExist(err) {
+			fmt.Println("File not exist ", err)
+			 w.Write([]byte(`{error: Dir Not Found }`))
+			return nil
+		}
+		upldFile, err := ioutil.TempFile("user_data", handler.Filename+"-*.txt")
+		if err != nil {
+			fmt.Println("Error received while uploading!", err)
+			w.Write([]byte(`{error: Invalid extension , File must be .txt  }`))
+			return nil 
+		}
+		defer upldFile.Close()
+		// file convert into bytes
+		bytesFile, err := ioutil.ReadAll(file)
+		if err != nil {
+			fmt.Println("Error received while reading!", err)
+			w.Write([]byte(`{error: File Unable to Read, Wrong Format }`))
+			return nil
+		}
+
+		upldFile.Write(bytesFile)
+		fmt.Println("File added on server")
+		return upldFile
+	}
+	return nil
 }
 
 func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo) {
