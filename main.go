@@ -302,7 +302,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 	    r.Method = "GET"
 		println("Response:", w.Header().Get("Content-Type"))
 		println("Header:", r.Header.Get("User-Agent"))
-		// Dashboard(w,r)
+		Dashboard(w,r)
 	}
 }
 
@@ -315,7 +315,7 @@ func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string)(*db.Vis
 	
 	var data *db.Vistors
 	var err error
-	w.Header().Set("Content-Type", "application/json")
+	// w.Header().Set("Content-Type", "application/json")
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
 	} else {
