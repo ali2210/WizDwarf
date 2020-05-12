@@ -229,12 +229,6 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		println("User record:", user.name, user.email)
 		// println("phase:", KeyTx)
 		addVistor(w, r, &user, encrypted.reader)
-		// if r.FormValue("check") == "on" {
-		// 	user.secure = true
-		// } else {
-		// 	user.secure = false
-		// }		
-		// temp.Execute(w,"Regsiter")
 	}
 
 }
@@ -247,6 +241,8 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Method:%s\n", r.Method)
 		temp.Execute(w, "Login")	
 	}else{
+
+		// Parse Form
 		r.ParseForm()
 		fmt.Println("Method:%s\n", r.Method)
 		user.email = r.FormValue("email")
@@ -258,35 +254,36 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		}
 		println("Login form data[", user.email, user.password, user.secure,"]")
 
-
+		// Valid Data for processing
 		_, err := regexp.MatchString(emailexp, user.email)
 		if err != nil {
 			println("invalid regular expression", err)
+			w.Write([]byte(`{error: Data must be valid }`))
 		}
 		// println("regexp_email:", matchE)
 		_, err = regexp.MatchString(passexp, user.password)
 		if err != nil {
 			println("invalid regular expression", err)
+			w.Write([]byte(`{error: Data must be valid }`))
+			return
 		}
-		// println("regexp_pass:", matchP)
 
-		// security
-		 // hashRet, _ := MessageToHash(matchE, matchP, user)
-		 // if hashRet == false {
-		 // 	fmt.Fprintf(w, "Sorry provided data must not match with rules\n. Email must be in Upper or Lower case or some digits, while password must contain Uppercase Letter , lowercase letter")
-		 // 	temp.Execute(w, "Login")
-		 //}
-		 // println(cipher)
+		// Search Data in DB
 		 data, err := SearchDB(w, r, user.email,user.password); if err != nil{
 		 	log.Fatal("Error", err)
+		 	w.Write([]byte(`{error: No Result Found }`))
 		 }
 		 println("Search Data:", data)
+
+		 // User Session
 		 if userSessions == nil {
 		 	userSessions = SessionsInit(data.Id)
 		 	sessId , _ := userSessions.Get(r, "session-name")
 		 	sessId.Values["authenticated"] = true
 		 	err = sessId.Save(r,w); if err != nil{
 		 		log.Fatal("Error", err)
+		 		w.Write([]byte(`{error: Generate Session }`))
+		 		return
 		 	}
 		 	println("Id :", sessId, "user:", userSessions)
 		 }else{
@@ -294,9 +291,17 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	sessId.Values["authenticated"] = true
 		 	err = sessId.Save(r,w); if err != nil{
 		 		log.Fatal("Error", err)
+		 		w.Write([]byte(`{error: Generate Sessions }`))
+		 		return
 		 	}
 		 	println("Id :", sessId)
 		 }
+		
+		 // Login page 
+		w.WriteHeader(http.StatusOK)
+	    r.Method = "GET"
+		println("Request:", r.Method)
+		Dashboard(w,r)
 	}
 }
 
@@ -488,17 +493,14 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		member.Country = user.country
 		record ,err := cloud.SaveData(&member, AppName); if err != nil{
 			fmt.Printf("Error%v\n", err)
-			// response.Write([]byte(`{error: records }`))
-			// return 		
+			response.Write([]byte(`{error: records }`))
+			return 		
 		}
 
 		println("Record:", record.Id)
 		response.WriteHeader(http.StatusOK)
 		request.Method = "GET"
-		println("Request:", request.Method)
 		Existing(response,request)
-		// json.NewEncoder(response).Encode(record)
-		// return record, nil
 	}
 	//println("Vistors:" , p.Id)
 
