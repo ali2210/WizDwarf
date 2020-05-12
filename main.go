@@ -117,7 +117,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Method:" + r.Method)
 
 		// FILE Upload ....
-		file := UploadFiles(r)
+		file := UploadFiles(w, r)
 		if file != nil {
 			println(file) // user file upload
 			choose := r.FormValue("choose")
@@ -129,30 +129,30 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				temFile.Execute(w, "Home")
 			case "1":
 				var name string = "Covid-19"
-				svrFile := FileReadFromDisk(name)
+				svrFile := FileReadFromDisk(w, name)
 				println("Please Wait", svrFile.Name(), "...")
 				SequenceAligmentTable(file, svrFile)
 
 			case "2":
 				var name string = "FlaviDengue"
-				svrFile := FileReadFromDisk(name)
+				svrFile := FileReadFromDisk(w, name)
 				SequenceAligmentTable(file, svrFile)
 
 			case "3":
 				var name string = "KenyaEbola"
-				svrFile := FileReadFromDisk(name)
+				svrFile := FileReadFromDisk(w, name)
 				println("Please Wait", svrFile.Name(), "...")
 				SequenceAligmentTable(file, svrFile)
 
 			case "4":
 				var name string = "ZikaVirusBrazil"
-				svrFile := FileReadFromDisk(name)
+				svrFile := FileReadFromDisk(w, name)
 				println("Please Wait", svrFile.Name(), "...")
 				SequenceAligmentTable(file, svrFile)
 
 			case "5":
 				var name string = "MersSaudiaArabia"
-				svrFile := FileReadFromDisk(name)
+				svrFile := FileReadFromDisk(w, name)
 				println("Please Wait", svrFile.Name(), "...")
 				SequenceAligmentTable(file, svrFile)
 
@@ -212,7 +212,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		println("regexp_pass:", matchP)
 
 		// security
-		hashRet, encrypted := MessageToHash(matchE, matchP, user)
+		hashRet, encrypted := MessageToHash(w, matchE, matchP, user)
 		if hashRet == false {
 			fmt.Fprintf(w, "Sorry provided data must not match with rules\n. Email must be in Upper or Lower case or some digits, while password must contain Uppercase Letter , lowercase letter")
 			temp.Execute(w, "Regsiter")
@@ -300,8 +300,6 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 // Login page 
 		w.WriteHeader(http.StatusOK)
 	    r.Method = "GET"
-		println("Response:", w.Header().Get("Content-Type"))
-		println("Header:", r.Header.Get("User-Agent"))
 		Dashboard(w,r)
 	}
 }
@@ -322,6 +320,7 @@ func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string)(*db.Vis
 		fmt.Println("Method:" + r.Method)
 		data , err = cloud.FindData(email,pass, AppName); if err != nil{
 			log.Fatal("Error", err)
+			w.Write([]byte(`{error: No Record exist }`))
 			return nil, err
 		}
 	}
@@ -333,12 +332,13 @@ func Dump(w http.ResponseWriter, r *http.Request) {
 	temp.Execute(w, "Dump")
 }
 
-func UploadFiles(r *http.Request) *os.File {
+func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 	// println("request body", r.Body)
 	r.ParseMultipartForm(10 << 50)
 	file, handler, err := r.FormFile("fileSeq")
 	if err != nil {
 		fmt.Println("Error failed.... retry", err)
+		 w.Write([]byte(`{error: File upload }`))
 		return nil
 	}
 	defer file.Close()
@@ -346,16 +346,22 @@ func UploadFiles(r *http.Request) *os.File {
 		fmt.Println("File name:" + handler.Filename)
 		if _, err := os.Stat(handler.Filename); os.IsExist(err) {
 			fmt.Println("File not exist ", err)
+			 w.Write([]byte(`{error: Dir Not Found }`))
+			return nil
 		}
 		upldFile, err := ioutil.TempFile("user_data", handler.Filename+"-*.txt")
 		if err != nil {
 			fmt.Println("Error received while uploading!", err)
+			w.Write([]byte(`{error: Invalid extension , File must be .txt  }`))
+			return nil 
 		}
 		defer upldFile.Close()
 		// file convert into bytes
 		bytesFile, err := ioutil.ReadAll(file)
 		if err != nil {
 			fmt.Println("Error received while reading!", err)
+			w.Write([]byte(`{error: File Unable to Read, Wrong Format }`))
+			return nil
 		}
 
 		upldFile.Write(bytesFile)
@@ -367,21 +373,25 @@ func UploadFiles(r *http.Request) *os.File {
 
 
 
-func FileReadFromDisk(filename string) os.FileInfo {
+func FileReadFromDisk(w http.ResponseWriter, filename string) os.FileInfo {
 	f, err := os.OpenFile(filename+".txt", os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
 		println("FILE Open Error ... ", err)
+		w.Write([]byte(`{error:File not Found}`))
+		return nil
 	}
 	println("File Exist...", f)
 	finfo, err := f.Stat()
 	if err != nil {
 		println("File Info not found", err)
+		w.Write([]byte(`{error: File have No Infomation }`))
+		return nil
 	}
 	println("File Info", finfo.Name())
 	return finfo
 }
 
-func MessageToHash(matchE, matchP bool, user Create_User) (bool, *SignedKey) {
+func MessageToHash(w http.ResponseWriter,matchE, matchP bool, user Create_User) (bool, *SignedKey) {
 	code := SignedKey{}
 	if matchE && matchP {
 		h := sha256.New()
@@ -393,7 +403,7 @@ func MessageToHash(matchE, matchP bool, user Create_User) (bool, *SignedKey) {
 		// h1.Write([]byte(user.password))
 		hashp := h1.Sum([]byte(user.password))
 		fmt.Println("pass:", hex.EncodeToString(hashp))
-		code.reader, code.signed, code.tx = Key(hex.EncodeToString(hashe), hex.EncodeToString(hashp))
+		code.reader, code.signed, code.tx = Key(w,hex.EncodeToString(hashe), hex.EncodeToString(hashp))
 		// println("data get :", code.reader, code.signed)
 		return true, &code
 	}
@@ -402,7 +412,7 @@ func MessageToHash(matchE, matchP bool, user Create_User) (bool, *SignedKey) {
 
 
 
-func Key(h1, h2 string) (string, string, *ecdsa.PrivateKey) {
+func Key(w http.ResponseWriter, h1, h2 string) (string, string, *ecdsa.PrivateKey) {
 
 
 		privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
@@ -422,6 +432,7 @@ func Key(h1, h2 string) (string, string, *ecdsa.PrivateKey) {
 		r, s, err := ecdsa.Sign(rand.Reader, privateKey, hash[:])
 		println("Reader_reg:", rand.Reader)
 		if err != nil {
+			w.Write([]byte(`{error: Generate data }`))
 			panic(err)
 		}
 		fmt.Printf("signature : (0x%x 0x%x)\n", r, s)
@@ -440,6 +451,8 @@ func SetFirestoreCredentials() *firebase.App {
 	app, err := firebase.NewApp(context.Background(), conf, opt)
 	if err != nil {
 		log.Fatal("Error in Connection with Firestore", err)
+		// w.Write([]byte(`{error: Make sure You're Connected }`))
+		return nil
 	}
 	println("Connected... Welcome to Firestore")
 	return app
@@ -451,6 +464,7 @@ func getVistorData(response http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(`{"error" :"Error getting visitor result"}`))
+		return
 	}
 	fmt.Printf("Vistors array%v", visitor)
 
@@ -560,6 +574,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 func ReadSequence(filename string) ([]byte, error) {
 	body, err := ioutil.ReadFile(filename)
 	if err != nil {
+		// w.Write([]byte(`{error: Unable to Read File }`))
 		return nil, err
 	}
 	// fmt.Printf("content %s:", body)
