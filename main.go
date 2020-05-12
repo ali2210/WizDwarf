@@ -208,11 +208,13 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		matchE, err := regexp.MatchString(emailexp, user.email)
 		if err != nil {
 			println("invalid regular expression", err)
+			temp.Execute(w,"Regsiter")
 		}
 		println("regexp_email:", matchE)
 		matchP, err := regexp.MatchString(passexp, user.password)
 		if err != nil {
 			println("invalid regular expression", err)
+			temp.Execute(w,"Regsiter")
 		}
 		println("regexp_pass:", matchP)
 
@@ -264,20 +266,24 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			println("invalid regular expression", err)
 			w.Write([]byte(`{error: Data must be valid }`))
+			temp.Execute(w,"Login")
+			return
 		}
 		// println("regexp_email:", matchE)
 		_, err = regexp.MatchString(passexp, user.password)
 		if err != nil {
 			println("invalid regular expression", err)
 			w.Write([]byte(`{error: Data must be valid }`))
+			temp.Execute(w,"Login")
 			return
 		}
 
 		// Search Data in DB
 		 data, err := SearchDB(w, r, user.email,user.password); if err != nil{
-		 	log.Fatal("Error", err)
+		 	// log.Fatal("Error", err)
 		 	w.Write([]byte(`{error: No Result Found }`))
 		 	temp.Execute(w,"Login")
+		 	return
 		 }
 		 println("Search Data:", data)
 
@@ -287,8 +293,9 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	sessId , _ := userSessions.Get(r, "session-name")
 		 	sessId.Values["authenticated"] = true
 		 	err = sessId.Save(r,w); if err != nil{
-		 		log.Fatal("Error", err)
+		 		// log.Fatal("Error", err)
 		 		w.Write([]byte(`{error: Generate Session }`))
+		 		temp.Execute(w,"Login")
 		 		return
 		 	}
 		 	println("Id :", sessId, "user:", userSessions)
@@ -296,8 +303,9 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	sessId , _ := userSessions.Get(r, "session-name")
 		 	sessId.Values["authenticated"] = true
 		 	err = sessId.Save(r,w); if err != nil{
-		 		log.Fatal("Error", err)
+		 		// log.Fatal("Error", err)
 		 		w.Write([]byte(`{error: Generate Sessions }`))
+		 		temp.Execute(w,"Login")
 		 		return
 		 	}
 		 	println("Id :", sessId)
@@ -324,8 +332,9 @@ func Logout(w http.ResponseWriter, r *http.Request){
 		 	sessId , _ := userSessions.Get(r, "session-name")
 		 	sessId.Values["authenticated"] = false
 		 	err := sessId.Save(r,w); if err != nil{
-		 		log.Fatal("Error", err)
+		 		// log.Fatal("Error", err)
 		 		w.Write([]byte(`{error: Generate Sessions }`))
+		 		Dashboard(w,r)
 		 		return
 		 	}
 		 	Existing(w,r)
@@ -345,8 +354,9 @@ func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string)(*db.Vis
 	} else {
 		fmt.Println("Method:" + r.Method)
 		data , err = cloud.FindData(email,pass, AppName); if err != nil{
-			log.Fatal("Error", err)
+			// log.Fatal("Error", err)
 			w.Write([]byte(`{error: No Record exist }`))
+			Existing(w,r)
 			return nil, err
 		}
 	}
@@ -380,11 +390,13 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		data, err  := json.Marshal(member); if err != nil{
 			fmt.Printf("Error in Marshal%v\n", err)
 			response.Write([]byte(`{error: Marshal}`))
+			NewUser(response,request)
 			return  
 		}
 		err = json.Unmarshal(data, &member); if err != nil{
 			fmt.Printf("Error%v\n", err)
 			response.Write([]byte(`{error:  UnMarshal}`))
+			NewUser(response,request)
 			return 
 		}
 		member.Id = im
@@ -405,6 +417,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		record ,err := cloud.SaveData(&member, AppName); if err != nil{
 			fmt.Printf("Error%v\n", err)
 			response.Write([]byte(`{error: records }`))
+			NewUser(response,request)
 			return 		
 		}
 
@@ -427,7 +440,7 @@ func SetFirestoreCredentials() *firebase.App {
 	opt := option.WithCredentialsFile(Google_Credentials)
 	app, err := firebase.NewApp(context.Background(), conf, opt)
 	if err != nil {
-		log.Fatal("Error in Connection with Firestore", err)
+		println("Error in Connection with Firestore", err)
 		// w.Write([]byte(`{error: Make sure You're Connected }`))
 		return nil
 	}
