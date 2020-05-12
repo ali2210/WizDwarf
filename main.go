@@ -414,7 +414,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		member.City = user.city
 		member.Zip = user.zip
 		member.Country = user.country
-		record ,err := cloud.SaveData(&member, AppName); if err != nil{
+		record ,err := cloud.SaveData(&member, AppName); if err != nil && record != nil{
 			fmt.Printf("Error%v\n", err)
 			response.Write([]byte(`{error: records }`))
 			NewUser(response,request)
