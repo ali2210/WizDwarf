@@ -208,13 +208,17 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		matchE, err := regexp.MatchString(emailexp, user.email)
 		if err != nil {
 			println("invalid regular expression", err)
-			temp.Execute(w,"Regsiter")
+			r.Method = "GET"
+			fmt.Println("Method:" + r.Method)
+			Existing(w,r)
 		}
 		println("regexp_email:", matchE)
 		matchP, err := regexp.MatchString(passexp, user.password)
 		if err != nil {
 			println("invalid regular expression", err)
-			temp.Execute(w,"Regsiter")
+			r.Method = "GET"
+			fmt.Println("Method:" + r.Method)
+			Existing(w,r)
 		}
 		println("regexp_pass:", matchP)
 
@@ -222,7 +226,9 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		hashRet, encrypted := MessageToHash(w, matchE, matchP, user)
 		if hashRet == false {
 			fmt.Fprintf(w, "Sorry provided data must not match with rules\n. Email must be in Upper or Lower case or some digits, while password must contain Uppercase Letter , lowercase letter")
-			temp.Execute(w, "Regsiter")
+			r.Method = "GET"
+			fmt.Println("Method:" + r.Method)
+			Existing(w,r)
 		}
 		println("encryted data", encrypted.reader)
 		println("FamilyName:", user.fname)
@@ -266,7 +272,8 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			println("invalid regular expression", err)
 			w.Write([]byte(`{error: Data must be valid }`))
-			temp.Execute(w,"Login")
+			r.Method = "GET"
+			Existing(w,r)
 			return
 		}
 		// println("regexp_email:", matchE)
@@ -274,7 +281,8 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			println("invalid regular expression", err)
 			w.Write([]byte(`{error: Data must be valid }`))
-			temp.Execute(w,"Login")
+			r.Method = "GET"
+			Existing(w,r)
 			return
 		}
 
@@ -282,7 +290,8 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 data, err := SearchDB(w, r, user.email,user.password); if err != nil{
 		 	// log.Fatal("Error", err)
 		 	w.Write([]byte(`{error: No Result Found }`))
-		 	temp.Execute(w,"Login")
+		 	r.Method = "GET"
+		 	Existing(w,r)
 		 	return
 		 }
 		 println("Search Data:", data)
@@ -295,7 +304,8 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	err = sessId.Save(r,w); if err != nil{
 		 		// log.Fatal("Error", err)
 		 		w.Write([]byte(`{error: Generate Session }`))
-		 		temp.Execute(w,"Login")
+		 		r.Method = "GET"
+		 		Existing(w,r)
 		 		return
 		 	}
 		 	println("Id :", sessId, "user:", userSessions)
@@ -305,7 +315,8 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	err = sessId.Save(r,w); if err != nil{
 		 		// log.Fatal("Error", err)
 		 		w.Write([]byte(`{error: Generate Sessions }`))
-		 		temp.Execute(w,"Login")
+		 		r.Method = "GET"
+		 		Existing(w,r)
 		 		return
 		 	}
 		 	println("Id :", sessId)
@@ -353,9 +364,10 @@ func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string)(*db.Vis
 		fmt.Println("Method:" + r.Method)
 	} else {
 		fmt.Println("Method:" + r.Method)
-		data , err = cloud.FindData(email,pass, AppName); if err != nil{
+		data , err = cloud.FindData(email,pass, AppName); if err != nil && data != nil{
 			// log.Fatal("Error", err)
 			w.Write([]byte(`{error: No Record exist }`))
+			r.Method = "GET"
 			Existing(w,r)
 			return nil, err
 		}
@@ -390,12 +402,14 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		data, err  := json.Marshal(member); if err != nil{
 			fmt.Printf("Error in Marshal%v\n", err)
 			response.Write([]byte(`{error: Marshal}`))
+			request.Method = "GET"
 			NewUser(response,request)
 			return  
 		}
 		err = json.Unmarshal(data, &member); if err != nil{
 			fmt.Printf("Error%v\n", err)
 			response.Write([]byte(`{error:  UnMarshal}`))
+			request.Method = "GET"
 			NewUser(response,request)
 			return 
 		}
@@ -414,9 +428,10 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		member.City = user.city
 		member.Zip = user.zip
 		member.Country = user.country
-		record ,err := cloud.SaveData(&member, AppName); if err != nil && record != nil{
+		record ,err := cloud.SaveData(&member, AppName); if err != nil {
 			fmt.Printf("Error%v\n", err)
 			response.Write([]byte(`{error: records }`))
+			request.Method = "GET"
 			NewUser(response,request)
 			return 		
 		}

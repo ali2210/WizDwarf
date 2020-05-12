@@ -128,7 +128,7 @@ func (*cloud_data)FindData(email string , pass string, app *firebase.App)(*Visto
 	defer iterator.Stop()
 	for{
 		doc, err := iterator.Next();if err != nil{
-			println("Iterator Failed on Vistor: ", err)
+			log.Fatal("Iterator Failed on Vistor: ", err)
 			return nil, err
 		}
 		fmt.Printf("Data:%v\n", doc.Data())
