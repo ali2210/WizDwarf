@@ -190,13 +190,10 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		user.zip = r.FormValue("inputZip")
 		user.email = r.FormValue("email")
 		user.password = r.FormValue("password")
-		if r.FormValue("sir") == "on" {
-			user.madam = false
-		} else if r.FormValue("madam") == "on" {
+		if r.FormValue("gender") == "on" {
 			user.madam = true
-		} else {
-			fmt.Fprintf(w, "Select any option")
-			temp.Execute(w, "Regsiter")
+		} else{
+			user.madam = false
 		}
 
 		// println("Gender:", user.sir)
