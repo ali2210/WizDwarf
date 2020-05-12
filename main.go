@@ -316,13 +316,19 @@ func Dump(w http.ResponseWriter, r *http.Request) {
 }
 
 func Logout(w http.ResponseWriter, r *http.Request){
-	// temp := template.Must(template.ParseFiles("login.html"))
 
 	println("Request:", r.Method )
 
 	if r.Method == "GET"{
-		// temp.Execute(w,"Login")
 		println("User Session:", userSessions)
+		 	sessId , _ := userSessions.Get(r, "session-name")
+		 	sessId.Values["authenticated"] = false
+		 	err := sessId.Save(r,w); if err != nil{
+		 		log.Fatal("Error", err)
+		 		w.Write([]byte(`{error: Generate Sessions }`))
+		 		return
+		 	}
+		 	Existing(w,r)
 	}
 }
 
