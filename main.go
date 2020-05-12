@@ -496,6 +496,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		response.WriteHeader(http.StatusOK)
 		request.Method = "GET"
 		println("Request:", request.Method)
+		Existing(response,request)
 		// json.NewEncoder(response).Encode(record)
 		// return record, nil
 	}
