@@ -301,7 +301,8 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	    r.Method = "GET"
 		println("Request:", r.Method)
-		Dashboard(w,r)
+		println("Response:", r.Header.Get("User-Agent"))
+		// Dashboard(w,r)
 	}
 }
 
