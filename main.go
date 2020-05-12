@@ -190,13 +190,10 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		user.zip = r.FormValue("inputZip")
 		user.email = r.FormValue("email")
 		user.password = r.FormValue("password")
-		if r.FormValue("sir") == "on" {
-			user.madam = false
-		} else if r.FormValue("madam") == "on" {
+		if r.FormValue("gender") == "on" {
 			user.madam = true
-		} else {
-			fmt.Fprintf(w, "Select any option")
-			temp.Execute(w, "Regsiter")
+		} else{
+			user.madam = false
 		}
 
 		// println("Gender:", user.sir)
@@ -459,7 +456,7 @@ func getVistorData(response http.ResponseWriter, request *http.Request) {
 func addVistor(response http.ResponseWriter, request *http.Request, user *Create_User, im string) {
 	
 	// var err error
-	response.Header().Set("Content-Type", "application/json")
+	//response.Header().Set("Content-Type", "application/json")
 	if request.Method == "GET" {
 		fmt.Println("Method:" + request.Method)
 	} else {
@@ -491,13 +488,15 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		member.Country = user.country
 		record ,err := cloud.SaveData(&member, AppName); if err != nil{
 			fmt.Printf("Error%v\n", err)
-			response.Write([]byte(`{error: records }`))
-			return 		
+			// response.Write([]byte(`{error: records }`))
+			// return 		
 		}
-		userSessions = SessionsInit(record.Id)
-		println("Your Session :", userSessions)
-		println("Record:", record)
-		// response.WriteHeader(http.StatusOK)
+
+		println("Record:", record.Id)
+		response.WriteHeader(http.StatusOK)
+		request.Method = "GET"
+		println("Request:", request.Method)
+		Existing(response,request)
 		// json.NewEncoder(response).Encode(record)
 		// return record, nil
 	}
