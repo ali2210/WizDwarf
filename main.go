@@ -456,7 +456,7 @@ func getVistorData(response http.ResponseWriter, request *http.Request) {
 func addVistor(response http.ResponseWriter, request *http.Request, user *Create_User, im string) {
 	
 	// var err error
-	response.Header().Set("Content-Type", "application/json")
+	//response.Header().Set("Content-Type", "application/json")
 	if request.Method == "GET" {
 		fmt.Println("Method:" + request.Method)
 	} else {
