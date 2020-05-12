@@ -277,6 +277,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 data, err := SearchDB(w, r, user.email,user.password); if err != nil{
 		 	log.Fatal("Error", err)
 		 	w.Write([]byte(`{error: No Result Found }`))
+		 	temp.Execute(w,"Login")
 		 }
 		 println("Search Data:", data)
 
