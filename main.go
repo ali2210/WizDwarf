@@ -252,7 +252,6 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 	count := 0
 	if r.Method == "GET"{
 		fmt.Printf("Method:%s\n\t%d", r.Method, count)
-		fmt.Printf("File:%s", temp)
 		temp.Execute(w, "Login")
 		count = count + 1	
 	}else{
