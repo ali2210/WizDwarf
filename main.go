@@ -291,7 +291,6 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	r.Method = "GET"
 		 	println("Request:", r.Method)
 		 	Existing(w,r)
-		 	return
 
 		 }
 		 println("Search Data:", data)
