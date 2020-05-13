@@ -289,12 +289,13 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	// log.Fatal("Error", err)
 		 	w.Write([]byte(`{error: No Result Found }`))
 		 }
+		 fmt.Printf("Search Data:%v", data)
 		 if data == nil{
 		 	r.Method = "GET"
 		 	println("Request:", r.Method)
 		 	Existing(w,r)
 		 }else{
-		 	println("Search Data:", data)
+		 	fmt.Printf("Search Data:%v", data)
 
 		 	// User Session
 		 	if userSessions == nil {
@@ -322,7 +323,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		}
 		
 		 // Login page 
-		w.WriteHeader(http.StatusOK)
+		// w.WriteHeader(http.StatusOK)
 	    r.Method = "GET"
 		Dashboard(w,r)
 	}
