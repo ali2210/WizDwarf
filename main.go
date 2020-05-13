@@ -250,9 +250,9 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("login.html"))
 	user := Create_User{}
 
-	fmt.Printf("Method:%s\t", r.Method)
 	if r.Method == "GET"{
 		fmt.Printf("Method:%s\n", r.Method)
+		fmt.Printf("File:%v", temp)
 		temp.Execute(w, "Login")	
 	}else{
 		// Parse Form
@@ -272,16 +272,18 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			println("invalid regular expression", err)
 			w.Write([]byte(`{error: Data must be valid }`))
-			r.Method = "GET"
-			Existing(w,r)
+			return
+			// r.Method = "GET"
+			// Existing(w,r)
 		}
 		// println("regexp_email:", matchE)
 		_, err = regexp.MatchString(passexp, user.password)
 		if err != nil {
 			println("invalid regular expression", err)
 			w.Write([]byte(`{error: Data must be valid }`))
-			r.Method = "GET"
-			Existing(w,r)
+			return
+			// r.Method = "GET"
+			// Existing(w,r)
 		}
 
 		// Search Data in DB
@@ -305,8 +307,8 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 		err = sessId.Save(r,w); if err != nil{
 		 		// log.Fatal("Error", err)
 		 			w.Write([]byte(`{error: Generate Session }`))
-		 			r.Method = "GET"
-		 			Existing(w,r)
+		 			// r.Method = "GET"
+		 			// Existing(w,r)
 		 		}
 		 		println("Id :", sessId, "user:", userSessions)
 		 }else{
@@ -315,8 +317,8 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	err = sessId.Save(r,w); if err != nil{
 		 		// log.Fatal("Error", err)
 		 		w.Write([]byte(`{error: Generate Sessions }`))
-		 		r.Method = "GET"
-		 		Existing(w,r)
+		 		// r.Method = "GET"
+		 		// Existing(w,r)
 		 	}
 		 	println("Id :", sessId)
 		 }
