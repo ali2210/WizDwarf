@@ -251,7 +251,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 	user := Create_User{}
 	count := 0
 	if r.Method == "GET"{
-		fmt.Printf("Method:%s\n\t%d", r.Method, count)
+		fmt.Printf("Method:%s\n Count:%d", r.Method, count)
 		temp.Execute(w, "Login")
 		count = count + 1	
 	}else{
@@ -296,6 +296,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	r.Method = "GET"
 		 	// println("Request:", r.Method)
 		 	Existing(w,r)
+		 	return
 		 }else{
 		 	fmt.Printf("Search Data:%v", data)
 
