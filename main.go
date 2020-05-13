@@ -288,8 +288,9 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 data, err := SearchDB(w, r, user.email,user.password); if err != nil{
 		 	// log.Fatal("Error", err)
 		 	w.Write([]byte(`{error: No Result Found }`))
-		 	println("Header :", w.Header().Get("Content-Type"))
+		 	r.Method = "GET"
 		 	println("Request:", r.Method)
+		 	Existing(w,r)
 		 	return
 
 		 }
