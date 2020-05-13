@@ -208,17 +208,13 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		matchE, err := regexp.MatchString(emailexp, user.email)
 		if err != nil {
 			println("invalid regular expression", err)
-			r.Method = "GET"
-			fmt.Println("Method:" + r.Method)
-			Existing(w,r)
+			return
 		}
 		println("regexp_email:", matchE)
 		matchP, err := regexp.MatchString(passexp, user.password)
 		if err != nil {
 			println("invalid regular expression", err)
-			r.Method = "GET"
-			fmt.Println("Method:" + r.Method)
-			Existing(w,r)
+			return
 		}
 		println("regexp_pass:", matchP)
 
@@ -226,9 +222,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		hashRet, encrypted := MessageToHash(w, matchE, matchP, user)
 		if hashRet == false {
 			fmt.Fprintf(w, "Sorry provided data must not match with rules\n. Email must be in Upper or Lower case or some digits, while password must contain Uppercase Letter , lowercase letter")
-			r.Method = "GET"
-			fmt.Println("Method:" + r.Method)
-			Existing(w,r)
+			return
 		}
 		println("encryted data", encrypted.reader)
 		println("FamilyName:", user.fname)
@@ -249,15 +243,13 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 func Existing(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("login.html"))
 	user := Create_User{}
-
 	if r.Method == "GET"{
-		fmt.Printf("Method:%s\n", r.Method)
+		fmt.Printf("\nMethod:%v", r.Method)
 		temp.Execute(w, "Login")	
 	}else{
-
 		// Parse Form
 		r.ParseForm()
-		fmt.Println("Method:%s\n", r.Method)
+		fmt.Println("Method:\n", r.Method)
 		user.email = r.FormValue("email")
 		user.password = r.FormValue("password")
 		if r.FormValue("check") == "on"{
@@ -272,29 +264,28 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			println("invalid regular expression", err)
 			w.Write([]byte(`{error: Data must be valid }`))
-			r.Method = "GET"
-			Existing(w,r)
+			return
+			// r.Method = "GET"
+			// Existing(w,r)
 		}
 		// println("regexp_email:", matchE)
 		_, err = regexp.MatchString(passexp, user.password)
 		if err != nil {
 			println("invalid regular expression", err)
 			w.Write([]byte(`{error: Data must be valid }`))
-			r.Method = "GET"
-			Existing(w,r)
+			return
+			// r.Method = "GET"
+			// Existing(w,r)
 		}
 
 		// Search Data in DB
 		 data, err := SearchDB(w, r, user.email,user.password); if err != nil{
 		 	// log.Fatal("Error", err)
 		 	w.Write([]byte(`{error: No Result Found }`))
-		 }
-		 if data == nil{
 		 	r.Method = "GET"
-		 	println("Request:", r.Method)
-		 	Existing(w,r)
-		 }else{
-		 	println("Search Data:", data)
+		 	Home(w,r)
+		 }
+		 	fmt.Printf("Search Data:%v", data)
 
 		 	// User Session
 		 	if userSessions == nil {
@@ -304,8 +295,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 		err = sessId.Save(r,w); if err != nil{
 		 		// log.Fatal("Error", err)
 		 			w.Write([]byte(`{error: Generate Session }`))
-		 			r.Method = "GET"
-		 			Existing(w,r)
+		 			return
 		 		}
 		 		println("Id :", sessId, "user:", userSessions)
 		 }else{
@@ -314,15 +304,14 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	err = sessId.Save(r,w); if err != nil{
 		 		// log.Fatal("Error", err)
 		 		w.Write([]byte(`{error: Generate Sessions }`))
-		 		r.Method = "GET"
-		 		Existing(w,r)
+		 		return
 		 	}
 		 	println("Id :", sessId)
 		 }
-		}
+		
 		
 		 // Login page 
-		w.WriteHeader(http.StatusOK)
+		 w.WriteHeader(http.StatusOK)
 	    r.Method = "GET"
 		Dashboard(w,r)
 	}
@@ -335,7 +324,6 @@ func Dump(w http.ResponseWriter, r *http.Request) {
 
 func Logout(w http.ResponseWriter, r *http.Request){
 
-	println("Request:", r.Method )
 
 	if r.Method == "GET"{
 		println("User Session:", userSessions)
@@ -344,7 +332,7 @@ func Logout(w http.ResponseWriter, r *http.Request){
 		 	err := sessId.Save(r,w); if err != nil{
 		 		// log.Fatal("Error", err)
 		 		w.Write([]byte(`{error: Generate Sessions }`))
-		 		Dashboard(w,r)
+		 		return
 		 	}
 		 	Existing(w,r)
 	}
@@ -400,12 +388,14 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 			response.Write([]byte(`{error: Marshal}`))
 			request.Method = "GET"
 			NewUser(response,request)  
+			return
 		}
 		err = json.Unmarshal(data, &member); if err != nil{
 			fmt.Printf("Error%v\n", err)
 			response.Write([]byte(`{error:  UnMarshal}`))
 			request.Method = "GET"
 			NewUser(response,request)
+			return
 		}
 		member.Id = im
 		member.Name = user.name
@@ -425,8 +415,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		record ,err := cloud.SaveData(&member, AppName); if err != nil {
 			fmt.Printf("Error%v\n", err)
 			response.Write([]byte(`{error: records }`))
-			request.Method = "GET"
-			NewUser(response,request) 		
+			return	
 		}
 
 		println("Record:", record.Id)
@@ -483,7 +472,8 @@ func Key(w http.ResponseWriter, h1, h2 string) (string, string, *ecdsa.PrivateKe
 
 		privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 		if err != nil {
-			panic(err)
+			// panic(err)
+			return "", "", nil
 		}
 
 		// 0x40fa6d8c32594a971b692c44c0c56b19c32613deb1c6200c26ea4fe33d34a5fd
@@ -498,7 +488,8 @@ func Key(w http.ResponseWriter, h1, h2 string) (string, string, *ecdsa.PrivateKe
 		println("Reader_reg:", rand.Reader)
 		if err != nil {
 			w.Write([]byte(`{error: Generate data }`))
-			panic(err)
+			// panic(err)
+			return "", "", privateKey
 		}
 		fmt.Printf("signature : (0x%x 0x%x)\n", r, s)
 		return fmt.Sprintf("0x%x", r), fmt.Sprintf("0x%x", s),privateKey
@@ -580,11 +571,13 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo) {
 	seq, err := ReadSequence(userFile.Name())
 	if err != nil {
 		println("Error in read file", err)
+		return
 	}
   // fmt.Printf("Seq string:%s\n", seq)
 	Useq, err := ReadSequence(serverFile.Name())
 	if err != nil {
 		println("Error in read file", err)
+		return
 	}
 
 	println("Virus Dna sequence :")
