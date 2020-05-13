@@ -293,21 +293,21 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	r.Method = "GET"
 		 	println("Request:", r.Method)
 		 	Existing(w,r)
-		 }
-		 println("Search Data:", data)
+		 }else{
+		 	println("Search Data:", data)
 
-		 // User Session
-		 if userSessions == nil {
-		 	userSessions = SessionsInit(data.Id)
-		 	sessId , _ := userSessions.Get(r, "session-name")
-		 	sessId.Values["authenticated"] = true
-		 	err = sessId.Save(r,w); if err != nil{
+		 	// User Session
+		 	if userSessions == nil {
+		 		userSessions = SessionsInit(data.Id)
+		 		sessId , _ := userSessions.Get(r, "session-name")
+		 		sessId.Values["authenticated"] = true
+		 		err = sessId.Save(r,w); if err != nil{
 		 		// log.Fatal("Error", err)
-		 		w.Write([]byte(`{error: Generate Session }`))
-		 		r.Method = "GET"
-		 		Existing(w,r)
-		 	}
-		 	println("Id :", sessId, "user:", userSessions)
+		 			w.Write([]byte(`{error: Generate Session }`))
+		 			r.Method = "GET"
+		 			Existing(w,r)
+		 		}
+		 		println("Id :", sessId, "user:", userSessions)
 		 }else{
 		 	sessId , _ := userSessions.Get(r, "session-name")
 		 	sessId.Values["authenticated"] = true
@@ -319,6 +319,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	}
 		 	println("Id :", sessId)
 		 }
+		}
 		
 		 // Login page 
 		w.WriteHeader(http.StatusOK)
