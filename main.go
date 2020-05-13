@@ -274,7 +274,6 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte(`{error: Data must be valid }`))
 			r.Method = "GET"
 			Existing(w,r)
-			return
 		}
 		// println("regexp_email:", matchE)
 		_, err = regexp.MatchString(passexp, user.password)
@@ -283,32 +282,32 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte(`{error: Data must be valid }`))
 			r.Method = "GET"
 			Existing(w,r)
-			return
 		}
 
 		// Search Data in DB
 		 data, err := SearchDB(w, r, user.email,user.password); if err != nil{
 		 	// log.Fatal("Error", err)
 		 	w.Write([]byte(`{error: No Result Found }`))
-		 	r.Method = "GET"
-		 	Existing(w,r)
-		 	return
 		 }
-		 println("Search Data:", data)
+		 if data == nil{
+		 	r.Method = "GET"
+		 	println("Request:", r.Method)
+		 	Existing(w,r)
+		 }else{
+		 	println("Search Data:", data)
 
-		 // User Session
-		 if userSessions == nil {
-		 	userSessions = SessionsInit(data.Id)
-		 	sessId , _ := userSessions.Get(r, "session-name")
-		 	sessId.Values["authenticated"] = true
-		 	err = sessId.Save(r,w); if err != nil{
+		 	// User Session
+		 	if userSessions == nil {
+		 		userSessions = SessionsInit(data.Id)
+		 		sessId , _ := userSessions.Get(r, "session-name")
+		 		sessId.Values["authenticated"] = true
+		 		err = sessId.Save(r,w); if err != nil{
 		 		// log.Fatal("Error", err)
-		 		w.Write([]byte(`{error: Generate Session }`))
-		 		r.Method = "GET"
-		 		Existing(w,r)
-		 		return
-		 	}
-		 	println("Id :", sessId, "user:", userSessions)
+		 			w.Write([]byte(`{error: Generate Session }`))
+		 			r.Method = "GET"
+		 			Existing(w,r)
+		 		}
+		 		println("Id :", sessId, "user:", userSessions)
 		 }else{
 		 	sessId , _ := userSessions.Get(r, "session-name")
 		 	sessId.Values["authenticated"] = true
@@ -317,10 +316,10 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 		w.Write([]byte(`{error: Generate Sessions }`))
 		 		r.Method = "GET"
 		 		Existing(w,r)
-		 		return
 		 	}
 		 	println("Id :", sessId)
 		 }
+		}
 		
 		 // Login page 
 		w.WriteHeader(http.StatusOK)
@@ -346,7 +345,6 @@ func Logout(w http.ResponseWriter, r *http.Request){
 		 		// log.Fatal("Error", err)
 		 		w.Write([]byte(`{error: Generate Sessions }`))
 		 		Dashboard(w,r)
-		 		return
 		 	}
 		 	Existing(w,r)
 	}
@@ -367,8 +365,6 @@ func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string)(*db.Vis
 		data , err = cloud.FindData(email,pass, AppName); if err != nil && data != nil{
 			// log.Fatal("Error", err)
 			w.Write([]byte(`{error: No Record exist }`))
-			r.Method = "GET"
-			Existing(w,r)
 			return nil, err
 		}
 	}
@@ -403,15 +399,13 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 			fmt.Printf("Error in Marshal%v\n", err)
 			response.Write([]byte(`{error: Marshal}`))
 			request.Method = "GET"
-			NewUser(response,request)
-			return  
+			NewUser(response,request)  
 		}
 		err = json.Unmarshal(data, &member); if err != nil{
 			fmt.Printf("Error%v\n", err)
 			response.Write([]byte(`{error:  UnMarshal}`))
 			request.Method = "GET"
 			NewUser(response,request)
-			return 
 		}
 		member.Id = im
 		member.Name = user.name
@@ -432,8 +426,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 			fmt.Printf("Error%v\n", err)
 			response.Write([]byte(`{error: records }`))
 			request.Method = "GET"
-			NewUser(response,request)
-			return 		
+			NewUser(response,request) 		
 		}
 
 		println("Record:", record.Id)
