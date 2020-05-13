@@ -249,7 +249,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 func Existing(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("login.html"))
 	user := Create_User{}
-
+	println("Existing....")
 	if r.Method == "GET"{
 		fmt.Printf("Method:%s\n", r.Method)
 		temp.Execute(w, "Login")	
