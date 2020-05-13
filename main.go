@@ -249,11 +249,12 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 func Existing(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("login.html"))
 	user := Create_User{}
-
+	count := 0
 	if r.Method == "GET"{
-		fmt.Printf("Method:%s\n", r.Method)
-		fmt.Printf("File:%v", temp)
-		temp.Execute(w, "Login")	
+		fmt.Printf("Method:%s\n\t%d", r.Method, count)
+		fmt.Printf("File:%s", temp)
+		temp.Execute(w, "Login")
+		count = count + 1	
 	}else{
 		// Parse Form
 		r.ParseForm()
