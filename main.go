@@ -249,12 +249,14 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 func Existing(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("login.html"))
 	user := Create_User{}
+
+	fmt.Printf("Method:%s", r.Method)
 	if r.Method == "GET"{
 		fmt.Printf("Method:%s\n", r.Method)
-		println("Header:", w.Header().Get("Content-Type"))
 		temp.Execute(w, "Login")	
 	}else{
 		// Parse Form
+		fmt.Println("POST....")
 		r.ParseForm()
 		fmt.Println("Method:%s\n", r.Method)
 		user.email = r.FormValue("email")
