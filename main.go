@@ -244,12 +244,12 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("login.html"))
 	user := Create_User{}
 	if r.Method == "GET"{
-		fmt.Printf("\nMethod:%s", r.Method)
+		fmt.Printf("\nMethod:%v", r.Method)
 		temp.Execute(w, "Login")	
 	}else{
 		// Parse Form
 		r.ParseForm()
-		fmt.Println("Method:%s\n", r.Method)
+		fmt.Println("Method:\n", r.Method)
 		user.email = r.FormValue("email")
 		user.password = r.FormValue("password")
 		if r.FormValue("check") == "on"{
@@ -282,6 +282,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 data, err := SearchDB(w, r, user.email,user.password); if err != nil{
 		 	// log.Fatal("Error", err)
 		 	w.Write([]byte(`{error: No Result Found }`))
+		 	Home(w,r)
 		 	return
 		 }
 		 	fmt.Printf("Search Data:%v", data)
