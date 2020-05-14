@@ -26,9 +26,9 @@ import (
 // Struts
 
 type Response struct {
-	flag bool
-	message string
-	links string
+	Flag bool
+	Message string
+	Links string
 }
 
 type Create_User struct {
@@ -169,7 +169,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 		} else {
 			print("size must be less than 5KB")
 			Repon := Response{true,"Error in Upload File", ""}
-			println("Server Response:", Repon.flag,Repon.message,Repon.links)
+			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
 		}
 
@@ -283,7 +283,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	// w.Write([]byte(`{error: No Result Found }`))
 		 	temp := template.Must(template.ParseFiles("dump.html"))
 			Res := Response{true, "No Record Exist", ""}
-			println("Server Response:", Res.flag,Res.message,Res.links)
+			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 		 	return 
 		 }
