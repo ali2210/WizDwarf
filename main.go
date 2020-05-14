@@ -284,7 +284,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 			serverResponse := Response{0, true}
 			println("Server Response:", serverResponse.id, serverResponse.flag)
 			temp.Execute(w, serverResponse)
-		 	
+		 	return 
 		 }
 		 	fmt.Printf("Search Data:%v", data)
 
