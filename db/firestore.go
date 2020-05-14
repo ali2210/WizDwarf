@@ -52,27 +52,10 @@ func (*cloud_data)SaveData(visitor *Vistors, app *firebase.App)(*Vistors, error)
 		return nil, err
 	}
 	defer client.Close()
-	var visits Vistors
 	timerStrt := time.Now()
 	t := time.Now()
 	fmt.Println("Please wait ...", t)
-	iterator := client.Collection(collectionName).Where("Email", "==",visitor.Email).Documents(ctx)
-	fmt.Printf("Iterator%v\n", iterator)
-	defer iterator.Stop()
-	for{
-		doc, err := iterator.Next();if err != nil{
-			//log.Fatal("Iterator Failed on Vistor: ", err)
-			return nil, err
-		}
-		fmt.Printf("Data:%v\n", doc.Data())
-		visits = Vistors {
-			Email : doc.Data()["Email"].(string),
-			Password: doc.Data()["Password"].(string),
-		}
-		fmt.Println("Process complete ...", t.Sub(timerStrt))
-		break
-	}
-	fmt.Println("visits:", visits)
+	
 	_, _, err = client.Collection(collectionName).Add(ctx, map[string]interface{}{
 		"Id" :	visitor.Id,
 		"Name" : visitor.Name,

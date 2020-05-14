@@ -445,10 +445,19 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		member.City = user.city
 		member.Zip = user.zip
 		member.Country = user.country
+		datax , err := cloud.FindData(member.Email,member.Password, AppName); if err != nil && data != nil{
+			// log.Fatal("Error", err)
+				temp := template.Must(template.ParseFiles("server.html"))
+				Res := Response{true, "Sorry We have Record", ""}
+				println("Server Response:", Res.Flag,Res.Message,Res.Links)
+				fmt.Printf("Data:%v", datax)
+				temp.Execute(response, Res)
+			// return nil, err
+		}	
 		record ,err := cloud.SaveData(&member, AppName); if err != nil {
 			fmt.Printf("Error%v\n", err)
 				temp := template.Must(template.ParseFiles("server.html"))
-				Res := Response{true, "Sorry Data is not save yet, check your Connection", ""}
+				Res := Response{true, "Sorry Data is not save yet", ""}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(response, Res)
 			return	
