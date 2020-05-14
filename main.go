@@ -282,7 +282,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	// log.Fatal("Error", err)
 		 	// w.Write([]byte(`{error: No Result Found }`))
 		 	temp := template.Must(template.ParseFiles("dump.html"))
-			Res := Response{true, "No Record Exist", "/WizDawrf/login"}
+			Res := Response{true, "No Record Exist", "WizDawrf/login"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 		 	return 
