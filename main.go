@@ -452,7 +452,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				fmt.Printf("Data:%v", datax)
 				temp.Execute(response, Res)
-			// return nil, err
+			return 
 		}	
 		record ,err := cloud.SaveData(&member, AppName); if err != nil {
 			fmt.Printf("Error%v\n", err)
