@@ -279,12 +279,12 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		// Search Data in DB
 		 data, err := SearchDB(w, r, user.email,user.password); if err != nil{
 		 	// log.Fatal("Error", err)
-		 	w.Write([]byte(`{error: No Result Found }`))
+		 	// w.Write([]byte(`{error: No Result Found }`))
 		 	temp := template.Must(template.ParseFiles("dump.html"))
 			serverResponse := Response{0, true}
 			println("Server Response:", serverResponse.id, serverResponse.flag)
 			temp.Execute(w, serverResponse)
-		 	return
+		 	
 		 }
 		 	fmt.Printf("Search Data:%v", data)
 
