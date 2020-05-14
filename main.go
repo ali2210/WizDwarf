@@ -445,12 +445,12 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		member.City = user.city
 		member.Zip = user.zip
 		member.Country = user.country
-		datax , err := cloud.FindData(member.Email,member.Password, AppName); if err != nil && data != nil{
+		datax , err := cloud.FindData(member.Email,member.Password, AppName); if err == nil && datax == nil{
 			// log.Fatal("Error", err)
 				temp := template.Must(template.ParseFiles("server.html"))
 				Res := Response{true, "Sorry We have Record", ""}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
-				fmt.Printf("Data:%v", datax)
+				fmt.Printf("Data:%v", datax.Email)
 				temp.Execute(response, Res)
 			return 
 		}	
