@@ -26,7 +26,6 @@ import (
 // Struts
 
 type Response struct {
-	id   int
 	flag bool
 	message string
 	links string
@@ -169,8 +168,8 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 			}
 		} else {
 			print("size must be less than 5KB")
-			Repon := Response{0, true,"Error in Upload File", "/WizDwarf/Dashboard"}
-			println("Server Response:", Repon.id, Repon.flag,Repon.message,Repon.links)
+			Repon := Response{true,"Error in Upload File", ""}
+			println("Server Response:", Repon.flag,Repon.message,Repon.links)
 			temp.Execute(w, Repon)
 		}
 
@@ -283,8 +282,8 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	// log.Fatal("Error", err)
 		 	// w.Write([]byte(`{error: No Result Found }`))
 		 	temp := template.Must(template.ParseFiles("dump.html"))
-			Res := Response{0, true, "No Record Exist", "/WizDwarf/login"}
-			println("Server Response:", Res.id, Res.flag,Res.message,Res.links)
+			Res := Response{true, "No Record Exist", ""}
+			println("Server Response:", Res.flag,Res.message,Res.links)
 			temp.Execute(w, Res)
 		 	return 
 		 }
