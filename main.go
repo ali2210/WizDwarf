@@ -264,9 +264,11 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			println("invalid regular expression", err)
 			w.Write([]byte(`{error: Data must be valid }`))
+			temp := template.Must(template.ParseFiles("dump.html"))
+			serverResponse := Response{0, true}
+			println("Server Response:", serverResponse.id, serverResponse.flag)
+			temp.Execute(w, serverResponse)
 			return
-			// r.Method = "GET"
-			// Existing(w,r)
 		}
 		// println("regexp_email:", matchE)
 		_, err = regexp.MatchString(passexp, user.password)
