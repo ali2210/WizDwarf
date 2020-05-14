@@ -28,6 +28,8 @@ import (
 type Response struct {
 	id   int
 	flag bool
+	message string
+	link string
 }
 
 type Create_User struct {
@@ -167,9 +169,9 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 			}
 		} else {
 			print("size must be less than 5KB")
-			serverResponse := Response{0, true}
-			println("Server Response:", serverResponse.id, serverResponse.flag)
-			temp.Execute(w, serverResponse)
+			Repon := Response{0, true,"Error in Upload File", "/WizDwarf/Dashboard"}
+			println("Server Response:", Repon.id, Repon.flag,Repon.message,Repon.link)
+			temp.Execute(w, Repon)
 		}
 
 	}
@@ -281,9 +283,9 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	// log.Fatal("Error", err)
 		 	// w.Write([]byte(`{error: No Result Found }`))
 		 	temp := template.Must(template.ParseFiles("dump.html"))
-			serverResponse := Response{0, true}
-			println("Server Response:", serverResponse.id, serverResponse.flag)
-			temp.Execute(w, serverResponse)
+			Res := Response{0, true, "No Record Exist", "/WizDwarf/login"}
+			println("Server Response:", Res.id, Res.flag,Res.message,Res.link)
+			temp.Execute(w, Res)
 		 	return 
 		 }
 		 	fmt.Printf("Search Data:%v", data)
