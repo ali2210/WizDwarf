@@ -55,6 +55,7 @@ func (*cloud_data)SaveData(visitor *Vistors, app *firebase.App)(*Vistors, error)
 	timerStrt := time.Now()
 	t := time.Now()
 	fmt.Println("Please wait ...", t)
+	
 	_, _, err = client.Collection(collectionName).Add(ctx, map[string]interface{}{
 		"Id" :	visitor.Id,
 		"Name" : visitor.Name,
@@ -67,12 +68,13 @@ func (*cloud_data)SaveData(visitor *Vistors, app *firebase.App)(*Vistors, error)
 		"City" : visitor.City,
 		"Zip": visitor.Zip,
 		"Country": visitor.Country,
-	}); if err != nil{
-		log.Fatal("Failed to retrive Vistor Record:", err)
-		return nil, err
-	}
-	fmt.Println("Process complete ...\n", t.Sub(timerStrt), "Record added")
-	return visitor, nil
+		}); if err != nil{
+			log.Fatal("Failed to retrive Vistor Record:", err)
+			return nil, err
+		}
+		fmt.Println("Process complete ...\n", t.Sub(timerStrt), "Record added")
+		return visitor, nil
+
 }
 
 func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
@@ -137,6 +139,13 @@ func (*cloud_data)FindData(email string , pass string, app *firebase.App)(*Visto
 			Name : doc.Data()["Name"].(string),
 			Email : doc.Data()["Email"].(string),
 			Password: doc.Data()["Password"].(string),
+			FName: doc.Data()["FName"].(string),
+			City : doc.Data()["City"].(string),
+			Country: doc.Data()["Country"].(string),
+			Zip: doc.Data()["Zip"].(string),
+			Address: doc.Data()["Address"].(string),
+			LAddress: doc.Data()["LAddress"].(string),
+			Eve: doc.Data()["Eve"].(bool),
 		}
 		fmt.Println("Process complete ...", t.Sub(timerStrt))
 		break

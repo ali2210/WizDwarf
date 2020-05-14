@@ -92,7 +92,7 @@ func main() {
 	routing.PathPrefix("/css/").Handler(css)
 	js := http.StripPrefix("/js/", http.FileServer(http.Dir("./js")))
 	routing.PathPrefix("/js/").Handler(js)
-	routing.HandleFunc("/dummy", Dump)
+	routing.HandleFunc("/dummy", server)
 
 		// Server
 	log.Println("Listening at 9101 ... please wait...")
@@ -117,7 +117,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Method:" + r.Method)
 		temp.Execute(w, "Dashboard")
 	} else {
-		temp := template.Must(template.ParseFiles("dump.html"))
+		temp := template.Must(template.ParseFiles("server.html"))
 		r.ParseForm()
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
@@ -209,7 +209,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		matchE, err := regexp.MatchString(emailexp, user.email)
 		if err != nil {
 			println("invalid regular expression", err)
-			temp := template.Must(template.ParseFiles("dump.html"))
+			temp := template.Must(template.ParseFiles("server.html"))
 			Res := Response{true, "Data must be valid", ""}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
@@ -219,7 +219,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		matchP, err := regexp.MatchString(passexp, user.password)
 		if err != nil {
 			println("invalid regular expression", err)
-			temp := template.Must(template.ParseFiles("dump.html"))
+			temp := template.Must(template.ParseFiles("server.html"))
 			Res := Response{true, "Data must be valid", ""}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
@@ -230,7 +230,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		// security
 		hashRet, encrypted := MessageToHash(w, matchE, matchP, user)
 		if hashRet == false {
-			temp := template.Must(template.ParseFiles("dump.html"))
+			temp := template.Must(template.ParseFiles("server.html"))
 			Res := Response{true, "Data must be valid", ""}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
@@ -275,8 +275,8 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		_, err := regexp.MatchString(emailexp, user.email)
 		if err != nil {
 			println("invalid regular expression", err)
-			temp := template.Must(template.ParseFiles("dump.html"))
-			Res := Response{true, "Data must be valid", "WizDawrf/login"}
+			temp := template.Must(template.ParseFiles("server.html"))
+			Res := Response{true, "Data must be valid", "/WizDawrf/login"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			return
@@ -285,7 +285,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		_, err = regexp.MatchString(passexp, user.password)
 		if err != nil {
 			println("invalid regular expression", err)
-			temp := template.Must(template.ParseFiles("dump.html"))
+			temp := template.Must(template.ParseFiles("server.html"))
 			Res := Response{true, "Data must be valid", "WizDawrf/login"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
@@ -298,7 +298,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 data, err := SearchDB(w, r, user.email,user.password); if err != nil{
 		 	// log.Fatal("Error", err)
 		 	// w.Write([]byte(`{error: No Result Found }`))
-		 	temp := template.Must(template.ParseFiles("dump.html"))
+		 	temp := template.Must(template.ParseFiles("server.html"))
 			Res := Response{true, "No Record Exist", "WizDawrf/login"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
@@ -313,7 +313,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 		sessId.Values["authenticated"] = true
 		 		err = sessId.Save(r,w); if err != nil{
 		 		// log.Fatal("Error", err)
-		 		temp := template.Must(template.ParseFiles("dump.html"))
+		 		temp := template.Must(template.ParseFiles("server.html"))
 				Res := Response{true, "Sorry We have no Record, Please Regsiter", ""}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(w, Res)
@@ -325,7 +325,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	sessId.Values["authenticated"] = true
 		 	err = sessId.Save(r,w); if err != nil{
 		 		// log.Fatal("Error", err)
-		 		temp := template.Must(template.ParseFiles("dump.html"))
+		 		temp := template.Must(template.ParseFiles("server.html"))
 				Res := Response{true, "Sorry We donot have any record , please register", ""}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(w, Res)
@@ -342,9 +342,9 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func Dump(w http.ResponseWriter, r *http.Request) {
-	temp := template.Must(template.ParseFiles("dump.html"))
-	temp.Execute(w, "Dump")
+func server(w http.ResponseWriter, r *http.Request) {
+	temp := template.Must(template.ParseFiles("server.html"))
+	temp.Execute(w, "server")
 }
 
 func Logout(w http.ResponseWriter, r *http.Request){
@@ -356,7 +356,7 @@ func Logout(w http.ResponseWriter, r *http.Request){
 		 	sessId.Values["authenticated"] = false
 		 	err := sessId.Save(r,w); if err != nil{
 		 		// log.Fatal("Error", err)
-		 		temp := template.Must(template.ParseFiles("dump.html"))
+		 		temp := template.Must(template.ParseFiles("server.html"))
 				Res := Response{true, "Sorry We have no Record, Please Regsiter", ""}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(w, Res)
@@ -380,7 +380,7 @@ func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string)(*db.Vis
 		fmt.Println("Method:" + r.Method)
 		data , err = cloud.FindData(email,pass, AppName); if err != nil && data != nil{
 			// log.Fatal("Error", err)
-				temp := template.Must(template.ParseFiles("dump.html"))
+				temp := template.Must(template.ParseFiles("server.html"))
 				Res := Response{true, "Sorry We have no Record, Please Regsiter", ""}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(w, Res)
@@ -416,7 +416,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		var member db.Vistors
 		data, err  := json.Marshal(member); if err != nil{
 			fmt.Printf("Error in Marshal%v\n", err)
-				temp := template.Must(template.ParseFiles("dump.html"))
+				temp := template.Must(template.ParseFiles("server.html"))
 				Res := Response{true, "Sorry Data must be in Format", ""}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(response, Res)
@@ -424,7 +424,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		}
 		err = json.Unmarshal(data, &member); if err != nil{
 			fmt.Printf("Error%v\n", err)
-				temp := template.Must(template.ParseFiles("dump.html"))
+				temp := template.Must(template.ParseFiles("server.html"))
 				Res := Response{true, "Sorry Data Format Issue", ""}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(response, Res)
@@ -445,10 +445,19 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		member.City = user.city
 		member.Zip = user.zip
 		member.Country = user.country
+		datax , err := cloud.FindData(member.Email,member.Password, AppName); if err == nil && datax == nil{
+			// log.Fatal("Error", err)
+				temp := template.Must(template.ParseFiles("server.html"))
+				Res := Response{true, "Sorry We have Record", ""}
+				println("Server Response:", Res.Flag,Res.Message,Res.Links)
+				fmt.Printf("Data:%v", datax.Email)
+				temp.Execute(response, Res)
+			return 
+		}	
 		record ,err := cloud.SaveData(&member, AppName); if err != nil {
 			fmt.Printf("Error%v\n", err)
-				temp := template.Must(template.ParseFiles("dump.html"))
-				Res := Response{true, "Sorry Data is not save yet, check your Connection", ""}
+				temp := template.Must(template.ParseFiles("server.html"))
+				Res := Response{true, "Sorry Data is not save yet", ""}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(response, Res)
 			return	
@@ -474,7 +483,7 @@ func SetFirestoreCredentials() *firebase.App {
 	app, err := firebase.NewApp(context.Background(), conf, opt)
 	if err != nil {
 		println("Error in Connection with Firestore", err)
-				// temp := template.Must(template.ParseFiles("dump.html"))
+				// temp := template.Must(template.ParseFiles("server.html"))
 				// Res := Response{true, "Sorry, Internet Connection Failed", ""}
 				// println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				// temp.Execute(w, Res)
@@ -492,7 +501,7 @@ func FileReadFromDisk(w http.ResponseWriter, filename string) os.FileInfo {
 	f, err := os.OpenFile(filename+".txt", os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
 		println("FILE Open Error ... ", err)
-		temp := template.Must(template.ParseFiles("dump.html"))
+		temp := template.Must(template.ParseFiles("server.html"))
 		Res := Response{true, "Sorry Error in open File", ""}
 		println("Server Response:", Res.Flag,Res.Message,Res.Links)
 		temp.Execute(w, Res)
@@ -502,7 +511,7 @@ func FileReadFromDisk(w http.ResponseWriter, filename string) os.FileInfo {
 	finfo, err := f.Stat()
 	if err != nil {
 		println("File Info not found", err)
-		temp := template.Must(template.ParseFiles("dump.html"))
+		temp := template.Must(template.ParseFiles("server.html"))
 		Res := Response{true, "Sorry, Server have NO INFORMATION", ""}
 		println("Server Response:", Res.Flag,Res.Message,Res.Links)
 		temp.Execute(w, Res)
@@ -518,7 +527,7 @@ func Key(w http.ResponseWriter, h1, h2 string) (string, string, *ecdsa.PrivateKe
 		privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 		if err != nil {
 			// panic(err)
-			temp := template.Must(template.ParseFiles("dump.html"))
+			temp := template.Must(template.ParseFiles("server.html"))
 			Res := Response{true, "Sorry Error in encrytion", ""}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
@@ -536,7 +545,7 @@ func Key(w http.ResponseWriter, h1, h2 string) (string, string, *ecdsa.PrivateKe
 		r, s, err := ecdsa.Sign(rand.Reader, privateKey, hash[:])
 		println("Reader_reg:", rand.Reader)
 		if err != nil {
-			temp := template.Must(template.ParseFiles("dump.html"))
+			temp := template.Must(template.ParseFiles("server.html"))
 			Res := Response{true, "Sorry Error in encrytion", ""}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
@@ -583,7 +592,7 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 	file, handler, err := r.FormFile("fileSeq")
 	if err != nil {
 		fmt.Println("Error failed.... retry", err)
-		 temp := template.Must(template.ParseFiles("dump.html"))
+		 temp := template.Must(template.ParseFiles("server.html"))
 		 Res := Response{true, "Sorry Error in Upload File", ""}
 		 println("Server Response:", Res.Flag,Res.Message,Res.Links)
 		temp.Execute(w, Res)
@@ -594,7 +603,7 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 		fmt.Println("File name:" + handler.Filename)
 		if _, err := os.Stat(handler.Filename); os.IsExist(err) {
 			fmt.Println("File not exist ", err)
-			 temp := template.Must(template.ParseFiles("dump.html"))
+			 temp := template.Must(template.ParseFiles("server.html"))
 			Res := Response{true, "Sorry Error , No Such Directory", ""}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
@@ -603,7 +612,7 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 		upldFile, err := ioutil.TempFile("user_data", handler.Filename+"-*.txt")
 		if err != nil {
 			fmt.Println("Error received while uploading!", err)
-			temp := template.Must(template.ParseFiles("dump.html"))
+			temp := template.Must(template.ParseFiles("server.html"))
 			Res := Response{true, "Sorry Upload File must have .txt extension ", ""}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
@@ -614,7 +623,7 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 		bytesFile, err := ioutil.ReadAll(file)
 		if err != nil {
 			fmt.Println("Error received while reading!", err)
-			temp := template.Must(template.ParseFiles("dump.html"))
+			temp := template.Must(template.ParseFiles("server.html"))
 			Res := Response{true, "Error in Reading File", ""}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
@@ -635,7 +644,7 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo) {
 	seq, err := ReadSequence(userFile.Name())
 	if err != nil {
 		println("Error in read file", err)
-		// temp := template.Must(template.ParseFiles("dump.html"))
+		// temp := template.Must(template.ParseFiles("server.html"))
 		// 	Res := Response{true, "Error in File", ""}
 		// 	println("Server Response:", Res.Flag,Res.Message,Res.Links)
 		// 	temp.Execute(w, Res)
@@ -645,7 +654,7 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo) {
 	Useq, err := ReadSequence(serverFile.Name())
 	if err != nil {
 		println("Error in read file", err)
-		// temp := template.Must(template.ParseFiles("dump.html"))
+		// temp := template.Must(template.ParseFiles("server.html"))
 		// 	Res := Response{true, "Error in File", ""}
 		// 	println("Server Response:", Res.Flag,Res.Message,Res.Links)
 		// 	temp.Execute(w, Res)
