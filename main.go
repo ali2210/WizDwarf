@@ -264,10 +264,6 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			println("invalid regular expression", err)
 			w.Write([]byte(`{error: Data must be valid }`))
-			temp := template.Must(template.ParseFiles("dump.html"))
-			serverResponse := Response{0, true}
-			println("Server Response:", serverResponse.id, serverResponse.flag)
-			temp.Execute(w, serverResponse)
 			return
 		}
 		// println("regexp_email:", matchE)
@@ -284,6 +280,10 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 data, err := SearchDB(w, r, user.email,user.password); if err != nil{
 		 	// log.Fatal("Error", err)
 		 	w.Write([]byte(`{error: No Result Found }`))
+		 	temp := template.Must(template.ParseFiles("dump.html"))
+			serverResponse := Response{0, true}
+			println("Server Response:", serverResponse.id, serverResponse.flag)
+			temp.Execute(w, serverResponse)
 		 	return
 		 }
 		 	fmt.Printf("Search Data:%v", data)
