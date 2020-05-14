@@ -282,8 +282,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 data, err := SearchDB(w, r, user.email,user.password); if err != nil{
 		 	// log.Fatal("Error", err)
 		 	w.Write([]byte(`{error: No Result Found }`))
-		 	r.Method = "GET"
-		 	Home(w,r)
+		 	return
 		 }
 		 	fmt.Printf("Search Data:%v", data)
 
@@ -386,15 +385,11 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		data, err  := json.Marshal(member); if err != nil{
 			fmt.Printf("Error in Marshal%v\n", err)
 			response.Write([]byte(`{error: Marshal}`))
-			request.Method = "GET"
-			NewUser(response,request)  
 			return
 		}
 		err = json.Unmarshal(data, &member); if err != nil{
 			fmt.Printf("Error%v\n", err)
 			response.Write([]byte(`{error:  UnMarshal}`))
-			request.Method = "GET"
-			NewUser(response,request)
 			return
 		}
 		member.Id = im
@@ -535,7 +530,7 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 		return nil
 	}
 	defer file.Close()
-	if handler.Size <= (50 * 1024) {
+	if handler.Size <= (50   * 1024) {
 		fmt.Println("File name:" + handler.Filename)
 		if _, err := os.Stat(handler.Filename); os.IsExist(err) {
 			fmt.Println("File not exist ", err)
