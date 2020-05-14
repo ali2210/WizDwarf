@@ -26,8 +26,9 @@ import (
 // Struts
 
 type Response struct {
-	id   int
-	flag bool
+	Flag bool
+	Message string
+	Links string
 }
 
 type Create_User struct {
@@ -167,9 +168,9 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 			}
 		} else {
 			print("size must be less than 5KB")
-			serverResponse := Response{0, true}
-			println("Server Response:", serverResponse.id, serverResponse.flag)
-			temp.Execute(w, serverResponse)
+			Repon := Response{true,"Error in Upload File", ""}
+			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			temp.Execute(w, Repon)
 		}
 
 	}
@@ -208,12 +209,20 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		matchE, err := regexp.MatchString(emailexp, user.email)
 		if err != nil {
 			println("invalid regular expression", err)
+			temp := template.Must(template.ParseFiles("dump.html"))
+			Res := Response{true, "Data must be valid", ""}
+			println("Server Response:", Res.Flag,Res.Message,Res.Links)
+			temp.Execute(w, Res)
 			return
 		}
 		println("regexp_email:", matchE)
 		matchP, err := regexp.MatchString(passexp, user.password)
 		if err != nil {
 			println("invalid regular expression", err)
+			temp := template.Must(template.ParseFiles("dump.html"))
+			Res := Response{true, "Data must be valid", ""}
+			println("Server Response:", Res.Flag,Res.Message,Res.Links)
+			temp.Execute(w, Res)
 			return
 		}
 		println("regexp_pass:", matchP)
@@ -221,7 +230,10 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		// security
 		hashRet, encrypted := MessageToHash(w, matchE, matchP, user)
 		if hashRet == false {
-			fmt.Fprintf(w, "Sorry provided data must not match with rules\n. Email must be in Upper or Lower case or some digits, while password must contain Uppercase Letter , lowercase letter")
+			temp := template.Must(template.ParseFiles("dump.html"))
+			Res := Response{true, "Data must be valid", ""}
+			println("Server Response:", Res.Flag,Res.Message,Res.Links)
+			temp.Execute(w, Res)
 			return
 		}
 		println("encryted data", encrypted.reader)
@@ -263,16 +275,20 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		_, err := regexp.MatchString(emailexp, user.email)
 		if err != nil {
 			println("invalid regular expression", err)
-			w.Write([]byte(`{error: Data must be valid }`))
+			temp := template.Must(template.ParseFiles("dump.html"))
+			Res := Response{true, "Data must be valid", "WizDawrf/login"}
+			println("Server Response:", Res.Flag,Res.Message,Res.Links)
+			temp.Execute(w, Res)
 			return
-			// r.Method = "GET"
-			// Existing(w,r)
 		}
 		// println("regexp_email:", matchE)
 		_, err = regexp.MatchString(passexp, user.password)
 		if err != nil {
 			println("invalid regular expression", err)
-			w.Write([]byte(`{error: Data must be valid }`))
+			temp := template.Must(template.ParseFiles("dump.html"))
+			Res := Response{true, "Data must be valid", "WizDawrf/login"}
+			println("Server Response:", Res.Flag,Res.Message,Res.Links)
+			temp.Execute(w, Res)
 			return
 			// r.Method = "GET"
 			// Existing(w,r)
@@ -281,9 +297,12 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		// Search Data in DB
 		 data, err := SearchDB(w, r, user.email,user.password); if err != nil{
 		 	// log.Fatal("Error", err)
-		 	w.Write([]byte(`{error: No Result Found }`))
-		 	r.Method = "GET"
-		 	Home(w,r)
+		 	// w.Write([]byte(`{error: No Result Found }`))
+		 	temp := template.Must(template.ParseFiles("dump.html"))
+			Res := Response{true, "No Record Exist", "WizDawrf/login"}
+			println("Server Response:", Res.Flag,Res.Message,Res.Links)
+			temp.Execute(w, Res)
+		 	return 
 		 }
 		 	fmt.Printf("Search Data:%v", data)
 
@@ -294,7 +313,10 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 		sessId.Values["authenticated"] = true
 		 		err = sessId.Save(r,w); if err != nil{
 		 		// log.Fatal("Error", err)
-		 			w.Write([]byte(`{error: Generate Session }`))
+		 		temp := template.Must(template.ParseFiles("dump.html"))
+				Res := Response{true, "Sorry We have no Record, Please Regsiter", ""}
+				println("Server Response:", Res.Flag,Res.Message,Res.Links)
+				temp.Execute(w, Res)
 		 			return
 		 		}
 		 		println("Id :", sessId, "user:", userSessions)
@@ -303,7 +325,10 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	sessId.Values["authenticated"] = true
 		 	err = sessId.Save(r,w); if err != nil{
 		 		// log.Fatal("Error", err)
-		 		w.Write([]byte(`{error: Generate Sessions }`))
+		 		temp := template.Must(template.ParseFiles("dump.html"))
+				Res := Response{true, "Sorry We donot have any record , please register", ""}
+				println("Server Response:", Res.Flag,Res.Message,Res.Links)
+				temp.Execute(w, Res)
 		 		return
 		 	}
 		 	println("Id :", sessId)
@@ -331,7 +356,10 @@ func Logout(w http.ResponseWriter, r *http.Request){
 		 	sessId.Values["authenticated"] = false
 		 	err := sessId.Save(r,w); if err != nil{
 		 		// log.Fatal("Error", err)
-		 		w.Write([]byte(`{error: Generate Sessions }`))
+		 		temp := template.Must(template.ParseFiles("dump.html"))
+				Res := Response{true, "Sorry We have no Record, Please Regsiter", ""}
+				println("Server Response:", Res.Flag,Res.Message,Res.Links)
+				temp.Execute(w, Res)
 		 		return
 		 	}
 		 	Existing(w,r)
@@ -352,7 +380,10 @@ func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string)(*db.Vis
 		fmt.Println("Method:" + r.Method)
 		data , err = cloud.FindData(email,pass, AppName); if err != nil && data != nil{
 			// log.Fatal("Error", err)
-			w.Write([]byte(`{error: No Record exist }`))
+				temp := template.Must(template.ParseFiles("dump.html"))
+				Res := Response{true, "Sorry We have no Record, Please Regsiter", ""}
+				println("Server Response:", Res.Flag,Res.Message,Res.Links)
+				temp.Execute(w, Res)
 			return nil, err
 		}
 	}
@@ -385,16 +416,18 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		var member db.Vistors
 		data, err  := json.Marshal(member); if err != nil{
 			fmt.Printf("Error in Marshal%v\n", err)
-			response.Write([]byte(`{error: Marshal}`))
-			request.Method = "GET"
-			NewUser(response,request)  
+				temp := template.Must(template.ParseFiles("dump.html"))
+				Res := Response{true, "Sorry Data must be in Format", ""}
+				println("Server Response:", Res.Flag,Res.Message,Res.Links)
+				temp.Execute(response, Res)
 			return
 		}
 		err = json.Unmarshal(data, &member); if err != nil{
 			fmt.Printf("Error%v\n", err)
-			response.Write([]byte(`{error:  UnMarshal}`))
-			request.Method = "GET"
-			NewUser(response,request)
+				temp := template.Must(template.ParseFiles("dump.html"))
+				Res := Response{true, "Sorry Data Format Issue", ""}
+				println("Server Response:", Res.Flag,Res.Message,Res.Links)
+				temp.Execute(response, Res)
 			return
 		}
 		member.Id = im
@@ -414,7 +447,10 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		member.Country = user.country
 		record ,err := cloud.SaveData(&member, AppName); if err != nil {
 			fmt.Printf("Error%v\n", err)
-			response.Write([]byte(`{error: records }`))
+				temp := template.Must(template.ParseFiles("dump.html"))
+				Res := Response{true, "Sorry Data is not save yet, check your Connection", ""}
+				println("Server Response:", Res.Flag,Res.Message,Res.Links)
+				temp.Execute(response, Res)
 			return	
 		}
 
@@ -438,7 +474,10 @@ func SetFirestoreCredentials() *firebase.App {
 	app, err := firebase.NewApp(context.Background(), conf, opt)
 	if err != nil {
 		println("Error in Connection with Firestore", err)
-		// w.Write([]byte(`{error: Make sure You're Connected }`))
+				// temp := template.Must(template.ParseFiles("dump.html"))
+				// Res := Response{true, "Sorry, Internet Connection Failed", ""}
+				// println("Server Response:", Res.Flag,Res.Message,Res.Links)
+				// temp.Execute(w, Res)
 		return nil
 	}
 	println("Connected... Welcome to Firestore")
@@ -453,14 +492,20 @@ func FileReadFromDisk(w http.ResponseWriter, filename string) os.FileInfo {
 	f, err := os.OpenFile(filename+".txt", os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
 		println("FILE Open Error ... ", err)
-		w.Write([]byte(`{error:File not Found}`))
+		temp := template.Must(template.ParseFiles("dump.html"))
+		Res := Response{true, "Sorry Error in open File", ""}
+		println("Server Response:", Res.Flag,Res.Message,Res.Links)
+		temp.Execute(w, Res)
 		return nil
 	}
 	println("File Exist...", f)
 	finfo, err := f.Stat()
 	if err != nil {
 		println("File Info not found", err)
-		w.Write([]byte(`{error: File have No Infomation }`))
+		temp := template.Must(template.ParseFiles("dump.html"))
+		Res := Response{true, "Sorry, Server have NO INFORMATION", ""}
+		println("Server Response:", Res.Flag,Res.Message,Res.Links)
+		temp.Execute(w, Res)
 		return nil
 	}
 	println("File Info", finfo.Name())
@@ -473,6 +518,10 @@ func Key(w http.ResponseWriter, h1, h2 string) (string, string, *ecdsa.PrivateKe
 		privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 		if err != nil {
 			// panic(err)
+			temp := template.Must(template.ParseFiles("dump.html"))
+			Res := Response{true, "Sorry Error in encrytion", ""}
+			println("Server Response:", Res.Flag,Res.Message,Res.Links)
+			temp.Execute(w, Res)
 			return "", "", nil
 		}
 
@@ -487,7 +536,10 @@ func Key(w http.ResponseWriter, h1, h2 string) (string, string, *ecdsa.PrivateKe
 		r, s, err := ecdsa.Sign(rand.Reader, privateKey, hash[:])
 		println("Reader_reg:", rand.Reader)
 		if err != nil {
-			w.Write([]byte(`{error: Generate data }`))
+			temp := template.Must(template.ParseFiles("dump.html"))
+			Res := Response{true, "Sorry Error in encrytion", ""}
+			println("Server Response:", Res.Flag,Res.Message,Res.Links)
+			temp.Execute(w, Res)
 			// panic(err)
 			return "", "", privateKey
 		}
@@ -531,21 +583,30 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 	file, handler, err := r.FormFile("fileSeq")
 	if err != nil {
 		fmt.Println("Error failed.... retry", err)
-		 w.Write([]byte(`{error: File upload }`))
+		 temp := template.Must(template.ParseFiles("dump.html"))
+		 Res := Response{true, "Sorry Error in Upload File", ""}
+		 println("Server Response:", Res.Flag,Res.Message,Res.Links)
+		temp.Execute(w, Res)
 		return nil
 	}
 	defer file.Close()
-	if handler.Size <= (50 * 1024) {
+	if handler.Size <= (50   * 1024) {
 		fmt.Println("File name:" + handler.Filename)
 		if _, err := os.Stat(handler.Filename); os.IsExist(err) {
 			fmt.Println("File not exist ", err)
-			 w.Write([]byte(`{error: Dir Not Found }`))
+			 temp := template.Must(template.ParseFiles("dump.html"))
+			Res := Response{true, "Sorry Error , No Such Directory", ""}
+			println("Server Response:", Res.Flag,Res.Message,Res.Links)
+			temp.Execute(w, Res)
 			return nil
 		}
 		upldFile, err := ioutil.TempFile("user_data", handler.Filename+"-*.txt")
 		if err != nil {
 			fmt.Println("Error received while uploading!", err)
-			w.Write([]byte(`{error: Invalid extension , File must be .txt  }`))
+			temp := template.Must(template.ParseFiles("dump.html"))
+			Res := Response{true, "Sorry Upload File must have .txt extension ", ""}
+			println("Server Response:", Res.Flag,Res.Message,Res.Links)
+			temp.Execute(w, Res)
 			return nil 
 		}
 		defer upldFile.Close()
@@ -553,7 +614,10 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 		bytesFile, err := ioutil.ReadAll(file)
 		if err != nil {
 			fmt.Println("Error received while reading!", err)
-			w.Write([]byte(`{error: File Unable to Read, Wrong Format }`))
+			temp := template.Must(template.ParseFiles("dump.html"))
+			Res := Response{true, "Error in Reading File", ""}
+			println("Server Response:", Res.Flag,Res.Message,Res.Links)
+			temp.Execute(w, Res)
 			return nil
 		}
 
@@ -571,12 +635,20 @@ func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo) {
 	seq, err := ReadSequence(userFile.Name())
 	if err != nil {
 		println("Error in read file", err)
+		// temp := template.Must(template.ParseFiles("dump.html"))
+		// 	Res := Response{true, "Error in File", ""}
+		// 	println("Server Response:", Res.Flag,Res.Message,Res.Links)
+		// 	temp.Execute(w, Res)
 		return
 	}
   // fmt.Printf("Seq string:%s\n", seq)
 	Useq, err := ReadSequence(serverFile.Name())
 	if err != nil {
 		println("Error in read file", err)
+		// temp := template.Must(template.ParseFiles("dump.html"))
+		// 	Res := Response{true, "Error in File", ""}
+		// 	println("Server Response:", Res.Flag,Res.Message,Res.Links)
+		// 	temp.Execute(w, Res)
 		return
 	}
 
