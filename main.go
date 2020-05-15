@@ -276,7 +276,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			println("invalid regular expression", err)
 			temp := template.Must(template.ParseFiles("server.html"))
-			Res := Response{true, "Data must be valid", "/WizDawrf/login"}
+			Res := Response{true, "Data must be valid", "WizDawrf/login"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			return
