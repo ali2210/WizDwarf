@@ -276,7 +276,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			println("invalid regular expression", err)
 			temp := template.Must(template.ParseFiles("server.html"))
-			Res := Response{true, "Data must be valid", "/WizDawrf/login"}
+			Res := Response{true, "Data must be valid", "WizDawrf/login"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			return
@@ -445,7 +445,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		member.City = user.city
 		member.Zip = user.zip
 		member.Country = user.country
-		datax , err := cloud.FindData(member.Email,member.Password, AppName); if err == nil && datax == nil{
+		datax , err := cloud.FindData(member.Email,member.Password, AppName); if err != nil && datax == nil{
 			// log.Fatal("Error", err)
 				temp := template.Must(template.ParseFiles("server.html"))
 				Res := Response{true, "Sorry We have Record", ""}
