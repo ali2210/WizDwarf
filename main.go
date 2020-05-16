@@ -168,7 +168,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 			}
 		} else {
 			print("size must be less than 5KB")
-			Repon := Response{true,"Error in Upload File", ""}
+			Repon := Response{true,"Error in Upload File", "WizDawrf/dashboard"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
 		}
@@ -210,7 +210,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			println("invalid regular expression", err)
 			temp := template.Must(template.ParseFiles("server.html"))
-			Res := Response{true, "Data must be valid", ""}
+			Res := Response{true, "Data must be valid", "WizDawrf/signup"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			return
@@ -220,7 +220,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			println("invalid regular expression", err)
 			temp := template.Must(template.ParseFiles("server.html"))
-			Res := Response{true, "Data must be valid", ""}
+			Res := Response{true, "Data must be valid", "WizDawrf/signup"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			return
@@ -231,7 +231,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		hashRet, encrypted := MessageToHash(w, matchE, matchP, user)
 		if hashRet == false {
 			temp := template.Must(template.ParseFiles("server.html"))
-			Res := Response{true, "Data must be valid", ""}
+			Res := Response{true, "Data must be valid", "WizDawrf/signup"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			return
@@ -314,7 +314,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 		err = sessId.Save(r,w); if err != nil{
 		 		// log.Fatal("Error", err)
 		 		temp := template.Must(template.ParseFiles("server.html"))
-				Res := Response{true, "Sorry We have no Record, Please Regsiter", ""}
+				Res := Response{true, "Sorry We have no Record, Please Regsiter", "WizDawrf/signup"}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(w, Res)
 		 			return
@@ -326,7 +326,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	err = sessId.Save(r,w); if err != nil{
 		 		// log.Fatal("Error", err)
 		 		temp := template.Must(template.ParseFiles("server.html"))
-				Res := Response{true, "Sorry We donot have any record , please register", ""}
+				Res := Response{true, "Sorry We donot have any record , please register", "WizDawrf/signup"}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(w, Res)
 		 		return
@@ -357,7 +357,7 @@ func Logout(w http.ResponseWriter, r *http.Request){
 		 	err := sessId.Save(r,w); if err != nil{
 		 		// log.Fatal("Error", err)
 		 		temp := template.Must(template.ParseFiles("server.html"))
-				Res := Response{true, "Sorry We have no Record, Please Regsiter", ""}
+				Res := Response{true, "Sorry We have no Record, Please Regsiter", "WizDawrf/signup"}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(w, Res)
 		 		return
@@ -371,23 +371,23 @@ func Logout(w http.ResponseWriter, r *http.Request){
 
 func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string)(*db.Vistors, error){
 	
-	var data *db.Vistors
-	var err error
+	 var data *db.Vistors
+	 var err error
 	// w.Header().Set("Content-Type", "application/json")
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
 	} else {
 		fmt.Println("Method:" + r.Method)
-		data , err = cloud.FindData(email,pass, AppName); if err != nil && data != nil{
+		data, err = cloud.FindData(email,pass, AppName); if err != nil && data != nil{
 			// log.Fatal("Error", err)
 				temp := template.Must(template.ParseFiles("server.html"))
-				Res := Response{true, "Sorry We have no Record, Please Regsiter", ""}
+				Res := Response{true, "Sorry We have no Record, Please Regsiter", "WizDawrf/signup"}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(w, Res)
-			return nil, err
+			return nil, err 
 		}
 	}
-	return data, err
+	return data, nil
 }
 
 
@@ -417,7 +417,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		data, err  := json.Marshal(member); if err != nil{
 			fmt.Printf("Error in Marshal%v\n", err)
 				temp := template.Must(template.ParseFiles("server.html"))
-				Res := Response{true, "Sorry Data must be in Format", ""}
+				Res := Response{true, "Sorry Data must be in Format", "WizDawrf/signup"}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(response, Res)
 			return
@@ -425,11 +425,14 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		err = json.Unmarshal(data, &member); if err != nil{
 			fmt.Printf("Error%v\n", err)
 				temp := template.Must(template.ParseFiles("server.html"))
-				Res := Response{true, "Sorry Data Format Issue", ""}
+				Res := Response{true, "Sorry Data Format Issue", "WizDawrf/signup"}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(response, Res)
 			return
 		}
+		candidate , err := SearchDB(response, request, user.email,user.password); if err == nil{
+		 	// log.Fatal("Error", err)
+		 	// w.Write([]byte(`{error: No Result Found }`))
 		member.Id = im
 		member.Name = user.name
 		member.Email = user.email
@@ -445,19 +448,10 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		member.City = user.city
 		member.Zip = user.zip
 		member.Country = user.country
-		datax , err := cloud.FindData(member.Email,member.Password, AppName); if err != nil && datax == nil{
-			// log.Fatal("Error", err)
-				temp := template.Must(template.ParseFiles("server.html"))
-				Res := Response{true, "Sorry We have Record", ""}
-				println("Server Response:", Res.Flag,Res.Message,Res.Links)
-				fmt.Printf("Data:%v", datax.Email)
-				temp.Execute(response, Res)
-			return 
-		}	
 		record ,err := cloud.SaveData(&member, AppName); if err != nil {
 			fmt.Printf("Error%v\n", err)
 				temp := template.Must(template.ParseFiles("server.html"))
-				Res := Response{true, "Sorry Data is not save yet", ""}
+				Res := Response{true, "Sorry Data is not save yet", "WizDawrf/signup"}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(response, Res)
 			return	
@@ -467,6 +461,12 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		response.WriteHeader(http.StatusOK)
 		request.Method = "GET"
 		Existing(response,request)
+		}
+			fmt.Printf("Search Data:%v", candidate.Email)
+			temp := template.Must(template.ParseFiles("server.html"))
+			Res := Response{true, "Your Data Already in DB", "WizDawrf/signup"}
+			println("Server Response:", Res.Flag,Res.Message,Res.Links)
+			temp.Execute(response, Res)
 	}
 	
 }
@@ -502,7 +502,7 @@ func FileReadFromDisk(w http.ResponseWriter, filename string) os.FileInfo {
 	if err != nil {
 		println("FILE Open Error ... ", err)
 		temp := template.Must(template.ParseFiles("server.html"))
-		Res := Response{true, "Sorry Error in open File", ""}
+		Res := Response{true, "Sorry Error in open File", "WizDawrf/dashboard"}
 		println("Server Response:", Res.Flag,Res.Message,Res.Links)
 		temp.Execute(w, Res)
 		return nil
@@ -512,7 +512,7 @@ func FileReadFromDisk(w http.ResponseWriter, filename string) os.FileInfo {
 	if err != nil {
 		println("File Info not found", err)
 		temp := template.Must(template.ParseFiles("server.html"))
-		Res := Response{true, "Sorry, Server have NO INFORMATION", ""}
+		Res := Response{true, "Sorry, Server have NO INFORMATION", "WizDawrf/dashboard"}
 		println("Server Response:", Res.Flag,Res.Message,Res.Links)
 		temp.Execute(w, Res)
 		return nil
@@ -528,7 +528,7 @@ func Key(w http.ResponseWriter, h1, h2 string) (string, string, *ecdsa.PrivateKe
 		if err != nil {
 			// panic(err)
 			temp := template.Must(template.ParseFiles("server.html"))
-			Res := Response{true, "Sorry Error in encrytion", ""}
+			Res := Response{true, "Sorry Error in encrytion", "WizDawrf/signup"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			return "", "", nil
@@ -546,7 +546,7 @@ func Key(w http.ResponseWriter, h1, h2 string) (string, string, *ecdsa.PrivateKe
 		println("Reader_reg:", rand.Reader)
 		if err != nil {
 			temp := template.Must(template.ParseFiles("server.html"))
-			Res := Response{true, "Sorry Error in encrytion", ""}
+			Res := Response{true, "Sorry Error in encrytion", "WizDawrf/signup"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			// panic(err)
@@ -593,7 +593,7 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 	if err != nil {
 		fmt.Println("Error failed.... retry", err)
 		 temp := template.Must(template.ParseFiles("server.html"))
-		 Res := Response{true, "Sorry Error in Upload File", ""}
+		 Res := Response{true, "Sorry Error in Upload File", "WizDawrf/dashboard"}
 		 println("Server Response:", Res.Flag,Res.Message,Res.Links)
 		temp.Execute(w, Res)
 		return nil
@@ -604,7 +604,7 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 		if _, err := os.Stat(handler.Filename); os.IsExist(err) {
 			fmt.Println("File not exist ", err)
 			 temp := template.Must(template.ParseFiles("server.html"))
-			Res := Response{true, "Sorry Error , No Such Directory", ""}
+			Res := Response{true, "Sorry Error , No Such Directory", "WizDawrf/dashboard"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			return nil
@@ -613,7 +613,7 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 		if err != nil {
 			fmt.Println("Error received while uploading!", err)
 			temp := template.Must(template.ParseFiles("server.html"))
-			Res := Response{true, "Sorry Upload File must have .txt extension ", ""}
+			Res := Response{true, "Sorry Upload File must have .txt extension ", "WizDawrf/dashboard"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			return nil 
@@ -624,7 +624,7 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 		if err != nil {
 			fmt.Println("Error received while reading!", err)
 			temp := template.Must(template.ParseFiles("server.html"))
-			Res := Response{true, "Error in Reading File", ""}
+			Res := Response{true, "Error in Reading File", "WizDawrf/dashboard"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			return nil
