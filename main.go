@@ -433,13 +433,6 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		candidate , err := SearchDB(response, request, user.email,user.password); if err == nil{
 		 	// log.Fatal("Error", err)
 		 	// w.Write([]byte(`{error: No Result Found }`))
-		 	temp := template.Must(template.ParseFiles("server.html"))
-			Res := Response{true, "Your Data Already in DB", "WizDawrf/signup"}
-			println("Server Response:", Res.Flag,Res.Message,Res.Links)
-			temp.Execute(response, Res)
-		 	return 
-		 }
-		fmt.Printf("Search Data:%v", candidate.Email)
 		member.Id = im
 		member.Name = user.name
 		member.Email = user.email
@@ -468,6 +461,12 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		response.WriteHeader(http.StatusOK)
 		request.Method = "GET"
 		Existing(response,request)
+		}
+			fmt.Printf("Search Data:%v", candidate.Email)
+			temp := template.Must(template.ParseFiles("server.html"))
+			Res := Response{true, "Your Data Already in DB", "WizDawrf/signup"}
+			println("Server Response:", Res.Flag,Res.Message,Res.Links)
+			temp.Execute(response, Res)
 	}
 	
 }
