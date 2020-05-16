@@ -380,12 +380,14 @@ func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string)(*db.Vis
 		fmt.Println("Method:" + r.Method)
 		data, err = cloud.FindData(email,pass, AppName); if err != nil && data != nil{
 			// log.Fatal("Error", err)
-				temp := template.Must(template.ParseFiles("server.html"))
+			println("Error:", err)
+				/*temp := template.Must(template.ParseFiles("server.html"))
 				Res := Response{true, "Sorry We have no Record, Please Regsiter", "WizDawrf/signup"}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
-				temp.Execute(w, Res)
+				temp.Execute(w, Res)*/
 			return nil, err 
 		}
+		println("Data:", data)
 	}
 	return data, nil
 }
@@ -430,7 +432,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 				temp.Execute(response, Res)
 			return
 		}
-		candidate , err := SearchDB(response, request, user.email,user.password); if err == nil{
+		candidate , err := SearchDB(response, request, user.email,user.password); if err == nil && candidate == nil{
 		 	// log.Fatal("Error", err)
 		 	// w.Write([]byte(`{error: No Result Found }`))
 		member.Id = im
@@ -461,6 +463,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		response.WriteHeader(http.StatusOK)
 		request.Method = "GET"
 		Existing(response,request)
+			return 
 		}
 			fmt.Printf("Search Data:%v", candidate.Email)
 			temp := template.Must(template.ParseFiles("server.html"))
