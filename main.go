@@ -371,23 +371,23 @@ func Logout(w http.ResponseWriter, r *http.Request){
 
 func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string)(*db.Vistors, error){
 	
-	var data *db.Vistors
-	var err error
+	 var data *db.Vistors
+	 var err error
 	// w.Header().Set("Content-Type", "application/json")
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
 	} else {
 		fmt.Println("Method:" + r.Method)
-		data , err = cloud.FindData(email,pass, AppName); if err != nil && data != nil{
+		data, err = cloud.FindData(email,pass, AppName); if err != nil && data != nil{
 			// log.Fatal("Error", err)
 				temp := template.Must(template.ParseFiles("server.html"))
 				Res := Response{true, "Sorry We have no Record, Please Regsiter", "WizDawrf/signup"}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(w, Res)
-			return nil, err
+			return nil, err 
 		}
 	}
-	return data, err
+	return data, nil
 }
 
 
@@ -430,6 +430,16 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 				temp.Execute(response, Res)
 			return
 		}
+		candidate , err := SearchDB(response, request, user.email,user.password); if err != nil{
+		 	// log.Fatal("Error", err)
+		 	// w.Write([]byte(`{error: No Result Found }`))
+		 	temp := template.Must(template.ParseFiles("server.html"))
+			Res := Response{true, "Your Data Already in DB", "WizDawrf/signup"}
+			println("Server Response:", Res.Flag,Res.Message,Res.Links)
+			temp.Execute(response, Res)
+		 	return 
+		 }
+		fmt.Printf("Search Data:%v", candidate)
 		member.Id = im
 		member.Name = user.name
 		member.Email = user.email
@@ -445,15 +455,6 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		member.City = user.city
 		member.Zip = user.zip
 		member.Country = user.country
-		datax , err := cloud.FindData(member.Email,member.Password, AppName); if err == nil && datax != nil{
-			// log.Fatal("Error", err)
-				temp := template.Must(template.ParseFiles("server.html"))
-				Res := Response{true, "Sorry We have Record", "WizDawrf/signup"}
-				println("Server Response:", Res.Flag,Res.Message,Res.Links)
-				fmt.Printf("Data:%v", datax.Email)
-				temp.Execute(response, Res)
-			return 
-		}	
 		record ,err := cloud.SaveData(&member, AppName); if err != nil {
 			fmt.Printf("Error%v\n", err)
 				temp := template.Must(template.ParseFiles("server.html"))
