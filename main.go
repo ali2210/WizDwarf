@@ -430,7 +430,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 				temp.Execute(response, Res)
 			return
 		}
-		candidate , err := SearchDB(response, request, user.email,user.password); if err != nil{
+		candidate , err := SearchDB(response, request, user.email,user.password); if err == nil{
 		 	// log.Fatal("Error", err)
 		 	// w.Write([]byte(`{error: No Result Found }`))
 		 	temp := template.Must(template.ParseFiles("server.html"))
@@ -439,7 +439,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 			temp.Execute(response, Res)
 		 	return 
 		 }
-		fmt.Printf("Search Data:%v", candidate)
+		fmt.Printf("Search Data:%v", candidate.Email)
 		member.Id = im
 		member.Name = user.name
 		member.Email = user.email
