@@ -33,7 +33,7 @@
 	width: 80%; 
 	justify-content: center;
 	display: flex;
-	margin-left: 30px;
+	margin-left: 70px;
 	margin-top: 60px;
 }
 
@@ -42,12 +42,12 @@
 	margin-top: 400px;
 	display: flex;
 	justify-content: center;
-	margin-left: 80px;
+	margin-left: 200px;
 }
 .img-dwarfs{
 	width: 80%; 
 	margin-top: 400px;
-	margin-left: auto;
+	margin-left: 100px;
 	display: flex;
 	justify-content: center;
 }
@@ -68,7 +68,8 @@
 	margin-top: 450px;
 	/*display: flex;
 	justify-content: center;*/
-	margin-left: 70px;
+	text-align: center;
+	margin-left: 200px;
 }
 
 .img-dna{
@@ -82,11 +83,17 @@
 	padding-left: 60px; 
 	margin-left: 60px;
 	text-align: center; 
-	font-size: 10px; 
+	font-size: 16px; 
 	margin-top: 70px;
 }
 .mycontainer{
 	text-rendering: auto; 
-	letter-spacing: 2.5px; 
+	letter-spacing: 5px; 
 	text-align: center
+}
+
+
+.foot-mark{
+	display: flex; 
+	justify-content: center;
 }
