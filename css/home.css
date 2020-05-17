@@ -1,0 +1,92 @@
+.custom-header{
+	display: flex;
+	justify-content: center;
+	color: black;
+	margin-top: 50px;
+}
+
+.logo{
+	width: 30%;
+}
+
+.nav-item{
+	text-rendering: geometricPrecision;
+	font-variant: small-caps;
+	font-size: 14px;
+	display: flex;
+}
+.dropdown{
+	margin-right: 70px;
+	align-items: center;
+	display: flex;
+}
+.dropdown-item{
+	padding-right: 100px; 
+	align-items: center; 
+	color: rgb(90,90,90); 
+	text-rendering: geometricPrecision; 
+	font-variant: small-caps; 
+	font-size: 16px;
+	display: flex;
+}
+.polychromatic{
+	width: 80%; 
+	justify-content: center;
+	display: flex;
+	margin-left: 30px;
+	margin-top: 60px;
+}
+
+.img-logo{
+	width: 60%; 
+	margin-top: 400px;
+	display: flex;
+	justify-content: center;
+	margin-left: 80px;
+}
+.img-dwarfs{
+	width: 80%; 
+	margin-top: 400px;
+	margin-left: auto;
+	display: flex;
+	justify-content: center;
+}
+
+.edit-cont{
+	font-size: 24px;
+	display: flex;
+	justify-content: center;
+	margin-left: auto;
+	text-align: center;
+}
+.static-text{
+	text-rendering: auto; 
+	font-variant: small-caps;
+	margin: auto;
+}
+.fluid{
+	margin-top: 450px;
+	/*display: flex;
+	justify-content: center;*/
+	margin-left: 70px;
+}
+
+.img-dna{
+	width: 80%;
+	height: 80%;
+	margin-top: 100px;
+	margin-right: 50px;
+}
+
+.fluids{
+	padding-left: 60px; 
+	margin-left: 60px;
+	text-align: center; 
+	font-size: 10px; 
+	margin-top: 70px;
+}
+.mycontainer{
+	text-rendering: auto; 
+	letter-spacing: 2.5px; 
+	text-align: center
+}
