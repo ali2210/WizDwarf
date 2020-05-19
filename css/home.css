@@ -1,31 +1,43 @@
 
 html{
-	min-height: 100%;
+	/*min-height: 100%;*/
 	/*overflow: hidden;*/
+
 }
 
 body{
-	height: calc(100vh - 8em);
-	padding: 4em;
+	/*height: calc(100vh - 8em);*/
+	/*padding: 4em;*/
 }
 
+
 .container-1{
-	text-align: center; 
-	background-image: initial;
 	margin-top: 50px;
+	margin-left: 50px;
+	text-align: center;
 }
 
 .container2{
-	padding-top: 400px; 
-	text-align: center
+	margin-top: 50px;
+	margin-left: auto;
 }
 
 .container3{
-	letter-spacing: 3px; 
-	text-rendering: geometricPrecision; 
-	text-rendering: auto; 
-	font-size: 20px;
+	margin-top: 50px;	
 }
+
+.polychromatic{
+	width: 80%;	
+}
+
+
+.img-logo{
+	width: 80%;	
+}																																																					
+.container-0{
+
+}
+/*
 
 .line-1{
 	position: relative;
@@ -56,29 +68,45 @@ body{
 	to{
 		border-right-color: transparent;
 	}
+}*/
+
+
+.dwarfs{
+	margin-top: 30px;
 }
 
+
 .custom-header{
-	display: flex;
-	justify-content: center;
+	/*display: flex;*/
+	/*justify-content: center;*/
 	color: black;
 	margin-top: 50px;
+	text-align: center;
+	margin-left: 100px;
+	font-size: 14px;
 }
 
 .logo{
 	width: 30%;
 }
 
+.all-screens{
+	display:flex;
+	justify-content: center;
+	align-items: center;
+}
+
 .nav-item{
 	text-rendering: geometricPrecision;
 	font-variant: small-caps;
 	font-size: 14px;
-	display: flex;
+	text-align: center;
+	/*display: flex;*/
 }
 .dropdown{
 	margin-right: 70px;
 	align-items: center;
-	display: flex;
+	/*display: flex;*/
 }
 .dropdown-item{
 	padding-right: 100px; 
@@ -87,73 +115,40 @@ body{
 	text-rendering: geometricPrecision; 
 	font-variant: small-caps; 
 	font-size: 16px;
-	display: flex;
-}
-.polychromatic{
-	width: 80%; 
-	justify-content: center;
-	display: flex;
-	margin-left: 80px;
-	margin-top: 60px;
+	/*display: flex;*/
 }
 
-.img-logo{
-	width: 60%; 
-	margin-top: 400px;
-	display: flex;
-	justify-content: center;
-	margin-left: 200px;
-}
+
 .img-dwarfs{
-	width: 80%; 
-	margin-top: 400px;
-	margin-left: 100px;
-	display: flex;
-	justify-content: center;
+	width: 80%;
 }
 
 .edit-cont{
-	font-size: 24px;
-	display: flex;
-	justify-content: center;
-	margin-left: auto;
-	text-align: center;
+	margin: auto;
+	font-variant: small-caps;
 }
 .static-text{
-	text-rendering: auto; 
-	font-variant: small-caps;
-	margin: auto;
+	margin:auto;
 }
 .fluid{
-	margin-top: 450px;
-	/*display: flex;
-	justify-content: center;*/
-	text-align: center;
-	margin-left: 200px;
+	margin-top: 50px;
 }
 
 .img-dna{
 	width: 80%;
-	height: 80%;
-	margin-top: 100px;
-	margin-right: 40px;
 }
 
 .fluids{
-	padding-left: 60px; 
-	margin-left: 60px;
-	text-align: center; 
-	font-size: 16px; 
-	margin-top: 70px;
+	margin-top: 20px;
 }
 .mycontainer{
-	text-rendering: auto; 
-	letter-spacing: 3px; 
-	text-align: center
+	letter-spacing: 3px;
+	font-variant: small-caps;
+	flex-direction: column;
 }
 
 
 .foot-mark{
-	display: flex; 
+	display: flex;
 	justify-content: center;
 }
