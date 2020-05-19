@@ -126,6 +126,10 @@ body{
 .edit-cont{
 	margin: auto;
 	font-variant: small-caps;
+	letter-spacing: 3px;
+	font-style: oblique;
+	font-size: 20px;
+	margin-top: 20px;
 }
 .static-text{
 	margin:auto;
