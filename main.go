@@ -295,7 +295,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Search Data in DB
-		 data, err := SearchDB(w, r, user.email,user.password); if err != nil  && data != nil{
+		 data, err := SearchDB(w, r, user.email,user.password); if err != nil{
 		 	// log.Fatal("Error", err)
 		 	// w.Write([]byte(`{error: No Result Found }`))
 		 	temp := template.Must(template.ParseFiles("server.html"))
@@ -304,6 +304,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 			temp.Execute(w, Res)
 		 	return 
 		 }
+		 	if data != nil{
 		 	fmt.Printf("Search Data:%v", data.Id)
 
 		 	// User Session
@@ -339,6 +340,14 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 w.WriteHeader(http.StatusOK)
 	    r.Method = "GET"
 		Dashboard(w,r)
+		}else{
+				temp := template.Must(template.ParseFiles("server.html"))
+				Res := Response{true, "Sorry We donot have any record , please register", "WizDawrf/signup"}
+				println("Server Response:", Res.Flag,Res.Message,Res.Links)
+				temp.Execute(w, Res)
+		 		return
+		}
+
 	}
 }
 
