@@ -295,7 +295,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Search Data in DB
-		 data, err := SearchDB(w, r, user.email,user.password); if err != nil{
+		 data, err := SearchDB(w, r, user.email,user.password); if err != nil  && data != nil{
 		 	// log.Fatal("Error", err)
 		 	// w.Write([]byte(`{error: No Result Found }`))
 		 	temp := template.Must(template.ParseFiles("server.html"))
@@ -304,7 +304,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 			temp.Execute(w, Res)
 		 	return 
 		 }
-		 	fmt.Printf("Search Data:%v", data)
+		 	fmt.Printf("Search Data:%v", data.Id)
 
 		 	// User Session
 		 	if userSessions == nil {
