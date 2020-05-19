@@ -37,7 +37,7 @@ body{
 .container-0{
 
 }
-/*
+
 
 .line-1{
 	position: relative;
@@ -68,7 +68,7 @@ body{
 	to{
 		border-right-color: transparent;
 	}
-}*/
+}
 
 
 .dwarfs{
@@ -126,6 +126,10 @@ body{
 .edit-cont{
 	margin: auto;
 	font-variant: small-caps;
+	letter-spacing: 3px;
+	font-style: oblique;
+	font-size: 20px;
+	margin-top: 20px;
 }
 .static-text{
 	margin:auto;

@@ -304,7 +304,8 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 			temp.Execute(w, Res)
 		 	return 
 		 }
-		 	fmt.Printf("Search Data:%v", data)
+		 	if data != nil{
+		 	fmt.Printf("Search Data:%v", data.Id)
 
 		 	// User Session
 		 	if userSessions == nil {
@@ -339,6 +340,14 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 w.WriteHeader(http.StatusOK)
 	    r.Method = "GET"
 		Dashboard(w,r)
+		}else{
+				temp := template.Must(template.ParseFiles("server.html"))
+				Res := Response{true, "Sorry We donot have any record , please register", "WizDawrf/signup"}
+				println("Server Response:", Res.Flag,Res.Message,Res.Links)
+				temp.Execute(w, Res)
+		 		return
+		}
+
 	}
 }
 
