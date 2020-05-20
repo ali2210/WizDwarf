@@ -1,0 +1,27 @@
+.div-form{
+	display: flex;
+	justify-content: center;
+	margin-top: 100px;
+	align-items: center;
+	flex-direction: column;
+}
+
+
+.img-logo{
+	width: 30%;
+	margin-top: 20px;
+}
+
+
+.form-control-feedback{
+	display: block;
+}
+.form-email{
+	display: hidden;
+}
+
+.form-pass{
+	/*display: none;*/
+	/*visibility: hidden;*/
+}
+
