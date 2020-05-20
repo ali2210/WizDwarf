@@ -13,21 +13,23 @@
 <body>
 	<div class="div-form">
 		<img src="/images/logo.png" alt ="WizDwarfs" class="img-logo"/>
+		<h4>iSeed</h4>
 		<form action="/WizDwarf/iseed" method="post" class="pay-form">
 			<div class="form-email">
 				<div class="form-group has-search">
 					<!-- <span class="fa fa-snowflake-o form-control-feedback"> -->
 						<input type="email" class="form-control" id="inlineFormInput" placeholder="Email" name="email"/>
 					<!-- </span> -->
-        			  <button type="button" class="btn btn-Dark"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+        			  <button type="button" class="btn btn-submit"><i class="fa fa-arrow-right" aria-hidden="true"></i>Next</button>
 				</div>
 			</div>
-			<div class="form-pass">
-			 <button type="button" class="btn btn-Dark"><i class="fa fa-user" aria-hidden="true"></i>FaceID</button>
-			</div>
 			<div class="form-video">
-				<video id="videoInput"></video>
-				<canvas id="videoOutput"></canvas>
+				<video id="videoInput" class="videoIn"></video>
+				<canvas id="videoOutput" class="videoOut"></canvas>
+			</div>
+
+			<div class="form-pass">
+			 <button type="button" class="btn btn-face"><i class="fa fa-user" aria-hidden="true"></i>FaceID</button>
 			</div>
 		</form>
 	</div>

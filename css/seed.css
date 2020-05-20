@@ -4,6 +4,21 @@
 	margin-top: 100px;
 	align-items: center;
 	flex-direction: column;
+	border: 1px solid grey;
+	width: 80%;
+	margin-left: 100px;
+}
+
+.btn-submit{
+	background-color: snow ;
+	cursor: default;
+	margin: auto;
+	margin-top: 10px;
+}
+.btn-face{
+	background-color: snow;
+	margin: auto;
+	margin-top: 10px;
 }
 
 
@@ -13,15 +28,48 @@
 }
 
 
-.form-control-feedback{
+.form-control{
 	display: block;
 }
-.form-email{
-	display: hidden;
+
+.form-pay{
+	display: flex;
+}
+.has-search{
+	display: block;
+	text-align: center;
+
 }
 
 .form-pass{
 	/*display: none;*/
 	/*visibility: hidden;*/
+	display: block;
+	text-align: center;
 }
+.h4{
+	text-align: center; 
+	font-family: 'Roboto Mono', monospace;
+	color: #424242;
+	margin-top: 100px;
+}
+
+.form-video{
+	margin-top: 20px;
+	display: block;
+	border:1px solid darkgray;
+	display: hidden;
+}
+
+.videoIn{
+	border:1px dashed lightslategray;
+	display: flex;
+	background-color: ghostwhite;
+}
+.videoOut{
+	border:1px dotted blueviolet;
+	display: block;
+	background-color: snow;
+}
+
 
