@@ -82,7 +82,7 @@ func main() {
 	routing.HandleFunc("/{title}/login", Existing)
 	routing.HandleFunc("/{title}/dashboard",Dashboard)
 	routing.HandleFunc("/{title}/logout", Logout)
-	routing.HandleFunc("/{title}/seed",CryptoWallet)
+	routing.HandleFunc("/{title}/iseed",CryptoWallet)
 
 		// Static Files
 	// routing.HandleFunc("/{title}/action", addVistor)
