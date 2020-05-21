@@ -2,8 +2,6 @@
 // import fom opencv 
 import cv from "opencv.js";
 
-
-console.log(cv);
 let video = document.getElementById("videoInput");
 video.height = 640;
 video.width = 480;
