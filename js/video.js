@@ -2,7 +2,9 @@
 // import fom opencv 
 import cv from "opencv.js";
 
-let video = document.getID("videoIn");
+
+console.log(cv);
+let video = document.getElementById("videoInput");
 video.height = 640;
 video.width = 480;
 
@@ -22,7 +24,7 @@ navigator.mediaDevices.getUserMedia({video:true, audio:file}).then(function(stre
 			let date = Date.now();
 			cap.read(src);
 			cv.cvtColor(src, out, cv.COLOR_RGBA2GRAY);
-			cv.imshow("videoOut", out);
+			cv.imshow("videoOutput", out);
 
 			let delay = 1000 / FPS -(Date.now() - date);
 			setTimeout(processVideo,delay);
