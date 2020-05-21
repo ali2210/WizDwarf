@@ -1,7 +1,7 @@
-
-// import fom opencv 
 import cv from "opencv.js";
 
+
+console.log("Opencv started...")
 let video = document.getElementById("videoInput");
 video.height = 640;
 video.width = 480;
@@ -32,6 +32,7 @@ navigator.mediaDevices.getUserMedia({video:true, audio:file}).then(function(stre
 	}
 
 	setTimeout(processVideo, 0);
-}).catch(function(err)){
+})
+.catch(function(err){
 	console.log("An error occured!"+ err)
-}
+});
