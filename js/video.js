@@ -1,7 +1,6 @@
-import cv from "opencv.js";
+import cv from "../opencv.js";
 
 
-console.log("Opencv started...")
 let video = document.getElementById("videoInput");
 video.height = 640;
 video.width = 480;
