@@ -1,4 +1,4 @@
-import cv from "../opencv.js";
+import {cv} from "./opencv.js";
 
 
 let video = document.getElementById("videoInput");
