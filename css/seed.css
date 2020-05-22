@@ -54,7 +54,7 @@
 	margin-top: 100px;
 }
 
-.form-video{
+.form-img{
 	margin-top: 20px;
 	display: block;
 	border:1px solid darkgray;
@@ -65,6 +65,7 @@
 	border:1px dashed lightslategray;
 	display: flex;
 	background-color: ghostwhite;
+	margin: 0 auto;
 }
 .videoOut{
 	border:1px dotted blueviolet;
