@@ -1,54 +1,52 @@
+(function() {
+	var width = 320, 
+	var height = 0,
+    var	streaming = false,
+    var video = null;
+    var canvas = null;
 
+
+function startup() {
 	// body...
-	const video = document.querySelector('video');
-	var promiseOld =  function(constraints, sucessCallback,errorCallback){
-		
+	video = document.getElementById('video');
+	canvas = document.getElementById('canvas');
 
 
-		var getUserMedia = (navigator.getUserMedia || 
-							navigator.webkitGetUserMedia ||
-							navigator.mozGetUserMedia);
-		if(!getUserMedia){
-			return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+	// navigator 
+	navigator.mediaDevices.getUserMedia({video: true, audio :false})
+		.then(function(stream){
 
-		}
+			// video source intialize...
+			video.srcObject = stream;
 
-		return new Promise(function(sucessCallback,errorCallback){
-			getUserMedia.call(navigator,constraints,sucessCallback,errorCallback);
+			// video start play
+			video.play();
+		})
+		.catch(function(err){
+
+			// console output
+			console.log("Error:" + err)
 		});
 
-		if (navigator.mediaDevices == undefined) {
-			navigator.mediaDevices = {};
-		}
+		video.addEventListener('canplay', function(ev){
+			if (!streaming) {
+				height = video.videoHeight / (video.videoWidth/width);
 
-		if (navigator.mediaDevices.getUserMedia === undefined){
-			navigator.mediaDevices.getUserMedia = promiseOld;
-		}
+				if(isNaN(height)){
+					height = width/(4/3);
+				}
 
-		var constraints = {audio : true , video : {width : 580 ,height : 320}
-	    };
+				video.setAttribute('width',width);
+				video.setAttribute('height',height);
+				canvas.setAttribute('width', width);
+				canvas.setAttribute('height',height);
+				streaming = true;
+			}
 
-		navigator.mediaDevices.getUserMedia(constraints).then(function(stream){
-			video.src = window.URL.createObjectURL(stream);
-			video.onloadedmetadata = function(e){
-				video.play();
-			};
-		})
-			.catch(function(err){
-				console.log(err.name +":" + err.message);
-			});
+		}, false);
+
 	}
 
-	/*navigator.mediaDevices.getUserMedia({video: true , audio: false}
-	)
-	   .then(function(stream) {
-	   	// body...
-	   	  video.srcObject = stream;
-	   	  video.play();
-	   })
-	   .catch(function(err) {
-	   	// body...
-	   	console.log("Error:"+ err);
-	   });*/
+	window.addEventListener('load',startup,false);
+})
 
-			
