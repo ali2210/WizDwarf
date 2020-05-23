@@ -1,7 +1,7 @@
 (function() {
-	var width = 320, 
-	var height = 0,
-    var	streaming = false,
+	var width = 320; 
+	var height = 0;
+    var	streaming = false;
     var video = null;
     var canvas = null;
 
