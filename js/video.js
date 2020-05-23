@@ -1,6 +1,6 @@
 (function() {
 	var width = 320; 
-	var height = 0;
+	var height = 0;																																																																																																																																																																																																																																																						
     var	streaming = false;
     var video = null;
     var canvas = null;
@@ -16,6 +16,7 @@ function startup() {
 	navigator.mediaDevices.getUserMedia({video: true, audio :false})
 		.then(function(stream){
 
+			console.log("stream:", stream);
 			// video source intialize...
 			video.srcObject = stream;
 
