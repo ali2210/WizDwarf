@@ -1,53 +1,27 @@
-(function() {
-	var width = 320; 
-	var height = 0;																																																																																																																																																																																																																																																						
-    var	streaming = false;
-    var video = null;
-    var canvas = null;
 
 
-function startup() {
-	// body...
-	video = document.getElementById('video');
-	canvas = document.getElementById('canvas');
+// global variables 
+var video = null;
+// var canvas = null;
 
 
-	// navigator 
-	navigator.mediaDevices.getUserMedia({video: true, audio :false})
-		.then(function(stream){
 
-			console.log("stream:", stream);
-			// video source intialize...
-			video.srcObject = stream;
+		video = document.getElementById('video');
+		// canvas = document.getElementById('canvas');
 
-			// video start play
-			video.play();
-		})
-		.catch(function(err){
+let stream =  await navigator.mediaDevices.getUserMedia({video: true, audio :false});
+let rec =  new RecordRTCPromisesHandler(stream, {
+	type : video,
+});
 
-			// console output
-			console.log("Error:" + err)
-		});
+rec .startRecording();
 
-		video.addEventListener('canplay', function(ev){
-			if (!streaming) {
-				height = video.videoHeight / (video.videoWidth/width);
+const sleep = m => new Promise(r => setTimeout(r, m));
+await sleep(3000);
 
-				if(isNaN(height)){
-					height = width/(4/3);
-				}
 
-				video.setAttribute('width',width);
-				video.setAttribute('height',height);
-				canvas.setAttribute('width', width);
-				canvas.setAttribute('height',height);
-				streaming = true;
-			}
+await rec.stopRecording();
+let blob = await rec.getBlob();
+invokeSaveAsDialog(blob); 
 
-		}, false);
-
-	}
-
-	window.addEventListener('load',startup,false);
-})
-
+		
