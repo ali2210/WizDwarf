@@ -22,7 +22,7 @@ var canvas = null;
 			})
 
 			var constraints = {video:cam && mediaConstraints.video, audio:mic && mediaConstraints.audio};
-			console.log("getUserId" + JSON.stringify(constraints));
+			console.log("getUserMedia= :" + JSON.stringify(constraints));
 			return navigator.mediaDevices.getUserMedia(constraints)
 				.then(function(stream) {
 					getUserMedia(stream);
