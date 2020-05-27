@@ -15,9 +15,9 @@ var canvas = null;
 			.then(function (stream) {
 				// body...
 				video.srcObject = stream;
-				video.play();
+				// video.play();
 			})
 			.catch(function(err){
 				console.log("Error:"+ err)
-			})
+			});
 		}
