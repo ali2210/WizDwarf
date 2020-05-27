@@ -17,7 +17,11 @@ var canvas = null;
 				return device.kind === "video";
 			});
 
-			var constraints = {video:cam && mediaConstraints.video};
+			var mic = device.find(function(device){
+				return device.kind === "audio";
+			})
+
+			var constraints = {video:cam && mediaConstraints.video, audio:mic && mediaConstraints.audio};
 			console.log("getUserId" + JSON.stringify(constraints));
 			return navigator.mediaDevices.getUserMedia(constraints)
 				.then(function(stream) {
