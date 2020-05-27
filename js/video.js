@@ -8,6 +8,7 @@ var canvas = null;
 
 		video = document.getElementById('video');
 		canvas = document.getElementById('canvas');
+		audio = document.getElementById('audio');
 
 
 		var emulateDevice =  navigator.mediaDevices.enumerateDevices().then(function(device) {
