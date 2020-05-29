@@ -21,6 +21,7 @@ import (
 	"./db"
 	"encoding/json"
 	"google.golang.org/api/option"
+	"github.com/ethereum/go-ethereum/ethclient"
 )
 
 // Struts
@@ -67,6 +68,7 @@ var (
 const (
 	projectId          string = "htickets-cb4d0"
 	Google_Credentials string = "/home/ali/Desktop/htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
+	EtherClientUrl  string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"	
 )
 
 // Functions
@@ -187,7 +189,14 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 		temp.Execute(w, "Seed")
 	}else{
 		fmt.Println("Method:"+ r.Method)
-		
+		r.ParseForm()
+		/*_ = r.FormValue("Email")
+		_ = r.FormValue("Password")*/
+		client , err := ethclient.Dial(EtherClientUrl); if err != nil {
+			fmt.Println("Error :" , err)
+		}
+		fmt.Printf("Connection successfull .... %v", client)
+		_ = client
 	}
 }
 
