@@ -17,18 +17,18 @@
 }
 .btn-email{
 	margin-top: 10px;
-	visibility: hidden;
+	visibility: visible;
 }
 .btn-password{
 	margin-top: 10px;
-	visibility: hidden;
+	visibility: visible;
 }
 .enable-disable-0{
 	margin-top: 5px;
 }
 
 .btn-terms{
-	margin-top: 5px;
+	margin-top: 10px;
 }
 
 .span-link{
@@ -47,7 +47,8 @@
 
 .form-control{
 	display: block;
-	margin-bottom: 10px;
+	margin-bottom: 5px;
+	visibility: hidden;
 }
 
 .pay-form{
@@ -58,7 +59,6 @@
 .has-search{
 	display: block;
 	text-align: center;
-
 }
 
 .h4{

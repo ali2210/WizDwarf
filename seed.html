@@ -19,25 +19,27 @@
 			<div class="form-email">
 				<div class="form-group has-search">
 					<div class="enable-disable-0">
-						<button type="button" class="btn btn-email" id="email">
+						<button type="button" class="btn btn-email" id="email" onclick="showMeEmail()">
 							<i class="fa fa-user" aria-hidden="true"></i>
 						</button>
-						<input type="email" class="form-control" id="inlineFormInput" placeholder="Email" name="email">
+						<input type="email" class="form-control" id="inlineFormInput" placeholder="Email" name="email" required>
 					</div>
-					<div class="enable-disable-1">
-						<button type="button" class="btn btn-password" id="pass">
+					<div class="enable-disable-0">
+						<button type="button" class="btn btn-password" id="pass" onclick="showMePassword()">
 							<i class="fa fa-lock" aria-hidden="true"></i>
 						</button>
-						<input type="btn-password" class="form-control" id="inlineFormInput" placeholder="Password" name="pass">
+						<input type="btn-password" class="form-control" id="inline" placeholder="Password" name="password" required>
 					</div>
 					<div class="btn-terms">
-					  <input type="checkbox" id="agreeTerms" class="terms">
+					  <input type="checkbox" id="agreeTerms" class="terms" required>
 					  <a href="#" ><span class="span-link">terms accepted</span></a>
 					</div>
-        			  <button type="button" class="btn btn-submit"><i class="fa fa-arrow-right" aria-hidden="true"></i>Next</button>
+        			  <button type="button" class="btn btn-submit" id="btnSubmit" disabled="true">
+        			  	<i class="fa fa-arrow-right" aria-hidden="true"></i>Next</button>
 				</div>
 			</div>
 		</form>
 	</div>
+	<script type="text/javascript" src="/js/seed.js"></script>
 </body>
 </html>
