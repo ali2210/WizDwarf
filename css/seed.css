@@ -1,25 +1,42 @@
 .div-form{
 	display: flex;
 	justify-content: center;
-	margin-top: 100px;
+	margin-top: 130px;
 	align-items: center;
 	flex-direction: column;
 	border: 1px solid grey;
-	width: 80%;
-	margin-left: 100px;
+	width: 70%;
+	margin-left: 130px;
 }
 
 .btn-submit{
 	background-color: snow ;
 	cursor: default;
 	margin: auto;
+	margin-top: 0px;
+}
+.btn-email{
+	margin-top: 10px;
+	visibility: visible;
+}
+.btn-password{
+	margin-top: 10px;
+	visibility: visible;
+}
+.enable-disable-0{
+	margin-top: 5px;
+}
+
+.btn-terms{
 	margin-top: 10px;
 }
-.btn-face{
-	background-color: snow;
-	margin: auto;
-	margin-top: 10px;
+
+.span-link{
+	color: green;
+	visibility: visible;
+	margin-left: 5px;
 }
+
 
 
 .img-logo{
@@ -30,28 +47,26 @@
 
 .form-control{
 	display: block;
+	margin-bottom: 5px;
+	visibility: hidden;
 }
 
-.form-pay{
+.pay-form{
 	display: flex;
+	margin-left: 20px;
+	margin-top: 20px;
 }
 .has-search{
 	display: block;
 	text-align: center;
-
 }
 
-.form-pass{
-	/*display: none;*/
-	/*visibility: hidden;*/
-	display: block;
-	text-align: center;
-}
 .h4{
 	text-align: center; 
 	font-family: 'Roboto Mono', monospace;
 	color: #424242;
 	margin-top: 100px;
+	margin-left: 20px;
 }
 
 .form-img{
@@ -60,17 +75,4 @@
 	border:1px solid darkgray;
 	display: hidden;
 }
-
-/*.videoIn{
-	border:1px dashed lightslategray;
-	display: flex;
-	background-color: ghostwhite;
-	margin: 0 auto;
-}
-.videoOut{
-	border:1px dotted blueviolet;
-	display: block;
-	background-color: snow;
-}*/
-
 
