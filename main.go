@@ -19,6 +19,7 @@ import (
 	"regexp"
 	// "firebase.google.com/go/auth"
 	"./db"
+	"./structs"
 	"encoding/json"
 	"google.golang.org/api/option"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -184,14 +185,15 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 
 func CryptoWallet(w http.ResponseWriter, r*http.Request){
 	temp := template.Must(template.ParseFiles("seed.html"))
+	acc := structs.Acc{} 
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
 		temp.Execute(w, "Seed")
 	}else{
 		fmt.Println("Method:"+ r.Method)
 		r.ParseForm()
-		/*_ = r.FormValue("Email")
-		_ = r.FormValue("Password")*/
+		acc.Email = r.FormValue("Email")
+		acc.Password = r.FormValue("Password")
 		client , err := ethclient.Dial(EtherClientUrl); if err != nil {
 			fmt.Println("Error :" , err)
 		}
