@@ -18,11 +18,22 @@
 		<form action="/WizDwarf/createCryptoAccount" method="post" class="pay-form">
 			<div class="form-email">
 				<div class="form-group has-search">
-					<!-- <span class="fa fa-snowflake-o form-control-feedback"> -->
-						<input type="email" class="form-control" id="inlineFormInput" placeholder="Email" name="email"/>
-							<i class="fa fa-user-o" aria-hidden="true"></i>
-						<input type="password" name="pass" placeholder="Password" id="inlineFormInput" class="form-control"> 
-					<!-- </span> -->
+					<div class="enable-disable-0">
+						<button type="button" class="btn btn-email" id="email">
+							<i class="fa fa-user" aria-hidden="true"></i>
+						</button>
+						<input type="email" class="form-control" id="inlineFormInput" placeholder="Email" name="email">
+					</div>
+					<div class="enable-disable-1">
+						<button type="button" class="btn btn-password" id="pass">
+							<i class="fa fa-lock" aria-hidden="true"></i>
+						</button>
+						<input type="btn-password" class="form-control" id="inlineFormInput" placeholder="Password" name="pass">
+					</div>
+					<div class="btn-terms">
+					  <input type="checkbox" id="agreeTerms" class="terms">
+					  <a href="#" ><span class="span-link">terms accepted</span></a>
+					</div>
         			  <button type="button" class="btn btn-submit"><i class="fa fa-arrow-right" aria-hidden="true"></i>Next</button>
 				</div>
 			</div>
