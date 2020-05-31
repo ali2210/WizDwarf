@@ -61,6 +61,7 @@ var (
 	AppName  *firebase.App  = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
 	cloud    db.DBFirestore = db.NewCloudInstance()
 	userSessions *sessions.CookieStore = nil
+	ClientInstance *ethclient.Client = nil
 )
 
 
@@ -207,7 +208,9 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 			fmt.Println("Error :" , err)
 		}
 		fmt.Printf("Connection successfull ....%v", client)
+		ClientInstance = client
 		println("Email:"+ acc.Email + "Password:"+ acc.Password)
+
 	}
 }
 
