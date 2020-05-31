@@ -69,7 +69,10 @@ var (
 const (
 	projectId          string = "htickets-cb4d0"
 	Google_Credentials string = "/home/ali/Desktop/htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
-	EtherClientUrl  string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"	
+	// Main application
+	EtherMainClientUrl  string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
+	// Rickeby for test purpose
+	RinkebyClientUrl  	string = "https://rinkeby.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"	
 )
 
 // Functions
@@ -195,10 +198,15 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 		r.ParseForm()
 		acc.Email = r.FormValue("email")
 		acc.Password = r.FormValue("password")
-		client , err := ethclient.Dial(EtherClientUrl); if err != nil {
+		if r.FormValue("agreeTerms") == "on"{
+			acc.Accept = true
+		}else{
+			acc.Accept = false
+		}
+		client , err := ethclient.Dial(RinkebyClientUrl); if err != nil {
 			fmt.Println("Error :" , err)
 		}
-		fmt.Printf("Connection successfull .... %v", client)
+		fmt.Printf("Connection successfull ....%v", client)
 		println("Email:"+ acc.Email + "Password:"+ acc.Password)
 	}
 }
