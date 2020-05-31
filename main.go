@@ -61,6 +61,7 @@ var (
 	AppName  *firebase.App  = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
 	cloud    db.DBFirestore = db.NewCloudInstance()
 	userSessions *sessions.CookieStore = nil
+	ClientInstance *ethclient.Client = nil
 )
 
 
@@ -69,7 +70,10 @@ var (
 const (
 	projectId          string = "htickets-cb4d0"
 	Google_Credentials string = "/home/ali/Desktop/htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
-	EtherClientUrl  string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"	
+	// Main application
+	EtherMainClientUrl  string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
+	// Rickeby for test purpose
+	RinkebyClientUrl  	string = "https://rinkeby.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"	
 )
 
 // Functions
@@ -193,13 +197,20 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 	}else{
 		fmt.Println("Method:"+ r.Method)
 		r.ParseForm()
-		acc.Email = r.FormValue("Email")
-		acc.Password = r.FormValue("Password")
-		client , err := ethclient.Dial(EtherClientUrl); if err != nil {
+		acc.Email = r.FormValue("email")
+		acc.Password = r.FormValue("password")
+		if r.FormValue("agreeTerms") == "on"{
+			acc.Accept = true
+		}else{
+			acc.Accept = false
+		}
+		client , err := ethclient.Dial(RinkebyClientUrl); if err != nil {
 			fmt.Println("Error :" , err)
 		}
-		fmt.Printf("Connection successfull .... %v", client)
-		_ = client
+		fmt.Printf("Connection successfull ....%v", client)
+		ClientInstance = client
+		println("Email:"+ acc.Email + "Password:"+ acc.Password)
+
 	}
 }
 
