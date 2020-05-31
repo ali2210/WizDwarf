@@ -193,13 +193,13 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 	}else{
 		fmt.Println("Method:"+ r.Method)
 		r.ParseForm()
-		acc.Email = r.FormValue("Email")
-		acc.Password = r.FormValue("Password")
+		acc.Email = r.FormValue("email")
+		acc.Password = r.FormValue("password")
 		client , err := ethclient.Dial(EtherClientUrl); if err != nil {
 			fmt.Println("Error :" , err)
 		}
 		fmt.Printf("Connection successfull .... %v", client)
-		_ = client
+		println("Email:"+ acc.Email + "Password:"+ acc.Password)
 	}
 }
 
