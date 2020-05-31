@@ -86,6 +86,7 @@ func main() {
 	routing.HandleFunc("/{title}/dashboard",Dashboard)
 	routing.HandleFunc("/{title}/logout", Logout)
 	routing.HandleFunc("/{title}/createCryptoAccount",CryptoWallet)
+	routing.HandleFunc("/{title}/terms",Terms)
 
 		// Static Files
 	// routing.HandleFunc("/{title}/action", addVistor)
@@ -199,6 +200,16 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 		}
 		fmt.Printf("Connection successfull .... %v", client)
 		_ = client
+	}
+}
+
+
+func Terms(w http.ResponseWriter, r *http.Request){
+
+	temp := template.Must(template.ParseFiles("terms.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		temp.Execute(w, "Terms")
 	}
 }
 

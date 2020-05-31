@@ -1,0 +1,40 @@
+.div-box{
+	display: flex;
+	justify-content: center;
+	margin-top: 20px;
+	margin-right: 20px;
+	margin-left: 40px;
+}
+
+.div-headline{
+	position: initial;
+	margin-block-start : auto;
+	margin-block-end:auto;
+	margin-inline-start: inherit;
+	margin-inline-end:inherit;
+}
+
+.h4{
+	font-style: inherit;
+	font-size: 24px;
+}
+
+.div-t1{
+	margin-top: 10px;
+	font-size: 16px;
+}
+
+.div-t2{
+	margin-top: 10px;
+	font-size: 16px;
+}
+
+.btn-accept{
+	display: flex;
+	justify-content: center;
+	margin-left: 170px;
+}
+.btn-agree{
+	background-color: green;
+	color: white;
+}
