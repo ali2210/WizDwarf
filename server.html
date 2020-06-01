@@ -23,7 +23,11 @@
       <p>{{ .Message}}</p> <a href="/{{ .Links}}">GoBack</a>
     </div>
     {{ end }}
-    
+    {{ else }}
+        <div class="alert alert-success" role="alert">
+            <p>{{ .Message}}</p>
+        </div>
+    {{ end }}
     </body>
     
 </html>

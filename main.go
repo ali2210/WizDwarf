@@ -197,6 +197,7 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 		fmt.Println("Method:" + r.Method)
 		temp.Execute(w, "Seed")
 	}else{
+		temp := template.Must(template.ParseFiles("server.html"))
 		fmt.Println("Method:"+ r.Method)
 		r.ParseForm()
 		acc.Email = r.FormValue("email")
@@ -234,6 +235,8 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 
 		publicAddress := crypto.PubkeyToAddress(*pbcKey).Hex()
 		fmt.Println("Public_Addess:" , publicAddress)
+		resp := structs.Success{true, publicAddress}
+		temp.Execute(w, resp)
 	}
 }
 
