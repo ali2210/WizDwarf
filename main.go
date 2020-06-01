@@ -22,6 +22,7 @@ import (
 	"./structs"
 	"encoding/json"
 	"google.golang.org/api/option"
+	"golang.org/x/crypto/sha3"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -235,10 +236,15 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 
 		publicAddress := crypto.PubkeyToAddress(*pbcKey).Hex()
 		fmt.Println("Public_Addess:" , publicAddress)
+
+
+		// hash 
+		hshCode := sha3.NewLegacyKeccak256()
+		hshCode.Write(publicBytes[1:])
+		fmt.Println("Hash_sha3-256:" , hexutil.Encode(hshCode.Sum(nil)[12:]))
 			Repon := Response{false,publicAddress, "WizDawrf/dashboard"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
-		
 	}
 }
 
