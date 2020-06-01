@@ -235,8 +235,10 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 
 		publicAddress := crypto.PubkeyToAddress(*pbcKey).Hex()
 		fmt.Println("Public_Addess:" , publicAddress)
-		resp := structs.Success{true, publicAddress}
-		temp.Execute(w, resp)
+			Repon := Response{false,publicAddress, "WizDawrf/dashboard"}
+			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			temp.Execute(w, Repon)
+		
 	}
 }
 

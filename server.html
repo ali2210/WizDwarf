@@ -20,15 +20,15 @@
 
     {{if .Flag}}
     <div class="alert alert-danger" role="alert">
-      <p>{{ .Message}}</p> <a href="/{{ .Links}}">GoBack</a>
+      <p>{{ .Message}}</p> <a href="/{{ .Links}}">Earth</a>
     </div>
+    {{  else }}
+        <div class="alert alert-success" role="alert">
+            <p>{{ .Message}}</p> <a href="/{{ .Links}}">Mars</a>
+        </div>
     {{ end }}
 
-    {{if .FlagAccept}}
-        <div class="alert alert-success" role="alert">
-            <p>{{ .Message}}</p>
-        </div>
+
     </body>
-    {{ end }}
     
 </html>
