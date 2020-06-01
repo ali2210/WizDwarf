@@ -23,6 +23,8 @@ import (
 	"encoding/json"
 	"google.golang.org/api/option"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 )
 
 // Struts
@@ -211,6 +213,15 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 		ClientInstance = client
 		println("Email:"+ acc.Email + "Password:"+ acc.Password)
 
+		// private key 
+		privateKey ,err := crypto.GenerateKey(); if err != nil{
+			println("Error:" , err)
+		}
+
+			// private key into bytes 
+		PrvateKyByte := crypto.FromECDSA(privateKey)
+
+		fmt.Println("Hash :" , hexutil.Encode(PrvateKyByte)[:2])
 	}
 }
 
