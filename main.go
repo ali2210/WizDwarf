@@ -209,7 +209,7 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 		client , err := ethclient.Dial(RinkebyClientUrl); if err != nil {
 			fmt.Println("Error :" , err)
 		}
-		fmt.Printf("Connection successfull ....%v", client)
+		fmt.Printf("Connection successfull ....%v\n", client)
 		ClientInstance = client
 		println("Email:"+ acc.Email + "Password:"+ acc.Password)
 
@@ -221,7 +221,19 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 			// private key into bytes 
 		PrvateKyByte := crypto.FromECDSA(privateKey)
 
-		fmt.Println("Hash :" , hexutil.Encode(PrvateKyByte)[:2])
+		fmt.Println("Private_Hash :" , hexutil.Encode(PrvateKyByte)[2:])
+
+		pblicKey := privateKey.Public()
+
+		pbcKey , ok := pblicKey.(*ecdsa.PublicKey); if !ok{
+			println("Instaniate error {public key}")
+		}
+
+		publicBytes := crypto.FromECDSAPub(pbcKey)
+		fmt.Println("Public_Hash :" , hexutil.Encode(publicBytes)[4:])
+
+		publicAddress := crypto.PubkeyToAddress(*pbcKey).Hex()
+		fmt.Println("Public_Addess:" , publicAddress)
 	}
 }
 
