@@ -23,10 +23,13 @@
       <p>{{ .Message}}</p> <a href="/{{ .Links}}">GoBack</a>
     </div>
     {{ else }}
+    {{ end }}
+
+    {{if .FlagAccept}}
         <div class="alert alert-success" role="alert">
             <p>{{ .Message}}</p>
         </div>
-    {{ end }}
     </body>
+    }
     
 </html>
