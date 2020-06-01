@@ -1,6 +1,13 @@
 .alert-success{
 	background-color: black;
-	display: flex;
-	justify-content: center;
+	color: white;
+}
 
+.content{
+	color : white;
+}
+
+
+.links{
+	color: snow;
 }
