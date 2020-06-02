@@ -28,7 +28,7 @@ type Vistors struct{
 
 const (
 	// projectId string = "htickets-cb4d0"
-	collectionName string = "ProfileVistors"
+	collection string = "ProfileVistors"
 )
 
 
@@ -90,7 +90,7 @@ func (*cloud_data)FindAllData(app *firebase.App)([]Vistors,error){
 	defer client.Close()
 
 	var visits []Vistors
-	iterator := client.Collection(collectionName).Documents(ctx)
+	iterator := client.Collection(collection).Documents(ctx)
 	fmt.Printf("Iterator:%v\n", iterator)
 	// defer iterator.Stop()
 	for{
@@ -125,7 +125,7 @@ func (*cloud_data)FindData(email string , pass string, app *firebase.App)(*Visto
 
 	defer client.Close()
 	var visits Vistors
-	iterator := client.Collection(collectionName).Where("Email", "==", email).Where("Password", "==" , pass).Documents(ctx)
+	iterator := client.Collection(collection).Where("Email", "==", email).Where("Password", "==" , pass).Documents(ctx)
 	fmt.Printf("Iterator%v\n", iterator)
 	defer iterator.Stop()
 	for{

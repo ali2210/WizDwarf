@@ -606,7 +606,7 @@ func isYourPublcAdresValid(hash string) bool{
 	expression := regexp.MustCompile(addressexp)
 	v := expression.MatchString(hash)
 
-	fmt.Println("Is Valid:" , v)
+	fmt.Println("Hash Valid:" , v)
 
 	address := common.HexToAddress(hash)
 	bytecode , err := ClientInstance.CodeAt(contxt.Background(),address,nil); if err != nil{

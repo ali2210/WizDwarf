@@ -1,0 +1,93 @@
+package db
+
+
+
+import (
+	wallet "./cloudwalletclass"
+	walletacc "../structs"
+	"fmt"
+	"context"
+	firebase "firebase.google.com/go"
+)
+
+// constants 
+
+const collectionName string = "EthereumDB"
+
+
+
+
+// Interface 
+type PublicLedger interface{
+
+	// Public Ledger 
+	CreatePublicAddress(w *wallet.EthereumWalletAcc , clientID *firebase.App)(*wallet.EthereumWalletAcc, error);
+	FindMyPublicAddress(w *walletacc.Acc, clientID *firebase.App)(*walletacc.Acc,error);
+}
+
+
+
+type ledgerPublic struct{}
+
+
+
+func NewCollectionInstance() PublicLedger{
+	return &ledgerPublic{}
+}
+
+
+func (*ledgerPublic)CreatePublicAddress(w *wallet.EthereumWalletAcc, clientID *firebase.App)(*wallet.EthereumWalletAcc, error){
+
+		ctx := context.Background()
+
+		client , err := clientID.Firestore(ctx); if err != nil{
+			fmt.Println("Error", err)
+			return nil, err
+		}
+		defer client.Close()
+		fmt.Println("clientID:", clientID)
+
+		_, _ ,err = client.Collection(collectionName).Add(ctx, map[string]interface{}{
+			"Email" : w.Email,
+			"Password" : w.Password,
+			"PublicAddress": w.PublicAddress,
+		}); if err != nil{
+			fmt.Println("Error", err)
+			return nil , err	
+		}
+		return w,nil
+
+}
+
+
+func (*ledgerPublic)FindMyPublicAddress(w *walletacc.Acc, clientID *firebase.App)(*walletacc.Acc, error){
+
+
+	ctx := context.Background()
+
+	client , err := clientID.Firestore(ctx); if err != nil {
+		fmt.Println("Error:", err)
+		return nil, err 
+	}
+	defer client.Close()
+	var ethereumDetials walletacc.Acc
+	iterator := client.Collection(collectionName).Where("Email", "==" , w.Email ).Where("Password" , "==" , w.Password).Where("PublicAddress", "==" , w.PublicAddress).Documents(ctx)
+	defer iterator.Stop()
+
+	for{
+		doc , err := iterator.Next(); if err != nil {
+			fmt.Println("Error:", err)
+			return nil, err
+		}
+		ethereumDetials = walletacc.Acc{
+			Email : doc.Data()["Email"].(string),
+			Password : doc.Data()["Password"].(string),
+			PublicAddress : doc.Data()["PublicAddress"].(string),
+		}
+		break
+	}
+	return &ethereumDetials, nil
+}
+
+
+
