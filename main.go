@@ -17,7 +17,6 @@ import (
 	"net/http"
 	"os"
 	"regexp"
-	// "firebase.google.com/go/auth"
 	"./db"
 	"./structs"
 	"encoding/json"
@@ -26,6 +25,8 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/ethereum/go-ethereum/common"
+	contxt "context"
 )
 
 // Struts
@@ -45,7 +46,6 @@ type Create_User struct {
 	zip          string
 	city         string
 	country      string
-	check_me_out bool
 	email        string
 	password     string
 	secure  bool
@@ -61,6 +61,7 @@ type SignedKey struct {
 var (
 	emailexp string         = "([A-Z][a-z]|[0-9])*[@][a-z]*"
 	passexp  string         = "([A-Z][a-z]*[0-9])*"
+	addressexp string       = "(^0x[0-9a-fA-F]{40}$)"
 	AppName  *firebase.App  = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
 	cloud    db.DBFirestore = db.NewCloudInstance()
 	userSessions *sessions.CookieStore = nil
@@ -241,7 +242,17 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 		// hash 
 		hshCode := sha3.NewLegacyKeccak256()
 		hshCode.Write(publicBytes[1:])
-		fmt.Println("Hash_sha3-256:" , hexutil.Encode(hshCode.Sum(nil)[12:]))
+		hashEncode := hexutil.Encode(hshCode.Sum(nil)[12:])
+		fmt.Println("Hash_sha3-256:", hashEncode)
+
+		// valid address 
+			valid := isYourPublcAdresValid(hashEncode); if valid {
+				// smart contract address
+				fmt.Println("smart contract address:" , valid)	
+			}
+			fmt.Println("eth address:" , valid)
+
+			// Server response
 			Repon := Response{false,publicAddress, "WizDawrf/dashboard"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
@@ -353,19 +364,21 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		println("Login form data[", user.email, user.password, user.secure,"]")
 
 		// Valid Data for processing
-		_, err := regexp.MatchString(emailexp, user.email)
-		if err != nil {
-			println("invalid regular expression", err)
+		exp := regexp.MustCompile(emailexp)
+		ok := exp.MatchString(user.email)
+		if !ok {
+			println("invalid regular expression", !ok)
 			temp := template.Must(template.ParseFiles("server.html"))
 			Res := Response{true, "Data must be valid", "WizDawrf/login"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			return
 		}
-		// println("regexp_email:", matchE)
-		_, err = regexp.MatchString(passexp, user.password)
-		if err != nil {
-			println("invalid regular expression", err)
+		println("regexp_email:", ok)
+		reg := regexp.MustCompile(passexp)
+		okx := reg.MatchString(user.password)
+		if !okx {
+			println("invalid regular expression", !okx)
 			temp := template.Must(template.ParseFiles("server.html"))
 			Res := Response{true, "Data must be valid", "WizDawrf/login"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
@@ -374,6 +387,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 			// r.Method = "GET"
 			// Existing(w,r)
 		}
+		println("regexp_pass:", okx)
 
 		// Search Data in DB
 		 data, err := SearchDB(w, r, user.email,user.password); if err != nil{
@@ -584,6 +598,23 @@ func SetFirestoreCredentials() *firebase.App {
 	}
 	println("Connected... Welcome to Firestore")
 	return app
+}
+
+func isYourPublcAdresValid(hash string) bool{
+
+
+	expression := regexp.MustCompile(addressexp)
+	v := expression.MatchString(hash)
+
+	fmt.Println("Is Valid:" , v)
+
+	address := common.HexToAddress(hash)
+	bytecode , err := ClientInstance.CodeAt(contxt.Background(),address,nil); if err != nil{
+		fmt.Println("Error:", err)
+	}
+
+	contract := len(bytecode)> 0
+	return contract
 }
 
 func SessionsInit(unique string)(*sessions.CookieStore){
