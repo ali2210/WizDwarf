@@ -5,6 +5,6 @@ package structs
 type Acc struct{
 	Email string
 	Password string
-	Accept bool
-	PublicAddress string
+	Terms bool
+	EthAddress string
 }

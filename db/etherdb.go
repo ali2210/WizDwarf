@@ -4,7 +4,7 @@ package db
 
 import (
 	wallet "./cloudwalletclass"
-	walletacc "../structs"
+	walletAcc "../structs"
 	"fmt"
 	"context"
 	firebase "firebase.google.com/go"
@@ -12,7 +12,7 @@ import (
 
 // constants 
 
-const collectionName string = "EthereumDB"
+const collectionName string = "EthereumPrivateLedger"
 
 
 
@@ -22,7 +22,7 @@ type PublicLedger interface{
 
 	// Public Ledger 
 	CreatePublicAddress(w *wallet.EthereumWalletAcc , clientID *firebase.App)(*wallet.EthereumWalletAcc, error);
-	FindMyPublicAddress(w *walletacc.Acc, clientID *firebase.App)(*walletacc.Acc,error);
+	FindMyPublicAddress(w *walletAcc.Acc, clientID *firebase.App)(*wallet.EthereumWalletAcc,error);
 }
 
 
@@ -50,7 +50,8 @@ func (*ledgerPublic)CreatePublicAddress(w *wallet.EthereumWalletAcc, clientID *f
 		_, _ ,err = client.Collection(collectionName).Add(ctx, map[string]interface{}{
 			"Email" : w.Email,
 			"Password" : w.Password,
-			"PublicAddress": w.PublicAddress,
+			"EthAddress": w.EthAddress,
+			"Terms":w.Terms,
 		}); if err != nil{
 			fmt.Println("Error", err)
 			return nil , err	
@@ -60,7 +61,7 @@ func (*ledgerPublic)CreatePublicAddress(w *wallet.EthereumWalletAcc, clientID *f
 }
 
 
-func (*ledgerPublic)FindMyPublicAddress(w *walletacc.Acc, clientID *firebase.App)(*walletacc.Acc, error){
+func (*ledgerPublic)FindMyPublicAddress(w *walletAcc.Acc, clientID *firebase.App)(*wallet.EthereumWalletAcc, error){
 
 
 	ctx := context.Background()
@@ -70,8 +71,9 @@ func (*ledgerPublic)FindMyPublicAddress(w *walletacc.Acc, clientID *firebase.App
 		return nil, err 
 	}
 	defer client.Close()
-	var ethereumDetials walletacc.Acc
-	iterator := client.Collection(collectionName).Where("Email", "==" , w.Email ).Where("Password" , "==" , w.Password).Where("PublicAddress", "==" , w.PublicAddress).Documents(ctx)
+	var ethereumDetials wallet.EthereumWalletAcc
+
+	iterator := client.Collection(collectionName).Where("Email", "==" , w.Email ).Where("Password" , "==" , w.Password).Where("EthAddress", "==" , w.EthAddress).Documents(ctx)
 	defer iterator.Stop()
 
 	for{
@@ -79,15 +81,14 @@ func (*ledgerPublic)FindMyPublicAddress(w *walletacc.Acc, clientID *firebase.App
 			fmt.Println("Error:", err)
 			return nil, err
 		}
-		ethereumDetials = walletacc.Acc{
+		ethereumDetials = wallet.EthereumWalletAcc{
 			Email : doc.Data()["Email"].(string),
 			Password : doc.Data()["Password"].(string),
-			PublicAddress : doc.Data()["PublicAddress"].(string),
+			EthAddress : doc.Data()["EthAddress"].(string),
+			Terms : doc.Data()["Terms"].(bool),
 		}
 		break
 	}
 	return &ethereumDetials, nil
 }
-
-
 
