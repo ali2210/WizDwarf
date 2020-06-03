@@ -238,7 +238,7 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 			// private key into bytes 
 		PrvateKyByte := crypto.FromECDSA(privateKey)
 
-		fmt.Println("Private_Hash :" , hexutil.Encode(PrvateKyByte)[2:])
+		fmt.Println("Private_Key :" , hexutil.Encode(PrvateKyByte)[2:])
 
 		pblicKey := privateKey.Public()
 
@@ -250,18 +250,18 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 		publicBytes := crypto.FromECDSAPub(pbcKey)
 		fmt.Println("Public_Hash :" , hexutil.Encode(publicBytes)[4:])
 
-		publicAddress := crypto.PubkeyToAddress(*pbcKey).Hex()
-		fmt.Println("Public_Addess:" , publicAddress)
-
+		PublicKey := crypto.PubkeyToAddress(*pbcKey).Hex()
+		fmt.Println("PublicKey:" , PublicKey)
 
 		// hash 
 		hshCode := sha3.NewLegacyKeccak256()
 		hshCode.Write(publicBytes[1:])
-		hashEncode := hexutil.Encode(hshCode.Sum(nil)[12:])
-		fmt.Println("Hash_sha3-256:", hashEncode)
+		ethereum := hexutil.Encode(hshCode.Sum(nil)[12:])
+		fmt.Println("Hash_sha3-256:", ethereum) //ethereum address
+		acc.EthAddress = ethereum
 
-		// valid address 
-			valid := isYourPublcAdresValid(hashEncode); if valid {
+			// valid address 
+			valid := isYourPublcAdresValid(ethereum); if valid {
 				// smart contract address
 				fmt.Println("smart contract address :" , valid)
 				Repon := Response{true,"Sorry! This is Smart Contact Adddress , We will handle in future", "WizDawrf/dashboard"}
@@ -278,7 +278,7 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 				return
 		}
 
-		err = json.Unmarshal(signWallet, myWallet); if err != nil{
+		err = json.Unmarshal(signWallet, &myWallet); if err != nil{
 				fmt.Println("Error:", err)
 				return
 		}		
@@ -291,9 +291,10 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 				return
 		}
 		fmt.Println("Eth_Add:" , ethAdd)
+
 		myWallet.Email = acc.Email
 		myWallet.Password = acc.Password
-		myWallet.PublicAddress = acc.PublicAddress
+		myWallet.EthAddress = acc.EthAddress
 		myWallet.Terms = acc.Terms
 
 		merchant , err := ledger.CreatePublicAddress(&myWallet, appName); if err != nil{
@@ -305,7 +306,7 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 
 
 			// Server response
-			Repon := Response{false,publicAddress, "WizDawrf/dashboard"}
+			Repon := Response{false,acc.EthAddress, "WizDawrf/dashboard"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
 	}

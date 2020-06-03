@@ -12,7 +12,7 @@ import (
 
 // constants 
 
-const collectionName string = "EthereumDB"
+const collectionName string = "EthereumPrivateLedger"
 
 
 
@@ -50,7 +50,7 @@ func (*ledgerPublic)CreatePublicAddress(w *wallet.EthereumWalletAcc, clientID *f
 		_, _ ,err = client.Collection(collectionName).Add(ctx, map[string]interface{}{
 			"Email" : w.Email,
 			"Password" : w.Password,
-			"PublicAddress": w.PublicAddress,
+			"EthAddress": w.EthAddress,
 			"Terms":w.Terms,
 		}); if err != nil{
 			fmt.Println("Error", err)
@@ -73,7 +73,7 @@ func (*ledgerPublic)FindMyPublicAddress(w *walletAcc.Acc, clientID *firebase.App
 	defer client.Close()
 	var ethereumDetials wallet.EthereumWalletAcc
 
-	iterator := client.Collection(collectionName).Where("Email", "==" , w.Email ).Where("Password" , "==" , w.Password).Where("PublicAddress", "==" , w.PublicAddress).Documents(ctx)
+	iterator := client.Collection(collectionName).Where("Email", "==" , w.Email ).Where("Password" , "==" , w.Password).Where("EthAddress", "==" , w.EthAddress).Documents(ctx)
 	defer iterator.Stop()
 
 	for{
@@ -84,13 +84,11 @@ func (*ledgerPublic)FindMyPublicAddress(w *walletAcc.Acc, clientID *firebase.App
 		ethereumDetials = wallet.EthereumWalletAcc{
 			Email : doc.Data()["Email"].(string),
 			Password : doc.Data()["Password"].(string),
-			PublicAddress : doc.Data()["PublicAddress"].(string),
+			EthAddress : doc.Data()["EthAddress"].(string),
 			Terms : doc.Data()["Terms"].(bool),
 		}
 		break
 	}
 	return &ethereumDetials, nil
 }
-
-
 
