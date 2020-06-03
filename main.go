@@ -211,14 +211,17 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 		}
 		client , err := ethclient.Dial(RinkebyClientUrl); if err != nil {
 			fmt.Println("Error :" , err)
+			return
 		}
 		fmt.Printf("Connection successfull ....%v\n", client)
 		ClientInstance = client
 		println("Email:"+ acc.Email + "Password:"+ acc.Password)
 
+		
 		// private key 
 		privateKey ,err := crypto.GenerateKey(); if err != nil{
 			println("Error:" , err)
+			return
 		}
 
 			// private key into bytes 
@@ -230,6 +233,7 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 
 		pbcKey , ok := pblicKey.(*ecdsa.PublicKey); if !ok{
 			println("Instaniate error {public key}")
+			return
 		}
 
 		publicBytes := crypto.FromECDSAPub(pbcKey)
@@ -248,7 +252,11 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 		// valid address 
 			valid := isYourPublcAdresValid(hashEncode); if valid {
 				// smart contract address
-				fmt.Println("smart contract address:" , valid)	
+				fmt.Println("smart contract address :" , valid)
+				Repon := Response{false,"Sorry! This is Smart Contact Adddress , We will handle in future", "WizDawrf/dashboard"}
+				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+				temp.Execute(w, Repon)
+				return
 			}
 			fmt.Println("eth address:" , valid)
 
