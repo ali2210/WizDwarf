@@ -4,6 +4,7 @@ package db
 
 import (
 	wallet "./cloudwalletclass"
+	walletAcc "../structs"
 	"fmt"
 	"context"
 	firebase "firebase.google.com/go"
@@ -21,7 +22,7 @@ type PublicLedger interface{
 
 	// Public Ledger 
 	CreatePublicAddress(w *wallet.EthereumWalletAcc , clientID *firebase.App)(*wallet.EthereumWalletAcc, error);
-	FindMyPublicAddress(w *wallet.EthereumWalletAcc, clientID *firebase.App)(*wallet.EthereumWalletAcc,error);
+	FindMyPublicAddress(w *walletAcc.Acc, clientID *firebase.App)(*wallet.EthereumWalletAcc,error);
 }
 
 
@@ -50,6 +51,7 @@ func (*ledgerPublic)CreatePublicAddress(w *wallet.EthereumWalletAcc, clientID *f
 			"Email" : w.Email,
 			"Password" : w.Password,
 			"PublicAddress": w.PublicAddress,
+			"Terms":w.Terms,
 		}); if err != nil{
 			fmt.Println("Error", err)
 			return nil , err	
@@ -59,7 +61,7 @@ func (*ledgerPublic)CreatePublicAddress(w *wallet.EthereumWalletAcc, clientID *f
 }
 
 
-func (*ledgerPublic)FindMyPublicAddress(w *wallet.EthereumWalletAcc, clientID *firebase.App)(*wallet.EthereumWalletAcc, error){
+func (*ledgerPublic)FindMyPublicAddress(w *walletAcc.Acc, clientID *firebase.App)(*wallet.EthereumWalletAcc, error){
 
 
 	ctx := context.Background()
@@ -83,6 +85,7 @@ func (*ledgerPublic)FindMyPublicAddress(w *wallet.EthereumWalletAcc, clientID *f
 			Email : doc.Data()["Email"].(string),
 			Password : doc.Data()["Password"].(string),
 			PublicAddress : doc.Data()["PublicAddress"].(string),
+			Terms : doc.Data()["Terms"].(bool),
 		}
 		break
 	}

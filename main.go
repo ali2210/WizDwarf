@@ -19,6 +19,7 @@ import (
 	"regexp"
 	"./db"
 	"./structs"
+	cloudWallet "./db/cloudwalletclass"
 	"encoding/json"
 	"google.golang.org/api/option"
 	"golang.org/x/crypto/sha3"
@@ -62,10 +63,11 @@ var (
 	emailexp string         = "([A-Z][a-z]|[0-9])*[@][a-z]*"
 	passexp  string         = "([A-Z][a-z]*[0-9])*"
 	addressexp string       = "(^0x[0-9a-fA-F]{40}$)"
-	AppName  *firebase.App  = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
-	cloud    db.DBFirestore = db.NewCloudInstance()
+	appName  *firebase.App  = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
+	cloud   db.DBFirestore = db.NewCloudInstance()
+	ledger  db.PublicLedger = db.NewCollectionInstance()
 	userSessions *sessions.CookieStore = nil
-	ClientInstance *ethclient.Client = nil
+	clientInstance *ethclient.Client = nil
 )
 
 
@@ -193,28 +195,37 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 
 
 func CryptoWallet(w http.ResponseWriter, r*http.Request){
+	
 	temp := template.Must(template.ParseFiles("seed.html"))
 	acc := structs.Acc{} 
+
 	if r.Method == "GET" {
+		
 		fmt.Println("Method:" + r.Method)
 		temp.Execute(w, "Seed")
 	}else{
+		
 		temp := template.Must(template.ParseFiles("server.html"))
 		fmt.Println("Method:"+ r.Method)
 		r.ParseForm()
 		acc.Email = r.FormValue("email")
 		acc.Password = r.FormValue("password")
+		
 		if r.FormValue("agreeTerms") == "on"{
-			acc.Accept = true
+			acc.Terms = true
 		}else{
-			acc.Accept = false
+			acc.Terms = false
 		}
+		
 		client , err := ethclient.Dial(RinkebyClientUrl); if err != nil {
 			fmt.Println("Error :" , err)
 			return
 		}
+		
 		fmt.Printf("Connection successfull ....%v\n", client)
-		ClientInstance = client
+		
+		clientInstance = client
+		
 		println("Email:"+ acc.Email + "Password:"+ acc.Password)
 
 		
@@ -253,12 +264,45 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 			valid := isYourPublcAdresValid(hashEncode); if valid {
 				// smart contract address
 				fmt.Println("smart contract address :" , valid)
-				Repon := Response{false,"Sorry! This is Smart Contact Adddress , We will handle in future", "WizDawrf/dashboard"}
+				Repon := Response{true,"Sorry! This is Smart Contact Adddress , We will handle in future", "WizDawrf/dashboard"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
 			}
 			fmt.Println("eth address:" , valid)
+
+		myWallet := cloudWallet.EthereumWalletAcc{} 
+
+		signWallet , err := json.Marshal(myWallet); if err != nil{
+				fmt.Println("Error:", err)
+				return
+		}
+
+		err = json.Unmarshal(signWallet, myWallet); if err != nil{
+				fmt.Println("Error:", err)
+				return
+		}		
+
+		//dataabse -- FindAddress 
+		ok , ethAdd := FindAddress(&acc); if ok && ethAdd != nil {
+				Repon := Response{true,"Sorry! Data Already register ", "WizDawrf/dashboard"}
+				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+				temp.Execute(w, Repon)
+				return
+		}
+		fmt.Println("Eth_Add:" , ethAdd)
+		myWallet.Email = acc.Email
+		myWallet.Password = acc.Password
+		myWallet.PublicAddress = acc.PublicAddress
+		myWallet.Terms = acc.Terms
+
+		merchant , err := ledger.CreatePublicAddress(&myWallet, appName); if err != nil{
+				fmt.Println("Error:", err)
+				return
+		}
+
+		fmt.Println("merchant:" , merchant)
+
 
 			// Server response
 			Repon := Response{false,publicAddress, "WizDawrf/dashboard"}
@@ -481,6 +525,7 @@ func Logout(w http.ResponseWriter, r *http.Request){
 
 //  Advance Functions 
 
+
 func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string)(*db.Vistors, error){
 	
 	 var data *db.Vistors
@@ -490,7 +535,7 @@ func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string)(*db.Vis
 		fmt.Println("Method:" + r.Method)
 	} else {
 		fmt.Println("Method:" + r.Method)
-		data, err = cloud.FindData(email,pass, AppName); if err != nil && data != nil{
+		data, err = cloud.FindData(email,pass, appName); if err != nil && data != nil{
 			// log.Fatal("Error", err)
 			println("Error:", err)
 				/*temp := template.Must(template.ParseFiles("server.html"))
@@ -507,7 +552,7 @@ func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string)(*db.Vis
 
 func getVistorData(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("Content-Type", "application/json")
-	visitor, err := cloud.FindAllData(AppName)
+	visitor, err := cloud.FindAllData(appName)
 	if err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(`{"error" :"Error getting visitor result"}`))
@@ -562,7 +607,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 		member.City = user.city
 		member.Zip = user.zip
 		member.Country = user.country
-		record ,err := cloud.SaveData(&member, AppName); if err != nil {
+		record ,err := cloud.SaveData(&member, appName); if err != nil {
 			fmt.Printf("Error%v\n", err)
 				temp := template.Must(template.ParseFiles("server.html"))
 				Res := Response{true, "Sorry Data is not save yet", "WizDawrf/signup"}
@@ -587,7 +632,6 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 }
 
 
-
 // Functions
 
 func SetFirestoreCredentials() *firebase.App {
@@ -608,6 +652,19 @@ func SetFirestoreCredentials() *firebase.App {
 	return app
 }
 
+func FindAddress(w *structs.Acc)(bool, *cloudWallet.EthereumWalletAcc){
+
+	ethAcc , err := ledger.FindMyPublicAddress(w, appName); if err != nil{
+		fmt.Println("Error:", err)
+		return false, nil
+	}
+	if ethAcc != nil{
+		return false, nil	
+	}
+	return true, ethAcc
+
+}
+
 func isYourPublcAdresValid(hash string) bool{
 
 
@@ -617,7 +674,7 @@ func isYourPublcAdresValid(hash string) bool{
 	fmt.Println("Hash Valid:" , v)
 
 	address := common.HexToAddress(hash)
-	bytecode , err := ClientInstance.CodeAt(contxt.Background(),address,nil); if err != nil{
+	bytecode , err := clientInstance.CodeAt(contxt.Background(),address,nil); if err != nil{
 		fmt.Println("Error:", err)
 	}
 
