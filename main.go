@@ -269,17 +269,23 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 				temp.Execute(w, Repon)
 				return
 			}
-			fmt.Println("eth address:" , valid)
+			fmt.Println("smart address:" , valid)
 
 		myWallet := cloudWallet.EthereumWalletAcc{} 
 
 		signWallet , err := json.Marshal(myWallet); if err != nil{
 				fmt.Println("Error:", err)
+				Repon := Response{true,"Sorry! JSON Marshal Stream ", "WizDawrf/dashboard"}
+				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+				temp.Execute(w, Repon)
 				return
 		}
 
 		err = json.Unmarshal(signWallet, &myWallet); if err != nil{
 				fmt.Println("Error:", err)
+				Repon := Response{true,"Sorry! JSON Unmarshal Stream", "WizDawrf/dashboard"}
+				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+				temp.Execute(w, Repon)
 				return
 		}		
 
@@ -299,6 +305,9 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 
 		merchant , err := ledger.CreatePublicAddress(&myWallet, appName); if err != nil{
 				fmt.Println("Error:", err)
+				Repon := Response{true,"Sorry! Invalid Ethereum Account ", "WizDawrf/dashboard"}
+				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+				temp.Execute(w, Repon)
 				return
 		}
 
