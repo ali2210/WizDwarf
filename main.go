@@ -68,6 +68,7 @@ var (
 	ledger  db.PublicLedger = db.NewCollectionInstance()
 	userSessions *sessions.CookieStore = nil
 	clientInstance *ethclient.Client = nil
+	EthereumAddress string
 )
 
 
@@ -95,8 +96,9 @@ func main() {
 	routing.HandleFunc("/{title}/login", Existing)
 	routing.HandleFunc("/{title}/dashboard",Dashboard)
 	routing.HandleFunc("/{title}/logout", Logout)
-	routing.HandleFunc("/{title}/createCryptoAccount",CryptoWallet)
+	routing.HandleFunc("/{title}/createWallet",CreateWallet)
 	routing.HandleFunc("/{title}/terms",Terms)
+	routing.HandleFunc("/{title]/loginWallet",LoginWallet)
 
 		// Static Files
 	// routing.HandleFunc("/{title}/action", addVistor)
@@ -194,7 +196,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 
 
 
-func CryptoWallet(w http.ResponseWriter, r*http.Request){
+func CreateWallet(w http.ResponseWriter, r*http.Request){
 	
 	temp := template.Must(template.ParseFiles("seed.html"))
 	acc := structs.Acc{} 
@@ -312,12 +314,24 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 		}
 
 		fmt.Println("merchant:" , merchant)
-
+		EthereumAddress = merchant.EthAddress
 
 			// Server response
 			Repon := Response{false,acc.EthAddress, "WizDawrf/dashboard"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
+	}
+}
+
+
+func LoginWallet(w http.ResponseWriter, r *http.Request){
+	temp := template.Must(template.ParseFiles("loginWallet.html"))
+
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		temp.Execute(w, "LoginWallet")
+	}else{
+		
 	}
 }
 
