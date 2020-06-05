@@ -328,56 +328,58 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 
 	temp := template.Must(template.ParseFiles("wallet.html"))
 	acc := structs.Acc{}
-		
+
 	if r.Method == "GET" {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
 		temp.Execute(w,"Wallet")
 	}else{
 
-		temp := template.Must(template.ParseFiles("server.html"))
+		temp1 := template.Must(template.ParseFiles("server.html"))
+		static := structs.Static{true, EthereumAddress}
+		fmt.Println("Message:", static.Address, "Adddress:", static.Eth)
+		temp.Execute(w,static)
 		fmt.Println("Method:"+ r.Method)
 		r.ParseForm()
+
 		acc.Email = r.FormValue("Email")
 		acc.Password = r.FormValue("Password")
 		
 		
-		client , err := ethclient.Dial(RinkebyClientUrl); if err != nil {
-			fmt.Println("Error :" , err)
-			return
-		}
+		if clientInstance != nil{
 		
-		fmt.Printf("Connection successfull ....%v\n", client)
+			fmt.Printf("Connection successfull ....%v\n", clientInstance)
 		
 		
-		println("Email:"+ acc.Email + "Password:"+ acc.Password)
+			println("Email:"+ acc.Email + "Password:"+ acc.Password)
 
-		myWallet := cloudWallet.EthereumWalletAcc{} 
+			myWallet := cloudWallet.EthereumWalletAcc{} 
 
-		signWallet , err := json.Marshal(myWallet); if err != nil{
+			signWallet , err := json.Marshal(myWallet); if err != nil{
 				fmt.Println("Error:", err)
 				Repon := Response{true,"Sorry! JSON Marshal Stream ", "WizDawrf/dashboard"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
-				temp.Execute(w, Repon)
+				temp1.Execute(w, Repon)
 				return
-		}
+			}
 
-		err = json.Unmarshal(signWallet, &myWallet); if err != nil{
+			err = json.Unmarshal(signWallet, &myWallet); if err != nil{
 				fmt.Println("Error:", err)
 				Repon := Response{true,"Sorry! JSON Unmarshal Stream", "WizDawrf/dashboard"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
-				temp.Execute(w, Repon)
+				temp1.Execute(w, Repon)
 				return
-		}		
+			}		
 
 		//dataabse -- FindAddress 
-		ok , ethAdd := FindAddress(&acc); if !ok && ethAdd == nil {
+			ok , ethAdd := FindAddress(&acc); if !ok && ethAdd == nil {
 				Repon := Response{true,"Sorry! Data Already register ", "WizDawrf/dashboard"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
-				temp.Execute(w, Repon)
+				temp1.Execute(w, Repon)
 				return
+			}
+			fmt.Println("Eth_Add:" , ethAdd)
 		}
-		fmt.Println("Eth_Add:" , ethAdd)
 	}
 }
 
