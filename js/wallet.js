@@ -5,6 +5,8 @@ function connected() {
 
 	if (connectInternet) {
 		document.getElementById('wifi').className = "fa fa-wifi";
+	}else{
+		alert('Check your connection before proceed!');
 	}
 
 	setTimeout(connected, 1000);

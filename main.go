@@ -327,10 +327,57 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 func Wallet(w http.ResponseWriter, r *http.Request){
 
 	temp := template.Must(template.ParseFiles("wallet.html"))
+	acc := structs.Acc{}
+		
 	if r.Method == "GET" {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
 		temp.Execute(w,"Wallet")
+	}else{
+
+		temp := template.Must(template.ParseFiles("server.html"))
+		fmt.Println("Method:"+ r.Method)
+		r.ParseForm()
+		acc.Email = r.FormValue("Email")
+		acc.Password = r.FormValue("Password")
+		
+		
+		client , err := ethclient.Dial(RinkebyClientUrl); if err != nil {
+			fmt.Println("Error :" , err)
+			return
+		}
+		
+		fmt.Printf("Connection successfull ....%v\n", client)
+		
+		
+		println("Email:"+ acc.Email + "Password:"+ acc.Password)
+
+		myWallet := cloudWallet.EthereumWalletAcc{} 
+
+		signWallet , err := json.Marshal(myWallet); if err != nil{
+				fmt.Println("Error:", err)
+				Repon := Response{true,"Sorry! JSON Marshal Stream ", "WizDawrf/dashboard"}
+				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+				temp.Execute(w, Repon)
+				return
+		}
+
+		err = json.Unmarshal(signWallet, &myWallet); if err != nil{
+				fmt.Println("Error:", err)
+				Repon := Response{true,"Sorry! JSON Unmarshal Stream", "WizDawrf/dashboard"}
+				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+				temp.Execute(w, Repon)
+				return
+		}		
+
+		//dataabse -- FindAddress 
+		ok , ethAdd := FindAddress(&acc); if !ok && ethAdd == nil {
+				Repon := Response{true,"Sorry! Data Already register ", "WizDawrf/dashboard"}
+				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+				temp.Execute(w, Repon)
+				return
+		}
+		fmt.Println("Eth_Add:" , ethAdd)
 	}
 }
 
