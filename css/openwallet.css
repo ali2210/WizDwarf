@@ -2,12 +2,18 @@
 	border-style: none;
 	display: flex;
 	justify-content: center;
-	margin-left: 50px;
+	margin-left: 20px;
+	background-color: none;
+	width: 50%;
+	flex-direction: column;
+
+
 }
 
 .div-form{
 	display: flex;
 	justify-content: center;
+	margin: auto;
 }
 
 .text{
@@ -15,7 +21,7 @@
 }
 
 .form-submit{
-	margin-top: 20px;
+	margin: 20px;
 }
 
 .static{
@@ -35,14 +41,3 @@
 	text-align: center;
 }
 
-.btn-1{
-	border-style: none;
-	color:black;
-}
-
-.btn-2{
-	border-style: none;
-	color:black;
-	display: flex;
-	justify-content: center;
-}
