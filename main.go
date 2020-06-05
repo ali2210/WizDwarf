@@ -332,13 +332,14 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 	if r.Method == "GET" {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
-		temp.Execute(w,"Wallet")
-	}else{
-
-		temp1 := template.Must(template.ParseFiles("server.html"))
 		static := structs.Static{true, EthereumAddress}
 		fmt.Println("Message:", static.Address, "Adddress:", static.Eth)
 		temp.Execute(w,static)
+	
+	}else{
+
+		temp := template.Must(template.ParseFiles("server.html"))
+
 		fmt.Println("Method:"+ r.Method)
 		r.ParseForm()
 
@@ -359,7 +360,7 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 				fmt.Println("Error:", err)
 				Repon := Response{true,"Sorry! JSON Marshal Stream ", "WizDawrf/dashboard"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
-				temp1.Execute(w, Repon)
+				temp.Execute(w, Repon)
 				return
 			}
 
@@ -367,7 +368,7 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 				fmt.Println("Error:", err)
 				Repon := Response{true,"Sorry! JSON Unmarshal Stream", "WizDawrf/dashboard"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
-				temp1.Execute(w, Repon)
+				temp.Execute(w, Repon)
 				return
 			}		
 
@@ -375,7 +376,7 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 			ok , ethAdd := FindAddress(&acc); if !ok && ethAdd == nil {
 				Repon := Response{true,"Sorry! Data Already register ", "WizDawrf/dashboard"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
-				temp1.Execute(w, Repon)
+				temp.Execute(w, Repon)
 				return
 			}
 			fmt.Println("Eth_Add:" , ethAdd)
