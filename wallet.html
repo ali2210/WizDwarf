@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- <link rel="shortcut icon" type="image/png" href="/images/favicon.png"> -->
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/openwallet.css">
+  <link rel="stylesheet" type="text/css" href="/css/seed.css">
+  <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+  <title>WizDwarf</title>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    	<a class="navbar-brand" href="#">
+    		<button class="btn-connect" type="button" onclick="connected()">
+    			<i class="fa fa-wifi" aria-hidden="true"></i>
+    		</button>
+    	</a>
+    		<a>
+		<button class="btn-1" type="button" onclick="back()">
+			<i class="fa fa-pagelines" aria-hidden="true">1</i>
+		</button>
+	</a>
+	<a>
+		<button class="btn-2" type="button" onclick="fastback()">
+			<i class="fa fa-pagelines" aria-hidden="true">2</i>
+		</button>
+	</a>
+	</nav>
+	<div class="div-form">
+		<img src="/images/logo.png" alt ="WizDwarfs" class="img-logo"/>
+		<h4 class="text">Account</h4>
+		<form class="form-submit" action="/WizDwarf/open" method="post">
+			<div class="static">
+				<input type="text" name="eth"  value="058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW" class="static" readonly="true">
+			</div>
+			<div class="sub-form">
+				<div class="form-option">
+					<button type="button" class="btn btn-email" id="email" onclick="showMeEmail()">
+							<i class="fa fa-user" aria-hidden="true"></i>
+						</button>
+						<input type="email" class="form-control" id="inlineFormInput" placeholder="Email" name="email" required>
+					<button type="button" class="btn btn-password" id="pass" onclick="showMePassword()">
+							<i class="fa fa-lock" aria-hidden="true"></i>
+					</button>
+						<input type="password" class="form-control" id="inline" placeholder="Password" name="password" required>
+				</div>
+			</div>
+			<div class="btn-submit">
+				<button type="submit" class="btn btn-submit" id="btnSubmit" disabled="true">
+        			  <i class="fa fa-arrow-right" aria-hidden="true"></i>Next
+        		</button>
+        		</div>
+		</form>
+
+	</div>
+	<script type="text/javascript" src="/js/seed.js"></script>
+</body>
+</html>

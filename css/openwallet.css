@@ -1,0 +1,48 @@
+.btn-connect{
+	border-style: none;
+	display: flex;
+	justify-content: center;
+	margin-left: 50px;
+}
+
+.div-form{
+	display: flex;
+	justify-content: center;
+}
+
+.text{
+	margin-top: 20px;
+}
+
+.form-submit{
+	margin-top: 20px;
+}
+
+.static{
+	width: 100%;
+	scale:1;
+	margin-left: 10px;
+}
+.sub-form{
+	display: ruby;
+	margin-left: 20px;
+}
+.form-option{
+	text-align: center;
+}
+
+.btn-submit{
+	text-align: center;
+}
+
+.btn-1{
+	border-style: none;
+	color:black;
+}
+
+.btn-2{
+	border-style: none;
+	color:black;
+	display: flex;
+	justify-content: center;
+}

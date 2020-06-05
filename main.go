@@ -98,7 +98,7 @@ func main() {
 	routing.HandleFunc("/{title}/logout", Logout)
 	routing.HandleFunc("/{title}/createWallet",CreateWallet)
 	routing.HandleFunc("/{title}/terms",Terms)
-	routing.HandleFunc("/{title]/loginWallet",LoginWallet)
+	routing.HandleFunc("/{title}/open", Wallet)
 
 		// Static Files
 	// routing.HandleFunc("/{title}/action", addVistor)
@@ -324,14 +324,13 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 }
 
 
-func LoginWallet(w http.ResponseWriter, r *http.Request){
-	temp := template.Must(template.ParseFiles("loginWallet.html"))
+func Wallet(w http.ResponseWriter, r *http.Request){
 
+	temp := template.Must(template.ParseFiles("wallet.html"))
 	if r.Method == "GET" {
+		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
-		temp.Execute(w, "LoginWallet")
-	}else{
-		
+		temp.Execute(w,"Wallet")
 	}
 }
 
@@ -340,6 +339,7 @@ func Terms(w http.ResponseWriter, r *http.Request){
 
 	temp := template.Must(template.ParseFiles("terms.html"))
 	if r.Method == "GET" {
+		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
 		temp.Execute(w, "Terms")
 	}
