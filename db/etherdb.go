@@ -23,6 +23,7 @@ type PublicLedger interface{
 	// Public Ledger 
 	CreatePublicAddress(w *wallet.EthereumWalletAcc , clientID *firebase.App)(*wallet.EthereumWalletAcc, error);
 	FindMyPublicAddress(w *walletAcc.Acc, clientID *firebase.App)(*wallet.EthereumWalletAcc,error);
+	FindMyAddressByEmail(w *walletAcc.Acc, clientID *firebase.App)(*wallet.EthereumWalletAcc,error);
 }
 
 
@@ -90,5 +91,34 @@ func (*ledgerPublic)FindMyPublicAddress(w *walletAcc.Acc, clientID *firebase.App
 		break
 	}
 	return &ethereumDetials, nil
+}
+
+func (*ledgerPublic)FindMyAddressByEmail(w *walletAcc.Acc, clientID *firebase.App)(*wallet.EthereumWalletAcc,error){
+	ctx := context.Background()
+
+	client , err := clientID.Firestore(ctx); if err != nil {
+		fmt.Println("Error:", err)
+		return nil, err 
+	}
+	defer client.Close()
+	var ethereumDetials wallet.EthereumWalletAcc
+
+	iterator := client.Collection(collectionName).Where("Email", "==" , w.Email ).Where("Password" , "==" , w.Password).Documents(ctx)
+	defer iterator.Stop()
+
+	for{
+		doc , err := iterator.Next(); if err != nil {
+			fmt.Println("Error:", err)
+			return nil, err
+		}
+		ethereumDetials = wallet.EthereumWalletAcc{
+			Email : doc.Data()["Email"].(string),
+			Password : doc.Data()["Password"].(string),
+			EthAddress : doc.Data()["EthAddress"].(string),
+			Terms : doc.Data()["Terms"].(bool),
+		}
+		break
+	}
+	return &ethereumDetials, nil	
 }
 
