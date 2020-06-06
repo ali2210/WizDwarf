@@ -68,6 +68,7 @@ var (
 	ledger  db.PublicLedger = db.NewCollectionInstance()
 	userSessions *sessions.CookieStore = nil
 	clientInstance *ethclient.Client = nil
+	ETHAddressInstance string = ""
 )
 
 
@@ -224,7 +225,7 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 		}
 		
 		fmt.Printf("Connection successfull ....%v\n", client)
-		
+		clientInstance = client
 		
 		println("Email:"+ acc.Email + "Password:"+ acc.Password)
 
@@ -312,7 +313,7 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 		}
 
 		fmt.Println("merchant:" , merchant)
-
+		clientInstance = nil
 			// Server response
 			Repon := Response{false,acc.EthAddress, "WizDawrf/dashboard"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
@@ -334,13 +335,13 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 	}else{
 
 		temp := template.Must(template.ParseFiles("server.html"))
-		whtml := template.Must(template.ParseFiles("wallet.html"))
+		// whtml := template.Must(template.ParseFiles("wallet.html"))
 
 		fmt.Println("Method:"+ r.Method)
 		r.ParseForm()
 
-		acc.Email = r.FormValue("Email")
-		acc.Password = r.FormValue("Password")
+		acc.Email = r.FormValue("email")
+		acc.Password = r.FormValue("password")
 		
 		client , err := ethclient.Dial(RinkebyClientUrl); if err != nil {
 			fmt.Println("Error :" , err)
@@ -369,30 +370,28 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 				temp.Execute(w, Repon)
 				return
 			}		
-			add, ok := MyEthAddress(&acc); if !ok && add == nil{
+			add, ok := MyEthAddress(&acc); if !ok {
 				Repon := Response{true,"Sorry! No Account Exist ", "WizDawrf/oepn"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
-			} 
-			fmt.Println("Address:" , add)
-			acc.EthAddress = add.EthAddress
+			}
+			if add != nil{ 
+				fmt.Println("Address:" , add)
+				acc.EthAddress = add.EthAddress
+				
+				// variable address for futher processing
+				ETHAddressInstance = acc.EthAddress
+				fmt.Println("myWallet:", ETHAddressInstance)
 
 			 // add this address in html page as static. 
 
 		//dataabse -- FindAddress 
-			ok , Eth := FindAddress(&acc); if !ok && Eth == nil {
-				Repon := Response{true,"Sorry! Data Already register ", "WizDawrf/dashboard"}
-				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
-				temp.Execute(w, Repon)
-				return
+			secureWallet, ok := FindEthWallet(&acc); if ok && secureWallet != nil{
+					fmt.Println("Error", err)
 			}
-			fmt.Println("Eth_Add:" , Eth)
-
-			staticRec := structs.Static{acc.EthAddress}
-			fmt.Println("Message:", staticRec.Eth)
-			whtml.Execute(w,staticRec)
-		
+			fmt.Println("wallet:", secureWallet)			
+		}
 	}
 }
 
@@ -757,10 +756,19 @@ func MyEthAddress(w *structs.Acc)(*cloudWallet.EthereumWalletAcc, bool){
 		fmt.Println("Error:", err)
 		return nil, false
 	}
-	if acc != nil{
+	if acc == nil{
 		return nil,false	
 	}
 	return acc,true		
+}
+
+func FindEthWallet(w *structs.Acc)(*cloudWallet.EthereumWalletAcc,bool){
+
+	acc , err := ledger.FindMyPublicAddress(w, appName); if err != nil{
+		fmt.Println("Error", err)
+		return acc,false
+	}
+	return acc , true
 }
 
 func isYourPublcAdresValid(hash string) bool{
@@ -774,6 +782,7 @@ func isYourPublcAdresValid(hash string) bool{
 	address := common.HexToAddress(hash)
 	bytecode , err := clientInstance.CodeAt(contxt.Background(),address,nil); if err != nil{
 		fmt.Println("Error:", err)
+		return false
 	}
 
 	contract := len(bytecode)> 0
