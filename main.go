@@ -95,8 +95,9 @@ func main() {
 	routing.HandleFunc("/{title}/login", Existing)
 	routing.HandleFunc("/{title}/dashboard",Dashboard)
 	routing.HandleFunc("/{title}/logout", Logout)
-	routing.HandleFunc("/{title}/createCryptoAccount",CryptoWallet)
+	routing.HandleFunc("/{title}/createWallet",CreateWallet)
 	routing.HandleFunc("/{title}/terms",Terms)
+	routing.HandleFunc("/{title}/open", Wallet)
 
 		// Static Files
 	// routing.HandleFunc("/{title}/action", addVistor)
@@ -194,7 +195,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 
 
 
-func CryptoWallet(w http.ResponseWriter, r*http.Request){
+func CreateWallet(w http.ResponseWriter, r*http.Request){
 	
 	temp := template.Must(template.ParseFiles("seed.html"))
 	acc := structs.Acc{} 
@@ -224,7 +225,6 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 		
 		fmt.Printf("Connection successfull ....%v\n", client)
 		
-		clientInstance = client
 		
 		println("Email:"+ acc.Email + "Password:"+ acc.Password)
 
@@ -313,7 +313,6 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 
 		fmt.Println("merchant:" , merchant)
 
-
 			// Server response
 			Repon := Response{false,acc.EthAddress, "WizDawrf/dashboard"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
@@ -322,10 +321,87 @@ func CryptoWallet(w http.ResponseWriter, r*http.Request){
 }
 
 
+func Wallet(w http.ResponseWriter, r *http.Request){
+
+	temp := template.Must(template.ParseFiles("wallet.html"))
+	acc := structs.Acc{}
+
+	if r.Method == "GET" {
+		fmt.Println("Url:", r.URL.Path)
+		fmt.Println("Method:" + r.Method)
+		temp.Execute(w,"Wallet")
+	
+	}else{
+
+		temp := template.Must(template.ParseFiles("server.html"))
+		whtml := template.Must(template.ParseFiles("wallet.html"))
+
+		fmt.Println("Method:"+ r.Method)
+		r.ParseForm()
+
+		acc.Email = r.FormValue("Email")
+		acc.Password = r.FormValue("Password")
+		
+		client , err := ethclient.Dial(RinkebyClientUrl); if err != nil {
+			fmt.Println("Error :" , err)
+			return
+		}
+		
+			fmt.Printf("Connection successfull ....%v\n", client)
+		
+		
+			println("Email:"+ acc.Email + "Password:"+ acc.Password)
+
+			myWallet := cloudWallet.EthereumWalletAcc{} 
+
+			signWallet , err := json.Marshal(myWallet); if err != nil{
+				fmt.Println("Error:", err)
+				Repon := Response{true,"Sorry! JSON Marshal Stream ", "WizDawrf/dashboard"}
+				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+				temp.Execute(w, Repon)
+				return
+			}
+
+			err = json.Unmarshal(signWallet, &myWallet); if err != nil{
+				fmt.Println("Error:", err)
+				Repon := Response{true,"Sorry! JSON Unmarshal Stream", "WizDawrf/dashboard"}
+				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+				temp.Execute(w, Repon)
+				return
+			}		
+			add, ok := MyEthAddress(&acc); if !ok && add == nil{
+				Repon := Response{true,"Sorry! No Account Exist ", "WizDawrf/oepn"}
+				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+				temp.Execute(w, Repon)
+				return
+			} 
+			fmt.Println("Address:" , add)
+			acc.EthAddress = add.EthAddress
+
+			 // add this address in html page as static. 
+
+		//dataabse -- FindAddress 
+			ok , Eth := FindAddress(&acc); if !ok && Eth == nil {
+				Repon := Response{true,"Sorry! Data Already register ", "WizDawrf/dashboard"}
+				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+				temp.Execute(w, Repon)
+				return
+			}
+			fmt.Println("Eth_Add:" , Eth)
+
+			staticRec := structs.Static{acc.EthAddress}
+			fmt.Println("Message:", staticRec.Eth)
+			whtml.Execute(w,staticRec)
+		
+	}
+}
+
+
 func Terms(w http.ResponseWriter, r *http.Request){
 
 	temp := template.Must(template.ParseFiles("terms.html"))
 	if r.Method == "GET" {
+		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
 		temp.Execute(w, "Terms")
 	}
@@ -673,6 +749,18 @@ func FindAddress(w *structs.Acc)(bool, *cloudWallet.EthereumWalletAcc){
 	}
 	return true, ethAcc
 
+}
+
+func MyEthAddress(w *structs.Acc)(*cloudWallet.EthereumWalletAcc, bool){
+
+	acc , err := ledger.FindMyAddressByEmail(w, appName); if err != nil{
+		fmt.Println("Error:", err)
+		return nil, false
+	}
+	if acc != nil{
+		return nil,false	
+	}
+	return acc,true		
 }
 
 func isYourPublcAdresValid(hash string) bool{
