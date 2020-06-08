@@ -1,9 +1,14 @@
 .btn-connect{
-	border-style: none;
+	margin-top: 5px;
+	margin-left: 200px;
 	display: flex;
+	flex-direction: column-reverse;
 	justify-content: center;
-	margin-left: 20px;
-	background-color: none;
+	align-content: center;
+	border-style: none;
+	color: white;
+	background-color: black;
+	height: 30%;
 }
 
 .div-form{

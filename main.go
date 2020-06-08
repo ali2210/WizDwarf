@@ -99,6 +99,9 @@ func main() {
 	routing.HandleFunc("/{title}/createWallet",CreateWallet)
 	routing.HandleFunc("/{title}/terms",Terms)
 	routing.HandleFunc("/{title}/open", Wallet)
+	routing.HandleFunc("/{title}/transact", Transacts)
+	// routing.HandleFunc("/{title}/transact/send", Send)
+	// routing.HandleFunc("/{title}/transact/receive", Receive)
 
 		// Static Files
 	// routing.HandleFunc("/{title}/action", addVistor)
@@ -315,9 +318,25 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 		fmt.Println("merchant:" , merchant)
 		clientInstance = nil
 			// Server response
-			Repon := Response{false,acc.EthAddress, "WizDawrf/dashboard"}
-			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
-			temp.Execute(w, Repon)
+			// Repon := Response{false,acc.EthAddress, "WizDawrf/dashboard"}
+			// println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			// temp.Execute(w, Repon)
+		 w.WriteHeader(http.StatusOK)
+	    r.Method = "GET"
+		Transacts(w,r)
+	}
+}
+
+func Transacts(w http.ResponseWriter, r *http.Request){
+	
+	temp := template.Must(template.ParseFiles("transact.html"))	
+	acc := structs.Acc{}
+	if r.Method == "GET" {
+		fmt.Println("Url:", r.URL.Path)
+		fmt.Println("Method:" + r.Method)
+		acc.EthAddress = ETHAddressInstance
+		temp.Execute(w,acc)
+	
 	}
 }
 
