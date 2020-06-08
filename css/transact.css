@@ -1,0 +1,86 @@
+.btn-connect{
+	margin-top: 5px;
+	margin-left: 200px;
+	display: flex;
+	flex-direction: column-reverse;
+	justify-content: center;
+	align-content: center;
+	border-style: none;
+	color: white;
+	background-color: black;
+	height: 100%;
+}
+
+.static-field{
+	align-content: center;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+}
+.static-img{
+	align-self: center;
+	text-align: center;
+}
+.static-text{
+	text-align: center;
+	margin-top: 5px;
+}
+.avatar-pics{
+	margin-top: 5px;
+}
+.myAvatar{
+	border-radius: 50%;
+	width: 20%;
+}
+.address{
+	margin-top: 10px;
+}
+.balance{
+	margin-top: 10px;
+}
+
+.form-opts{
+	display: flex;
+	justify-content: center;
+	flex-direction: column-reverse;
+	align-self: center;
+	text-align: center;
+}
+.btn-pay,
+.btn-rec, 
+.btns{
+	margin: auto;
+}
+.btn-Send,
+.btn-Receive, 
+.btn-ok,
+.btn-rece{
+	border-style: none;
+	background-color: black;
+	color: white;
+	margin-top: 10px;
+}
+
+.btn-Send{
+	margin-top: 50px;
+}
+
+.send-input,
+.recAdd-input,
+.dropdown-trans, 
+.form-dropdown-control,
+.btn-ok,
+.recepit, 
+.your-add, .btn-rece
+{
+	visibility: hidden;
+}
+
+.form-send, .form-rec{
+	align-items: center;
+	margin-top: 20px;
+}
+.form-1, .rece{
+	align-content: center;
+	margin-top: 10px;
+}

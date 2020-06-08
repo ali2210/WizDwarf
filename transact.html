@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- <link rel="shortcut icon" type="image/png" href="/images/favicon.png"> -->
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/css/seed.css">
+  <link rel="stylesheet" type="text/css" href="/css/transact.css">
+  <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+  <title>WizDwarf</title>
+</head>
+<body>
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    	<a class="navbar-brand" href="#">
+    		<button class="btn-connect" type="button" onclick="connected()">
+    			<i class="fa fa-wifi" aria-hidden="true" id="wifi"></i>
+    		</button>
+    	</a>
+	</nav>
+	<div class="static-field">
+			<div class="static-img">
+				<img src="/images/logo.png" alt ="WizDwarfs" class="img-logo"/>
+				<h4 class="text">Payment</h4>
+			</div>
+			<div class="static-text">
+				<div class="avatar-pics">
+					<img src="/images/myAvatar.png" alt="avatar" class="myAvatar" />
+				</div>
+				<input type="text" name="eth" value="{{.EthAddress}}" class="address">
+				<h5 class="balance">0 Eth</h5>
+			</div>
+			<div class="form-opts">
+				<div class="btn-pay">
+					<button type="button" class="btn-Send" onclick="">
+						<i class="fa fa-shopping-basket" aria-hidden="true">Send</i>
+					</button>
+					<div class="form-send">
+						<form action="/WizDwarf/transact/send" method="post" 
+						class="form-1">
+							<div class="txt-send">
+								<input type="text" name="sendAdd" value="" class="send-input" readonly>
+							</div>
+							<div class="txt-eth">
+								<input type="text" name="add" class="recAdd-input" placeholder="Your Ethereum Address" required>
+							</div>
+							<div class="dropdown">
+								<label for="transact" class="dropdown-trans">Time</label>
+          						<select id="transact" class="form-dropdown-control" name="transact" disabled>
+            					<option selected>Choose...</option>
+            					<option>Normal Time</option>
+            					<option>Fair Time</option>
+            					<option>Blink Time</option>
+            				</select>
+            				</div>
+            					<div class="btns">
+            						<button type="submit" class="btn-ok" disabled>
+										<i class="fa fa-cubes" aria-hidden="true">Pay</i>
+									</button>
+								</div>
+						</form>
+					</div>
+				</div>
+				<div class="btn-rec">
+					<button type="button" class="btn-Receive" onclick="">
+						<i class="fa fa-gift" aria-hidden="true">Receive</i>
+					</button>
+					<div class="form-rec">
+						<form action="/WizDwarf/transact/receive" method="post" class="rece">
+							<div class="input-rece">
+								<input type="text" name="recepit" class="recepit" placeholder="Recepit Ethereum Address" required>
+							</div>
+							<div class="input-you">
+								<input type="text" name="your" class="your-add" placeholder="Your Ethereum Address" required>
+							</div>
+							<div class="btnr">
+            						<button type="submit" class="btn-rece" disabled>
+										<i class="fa fa-shopping-bag" aria-hidden="true">Wallet</i>
+									</button>
+								</div>
+						</form>
+					</div>
+				</div>
+			</div>
+	</div>
+</body>
+</html>
