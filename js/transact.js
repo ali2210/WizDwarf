@@ -5,6 +5,18 @@ function ChangePic() {
 
 	var img = document.getElementById('change').src = "/images/Female.png";
 	console.log(img);
+	document.getElementById('female').disabled = false;
+	var female = document.getElementById('female').style.visibility="visible";
+	var male = document.getElementById('male').style.visibility="hidden";
+
+
+}
+
+function Reverse(){
+	var reset = document.getElementById('change').src = "/images/myAvatar.png";
+	console.log(reset);
+	var male = document.getElementById('male').style.visibility="visible";
+	var female = document.getElementById('female').style.visibility="hidden";
 }
 
 function PayByEth(){

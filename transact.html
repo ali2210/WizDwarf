@@ -29,10 +29,12 @@
 				<div class="avatar-pics">
 					<img src="/images/myAvatar.png" alt="avatar" class="myAvatar" 
 					id="change" />
-					<button type="button" class="changePic" onclick="ChangePic()">+
-					</button> 
+					<button type="button" class="changePic" id="male" onclick="ChangePic()">+
+					</button>
+					<button type="button" class="reverse" id="female" onclick="Reverse()" disabled>-
+					</button>  
 				</div>
-				<input type="text" name="eth" value="{{.EthAddress}}" class="address">
+				<input type="text" name="eth" value="{{.EthAddress}}" class="address" readonly>
 				<h5 class="balance">0 Eth</h5>
 			</div>
 			<div class="form-opts">

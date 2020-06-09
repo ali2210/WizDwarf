@@ -63,6 +63,7 @@
 	background-color: black;
 	color: white;
 	margin-top: 5px;
+	height: 30%;
 }
 
 .btn-Send{
@@ -92,8 +93,9 @@
 }
 
 .changePic{
+	color: lime;
 	position: absolute;
-	top: 76.5%;
+	top: 77.5%;
 	left: 55.7%;
 	padding: 2.0px 2.0x;
 	-ms-transform:translate(-50%,-50%);
@@ -101,5 +103,16 @@
 	background: antiquewhite;
 	cursor: pointer;
 	border-style: none;
+}
+.reverse{
 	color: lime;
+	position: absolute;
+	top: 77.5%;
+	left: 45.0%;
+	padding: 2.0px 2.0x;
+	-ms-transform:translate(-50%,-50%);
+	transform: translate(-50%,-50%);
+	background: antiquewhite;
+	cursor: pointer;
+	border-style: none;
 }

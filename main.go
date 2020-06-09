@@ -376,7 +376,7 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 
 			signWallet , err := json.Marshal(myWallet); if err != nil{
 				fmt.Println("Error:", err)
-				Repon := Response{true,"Sorry! JSON Marshal Stream ", "WizDawrf/dashboard"}
+				Repon := Response{true,"Sorry! JSON Marshal Stream ", "WizDawrf/open"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
@@ -384,13 +384,13 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 
 			err = json.Unmarshal(signWallet, &myWallet); if err != nil{
 				fmt.Println("Error:", err)
-				Repon := Response{true,"Sorry! JSON Unmarshal Stream", "WizDawrf/dashboard"}
+				Repon := Response{true,"Sorry! JSON Unmarshal Stream", "WizDawrf/open"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
 			}		
 			add, ok := MyEthAddress(&acc); if !ok {
-				Repon := Response{true,"Sorry! No Account Exist ", "WizDawrf/oepn"}
+				Repon := Response{true,"Sorry! No Account Exist ", "WizDawrf/open"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
@@ -406,18 +406,19 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 			 // add this address in html page as static. 
 
 		//dataabse -- FindAddress 
-			secureWallet, ok := FindEthWallet(&acc); if ok {
+			secureWallet, ok := FindEthWallet(&acc); if !ok && secureWallet != nil {
 				fmt.Println("Error", err)
-				Repon := Response{true,"Sorry! No Account Exist ", "WizDawrf/oepn"}
+				Repon := Response{true,"Sorry! No Account Exist ", "WizDawrf/open"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
 			}
-			fmt.Println("wallet:", secureWallet)
+			fmt.Println("MyEthAddress Details:", secureWallet)
+
 
 			w.WriteHeader(http.StatusOK)
-	    	r.Method = "GET"
-	    	Transacts(w,r)			
+	  	   	r.Method = "GET"
+	     	Transacts(w,r)			
 		}
 	}
 }
@@ -793,7 +794,7 @@ func FindEthWallet(w *structs.Acc)(*cloudWallet.EthereumWalletAcc,bool){
 
 	acc , err := ledger.FindMyPublicAddress(w, appName); if err != nil{
 		fmt.Println("Error", err)
-		return acc,false
+		return nil,false
 	}
 	return acc , true
 }
