@@ -321,9 +321,9 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 			// Repon := Response{false,acc.EthAddress, "WizDawrf/dashboard"}
 			// println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			// temp.Execute(w, Repon)
-		 w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusOK)
 	    r.Method = "GET"
-		Transacts(w,r)
+		Wallet(w,r)
 	}
 }
 
@@ -406,10 +406,18 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 			 // add this address in html page as static. 
 
 		//dataabse -- FindAddress 
-			secureWallet, ok := FindEthWallet(&acc); if ok && secureWallet != nil{
-					fmt.Println("Error", err)
+			secureWallet, ok := FindEthWallet(&acc); if ok {
+				fmt.Println("Error", err)
+				Repon := Response{true,"Sorry! No Account Exist ", "WizDawrf/oepn"}
+				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+				temp.Execute(w, Repon)
+				return
 			}
-			fmt.Println("wallet:", secureWallet)			
+			fmt.Println("wallet:", secureWallet)
+
+			w.WriteHeader(http.StatusOK)
+	    	r.Method = "GET"
+	    	Transacts(w,r)			
 		}
 	}
 }

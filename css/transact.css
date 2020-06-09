@@ -6,8 +6,8 @@
 	justify-content: center;
 	align-content: center;
 	border-style: none;
-	color: white;
-	background-color: black;
+	color: black;
+	background-color: light;
 	height: 100%;
 }
 
@@ -31,6 +31,7 @@
 .myAvatar{
 	border-radius: 50%;
 	width: 20%;
+	position: relative;
 }
 .address{
 	margin-top: 10px;
@@ -51,14 +52,17 @@
 .btns{
 	margin: auto;
 }
+
 .btn-Send,
 .btn-Receive, 
 .btn-ok,
-.btn-rece{
+.btn-rece,
+.btn-reject,
+.btn-reset{
 	border-style: none;
 	background-color: black;
 	color: white;
-	margin-top: 10px;
+	margin-top: 5px;
 }
 
 .btn-Send{
@@ -71,7 +75,9 @@
 .form-dropdown-control,
 .btn-ok,
 .recepit, 
-.your-add, .btn-rece
+.your-add, 
+.btn-rece,
+.btn-reset
 {
 	visibility: hidden;
 }
@@ -83,4 +89,17 @@
 .form-1, .rece{
 	align-content: center;
 	margin-top: 10px;
+}
+
+.changePic{
+	position: absolute;
+	top: 76.5%;
+	left: 55.7%;
+	padding: 2.0px 2.0x;
+	-ms-transform:translate(-50%,-50%);
+	transform: translate(-50%,-50%);
+	background: antiquewhite;
+	cursor: pointer;
+	border-style: none;
+	color: lime;
 }
