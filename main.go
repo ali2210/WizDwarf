@@ -100,8 +100,7 @@ func main() {
 	routing.HandleFunc("/{title}/terms",Terms)
 	routing.HandleFunc("/{title}/open", Wallet)
 	routing.HandleFunc("/{title}/transact", Transacts)
-	// routing.HandleFunc("/{title}/transact/send", Send)
-	// routing.HandleFunc("/{title}/transact/receive", Receive)
+	routing.HandleFunc("/{title}/transact/send", Send)
 
 		// Static Files
 	// routing.HandleFunc("/{title}/action", addVistor)
@@ -197,6 +196,26 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 
 }
 
+
+func Send(w http.ResponseWriter, r *http.Request){
+
+	// temp := template.Must(template.ParseFiles("server.html"))
+	
+	block := structs.Block{}
+
+	if(r.Method == "POST"){
+
+		fmt.Println("Url:", r.URL.Path)
+		fmt.Println("Method:" + r.Method)
+		r.ParseForm()
+		block.TxSen = r.FormValue("sendAdd")
+		block.TxRec = r.FormValue("add")
+		choice :=  r.FormValue("transact")
+		fmt.Println("Block:" , block)
+		fmt.Println("choice:", choice)
+
+	}
+}
 
 
 func CreateWallet(w http.ResponseWriter, r*http.Request){
@@ -321,9 +340,9 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 			// Repon := Response{false,acc.EthAddress, "WizDawrf/dashboard"}
 			// println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			// temp.Execute(w, Repon)
-		 w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusOK)
 	    r.Method = "GET"
-		Transacts(w,r)
+		Wallet(w,r)
 	}
 }
 
@@ -376,7 +395,7 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 
 			signWallet , err := json.Marshal(myWallet); if err != nil{
 				fmt.Println("Error:", err)
-				Repon := Response{true,"Sorry! JSON Marshal Stream ", "WizDawrf/dashboard"}
+				Repon := Response{true,"Sorry! JSON Marshal Stream ", "WizDawrf/open"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
@@ -384,13 +403,13 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 
 			err = json.Unmarshal(signWallet, &myWallet); if err != nil{
 				fmt.Println("Error:", err)
-				Repon := Response{true,"Sorry! JSON Unmarshal Stream", "WizDawrf/dashboard"}
+				Repon := Response{true,"Sorry! JSON Unmarshal Stream", "WizDawrf/open"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
 			}		
 			add, ok := MyEthAddress(&acc); if !ok {
-				Repon := Response{true,"Sorry! No Account Exist ", "WizDawrf/oepn"}
+				Repon := Response{true,"Sorry! No Account Exist ", "WizDawrf/open"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
@@ -406,10 +425,19 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 			 // add this address in html page as static. 
 
 		//dataabse -- FindAddress 
-			secureWallet, ok := FindEthWallet(&acc); if ok && secureWallet != nil{
-					fmt.Println("Error", err)
+			secureWallet, ok := FindEthWallet(&acc); if !ok && secureWallet != nil {
+				fmt.Println("Error", err)
+				Repon := Response{true,"Sorry! No Account Exist ", "WizDawrf/open"}
+				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+				temp.Execute(w, Repon)
+				return
 			}
-			fmt.Println("wallet:", secureWallet)			
+			fmt.Println("MyEthAddress Details:", secureWallet)
+
+
+			w.WriteHeader(http.StatusOK)
+	  	   	r.Method = "GET"
+	     	Transacts(w,r)			
 		}
 	}
 }
@@ -785,7 +813,7 @@ func FindEthWallet(w *structs.Acc)(*cloudWallet.EthereumWalletAcc,bool){
 
 	acc , err := ledger.FindMyPublicAddress(w, appName); if err != nil{
 		fmt.Println("Error", err)
-		return acc,false
+		return nil,false
 	}
 	return acc , true
 }
