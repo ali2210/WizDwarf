@@ -29,9 +29,11 @@
 				<div class="avatar-pics">
 					<img src="/images/myAvatar.png" alt="avatar" class="myAvatar" 
 					id="change" />
-					<button type="button" class="changePic" id="male" onclick="ChangePic()">+
+					<button type="button" class="changePic" id="male" onclick="ChangePic()"><i class="fa fa-plus-square"></i>
 					</button>
-					<button type="button" class="reverse" id="female" onclick="Reverse()" disabled>-
+					<button type="button" class="reverse" id="female" 
+					onclick="Reverse()"	disabled>
+						<i class="fa fa-minus-square"></i>
 					</button>  
 				</div>
 				<input type="text" name="eth" value="{{.EthAddress}}" class="address" readonly>
@@ -46,7 +48,7 @@
 						<form action="/WizDwarf/transact/send" method="post" 
 						class="form-1">
 							<div class="txt-send">
-								<input type="text" name="sendAdd" value="" class="send-input" id="add" readonly>
+								<input type="text" name="sendAdd" value="0xF205f4d60bBA5c14F9efdeA5b6Fa7ef9F2D12dfa" class="send-input" id="add" readonly>
 							</div>
 							<div class="txt-eth">
 								<input type="text" name="add" class="recAdd-input" placeholder="Your Ethereum Address" id="your" required>

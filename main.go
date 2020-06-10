@@ -100,7 +100,7 @@ func main() {
 	routing.HandleFunc("/{title}/terms",Terms)
 	routing.HandleFunc("/{title}/open", Wallet)
 	routing.HandleFunc("/{title}/transact", Transacts)
-	// routing.HandleFunc("/{title}/transact/send", Send)
+	routing.HandleFunc("/{title}/transact/send", Send)
 	// routing.HandleFunc("/{title}/transact/receive", Receive)
 
 		// Static Files
@@ -197,6 +197,26 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 
 }
 
+
+func Send(w http.ResponseWriter, r *http.Request){
+
+	// temp := template.Must(template.ParseFiles("server.html"))
+	
+	block := structs.Block{}
+
+	if(r.Method == "POST"){
+
+		fmt.Println("Url:", r.URL.Path)
+		fmt.Println("Method:" + r.Method)
+		r.ParseForm()
+		block.TxSen = r.FormValue("sendAdd")
+		block.TxRec = r.FormValue("add")
+		choice :=  r.FormValue("transact")
+		fmt.Println("Block:" , block)
+		fmt.Println("choice:", choice)
+
+	}
+}
 
 
 func CreateWallet(w http.ResponseWriter, r*http.Request){
