@@ -1,4 +1,5 @@
 
+// set google loader api....
 
 function ChangePic() {
 	// body...
@@ -30,18 +31,10 @@ function PayByEth(){
 	document.getElementById('ok').disabled = false;
 	document.getElementById('cancel').style.visibility = "visible";
 	document.getElementById('cancel').disabled = false;
+	document.getElementById('more').style.visibility = "visible";
+	document.getElementById('more').disabled = false;
 }
 
-function ReceiveByEth() {
-	// body...
-	document.getElementById('btn-rec-0').style.visibility = "hidden";
-	document.getElementById('recepit').style.visibility = "visible";
-	document.getElementById('your-add').style.visibility = "visible";
-	document.getElementById('gift').style.visibility = "visible";
-	document.getElementById('gift').disabled = false;
-	document.getElementById('reset').style.visibility = "visible";
-	document.getElementById('reset').disabled = false;
-}
 
 function Cancel(){
 	document.getElementById('btn').style.visibility = "visible";
@@ -52,18 +45,25 @@ function Cancel(){
 	document.getElementById('transact').disabled = true;
 	document.getElementById('ok').style.visibility = "hidden";
 	document.getElementById('ok').disabled = true;
+	document.getElementById('amount').style.visibility = "hidden";
+	document.getElementById('amount').disabled = true;
+	document.getElementById('nonce').style.visibility = "hidden";
+	document.getElementById('nonce').disabled = true;
+	document.getElementById('gas').style.visibility = "hidden";
+	document.getElementById('gas').disabled = true;
+
 	document.getElementById('cancel').style.visibility = "hidden";
-	document.getElementById('cancel').disabled = true;	
+	document.getElementById('cancel').disabled = true;
+	document.getElementById('more').style.visibility = "hidden";
+	document.getElementById('more').disabled = true;		
 }
 
-function ClearWindow() {
-	// body...
-	document.getElementById('btn-rec-0').style.visibility = "visible";
-	document.getElementById('recepit').style.visibility = "hidden";
-	document.getElementById('your-add').style.visibility = "hidden";
-	document.getElementById('gift').style.visibility = "hidden";
-	document.getElementById('gift').disabled = true;
-	document.getElementById('reset').style.visibility = "hidden";
-	document.getElementById('reset').disabled = true;	
+function CompleteTransact(){
+	document.getElementById('amount').style.visibility = "visible";
+	document.getElementById('amount').disabled = false;
+	document.getElementById('nonce').style.visibility = "visible";
+	document.getElementById('nonce').disabled = false;
+	document.getElementById('gas').style.visibility = "visible";
+	document.getElementById('gas').disabled = false;
 }
 

@@ -39,6 +39,13 @@
 				<input type="text" name="eth" value="{{.EthAddress}}" class="address" readonly>
 				<h5 class="balance">0 Eth</h5>
 			</div>
+			<div class="div-info">
+				<article class="bar-chart-info">
+					<div class="div-gas">
+						
+					</div>
+				</article>
+			</div>
 			<div class="form-opts">
 				<div class="btn-pay">
 					<button type="button" class="btn-Send" onclick="PayByEth()" id="btn">
@@ -61,6 +68,17 @@
             					<option>Fair Time</option>
             					<option>Blink Time</option>
             				</select>
+            				<!-- Indiviual -->
+            				<div class="btn-more">
+            					<button type="button" class="more-btn" id="more" onclick="CompleteTransact ()" disabled>
+            						<i class="fa fa-chevron-circle-down"></i>Complete
+            					</button>
+            					<div class="more col-sm-7">
+            						<input type="number" name="amount" id="amount" class="class-amount" value="10" readonly>
+            						<input type="number" placeholder="Nonce" id="nonce" name="nonce" class="class-nonce" >
+            						<input type="number" name="gas" id="gas" class="class-gas" placeholder="Gas Price">
+            					</div>
+            				</div>
             				</div>
             					<div class="btns">
             						<button type="submit" class="btn-ok" id="ok" disabled>
@@ -75,32 +93,11 @@
 						</form>
 					</div>
 				</div>
-				<div class="btn-rec">
-					<button type="button" class="btn-Receive" id="btn-rec-0" onclick="ReceiveByEth()">
-						<i class="fa fa-gift" aria-hidden="true">Receive</i>
-					</button>
-					<div class="form-rec">
-						<form action="/WizDwarf/transact/receive" method="post" class="rece">
-							<div class="input-rece">
-								<input type="text" name="recepit" class="recepit" placeholder="Recepit Ethereum Address" id="recepit" required>
-							</div>
-							<div class="input-you">
-								<input type="text" name="your" class="your-add" placeholder="Your Ethereum Address" id="your-add" required>
-							</div>
-							<div class="btnr">
-            						<button type="submit" class="btn-rece" id="gift" disabled>
-										<i class="fa fa-shopping-bag" aria-hidden="true">Wallet</i>
-									</button>
-									<button type="button" class="btn-reset" id="reset" onclick="ClearWindow()">
-										<i class="fa fa-ban" aria-hidden="true">
-										Cancel</i></button>
-								</div>
-						</form>
-					</div>
-				</div>
+
 			</div>
 	</div>
 		<script type="text/javascript" src="/js/transact.js"></script>
 		<script type="text/javascript" src="/js/wallet.js"></script>
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </body>
 </html>

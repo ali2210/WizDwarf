@@ -101,7 +101,6 @@ func main() {
 	routing.HandleFunc("/{title}/open", Wallet)
 	routing.HandleFunc("/{title}/transact", Transacts)
 	routing.HandleFunc("/{title}/transact/send", Send)
-	// routing.HandleFunc("/{title}/transact/receive", Receive)
 
 		// Static Files
 	// routing.HandleFunc("/{title}/action", addVistor)
