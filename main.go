@@ -391,9 +391,9 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 			return
 		}
 		
-			fmt.Printf("Connection successfull ....%v\n", client)
+		fmt.Printf("Connection successfull ....%v\n", client)
 		
-		
+		clientInstance = client
 			println("Email:"+ acc.Email + "Password:"+ acc.Password)
 
 			myWallet := cloudWallet.EthereumWalletAcc{} 
