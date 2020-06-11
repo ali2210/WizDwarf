@@ -359,6 +359,7 @@ func Transacts(w http.ResponseWriter, r *http.Request){
 			fmt.Println("Error:")
 		}
 		fmt.Println("Account:", a0)
+		fmt.Println("Details:", acc )
 		temp.Execute(w,acc)
 	
 	}
