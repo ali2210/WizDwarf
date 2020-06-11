@@ -1,6 +1,7 @@
 
 // set google loader api....
 
+
 function ChangePic() {
 	// body...
 
