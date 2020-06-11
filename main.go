@@ -28,6 +28,7 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/common"
 	contxt "context"
+	"math/big"
 )
 
 // Struts
@@ -349,11 +350,15 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 func Transacts(w http.ResponseWriter, r *http.Request){
 	
 	temp := template.Must(template.ParseFiles("transact.html"))	
-	acc := structs.Acc{}
+	acc := structs.Static{}
 	if r.Method == "GET" {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
-		acc.EthAddress = ETHAddressInstance
+		acc.Eth = ETHAddressInstance
+		a0 := GetBalance(&acc); if a0 == nil{
+			fmt.Println("Error:")
+		}
+		fmt.Println("Account:", a0)
 		temp.Execute(w,acc)
 	
 	}
@@ -782,6 +787,17 @@ func SetFirestoreCredentials() *firebase.App {
 	}
 	println("Connected... Welcome to Firestore")
 	return app
+}
+
+func GetBalance(account *structs.Static)(*big.Int){
+	
+	wallet :=  common.HexToAddress(account.Eth)
+	balnce , err := clientInstance.BalanceAt(context.Background(), wallet, nil); if err != nil{
+		fmt.Println("Error:", err)
+		return nil
+	}
+	account.Balance = balnce
+	return account.Balance
 }
 
 func FindAddress(w *structs.Acc)(bool, *cloudWallet.EthereumWalletAcc){
