@@ -12,6 +12,7 @@ type Block struct{
 	TxSen string  // whom to send ...
 	TxRec string  // whom to receive....
 	FeesCharges string
-	Nonce string
-	GasPrice string
+	Nonce int32
+	GasPrice int32
 }
+

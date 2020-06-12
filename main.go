@@ -213,8 +213,7 @@ func Send(w http.ResponseWriter, r *http.Request){
 		block.TxRec = r.FormValue("add")
 		choice :=  r.FormValue("transact")
 		block.FeesCharges = r.FormValue("amount")
-		block.Nonce = r.FormValue("nonce")
-		block.GasPrice = r.FormValue("gas")
+		/*block.Nonce = r.FormValue("nonce")*/
 		fmt.Println("Block:" , block)
 		fmt.Println("choice:", choice)
 		
