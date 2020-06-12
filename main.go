@@ -28,7 +28,6 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/common"
 	contxt "context"
-	"math"
 	"math/big"
 )
 
@@ -217,10 +216,17 @@ func Send(w http.ResponseWriter, r *http.Request){
 		block.Balance = ReadBalanceFromBlock(&block); if block.Balance == nil{
 			fmt.Println("Error:")
 		}
-		ethFlot := new(big.Float)
-		ethFlot.SetString(block.Balance.String())
-		ethDec := new(big.Float).Quo(ethFlot,big.NewFloat(math.Pow10(18)))
-		fmt.Println("Balance:", ethDec)
+		header, err := clientInstance.HeaderByNumber(context.Background(), nil); if err != nil{
+			fmt.Println("Error:", err)
+		}
+
+		fmt.Println("Block Num :" , header)
+		// Is any pending transistion 
+		txHash := common.HexToHash(block.TxRec)
+		tx , status, err := clientInstance.TransactionByHash(context.Background(), txHash); if err != nil{
+			fmt.Println("Error:", err)
+		}
+		fmt.Println("Tx:", tx, "status:", status)
 		/*block.Nonce = r.FormValue("nonce")*/
 		fmt.Println("Block:" , block)
 		fmt.Println("choice:", choice)
@@ -876,6 +882,7 @@ func isYourPublcAdresValid(hash string) bool{
 func SessionsInit(unique string)(*sessions.CookieStore){
 	return sessions.NewCookieStore([]byte(unique))
 }
+
 
 func FileReadFromDisk(w http.ResponseWriter, filename string) os.FileInfo {
 	f, err := os.OpenFile(filename+".txt", os.O_RDWR|os.O_CREATE, 0755)
