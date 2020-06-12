@@ -28,6 +28,7 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/common"
 	contxt "context"
+	"math"
 	"math/big"
 )
 
@@ -213,6 +214,13 @@ func Send(w http.ResponseWriter, r *http.Request){
 		block.TxRec = r.FormValue("add")
 		choice :=  r.FormValue("transact")
 		block.FeesCharges = r.FormValue("amount")
+		block.Balance = ReadBalanceFromBlock(&block); if block.Balance == nil{
+			fmt.Println("Error:")
+		}
+		ethFlot := new(big.Float)
+		ethFlot.SetString(block.Balance.String())
+		ethDec := new(big.Float).Quo(ethFlot,big.NewFloat(math.Pow10(18)))
+		fmt.Println("Balance:", ethDec)
 		/*block.Nonce = r.FormValue("nonce")*/
 		fmt.Println("Block:" , block)
 		fmt.Println("choice:", choice)
@@ -357,10 +365,9 @@ func Transacts(w http.ResponseWriter, r *http.Request){
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
 		acc.Eth = ETHAddressInstance
-		a0 := GetBalance(&acc); if a0 == nil{
+		acc.Balance = GetBalance(&acc); if acc.Balance == nil{
 			fmt.Println("Error:")
 		}
-		fmt.Println("Account:", a0)
 		fmt.Println("Details:", acc )
 		temp.Execute(w,acc)
 	
@@ -801,6 +808,17 @@ func GetBalance(account *structs.Static)(*big.Int){
 	}
 	account.Balance = balnce
 	return account.Balance
+}
+
+func ReadBalanceFromBlock(acc *structs.Block)(*big.Int){
+	wallet :=  common.HexToAddress(acc.TxRec)
+	balnce , err := clientInstance.BalanceAt(context.Background(), wallet, nil); if err != nil{
+		fmt.Println("Error:", err)
+		return nil
+	}
+	acc.Balance = balnce
+	return acc.Balance
+
 }
 
 func FindAddress(w *structs.Acc)(bool, *cloudWallet.EthereumWalletAcc){
