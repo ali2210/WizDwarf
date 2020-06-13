@@ -309,6 +309,7 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 		fmt.Println("PublicKey:" , PublicKey)
 
 		acc.PubKey = PublicKey
+		fmt.Println("My Public Key:",  acc.PubKey)
 
 		// hash 
 		hshCode := sha3.NewLegacyKeccak256()
@@ -456,7 +457,8 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 				fmt.Println("Address:" , add)
 				acc.EthAddress = add.EthAddress
 				WalletPubKey = acc.PubKey
-				
+				fmt.Println("My Public Key:",  WalletPubKey)
+
 				// variable address for futher processing
 				ETHAddressInstance = acc.EthAddress
 				fmt.Println("myWallet:", ETHAddressInstance)
