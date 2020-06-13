@@ -1,5 +1,8 @@
 package structs
 
+// import(
+// 	"github.com/ethereum/go-ethereum/common"
+// )
 
 
 type Acc struct{
@@ -7,4 +10,5 @@ type Acc struct{
 	Password string
 	Terms bool
 	EthAddress string
+	PubKey string
 }

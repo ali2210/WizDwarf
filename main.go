@@ -70,6 +70,7 @@ var (
 	userSessions *sessions.CookieStore = nil
 	clientInstance *ethclient.Client = nil
 	ETHAddressInstance string = ""
+	WalletPubKey string = ""
 )
 
 
@@ -216,17 +217,31 @@ func Send(w http.ResponseWriter, r *http.Request){
 		block.Balance = ReadBalanceFromBlock(&block); if block.Balance == nil{
 			fmt.Println("Error:")
 		}
+		// Block number 
 		header, err := clientInstance.HeaderByNumber(context.Background(), nil); if err != nil{
 			fmt.Println("Error:", err)
 		}
 
-		fmt.Println("Block Num :" , header)
-		// Is any pending transistion 
-		txHash := common.HexToHash(block.TxRec)
-		tx , status, err := clientInstance.TransactionByHash(context.Background(), txHash); if err != nil{
-			fmt.Println("Error:", err)
-		}
-		fmt.Println("Tx:", tx, "status:", status)
+		fmt.Println("Block Num :\n" , header.Number.String())
+		
+		// private key 
+		// prvate, err := crypto.HexToECDSA(block.TxRec); if err != nil{
+		// 	fmt.Println("Error:",err)
+		// }
+		// fmt.Println("Private Key:", prvate)
+
+		// public  := prvate.Public();
+		// publicEcdsa, ok := public.(*ecdsa.PublicKey); if !ok{
+		// 	fmt.Println("Error:", err)
+		// } 
+		// fmt.Println("Your Public Key:", publicEcdsa)
+
+		// newAddress := crypto.PubkeyToAddress(*publicEcdsa)
+		// fmt.Println("Address:", newAddress)
+
+
+		
+
 		/*block.Nonce = r.FormValue("nonce")*/
 		fmt.Println("Block:" , block)
 		fmt.Println("choice:", choice)
@@ -292,6 +307,8 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 
 		PublicKey := crypto.PubkeyToAddress(*pbcKey).Hex()
 		fmt.Println("PublicKey:" , PublicKey)
+
+		acc.PubKey = PublicKey
 
 		// hash 
 		hshCode := sha3.NewLegacyKeccak256()
@@ -438,6 +455,7 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 			if add != nil{ 
 				fmt.Println("Address:" , add)
 				acc.EthAddress = add.EthAddress
+				WalletPubKey = acc.PubKey
 				
 				// variable address for futher processing
 				ETHAddressInstance = acc.EthAddress
