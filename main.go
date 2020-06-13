@@ -309,7 +309,7 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 		fmt.Println("PublicKey:" , PublicKey)
 
 		acc.PubKey = PublicKey
-		fmt.Println("My Public Key:",  acc.PubKey)
+		WalletPubKey = acc.PubKey
 
 		// hash 
 		hshCode := sha3.NewLegacyKeccak256()
@@ -360,6 +360,7 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 		myWallet.Password = acc.Password
 		myWallet.EthAddress = acc.EthAddress
 		myWallet.Terms = acc.Terms
+
 
 		merchant , err := ledger.CreatePublicAddress(&myWallet, appName); if err != nil{
 				fmt.Println("Error:", err)
@@ -419,7 +420,8 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 
 		acc.Email = r.FormValue("email")
 		acc.Password = r.FormValue("password")
-		
+		fmt.Println("WalletPubKey:", WalletPubKey)
+		fmt.Println("account public KEY:", acc.PubKey)
 		client , err := ethclient.Dial(RinkebyClientUrl); if err != nil {
 			fmt.Println("Error :" , err)
 			return
@@ -427,7 +429,7 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 		
 		fmt.Printf("Connection successfull ....%v\n", client)
 		
-		clientInstance = client
+			clientInstance = client
 			println("Email:"+ acc.Email + "Password:"+ acc.Password)
 
 			myWallet := cloudWallet.EthereumWalletAcc{} 
@@ -456,8 +458,8 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 			if add != nil{ 
 				fmt.Println("Address:" , add)
 				acc.EthAddress = add.EthAddress
-				WalletPubKey = acc.PubKey
-				fmt.Println("My Public Key:",  WalletPubKey)
+					
+				
 
 				// variable address for futher processing
 				ETHAddressInstance = acc.EthAddress
