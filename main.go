@@ -216,31 +216,25 @@ func Send(w http.ResponseWriter, r *http.Request){
 		block.FeesCharges = r.FormValue("amount")
 		block.Balance = ReadBalanceFromBlock(&block); if block.Balance == nil{
 			fmt.Println("Error:")
+			return
 		}
 		// Block number 
 		header, err := clientInstance.HeaderByNumber(context.Background(), nil); if err != nil{
 			fmt.Println("Error:", err)
+			return
 		}
 
-		fmt.Println("Block Num :\n" , header.Number.String())
+		 fmt.Println("Block Num :\n" , header.Number.String())
 		
-		// private key 
-		if WalletPubKey != ""{
-			prvate, err := crypto.HexToECDSA(WalletPubKey); if err != nil{
-				fmt.Println("Error:",err)
-			}
-			fmt.Println("Private Key:", prvate)
-
-			public  := prvate.Public();
-			publicEcdsa, ok := public.(*ecdsa.PublicKey); if !ok{
-				fmt.Println("Error:", err)
-			} 
-			fmt.Println("Your Public Key:", publicEcdsa)
-
-			// newAddress := crypto.PubkeyToAddress(*publicEcdsa)
-			// fmt.Println("Address:", newAddress)
-		}
-
+		// blockNum:= new big.NewInt()
+		// ethBlock ,err  := clientInstance.BlockByNumber(context.Background(),); if err != nil {
+		// 	fmt.Println("Error:", err)
+		// 	return 
+		// } 
+		// fmt.Println("Block Hash:", ethBlock.Hash())
+		address:= common.HexToAddress(block.TxRec)
+		fmt.Println("address:", address) 
+		
 		
 
 		/*block.Nonce = r.FormValue("nonce")*/
