@@ -225,20 +225,21 @@ func Send(w http.ResponseWriter, r *http.Request){
 		fmt.Println("Block Num :\n" , header.Number.String())
 		
 		// private key 
-		// prvate, err := crypto.HexToECDSA(block.TxRec); if err != nil{
-		// 	fmt.Println("Error:",err)
-		// }
-		// fmt.Println("Private Key:", prvate)
+		if WalletPubKey != ""{
+			prvate, err := crypto.HexToECDSA(WalletPubKey); if err != nil{
+				fmt.Println("Error:",err)
+			}
+			fmt.Println("Private Key:", prvate)
 
-		// public  := prvate.Public();
-		// publicEcdsa, ok := public.(*ecdsa.PublicKey); if !ok{
-		// 	fmt.Println("Error:", err)
-		// } 
-		// fmt.Println("Your Public Key:", publicEcdsa)
+			public  := prvate.Public();
+			publicEcdsa, ok := public.(*ecdsa.PublicKey); if !ok{
+				fmt.Println("Error:", err)
+			} 
+			fmt.Println("Your Public Key:", publicEcdsa)
 
-		// newAddress := crypto.PubkeyToAddress(*publicEcdsa)
-		// fmt.Println("Address:", newAddress)
-
+			// newAddress := crypto.PubkeyToAddress(*publicEcdsa)
+			// fmt.Println("Address:", newAddress)
+		}
 
 		
 
@@ -309,7 +310,6 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 		fmt.Println("PublicKey:" , PublicKey)
 
 		acc.PubKey = PublicKey
-		WalletPubKey = acc.PubKey
 
 		// hash 
 		hshCode := sha3.NewLegacyKeccak256()
@@ -360,6 +360,7 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 		myWallet.Password = acc.Password
 		myWallet.EthAddress = acc.EthAddress
 		myWallet.Terms = acc.Terms
+		myWallet.PubKey = acc.PubKey
 
 
 		merchant , err := ledger.CreatePublicAddress(&myWallet, appName); if err != nil{
@@ -420,8 +421,8 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 
 		acc.Email = r.FormValue("email")
 		acc.Password = r.FormValue("password")
-		fmt.Println("WalletPubKey:", WalletPubKey)
-		fmt.Println("account public KEY:", acc.PubKey)
+		
+
 		client , err := ethclient.Dial(RinkebyClientUrl); if err != nil {
 			fmt.Println("Error :" , err)
 			return
@@ -458,8 +459,8 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 			if add != nil{ 
 				fmt.Println("Address:" , add)
 				acc.EthAddress = add.EthAddress
-					
-				
+				acc.PubKey = add.PubKey	
+				WalletPubKey = acc.PubKey
 
 				// variable address for futher processing
 				ETHAddressInstance = acc.EthAddress
