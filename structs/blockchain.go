@@ -10,5 +10,9 @@ import(
 type Block struct{
 	Balance *big.Int 
 	TxSen string  // whom to send ...
-	TxRec string  // whom to receive....
+	TxRec string  // our customer
+	FeesCharges string
+	Nonce int32
+	GasPrice int32
 }
+

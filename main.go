@@ -28,6 +28,7 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/common"
 	contxt "context"
+	"math/big"
 )
 
 // Struts
@@ -69,6 +70,8 @@ var (
 	userSessions *sessions.CookieStore = nil
 	clientInstance *ethclient.Client = nil
 	ETHAddressInstance string = ""
+	WalletPubKey string = ""
+	WalletSecureKey *ecdsa.PrivateKey  = nil
 )
 
 
@@ -211,9 +214,24 @@ func Send(w http.ResponseWriter, r *http.Request){
 		block.TxSen = r.FormValue("sendAdd")
 		block.TxRec = r.FormValue("add")
 		choice :=  r.FormValue("transact")
+		block.FeesCharges = r.FormValue("amount")
+		block.Balance = ReadBalanceFromBlock(&block); if block.Balance == nil{
+			fmt.Println("Error:")
+			return
+		}
+		// Block number 
+		header, err := clientInstance.HeaderByNumber(context.Background(), nil); if err != nil{
+			fmt.Println("Error:", err)
+			return
+		}
+
+		fmt.Println("Block Num :\n" , header.Number.String())
+		
+
+		/*block.Nonce = r.FormValue("nonce")*/
 		fmt.Println("Block:" , block)
 		fmt.Println("choice:", choice)
-
+		
 	}
 }
 
@@ -276,6 +294,12 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 		PublicKey := crypto.PubkeyToAddress(*pbcKey).Hex()
 		fmt.Println("PublicKey:" , PublicKey)
 
+		acc.PubKey = PublicKey
+		acc.PrvteKey = privateKey 
+		fmt.Println("key: " , acc.PrvteKey)
+		acc.SetPrivateKey()
+
+
 		// hash 
 		hshCode := sha3.NewLegacyKeccak256()
 		hshCode.Write(publicBytes[1:])
@@ -325,6 +349,8 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 		myWallet.Password = acc.Password
 		myWallet.EthAddress = acc.EthAddress
 		myWallet.Terms = acc.Terms
+		myWallet.PubKey = acc.PubKey
+
 
 		merchant , err := ledger.CreatePublicAddress(&myWallet, appName); if err != nil{
 				fmt.Println("Error:", err)
@@ -349,11 +375,15 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 func Transacts(w http.ResponseWriter, r *http.Request){
 	
 	temp := template.Must(template.ParseFiles("transact.html"))	
-	acc := structs.Acc{}
+	acc := structs.Static{}
 	if r.Method == "GET" {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
-		acc.EthAddress = ETHAddressInstance
+		acc.Eth = ETHAddressInstance
+		acc.Balance = GetBalance(&acc); if acc.Balance == nil{
+			fmt.Println("Error:")
+		}
+		fmt.Println("Details:", acc )
 		temp.Execute(w,acc)
 	
 	}
@@ -381,14 +411,15 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 		acc.Email = r.FormValue("email")
 		acc.Password = r.FormValue("password")
 		
+
 		client , err := ethclient.Dial(RinkebyClientUrl); if err != nil {
 			fmt.Println("Error :" , err)
 			return
 		}
 		
-			fmt.Printf("Connection successfull ....%v\n", client)
+		fmt.Printf("Connection successfull ....%v\n", client)
 		
-		
+			clientInstance = client
 			println("Email:"+ acc.Email + "Password:"+ acc.Password)
 
 			myWallet := cloudWallet.EthereumWalletAcc{} 
@@ -417,7 +448,9 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 			if add != nil{ 
 				fmt.Println("Address:" , add)
 				acc.EthAddress = add.EthAddress
-				
+				acc.PubKey = add.PubKey	
+				WalletPubKey = acc.PubKey
+
 				// variable address for futher processing
 				ETHAddressInstance = acc.EthAddress
 				fmt.Println("myWallet:", ETHAddressInstance)
@@ -784,6 +817,28 @@ func SetFirestoreCredentials() *firebase.App {
 	return app
 }
 
+func GetBalance(account *structs.Static)(*big.Int){
+	
+	wallet :=  common.HexToAddress(account.Eth)
+	balnce , err := clientInstance.BalanceAt(context.Background(), wallet, nil); if err != nil{
+		fmt.Println("Error:", err)
+		return nil
+	}
+	account.Balance = balnce
+	return account.Balance
+}
+
+func ReadBalanceFromBlock(acc *structs.Block)(*big.Int){
+	wallet :=  common.HexToAddress(acc.TxRec)
+	balnce , err := clientInstance.BalanceAt(context.Background(), wallet, nil); if err != nil{
+		fmt.Println("Error:", err)
+		return nil
+	}
+	acc.Balance = balnce
+	return acc.Balance
+
+}
+
 func FindAddress(w *structs.Acc)(bool, *cloudWallet.EthereumWalletAcc){
 
 	ethAcc , err := ledger.FindMyPublicAddress(w, appName); if err != nil{
@@ -839,6 +894,7 @@ func isYourPublcAdresValid(hash string) bool{
 func SessionsInit(unique string)(*sessions.CookieStore){
 	return sessions.NewCookieStore([]byte(unique))
 }
+
 
 func FileReadFromDisk(w http.ResponseWriter, filename string) os.FileInfo {
 	f, err := os.OpenFile(filename+".txt", os.O_RDWR|os.O_CREATE, 0755)

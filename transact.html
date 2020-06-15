@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  
   <!-- <link rel="shortcut icon" type="image/png" href="/images/favicon.png"> -->
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="/css/seed.css">
@@ -36,8 +37,13 @@
 						<i class="fa fa-minus-square"></i>
 					</button>  
 				</div>
-				<input type="text" name="eth" value="{{.EthAddress}}" class="address" readonly>
-				<h5 class="balance">0 Eth</h5>
+				<input type="text" name="eth" value="{{.Eth}}" class="address" readonly>
+					<div class="">
+						<h5 class="balance">{{.Balance}}
+							<img src="/images/eth.png" alt="eth" class="eth-img"/>
+						</h5>
+					</div>
+
 			</div>
 			<div class="div-info">
 				<article class="bar-chart-info">
@@ -64,9 +70,9 @@
 								<label for="transact" class="dropdown-trans" id="time">Time</label>
           						<select id="transact" class="form-dropdown-control" name="transact" disabled>
             					<option selected>Choose...</option>
-            					<option>Normal Time</option>
-            					<option>Fair Time</option>
-            					<option>Blink Time</option>
+            					<option>Normal</option>
+            					<option>Fair</option>
+            					<option>Blink</option>
             				</select>
             				<!-- Indiviual -->
             				<div class="btn-more">
@@ -74,9 +80,9 @@
             						<i class="fa fa-chevron-circle-down"></i>Complete
             					</button>
             					<div class="more col-sm-7">
-            						<input type="number" name="amount" id="amount" class="class-amount" value="10" readonly>
-            						<input type="number" placeholder="Nonce" id="nonce" name="nonce" class="class-nonce" >
-            						<input type="number" name="gas" id="gas" class="class-gas" placeholder="Gas Price">
+            						<input type="number" name="amount" id="amount" class="class-amount" value="0.041" readonly>
+            						<!-- <input type="number" placeholder="Nonce" id="nonce" name="nonce" class="class-nonce" required> -->
+            						<!-- <input type="number" name="gas" id="gas" class="class-gas" placeholder="Gas Price" required> -->
             					</div>
             				</div>
             				</div>
