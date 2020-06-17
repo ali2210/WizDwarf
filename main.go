@@ -29,6 +29,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	// "github.com/ethereum/go-ethereum/core/types"
 	contxt "context"
+	"strconv"
 	"math/big"
 )
 
@@ -899,13 +900,13 @@ func SetFirestoreCredentials() *firebase.App {
 	return app
 }
 
-func StringToInt(s string)(*big.Int, error){
+func StringToInt(s string)(int, error){
 
-	conv := new(big.Int)
-	_ , err :=  fmt.Sscan(s, conv);if err != nil {
-		return nil, err
+	i, err := strconv.Atoi(s); if err != nil {
+		fmt.Println("Error:", err)
+		return 0 , err 
 	}
-	return conv, nil
+	return i, nil
 
 }
 
