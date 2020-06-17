@@ -12,7 +12,8 @@ type Block struct{
 	TxSen string  // whom to send ...
 	TxRec string  // our customer
 	FeesCharges string
-	Nonce int32
-	GasPrice int32
+	Nonce uint64
+	GasPrice *big.Int
+	GasLimit uint64
 }
 
