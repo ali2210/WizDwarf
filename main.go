@@ -297,6 +297,12 @@ func Send(w http.ResponseWriter, r *http.Request){
 				fmt.Println("No choice")
 		}
 
+		charge , err := StringToInt(block.FeesCharges); if err != nil {
+			fmt.Println("Error:", err)
+			return 
+		}
+		fmt.Println("conversion:", charge)
+
 		// transfer := common.HexToAddress(block.TxSen)
 
 		// var nofield []byte
@@ -891,6 +897,16 @@ func SetFirestoreCredentials() *firebase.App {
 	}
 	println("Connected... Welcome to Firestore")
 	return app
+}
+
+func StringToInt(s string)(*big.Int, error){
+
+	conv := new(big.Int)
+	_ , err :=  fmt.Sscan(s, conv);if err != nil {
+		return nil, err
+	}
+	return conv, nil
+
 }
 
 func GetBalance(account *structs.Static)(*big.Int){
