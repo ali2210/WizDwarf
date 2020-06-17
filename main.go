@@ -27,7 +27,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/common"
-	// "github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/core/types"
 	contxt "context"
 	"strconv"
 	"math/big"
@@ -216,7 +216,7 @@ func Send(w http.ResponseWriter, r *http.Request){
 		block.TxSen = r.FormValue("sendAdd")
 		block.TxRec = r.FormValue("add")
 		choice :=  r.FormValue("transact")
-		block.FeesCharges = r.FormValue("amount")
+		amount := r.FormValue("amount")
 		block.Balance = ReadBalanceFromBlock(&block); if block.Balance == nil{
 			fmt.Println("Error:")
 			return
@@ -298,18 +298,21 @@ func Send(w http.ResponseWriter, r *http.Request){
 				fmt.Println("No choice")
 		}
 
-		charge , err := StringToInt(block.FeesCharges); if err != nil {
+		charge , err := StringToInt(amount); if err != nil {
 			fmt.Println("Error:", err)
 			return 
 		}
-		fmt.Println("conversion:", charge)
+		
+		gwei := new(big.Int).SetInt64(int64(charge))
+		block.Amount = gwei
 
-		// transfer := common.HexToAddress(block.TxSen)
+		fmt.Println("amount:", block.Amount)
+		transfer := common.HexToAddress(block.TxSen)
 
-		// var nofield []byte
+		var nofield []byte
 
-		// tx := types.NewTransaction(block.Nonce, transfer,block.FeesCharges, block.GasLimit, block.GasPrice, nofield)
-		// fmt.Println("Transaction:", tx)
+		tx := types.NewTransaction(block.Nonce, transfer,block.Amount, block.GasLimit, block.GasPrice, nofield)
+		fmt.Println("Transaction:", tx)
 	}
 }
 
