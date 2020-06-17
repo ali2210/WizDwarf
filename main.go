@@ -268,6 +268,7 @@ func Send(w http.ResponseWriter, r *http.Request){
 		// gas
 		gasLImit := uint64(21000)
 		block.GasLimit = gasLImit
+		
 		gasPrice , err := clientInstance.SuggestGasPrice(context.Background()); if err != nil {
 				fmt.Println("Error:", err)
 				return 
