@@ -204,7 +204,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 
 func Send(w http.ResponseWriter, r *http.Request){
 
-	// temp := template.Must(template.ParseFiles("server.html"))
+	temp := template.Must(template.ParseFiles("server.html"))
 	
 	block := structs.Block{}
 
@@ -218,12 +218,18 @@ func Send(w http.ResponseWriter, r *http.Request){
 		choice :=  r.FormValue("transact")
 		amount := r.FormValue("amount")
 		block.Balance = ReadBalanceFromBlock(&block); if block.Balance == nil{
+			Repon := Response{true,"Some Issue ; [Balance]", "WizDawrf/transact"}
+			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			temp.Execute(w, Repon)
 			fmt.Println("Error:")
 			return
 		}
 		// Block number 
 		header, err := clientInstance.HeaderByNumber(context.Background(), nil); if err != nil{
 			fmt.Println("Error:", err)
+			Repon := Response{true,"Error {HeaderByNumber}", "WizDawrf/transact"}
+			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			temp.Execute(w, Repon)
 			return
 		}
 
@@ -233,6 +239,9 @@ func Send(w http.ResponseWriter, r *http.Request){
 		// private key to public address
 		secure , err := crypto.HexToECDSA(WalletSecureKey); if err != nil {
 			fmt.Println("Error:", err)
+			Repon := Response{true,"Error {Your Account dont have any Priavte key, use valid address}", "WizDawrf/transact/"}
+			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			temp.Execute(w, Repon)
 			return 
 		}
 		walletPublicKey :=  secure.Public()
@@ -241,6 +250,9 @@ func Send(w http.ResponseWriter, r *http.Request){
 		// Convert Public key
 		ecdsaPubKey , ok := walletPublicKey.(*ecdsa.PublicKey); if !ok{
 			fmt.Println("Error:", err)
+			Repon := Response{true,"Error {No Public Key}", "WizDawrf/transact"}
+			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			temp.Execute(w, Repon)
 			return
 		}
 		ethAdd := crypto.PubkeyToAddress(*ecdsaPubKey)
@@ -251,6 +263,9 @@ func Send(w http.ResponseWriter, r *http.Request){
 
 		// nonce pending 
 		 noncePending , err := clientInstance.PendingNonceAt(context.Background(), ethAdd); if err != nil {
+		 	Repon := Response{true,"Error {Get Nonce}", "WizDawrf/transact"}
+			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			temp.Execute(w, Repon)
 		 	fmt.Println("Error:", err)
 		 	return 
 		 }
@@ -272,6 +287,9 @@ func Send(w http.ResponseWriter, r *http.Request){
 		
 		gasPrice , err := clientInstance.SuggestGasPrice(context.Background()); if err != nil {
 				fmt.Println("Error:", err)
+				Repon := Response{true,"Error :{Gas Price Flucation}", "WizDawrf/transact"}
+			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			temp.Execute(w, Repon)
 				return 
 			}
 			fmt.Println("Gas:", gasPrice)
@@ -279,6 +297,9 @@ func Send(w http.ResponseWriter, r *http.Request){
 			//Conversion
 		charge , err := StringToInt(amount); if err != nil {
 			fmt.Println("Error:", err)
+			Repon := Response{true,"Error :{Conversion}", "WizDawrf/transact"}
+			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			temp.Execute(w, Repon)
 			return 
 		}
 
@@ -322,12 +343,18 @@ func Send(w http.ResponseWriter, r *http.Request){
 		// Signed Transaction
 		sign , err := types.SignTx(tx, types.NewEIP155Signer(chainId), secure); if err != nil {
 			fmt.Println("Error:", err)
+			Repon := Response{true,"Error in Upload File", "WizDawrf/transact"}
+			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			temp.Execute(w, Repon)
 			return 
 		}
 
 		// Send Transaction
 		err = clientInstance.SendTransaction(context.Background(), sign); if err != nil {
 			fmt.Println("Error:", err)
+			Repon := Response{true,"Error {Transaction Failed , Insufficent Balance}", "WizDawrf/transact"}
+			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			temp.Execute(w, Repon)
 			return 
 		}
 
