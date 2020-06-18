@@ -48,10 +48,10 @@ function Cancel(){
 	document.getElementById('ok').disabled = true;
 	document.getElementById('amount').style.visibility = "hidden";
 	document.getElementById('amount').disabled = true;
-	document.getElementById('nonce').style.visibility = "hidden";
-	document.getElementById('nonce').disabled = true;
-	document.getElementById('gas').style.visibility = "hidden";
-	document.getElementById('gas').disabled = true;
+	// document.getElementById('nonce').style.visibility = "hidden";
+	// document.getElementById('nonce').disabled = true;
+	// document.getElementById('gas').style.visibility = "hidden";
+	// document.getElementById('gas').disabled = true;
 
 	document.getElementById('cancel').style.visibility = "hidden";
 	document.getElementById('cancel').disabled = true;
@@ -62,9 +62,9 @@ function Cancel(){
 function CompleteTransact(){
 	document.getElementById('amount').style.visibility = "visible";
 	document.getElementById('amount').disabled = false;
-	document.getElementById('nonce').style.visibility = "visible";
-	document.getElementById('nonce').disabled = false;
-	document.getElementById('gas').style.visibility = "visible";
-	document.getElementById('gas').disabled = false;
+	// document.getElementById('nonce').style.visibility = "visible";
+	// document.getElementById('nonce').disabled = false;
+	// document.getElementById('gas').style.visibility = "visible";
+	// document.getElementById('gas').disabled = false;
 }
 
