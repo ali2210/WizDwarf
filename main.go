@@ -276,8 +276,18 @@ func Send(w http.ResponseWriter, r *http.Request){
 			}
 			fmt.Println("Gas:", gasPrice)
 
+			//Conversion
+		charge , err := StringToInt(amount); if err != nil {
+			fmt.Println("Error:", err)
+			return 
+		}
+
+		gwei := new(big.Int).SetInt64(int64(charge))
+		block.Amount = gwei
+
 		fee := new(big.Int)
 		result := new(big.Int) 
+		
 		switch choice{
 			case "Normal":
 				block.GasPrice = gasPrice 
@@ -298,21 +308,30 @@ func Send(w http.ResponseWriter, r *http.Request){
 				fmt.Println("No choice")
 		}
 
-		charge , err := StringToInt(amount); if err != nil {
-			fmt.Println("Error:", err)
-			return 
-		}
-		
-		gwei := new(big.Int).SetInt64(int64(charge))
-		block.Amount = gwei
+	// Send Transaction
 
-		fmt.Println("amount:", block.Amount)
 		transfer := common.HexToAddress(block.TxSen)
+
+		// Network ID
+		chainId , err := clientInstance.NetworkID(context.Background())
 
 		var nofield []byte
 
 		tx := types.NewTransaction(block.Nonce, transfer,block.Amount, block.GasLimit, block.GasPrice, nofield)
-		fmt.Println("Transaction:", tx)
+		
+		// Signed Transaction
+		sign , err := types.SignTx(tx, types.NewEIP155Signer(chainId), secure); if err != nil {
+			fmt.Println("Error:", err)
+			return 
+		}
+
+		// Send Transaction
+		err = clientInstance.SendTransaction(context.Background(), sign); if err != nil {
+			fmt.Println("Error:", err)
+			return 
+		}
+
+		fmt.Println("Send:", sign.Hash().Hex())
 	}
 }
 
