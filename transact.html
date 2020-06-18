@@ -45,18 +45,13 @@
 					</div>
 
 			</div>
-			<div class="div-info">
-				<article class="bar-chart-info">
-					<div class="div-gas">
-						
-					</div>
-				</article>
 			</div>
 			<div class="form-opts">
 				<div class="btn-pay">
 					<button type="button" class="btn-Send" onclick="PayByEth()" id="btn">
-						<i class="fa fa-shopping-basket" aria-hidden="true">Send</i>
+						<i class="fa fa-shopping-basket" aria-hidden="true">Pay</i>
 					</button>
+					<a href="/WizDwarf/transact/treasure" ><span class="span-link">Treasure</span></a>
 					<div class="form-send">
 						<form action="/WizDwarf/transact/send" method="post" 
 						class="form-1">
@@ -77,11 +72,10 @@
             				<!-- Indiviual -->
             				<div class="btn-more">
             					<button type="button" class="more-btn" id="more" onclick="CompleteTransact ()" disabled>
-            						<i class="fa fa-chevron-circle-down"></i>Complete
+            						<i class="fa fa-chevron-circle-down"></i>Service Charges
             					</button>
-            					<div class="more col-sm-7">
-            						<input type="number" name="amount" id="amount" class="class-amount" value="0.041" readonly>
-            						<!-- <input type="number" placeholder="Nonce" id="nonce" name="nonce" class="class-nonce" required> -->
+            					<div class="more col-sm-8">
+            						<input type="number" name="amount" id="amount" class="class-amount" value="4100000" readonly>             						<!-- <input type="number" placeholder="Nonce" id="nonce" name="nonce" class="class-nonce" required> -->
             						<!-- <input type="number" name="gas" id="gas" class="class-gas" placeholder="Gas Price" required> -->
             					</div>
             				</div>
@@ -104,6 +98,6 @@
 	</div>
 		<script type="text/javascript" src="/js/transact.js"></script>
 		<script type="text/javascript" src="/js/wallet.js"></script>
-		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+		<!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
 </body>
 </html>

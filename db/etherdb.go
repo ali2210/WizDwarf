@@ -53,7 +53,8 @@ func (*ledgerPublic)CreatePublicAddress(w *wallet.EthereumWalletAcc, clientID *f
 			"Password" : w.Password,
 			"EthAddress": w.EthAddress,
 			"Terms":w.Terms,
-			"PubKey":w.PubKey,
+			// "PubKey":w.PubKey,
+			"PrvteKey": w.PrvteKey,
 		}); if err != nil{
 			fmt.Println("Error", err)
 			return nil , err	
@@ -88,7 +89,8 @@ func (*ledgerPublic)FindMyPublicAddress(w *walletAcc.Acc, clientID *firebase.App
 			Password : doc.Data()["Password"].(string),
 			EthAddress : doc.Data()["EthAddress"].(string),
 			Terms : doc.Data()["Terms"].(bool),
-			PubKey: doc.Data()["PubKey"].(string),
+			// PubKey: doc.Data()["PubKey"].(string),
+			PrvteKey: doc.Data()["PrvteKey"].(string),
 		}
 		break
 	}
@@ -118,7 +120,8 @@ func (*ledgerPublic)FindMyAddressByEmail(w *walletAcc.Acc, clientID *firebase.Ap
 			Password : doc.Data()["Password"].(string),
 			EthAddress : doc.Data()["EthAddress"].(string),
 			Terms : doc.Data()["Terms"].(bool),
-			PubKey: doc.Data()["PubKey"].(string),
+			// PubKey: doc.Data()["PubKey"].(string),
+			PrvteKey: doc.Data()["PrvteKey"].(string),
 		}
 		break
 	}

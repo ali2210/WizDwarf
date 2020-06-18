@@ -15,6 +15,12 @@
 	margin: auto;
 	margin-top: 5px;
 }
+
+.btn-connect{
+	background: lightgrey;
+	border-style: none;
+}
+
 .btn-email{
 	margin-top: 10px;
 	visibility: visible;

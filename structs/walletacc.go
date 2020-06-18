@@ -1,12 +1,12 @@
 package structs
 
 import(
-	"crypto/ecdsa"
+	// "crypto/ecdsa"
 	"fmt"
 )
 
 
-var WalletPrivateKey  *ecdsa.PrivateKey = nil
+var WalletPrivateKey  string = ""
 
 type Acc struct{
 	Email string
@@ -14,7 +14,7 @@ type Acc struct{
 	Terms bool
 	EthAddress string
 	PubKey string
-	PrvteKey *ecdsa.PrivateKey 
+	PrvteKey string 
 }
 
 
@@ -23,10 +23,10 @@ func (a *Acc)SetPrivateKey(){
 	fmt.Println("WalletPrivateKey:", WalletPrivateKey)
 }
 
-func(*Acc)GetPrivateKey()(*ecdsa.PrivateKey){
+func(*Acc)GetPrivateKey()(string){
 
-	if WalletPrivateKey == nil{
-	return nil
+	if WalletPrivateKey == ""{
+	return WalletPrivateKey
 	}
  return WalletPrivateKey
 }

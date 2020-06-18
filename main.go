@@ -27,7 +27,9 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	contxt "context"
+	"strconv"
 	"math/big"
 )
 
@@ -71,7 +73,7 @@ var (
 	clientInstance *ethclient.Client = nil
 	ETHAddressInstance string = ""
 	WalletPubKey string = ""
-	WalletSecureKey *ecdsa.PrivateKey  = nil
+	WalletSecureKey string  = ""
 )
 
 
@@ -202,7 +204,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 
 func Send(w http.ResponseWriter, r *http.Request){
 
-	// temp := template.Must(template.ParseFiles("server.html"))
+	temp := template.Must(template.ParseFiles("server.html"))
 	
 	block := structs.Block{}
 
@@ -214,27 +216,151 @@ func Send(w http.ResponseWriter, r *http.Request){
 		block.TxSen = r.FormValue("sendAdd")
 		block.TxRec = r.FormValue("add")
 		choice :=  r.FormValue("transact")
-		block.FeesCharges = r.FormValue("amount")
+		amount := r.FormValue("amount")
 		block.Balance = ReadBalanceFromBlock(&block); if block.Balance == nil{
+			Repon := Response{true,"Some Issue ; [Balance]", "WizDawrf/transact"}
+			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			temp.Execute(w, Repon)
 			fmt.Println("Error:")
 			return
 		}
 		// Block number 
 		header, err := clientInstance.HeaderByNumber(context.Background(), nil); if err != nil{
 			fmt.Println("Error:", err)
+			Repon := Response{true,"Error {HeaderByNumber}", "WizDawrf/transact"}
+			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			temp.Execute(w, Repon)
 			return
 		}
 
 		fmt.Println("Block Num :\n" , header.Number.String())
+		fmt.Println("Wallet kEY:", WalletSecureKey)
+
+		// private key to public address
+		secure , err := crypto.HexToECDSA(WalletSecureKey); if err != nil {
+			fmt.Println("Error:", err)
+			Repon := Response{true,"Error {Your Account dont have any Priavte key, use valid address}", "WizDawrf/transact/"}
+			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			temp.Execute(w, Repon)
+			return 
+		}
+		walletPublicKey :=  secure.Public()
+
+
+		// Convert Public key
+		ecdsaPubKey , ok := walletPublicKey.(*ecdsa.PublicKey); if !ok{
+			fmt.Println("Error:", err)
+			Repon := Response{true,"Error {No Public Key}", "WizDawrf/transact"}
+			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			temp.Execute(w, Repon)
+			return
+		}
+		ethAdd := crypto.PubkeyToAddress(*ecdsaPubKey)
+		fmt.Println("Your Adddress:", ethAdd)
+
+		fmt.Println("EthAddress:", block.TxRec)
 		
 
+		// nonce pending 
+		 noncePending , err := clientInstance.PendingNonceAt(context.Background(), ethAdd); if err != nil {
+		 	Repon := Response{true,"Error {Get Nonce}", "WizDawrf/transact"}
+			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			temp.Execute(w, Repon)
+		 	fmt.Println("Error:", err)
+		 	return 
+		 }
+		 fmt.Println("Pending Nonce:", noncePending)
+
+
+		 // block number
+		 /*blockNumber := big.NewInt(6677972)*/
+
+		 block.Nonce = noncePending
+
+		 
 		/*block.Nonce = r.FormValue("nonce")*/
-		fmt.Println("Block:" , block)
 		fmt.Println("choice:", choice)
+
+		// gas
+		gasLImit := uint64(21000)
+		block.GasLimit = gasLImit
 		
+		gasPrice , err := clientInstance.SuggestGasPrice(context.Background()); if err != nil {
+				fmt.Println("Error:", err)
+				Repon := Response{true,"Error :{Gas Price Flucation}", "WizDawrf/transact"}
+			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			temp.Execute(w, Repon)
+				return 
+			}
+			fmt.Println("Gas:", gasPrice)
+
+			//Conversion
+		charge , err := StringToInt(amount); if err != nil {
+			fmt.Println("Error:", err)
+			Repon := Response{true,"Error :{Conversion}", "WizDawrf/transact"}
+			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			temp.Execute(w, Repon)
+			return 
+		}
+
+		gwei := new(big.Int).SetInt64(int64(charge))
+		block.Amount = gwei
+
+		fee := new(big.Int)
+		result := new(big.Int) 
+		
+		switch choice{
+			case "Normal":
+				block.GasPrice = gasPrice 
+				fee.SetInt64(1)
+				result.Mul(block.GasPrice , fee)
+				fmt.Println("Block:" , block)
+			case "Fair":
+				block.GasPrice = gasPrice
+				fee.SetInt64(3)
+				result.Mul(block.GasPrice , fee)
+				fmt.Println("Block:" , block)
+			case "Blink":
+				block.GasPrice = gasPrice
+				fee.SetInt64(5)
+				result.Mul(block.GasPrice , fee)
+				fmt.Println("Block:" , block)
+			default:
+				fmt.Println("No choice")
+		}
+
+	// Send Transaction
+
+		transfer := common.HexToAddress(block.TxSen)
+
+		// Network ID
+		chainId , err := clientInstance.NetworkID(context.Background())
+
+		var nofield []byte
+
+		tx := types.NewTransaction(block.Nonce, transfer,block.Amount, block.GasLimit, block.GasPrice, nofield)
+		
+		// Signed Transaction
+		sign , err := types.SignTx(tx, types.NewEIP155Signer(chainId), secure); if err != nil {
+			fmt.Println("Error:", err)
+			Repon := Response{true,"Error in Upload File", "WizDawrf/transact"}
+			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			temp.Execute(w, Repon)
+			return 
+		}
+
+		// Send Transaction
+		err = clientInstance.SendTransaction(context.Background(), sign); if err != nil {
+			fmt.Println("Error:", err)
+			Repon := Response{true,"Error {Transaction Failed , Insufficent Balance}", "WizDawrf/transact"}
+			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			temp.Execute(w, Repon)
+			return 
+		}
+
+		fmt.Println("Send:", sign.Hash().Hex())
 	}
 }
-
 
 func CreateWallet(w http.ResponseWriter, r*http.Request){
 	
@@ -279,7 +405,9 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 			// private key into bytes 
 		PrvateKyByte := crypto.FromECDSA(privateKey)
 
-		fmt.Println("Private_Key :" , hexutil.Encode(PrvateKyByte)[2:])
+		key := hexutil.Encode(PrvateKyByte)[2:]
+
+		fmt.Println("Private_Key :" , key)
 
 		pblicKey := privateKey.Public()
 
@@ -295,9 +423,7 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 		fmt.Println("PublicKey:" , PublicKey)
 
 		acc.PubKey = PublicKey
-		acc.PrvteKey = privateKey 
-		fmt.Println("key: " , acc.PrvteKey)
-		acc.SetPrivateKey()
+		acc.PrvteKey = key
 
 
 		// hash 
@@ -344,12 +470,13 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 				return
 		}
 		fmt.Println("Eth_Add:" , ethAdd)
+		// ethAdd.SetPrivateKey()
 
 		myWallet.Email = acc.Email
 		myWallet.Password = acc.Password
 		myWallet.EthAddress = acc.EthAddress
 		myWallet.Terms = acc.Terms
-		myWallet.PubKey = acc.PubKey
+		myWallet.PrvteKey = acc.PrvteKey
 
 
 		merchant , err := ledger.CreatePublicAddress(&myWallet, appName); if err != nil{
@@ -422,6 +549,7 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 			clientInstance = client
 			println("Email:"+ acc.Email + "Password:"+ acc.Password)
 
+
 			myWallet := cloudWallet.EthereumWalletAcc{} 
 
 			signWallet , err := json.Marshal(myWallet); if err != nil{
@@ -448,8 +576,12 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 			if add != nil{ 
 				fmt.Println("Address:" , add)
 				acc.EthAddress = add.EthAddress
-				acc.PubKey = add.PubKey	
-				WalletPubKey = acc.PubKey
+				// Secure Key
+				/*if add.GetPrivateKey() != ""{
+					WalletSecureKey = add.GetPrivateKey()
+				}*/
+				WalletSecureKey = add.PrvteKey
+				fmt.Println("Secure:", WalletSecureKey)
 
 				// variable address for futher processing
 				ETHAddressInstance = acc.EthAddress
@@ -815,6 +947,16 @@ func SetFirestoreCredentials() *firebase.App {
 	}
 	println("Connected... Welcome to Firestore")
 	return app
+}
+
+func StringToInt(s string)(int, error){
+
+	i, err := strconv.Atoi(s); if err != nil {
+		fmt.Println("Error:", err)
+		return 0 , err 
+	}
+	return i, nil
+
 }
 
 func GetBalance(account *structs.Static)(*big.Int){
