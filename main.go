@@ -106,6 +106,8 @@ func main() {
 	routing.HandleFunc("/{title}/open", Wallet)
 	routing.HandleFunc("/{title}/transact", Transacts)
 	routing.HandleFunc("/{title}/transact/send", Send)
+	routing.HandleFunc("/{title}/transact/treasure", Treasure)
+
 
 		// Static Files
 	// routing.HandleFunc("/{title}/action", addVistor)
@@ -133,6 +135,22 @@ func Home(w http.ResponseWriter, r *http.Request){
 		temp.Execute(w, "Home")
 	}
 
+}
+
+
+func Treasure(w http.ResponseWriter, r *http.Request){
+	temp := template.Must(template.ParseFiles("treasure.html"))	
+	acc := structs.Static{}
+	if r.Method == "GET" {
+		fmt.Println("Url:", r.URL.Path)
+		fmt.Println("Method:" + r.Method)
+		acc.Eth = ETHAddressInstance
+		acc.Balance = GetBalance(&acc); if acc.Balance == nil{
+			fmt.Println("Error:")
+		}
+		fmt.Println("Details:", acc )
+		temp.Execute(w,acc)
+	}
 }
 
 func Dashboard(w http.ResponseWriter, r *http.Request) {
