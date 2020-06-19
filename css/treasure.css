@@ -1,0 +1,19 @@
+.div-form{
+	display: flex;
+	justify-content: center;
+	margin: auto;
+	width: 50%;
+	flex-direction: column;
+}
+.div-form-container{
+	margin-top: 20px;
+	margin-left: 5px;
+}
+
+.div-send-in, .div-receive-in{
+	margin-top: 10px;
+}
+
+.btn-in, .in-send, .btn-in-rec,.in-rece{
+	margin-left: 10px;
+}

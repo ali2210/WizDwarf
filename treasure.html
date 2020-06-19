@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="/css/seed.css">
   <link rel="stylesheet" type="text/css" href="/css/transact.css">
+  <link rel="stylesheet" type="text/css" href="/css/treasure.css"></link>
   <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
   <title>WizDwarf</title>
 <body>
@@ -20,5 +21,34 @@
     		</button>
     	</a>
 	</nav>
+	<div class="static-field">
+			<div class="static-img">
+				<img src="/images/logo.png" alt ="WizDwarfs" class="img-logo"/>
+				<h4 class="text">Billioniare</h4>
+			</div>
+			<div class="static-text">
+				<input type="text" name="eth" value="{{.Eth}}" class="address" readonly>
+					<div class="">
+						<h5 class="balance">{{.Balance}}
+							<img src="/images/eth.png" alt="eth" class="eth-img"/>
+						</h5>
+					</div>
+					<div class="div-form col-md-4">
+						<form class="div-form-container" method="post" action="/WizDwarf/transact/treasure">
+						<div class="div-send-in">
+							<button type="button" class="btn-in" onclick="">Send</button>
+							<input type="text" name="send" class="in-send">
+						</div>
+						<div class="div-receive-in">
+							<button type="button" class="btn-in" onclick="">Receive</button>
+							<input type="text" name="rece" class="in-rece">
+						</div>
+						<button type="submit" class="btn-submt-form">Submit</button>
+						<button type="button" class="btn-cancel-form" onclick="">Cancel</button>
+					</form>
+					</div>
+			</div>
+
+		</div>
 </body>
 </html>
