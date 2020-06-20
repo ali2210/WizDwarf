@@ -33,6 +33,10 @@
 	margin-top: 5px;
 }
 
+.in-send, .in-rece{
+	visibility: hidden;
+}
+
 .btn-submt-form,
 .btn-cancel-form{
 	margin-top: 15px;
