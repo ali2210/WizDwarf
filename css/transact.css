@@ -6,7 +6,7 @@
 	justify-content: center;
 	align-content: center;
 	border-style: none;
-	color: black;
+	color: snow;
 	background-color: light;
 	height: 100%;
 }
@@ -62,7 +62,7 @@
 .more-btn 
 {
 	border-style: none;
-	background-color: black;
+	background-color: lightgrey;
 	color: white;
 	margin-top: 5px;
 	height: 10%;
