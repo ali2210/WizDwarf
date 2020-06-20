@@ -33,8 +33,13 @@
 	margin-top: 5px;
 }
 
-.in-send, .in-rece{
+.in-send, 
+.in-rece{
 	visibility: hidden;
+}
+
+.btn-in{
+	visibility: visible;
 }
 .in-rece{
 	margin-left: 20px;
