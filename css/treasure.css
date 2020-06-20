@@ -1,0 +1,41 @@
+.div-form{
+	display: flex;
+	justify-content: center;
+	margin: auto;
+	width: 50%;
+	flex-direction: column;
+}
+.div-form-container{
+	margin-top: 30px;
+	margin-left: 5px;
+	margin-bottom: 30px;
+}
+
+.div-send-in, .div-receive-in{
+	margin-top: 10px;
+}
+
+.btn-in,.btn-in-rec,.in-rece{
+	margin-left: 10px;
+}
+
+.in-send{
+	margin-left: 25px;
+}
+
+.btn-submt-form,
+.btn-cancel-form,
+.btn-in-rec,
+.btn-in{
+	border-style: none;
+	background-color: grey;
+	color: snow;
+	margin-top: 5px;
+}
+
+.btn-submt-form,
+.btn-cancel-form{
+	margin-top: 15px;
+	margin-left: 50px;
+	margin-right: -50px;
+}
