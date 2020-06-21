@@ -16,7 +16,7 @@
 }
 
 .btn-in,.btn-in-rec,.in-rece{
-	margin-left: 10px;
+	margin-left: 5px;
 }
 
 .in-send{
@@ -28,9 +28,21 @@
 .btn-in-rec,
 .btn-in{
 	border-style: none;
-	background-color: grey;
-	color: snow;
+	background-color: snow;
+	color: black;
 	margin-top: 5px;
+}
+
+.in-send, 
+.in-rece{
+	visibility: hidden;
+}
+
+.btn-in{
+	visibility: visible;
+}
+.in-rece{
+	margin-left: 20px;
 }
 
 .btn-submt-form,

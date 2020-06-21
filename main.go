@@ -141,6 +141,7 @@ func Home(w http.ResponseWriter, r *http.Request){
 func Treasure(w http.ResponseWriter, r *http.Request){
 	temp := template.Must(template.ParseFiles("treasure.html"))	
 	acc := structs.Static{}
+	block := structs.Block{}
 	if r.Method == "GET" {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
@@ -150,6 +151,51 @@ func Treasure(w http.ResponseWriter, r *http.Request){
 		}
 		fmt.Println("Details:", acc )
 		temp.Execute(w,acc)
+	}else{
+		fmt.Println("Url:", r.URL.Path)
+		fmt.Println("Method:" + r.Method)
+		r.ParseForm()
+		block.TxSen = r.FormValue("send")
+		block.TxRec = r.FormValue("rece")
+
+		fmt.Println("block:", block)
+
+
+		blockNumber := big.NewInt(6677972)
+		bNum , err := clientInstance.BlockByNumber(context.Background(), blockNumber); if err != nil {
+				fmt.Println("Error:",err)
+				return 
+		}
+
+
+		for _ , tx := range bNum.Transactions(){
+
+			// ChainId
+
+			chainId, err := clientInstance.NetworkID(context.Background()); if err != nil {
+				fmt.Println("Error:",err)
+				return 
+			}
+
+
+			// get recipt address
+			message , err := tx.AsMessage(types.NewEIP155Signer(chainId)); if err != nil {
+				fmt.Println("Error:",err)
+				return 
+			}
+
+			fmt.Println("Message hash:", message.From().Hex())
+
+			recp, err := clientInstance.TransactionReceipt(context.Background(), tx.Hash()); if err != nil {
+				fmt.Println("Error:",err)
+				return 
+			}
+
+			fmt.Println("Status:", recp.Status)
+
+		}
+
+
 	}
 }
 
