@@ -142,7 +142,9 @@ func Treasure(w http.ResponseWriter, r *http.Request){
 	temp := template.Must(template.ParseFiles("treasure.html"))	
 	acc := structs.Static{}
 	block := structs.Block{}
+	
 	if r.Method == "GET" {
+		
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
 		acc.Eth = ETHAddressInstance
@@ -151,24 +153,33 @@ func Treasure(w http.ResponseWriter, r *http.Request){
 		}
 		fmt.Println("Details:", acc )
 		temp.Execute(w,acc)
+
 	}else{
+		
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
+		
 		r.ParseForm()
 		block.TxSen = r.FormValue("send")
 		block.TxRec = r.FormValue("rece")
 
 		fmt.Println("block:", block)
 
-
+		// Block Number
 		blockNumber := big.NewInt(6677972)
 		bNum , err := clientInstance.BlockByNumber(context.Background(), blockNumber); if err != nil {
 				fmt.Println("Error:",err)
 				return 
 		}
 
+		fmt.Println("Length:", len(bNum.Transactions()))
+		fmt.Println("Hash:", bNum.Hash().Hex())
+		fmt.Println("Block:", bNum.Number().Uint64())
+		
 
 		for _ , tx := range bNum.Transactions(){
+			fmt.Println("To:", tx.To().Hex())
+			fmt.Println("Block_Hash:", tx.Hash().Hex())
 
 			// ChainId
 
@@ -184,7 +195,7 @@ func Treasure(w http.ResponseWriter, r *http.Request){
 				return 
 			}
 
-			fmt.Println("Message hash:", message.From().Hex())
+			fmt.Println("Message From:", message.From().Hex())
 
 			recp, err := clientInstance.TransactionReceipt(context.Background(), tx.Hash()); if err != nil {
 				fmt.Println("Error:",err)
@@ -192,9 +203,38 @@ func Treasure(w http.ResponseWriter, r *http.Request){
 			}
 
 			fmt.Println("Status:", recp.Status)
-
 		}
 
+ 		txs := common.HexToHash(bNum.Hash().Hex())
+		fmt.Println("Tx:", txs.Hex())
+
+		// Number of Transaction
+		count , err := clientInstance.TransactionCount(context.Background(), txs); if err != nil {
+				fmt.Println("Error:",err)
+				return 
+		}
+		fmt.Println("Num #:", count)
+
+		for i := uint(0); i < count; i++{
+			Tx , err := clientInstance.TransactionInBlock(context.Background(), txs, i); if err != nil {
+				fmt.Println("Error:",err)
+				return 
+	 		}
+
+	 		fmt.Println("Tx Hash:", Tx.Hash().Hex())
+
+	 		txHash := common.HexToHash(Tx.Hash().Hex())
+
+	 		// Transaction status
+	 		tx , isPending, err := clientInstance.TransactionByHash(context.Background(), txHash); if err != nil {
+				fmt.Println("Error:",err)
+				return 
+			}
+
+			fmt.Println("hash:", tx.Hash().Hex())
+			fmt.Println("Transaction_Pending:", isPending)
+			
+	 	}
 
 	}
 }
