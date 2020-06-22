@@ -29,6 +29,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	contxt "context"
+	"github.com/biogo/biogo/alphabet"
 	"strconv"
 	"math/big"
 )
@@ -243,6 +244,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("dashboard.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
+		fmt.Println("Url:", r.URL.Path)
 		temp.Execute(w, "Dashboard")
 	} else {
 		temp := template.Must(template.ParseFiles("server.html"))
@@ -265,38 +267,38 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				var name string = "Covid-19"
 				svrFile := FileReadFromDisk(w, name)
 				println("Please Wait", svrFile.Name(), "...")
-				SequenceAligmentTable(file, svrFile)
+				SequenceFile(file, svrFile)
 
 			case "2":
 				var name string = "FlaviDengue"
 				svrFile := FileReadFromDisk(w, name)
-				SequenceAligmentTable(file, svrFile)
+				SequenceFile(file, svrFile)
 
 			case "3":
 				var name string = "KenyaEbola"
 				svrFile := FileReadFromDisk(w, name)
 				println("Please Wait", svrFile.Name(), "...")
-				SequenceAligmentTable(file, svrFile)
+				SequenceFile(file, svrFile)
 
 			case "4":
 				var name string = "ZikaVirusBrazil"
 				svrFile := FileReadFromDisk(w, name)
 				println("Please Wait", svrFile.Name(), "...")
-				SequenceAligmentTable(file, svrFile)
+				SequenceFile(file, svrFile)
 
 			case "5":
 				var name string = "MersSaudiaArabia"
 				svrFile := FileReadFromDisk(w, name)
 				println("Please Wait", svrFile.Name(), "...")
-				SequenceAligmentTable(file, svrFile)
+				SequenceFile(file, svrFile)
 
 			default:
 				temFile := template.Must(template.ParseFiles("dashboard.html"))
 				temFile.Execute(w, "Dashboard")
 			}
 		} else {
-			print("size must be less than 5KB")
-			Repon := Response{true,"Error in Upload File", "WizDawrf/dashboard"}
+			print("size must be less than 512MB")
+			Repon := Response{true,"Error in Upload File {size must not exceed with 512MB}", "WizDawrf/dashboard"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
 		}
@@ -1205,10 +1207,8 @@ func Key(w http.ResponseWriter, h1, h2 string) (string, string, *ecdsa.PrivateKe
 func ReadSequence(filename string) ([]byte, error) {
 	body, err := ioutil.ReadFile(filename)
 	if err != nil {
-		// w.Write([]byte(`{error: Unable to Read File }`))
 		return nil, err
 	}
-	// fmt.Printf("content %s:", body)
 	return []byte(body), nil
 }
 
@@ -1244,8 +1244,8 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 		return nil
 	}
 	defer file.Close()
-	if handler.Size <= (50   * 1024) {
-		fmt.Println("File name:" + handler.Filename)
+	if handler.Size <= (500000  * 1024) {
+		fmt.Println("File name:" + handler.Filename, "Size:", handler.Size)
 		if _, err := os.Stat(handler.Filename); os.IsExist(err) {
 			fmt.Println("File not exist ", err)
 			 temp := template.Must(template.ParseFiles("server.html"))
@@ -1282,55 +1282,32 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 	return nil
 }
 
-func SequenceAligmentTable(serverFile *os.File, userFile os.FileInfo) {
+func SequenceFile(serverFile *os.File, userFile os.FileInfo) {
 
-
-	// local variable liitle scoope
-	seq, err := ReadSequence(userFile.Name())
-	if err != nil {
+	seq, err := ReadSequence(userFile.Name());if err != nil {
 		println("Error in read file", err)
-		// temp := template.Must(template.ParseFiles("server.html"))
-		// 	Res := Response{true, "Error in File", ""}
-		// 	println("Server Response:", Res.Flag,Res.Message,Res.Links)
-		// 	temp.Execute(w, Res)
-		return
-	}
-  // fmt.Printf("Seq string:%s\n", seq)
-	Useq, err := ReadSequence(serverFile.Name())
-	if err != nil {
-		println("Error in read file", err)
-		// temp := template.Must(template.ParseFiles("server.html"))
-		// 	Res := Response{true, "Error in File", ""}
-		// 	println("Server Response:", Res.Flag,Res.Message,Res.Links)
-		// 	temp.Execute(w, Res)
 		return
 	}
 
-	println("Virus Dna sequence :")
 
+	var gen []alphabet.Letter
 	for _, v := range seq {
-		// fmt.Printf("Seq:%v \t",  v ) // print bytes of array
 		space := DoAscii(v)
-		if space == "---" {
-			fmt.Printf("%s\t", space)
+		if space == alphabet.Letter(0) {
+			fmt.Println("\t", space)
 		}
-		fmt.Printf("%s\t", space)
+		fmt.Println("\t", space)
+		gen = append(gen, space)
 	}
-	println("Your Dna sequence :")
-	for _, v := range Useq {
-		uDna := DoAscii(v)
-		if uDna == "---" {
-			fmt.Printf("%s", uDna)
-			
-		}
-		fmt.Printf("%s\t", uDna)
+	fmt.Println("Gen:{", gen , "}")
 
-	}
+	
 }
 
-func DoAscii(seq byte) string {
-	if seq >= 65 && seq < 91 {
-		return string(seq)
+func DoAscii(seq byte) alphabet.Letter {
+	
+	if seq >= 65 && seq < 91{ 
+		return alphabet.Letter(seq)
 	}
-	return "---"
+	return alphabet.Letter(0) 	
 }
