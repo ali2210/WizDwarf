@@ -29,6 +29,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	contxt "context"
+	"github.com/biogo/biogo/alphabet"
 	"strconv"
 	"math/big"
 )
@@ -1243,8 +1244,8 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 		return nil
 	}
 	defer file.Close()
-	if handler.Size <= (50000  * 1024) {
-		fmt.Println("File name:" + handler.Filename)
+	if handler.Size <= (500000  * 1024) {
+		fmt.Println("File name:" + handler.Filename, "Size:", handler.Size)
 		if _, err := os.Stat(handler.Filename); os.IsExist(err) {
 			fmt.Println("File not exist ", err)
 			 temp := template.Must(template.ParseFiles("server.html"))
@@ -1287,38 +1288,26 @@ func SequenceFile(serverFile *os.File, userFile os.FileInfo) {
 		println("Error in read file", err)
 		return
 	}
-  	fmt.Printf("Seq string:%s\n", seq)
 
 
-	// Useq, err := ReadSequence(serverFile.Name());if err != nil {
-	// 	println("Error in read file", err)
-	// 	return
-	// }
+	var gen []alphabet.Letter
+	for _, v := range seq {
+		space := DoAscii(v)
+		if space == alphabet.Letter(0) {
+			fmt.Println("\t", space)
+		}
+		fmt.Println("\t", space)
+		gen = append(gen, space)
+	}
+	fmt.Println("Gen:{", gen , "}")
 
-	// println("Virus Dna sequence :")
-
-	// for _, v := range seq {
-	// 	// fmt.Printf("Seq:%v \t",  v ) // print bytes of array
-	// 	space := DoAscii(v)
-	// 	if space == "---" {
-	// 		fmt.Printf("%s\t", space)
-	// 	}
-	// 	fmt.Printf("%s\t", space)
-	// }
-	// println("Your Dna sequence :")
-	// for _, v := range Useq {
-	// 	uDna := DoAscii(v)
-	// 	if uDna == "---" {
-	// 		fmt.Printf("%s", uDna)
-			
-	// 	}
-	// 	fmt.Printf("%s\t", uDna)
-
+	
 }
 
-func DoAscii(seq byte) string {
-	if seq >= 65 && seq < 91 {
-		return string(seq)
+func DoAscii(seq byte) alphabet.Letter {
+	
+	if seq >= 65 && seq < 91{ 
+		return alphabet.Letter(seq)
 	}
-	return "---"
+	return alphabet.Letter(0) 	
 }
