@@ -1301,10 +1301,10 @@ func SequenceFile(serverFile *os.File, userFile os.FileInfo) {
 	}
 	fmt.Println("Gen:{", gen , "}")
 
-	for i, _ := range gen{
-		fmt.Printf("Data:%v\t", gen[i])
-	}
+	// Dna to rna 
 
+	rna35 := RNASequence(gen)
+	fmt.Println("single:", rna35)
 }
 
 func DoAscii(seq byte) string {
@@ -1313,4 +1313,21 @@ func DoAscii(seq byte) string {
 		return string(alphabet.Letter(seq))
 	}
 	return string(alphabet.Letter(seq))	
+}
+
+func RNASequence(sq []string) []string{
+
+	var  k []string
+
+
+	for i , _ := range sq{
+		
+		if sq[i] == "T"{
+			sq[i] = "U"
+		}
+	  k = append(k , sq[i])
+	}
+
+	return k
+	
 }
