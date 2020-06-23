@@ -1290,24 +1290,27 @@ func SequenceFile(serverFile *os.File, userFile os.FileInfo) {
 	}
 
 
-	var gen []alphabet.Letter
+	var gen []string
 	for _, v := range seq {
 		space := DoAscii(v)
-		if space == alphabet.Letter(0) {
-			fmt.Println("\t", space)
+		if space == ""{
+			fmt.Printf("Gap%v:\t", space)
 		}
-		fmt.Println("\t", space)
+		// fmt.Println("Letter:\t", space)
 		gen = append(gen, space)
 	}
 	fmt.Println("Gen:{", gen , "}")
 
-	
+	for i, _ := range gen{
+		fmt.Printf("Data:%v\t", gen[i])
+	}
+
 }
 
-func DoAscii(seq byte) alphabet.Letter {
+func DoAscii(seq byte) string {
 	
 	if seq >= 65 && seq < 91{ 
-		return alphabet.Letter(seq)
+		return string(alphabet.Letter(seq))
 	}
-	return alphabet.Letter(0) 	
+	return string(alphabet.Letter(seq))	
 }
