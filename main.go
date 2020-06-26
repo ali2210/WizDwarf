@@ -32,6 +32,7 @@ import (
 	"github.com/biogo/biogo/alphabet"
 	"strconv"
 	"math/big"
+	"./structs/biotree"
 )
 
 // Struts
@@ -1305,6 +1306,10 @@ func SequenceFile(serverFile *os.File, userFile os.FileInfo) {
 
 	rna35 := RNASequence(gen)
 	fmt.Println("single:", rna35)
+
+	parseTree()
+	
+
 }
 
 func DoAscii(seq byte) string {
@@ -1330,4 +1335,17 @@ func RNASequence(sq []string) []string{
 
 	return k
 	
+}
+
+func parseTree(){
+	tree := biotree.Tree{}
+	ele  := []string{"a", "l", "i"}
+
+	for i , _ := range ele{
+		u, v := tree.AddBranch(ele[i]); if v == nil{
+			fmt.Println("Error:", v)
+		}
+		fmt.Println("Node:", u,	"Tree:", v)	
+	}
+
 }
