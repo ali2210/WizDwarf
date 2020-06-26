@@ -1340,9 +1340,12 @@ func RNASequence(sq []string) []string{
 func parseTree(){
 	tree := biotree.Tree{}
 	ele  := []string{"a", "l", "i"}
-	t := tree.AddBranch(ele[0]); if t == nil{
-			fmt.Println("Error:", t)
+
+	for i , _ := range ele{
+		u, v := tree.AddBranch(ele[i]); if v == nil{
+			fmt.Println("Error:", v)
+		}
+		fmt.Println("Node:", u,	"Tree:", v)	
 	}
-	fmt.Println("Tree:", t)
-			
+
 }
