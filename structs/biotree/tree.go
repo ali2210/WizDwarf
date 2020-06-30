@@ -21,11 +21,6 @@ func (t *Tree) AddBranch(id string)(*Node, *Tree){
 			(*t).Root = node
 			fmt.Println("Root added:", (*t).Root)
 			return node, t
-		}else if node.LeftBranch != nil{
-
-			node.LeftBranch = node.LeftBranch.LeftBranch
-			fmt.Println("LeftBranch:", node.LeftBranch)
-			return node, t
 		}
 		
 	}else{
@@ -39,7 +34,19 @@ func (t *Tree) AddBranch(id string)(*Node, *Tree){
 				(*t).Root.RightBranch = node 
 				fmt.Println("Right added:")
 	   			return node, t
+		   }else {
+		   		fmt.Println("Left cHILD :", (*t).Root.LeftBranch.LeftBranch) // nil  
+		   	    temp := (*t).Root.LeftBranch
+		   	    if temp == nil{
+		   	    	fmt.Println("Parent:", temp)
+		   	    }else{
+		   	    	fmt.Println("Child:", temp)
+		   	    }
 		   }
 	}
 	return nil, nil
 }
+
+	
+
+
