@@ -17,8 +17,9 @@ type AminoClass struct{
 }
 
 
-func (bioclass *AminoClass) Bases(class []string) *AminoClass{
+func (bioclass *AminoClass) Bases(class []string) []*AminoClass{
 
+	proteinsClass := []*AminoClass{}
 	for i , _ := range class{
 		if (class[i+0] == "U"  && class[i+1] == "U" &&  class[i+2] == "U")|| (class[i+0] == "U" && class[i+1] == "U" && class[i+2] == "C"){
 			bioclass.Symbol = "F"
@@ -26,61 +27,72 @@ func (bioclass *AminoClass) Bases(class []string) *AminoClass{
 			bioclass.Polar = false
 			bioclass.TypeChain = "Aromatic"
 			bioclass.Hydrophobic = true
+			proteinsClass = append(proteinsClass, bioclass)
 		}else if (class[i+0] == "U" && class[i+1] == "U" && class[i+2] == "A")|| (class[i+0] == "U" && class[i+1] =="U" && class[i+2] =="G")|| (class[i+0] == "C" && class[i+1] =="U" && class[i+2] == "U") || (class[i+0] ==  "C" && class[i+1] =="U" && class[i+2] == "C")|| (class[i+0] ==  "C" &&  class[i+1] =="U"  && class[i+2] =="A") || (class[i+0] ==  "C" && class[i+1] =="U" && class[i+2] =="G") {
 			bioclass.Symbol = "L"
 			bioclass.Name = "Leucine"
 			bioclass.Polar = false
 			bioclass.TypeChain = "Aliphatic"
 			bioclass.Hydrophobic = true
+			proteinsClass = append(proteinsClass, bioclass)
 		}else if (class[i+0] ==  "U" && class[i+1] =="C" && class[i+2] =="U")|| (class[i+0] ==  "U" &&  class[i+1] =="C" && class[i+2] =="C")|| (class[i+0] ==  "U" && class[i+1] == "C" && class[i+2] == "A")|| (class[i+0] ==  "U" &&  class[i+1] == "C" && class[i+2] ==  "G")|| (class[i+0] ==  "A" && class[i+1] == "G" && class[i+2] == "U")|| (class[i+0] == "A" &&  class[i+1] == "G" && class[i+2] == "C") {
 			bioclass.Symbol = "S"
 			bioclass.Name = "Serine"
 			bioclass.Polar = true
 			bioclass.Charge = false
 			bioclass.Hydrophobic = false
+			proteinsClass = append(proteinsClass, bioclass)
 		}else if (class[i+0] ==  "C" && class[i+1] == "C" && class[i+2] == "U")|| (class[i+0] ==  "C" && class[i+1] == "C" && class[i+2] == "C")|| (class[i+0] ==  "C" && class[i+1] == "C" && class[i+2] == "A")|| (class[i+0] == "C" && class[i+1] == "C" && class[i+2] == "G" ){
 			bioclass.Symbol = "P"
 			bioclass.Name = "Proline"
 			bioclass.Polar = false
 			bioclass.TypeChain = "Aliphatic"
 			bioclass.Hydrophobic = true
+			proteinsClass = append(proteinsClass, bioclass)
 		}else if (class[i+0] ==  "A" && class[i+1] == "A" && class[i+2] == "U")|| (class[i+0] ==  "A" && class[i+1] == "U" && class[i+2] == "C")|| (class[i+0] == "A" && class[i+1] == "U" && class[i+2] == "A" ) {
 			bioclass.Symbol = "I"
 			bioclass.Name = "Isoleucine"
 			bioclass.Polar = false
 			bioclass.TypeChain = "Aliphatic"
 			bioclass.Hydrophobic = true
+			proteinsClass = append(proteinsClass, bioclass)
 		}else if class[i+0] ==  "A" && class[i+1] == "U" && class[i+2] == "G"  {
 			bioclass.Symbol = "M"
 			bioclass.Name = "Methionine"
 			bioclass.Polar = true
 			bioclass.Charge = false
 			bioclass.codon_Start = true
+			proteinsClass = append(proteinsClass, bioclass)
 		}else if (class[i+0] ==  "A" && class[i+1] == "C" && class[i+2] == "U")|| (class[i+0] ==  "A" && class[i+1] == "C" && class[i+2] == "C")|| (class[i+0] == "A" && class[i+1] == "C" && class[i+2] == "A" )|| (class[i+0] == "A" && class[i+1] == "C" && class[i+2] == "G") {
 			bioclass.Symbol = "T"
 			bioclass.Name = "Threonine"
 			bioclass.Polar = true
 			bioclass.Charge = false
+			proteinsClass = append(proteinsClass, bioclass)
 		}else if (class[i+0] ==  "G" && class[i+1] == "U" && class[i+2] == "U") || (class[i+0] == "G" && class[i+1] == "U" && class[i+2] == "C" )|| (class[i+0] == "G" && class[i+1] == "U" && class[i+2] == "A" )|| (class[i+0] == "G" && class[i+1] == "U" && class[i+2] == "G" ){
 			bioclass.Symbol = "V"
 			bioclass.Name = "Valine"
 			bioclass.Polar = false
 			bioclass.TypeChain = "Aliphatic"
 			bioclass.Hydrophobic = true
+			proteinsClass = append(proteinsClass, bioclass)
 		}else if (class[i+0] ==   "G" && class[i+1] == "C" && class[i+2] == "U")|| (class[i+0] == "G" && class[i+1] == "C" && class[i+2] == "C")|| (class[i+0] == "G" && class[i+1] == "C" && class[i+2] == "A" )|| (class[i+0] == "G" && class[i+1] == "C" && class[i+2] == "G") {
 			bioclass.Symbol = "A"
 			bioclass.Name = "Alanine"
 			bioclass.Polar = false
 			bioclass.TypeChain = "Aliphatic"
 			bioclass.Hydrophobic = true
+			proteinsClass = append(proteinsClass, bioclass)
 		}else if (class[i+0] ==   "U" && class[i+1] == "A" && class[i+2] == "U" )||  (class[i+0] == "U" && class[i+1] == "A" && class[i+2] == "C")  {
 			bioclass.Symbol = "Y"
 			bioclass.Name = "Tyrosine"
 			bioclass.Polar = true
 			bioclass.TypeChain = "Aromatic"
+			proteinsClass = append(proteinsClass, bioclass)
 		}else if (class[i+0] ==   "U" && class[i+1] == "A" && class[i+2] == "A") || (class[i+0] ==  "U" && class[i+1] == "A" && class[i+2] == "G")|| (class[i+0] == "U" && class[i+1] == "G" && class[i+2] == "A")  {
 			bioclass.Symbol = "X"
 			bioclass.codon_End = true
+			proteinsClass = append(proteinsClass, bioclass)
 		}else if (class[i+0] ==   "C" && class[i+1] == "A" && class[i+2] == "U") || (class[i+0] == "C" && class[i+1] == "A" && class[i+2] == "C")  {
 			bioclass.Symbol = "H"
 			bioclass.Charge = true
@@ -89,11 +101,13 @@ func (bioclass *AminoClass) Bases(class []string) *AminoClass{
 			bioclass.Polar = true
 			bioclass.TypeChain = "Aromatic"
 			bioclass.Hydrophobic = false
+			proteinsClass = append(proteinsClass, bioclass)
 		}else if (class[i+0] ==   "C" && class[i+1] == "A" && class[i+2] == "A") || (class[i+0] ==  "C" && class[i+1] == "A" && class[i+2] == "G")  {
 			bioclass.Symbol = "Q"
 			bioclass.Name = "Glutamine"
 			bioclass.Polar = true
 			bioclass.Charge = false
+			proteinsClass = append(proteinsClass, bioclass)
 		}else if (class[i+0] ==   "C" && class[i+1] == "G" && class[i+2] == "U") || (class[i+0] == "C" && class[i+1] == "G" && class[i+2] == "C" )|| (class[i+0] == "C" && class[i+1] == "G" && class[i+2] == "A")|| (class[i+0] == "C" && class[i+1] == "G" && class[i+2] == "G" )|| (class[i+0] == "A" && class[i+1] == "G" && class[i+2] == "A" )|| (class[i+0] == "A" && class[i+1] == "G" && class[i+2] == "G")  {
 			bioclass.Symbol = "R"
 			bioclass.Name = "Arginine"
@@ -102,11 +116,13 @@ func (bioclass *AminoClass) Bases(class []string) *AminoClass{
 			bioclass.ChargeType = "Positive"
 			bioclass.Hydrophobic= false
 			bioclass.PK= 12.5
+			proteinsClass = append(proteinsClass, bioclass)
 		}else if (class[i+0] ==   "A" && class[i+1] == "A" && class[i+2] == "U") || (class[i+0] == "A" && class[i+1] == "A" && class[i+2] == "C")  {
 			bioclass.Symbol = "N"
 			bioclass.Name = "Asparagine"
 			bioclass.Polar = true
 			bioclass.Charge = false
+			proteinsClass = append(proteinsClass, bioclass)
 		}else if (class[i+0] ==   "A" && class[i+1] == "A" && class[i+2] == "A") || (class[i+0] == "A" && class[i+1] == "A" && class[i+2] == "G")  {
 			bioclass.Symbol = "K"
 			bioclass.Name = "Lysine"
@@ -115,6 +131,7 @@ func (bioclass *AminoClass) Bases(class []string) *AminoClass{
 			bioclass.Hydrophobic = false
 			bioclass.ChargeType = "Positive"
 			bioclass.PK = 10.5
+			proteinsClass = append(proteinsClass, bioclass)
 		}else if (class[i+0] ==   "G" && class[i+1] == "A" && class[i+2] == "U") || (class[i+0] == "G" && class[i+1] == "A" && class[i+2] == "C")  {
 			bioclass.Symbol = "D"
 			bioclass.Name = "Aspartic Acid"
@@ -123,6 +140,7 @@ func (bioclass *AminoClass) Bases(class []string) *AminoClass{
 			bioclass.Hydrophobic = false
 			bioclass.PK = 3.9
 			bioclass.ChargeType = "Negative"
+			proteinsClass = append(proteinsClass, bioclass)
 		}else if (class[i+0] ==   "G" && class[i+1] == "A" && class[i+2] == "A") || (class[i+0] ==  "G" && class[i+1] == "A" && class[i+2] == "G")  {
 			bioclass.Symbol = "E"
 			bioclass.Name = "Glutamate"
@@ -131,25 +149,29 @@ func (bioclass *AminoClass) Bases(class []string) *AminoClass{
 			bioclass.Hydrophobic = false
 			bioclass.PK = 4.2
 			bioclass.ChargeType = "Negative"
+			proteinsClass = append(proteinsClass, bioclass)
 		}else if (class[i] ==   "G" && class[i] == "G" && class[i] == "U" )|| (class[i+0] == "G" && class[i+1] == "G" && class[i+2] == "C" )|| (class[i+0] == "G" && class[i+1] == "G" && class[i+2] == "A" )|| (class[i+0] == "G" && class[i+1] == "G" && class[i+2] == "G")  {
 			bioclass.Symbol = "G"
 			bioclass.Name = "Glycine"
 			bioclass.Polar = false
 			bioclass.TypeChain = "Aliphatic"
 			bioclass.Hydrophobic = true
+			proteinsClass = append(proteinsClass, bioclass)
 		}else if (class[i+0] ==   "U" && class[i+1] == "G" && class[i+2] == "U" )|| (class[i+0] == "U" && class[i+1] == "G" && class[i+2] == "C")  {
 			bioclass.Symbol = "C"
 			bioclass.Name = "Cysteine"
 			bioclass.Polar = true
 			bioclass.Charge = false
+			proteinsClass = append(proteinsClass, bioclass)
 		}else if class[i+0] ==   "U" && class[i+1] == "G" && class[i+2] == "G" {
 			bioclass.Symbol = "W"
 			bioclass.Name = "Tryptophan"
 			bioclass.Polar = false
 			bioclass.TypeChain = "Aromatic"
 			bioclass.Hydrophobic = true
+			proteinsClass = append(proteinsClass, bioclass)
 		}
 	}
-	return bioclass
+	return proteinsClass
 }
 

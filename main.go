@@ -1400,7 +1400,7 @@ func bioChemRecord(st2 string){
 
 }
 
-func RNAToAminoAcids(s []string) *amino.AminoClass{
+func RNAToAminoAcids(s []string) []*amino.AminoClass{
 
 	 proteins := amino.AminoClass{}
 	bases := []string{}
