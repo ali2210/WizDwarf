@@ -32,7 +32,10 @@ import (
 	"github.com/biogo/biogo/alphabet"
 	"strconv"
 	"math/big"
-	"./structs/biotree"
+	"strings"
+	"github.com/fogleman/ribbon/pdb"
+	 "./structs/amino"
+	// "./structs/biotree"
 )
 
 // Struts
@@ -1285,6 +1288,8 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 
 func SequenceFile(serverFile *os.File, userFile os.FileInfo) {
 
+
+	//own pdb file ... old file is not very friendly..... boooah...
 	seq, err := ReadSequence(userFile.Name());if err != nil {
 		println("Error in read file", err)
 		return
@@ -1297,7 +1302,6 @@ func SequenceFile(serverFile *os.File, userFile os.FileInfo) {
 		if space == ""{
 			fmt.Printf("Gap%v:\t", space)
 		}
-		// fmt.Println("Letter:\t", space)
 		gen = append(gen, space)
 	}
 	fmt.Println("Gen:{", gen , "}")
@@ -1307,9 +1311,44 @@ func SequenceFile(serverFile *os.File, userFile os.FileInfo) {
 	rna35 := RNASequence(gen)
 	fmt.Println("single:", rna35)
 
-	parseTree()
-	
+	 st1 := rna35
+	st2 := strings.Join(st1, "")
 
+	
+	bioChemRecord(st2)	
+	proteins := RNAToAminoAcids(rna35)
+	fmt.Println("Proteins:", proteins)
+
+	pathogen , err := ReadSequence(serverFile.Name()); ;if err != nil {
+		println("Error in read file", err)
+		return
+	}
+
+	var genV []string
+	for _, v := range pathogen {
+		space := DoAscii(v)
+		if space == ""{
+			fmt.Printf("Gap%v:\t", space)
+		}
+		genV = append(genV, space)
+	}
+	fmt.Println("Genes:{", genV , "}")
+
+	// Dna to rna 
+
+	rnaVirus := RNASequence(genV)
+	fmt.Println("single:", rnaVirus)
+
+	 st := rnaVirus
+	st21 := strings.Join(st, "")
+
+	
+	bioChemRecord(st21)	
+	caspidProteins := RNAToAminoAcids(rnaVirus)
+	fmt.Println("Proteins:", caspidProteins)
+
+	
+	
 }
 
 func DoAscii(seq byte) string {
@@ -1337,15 +1376,71 @@ func RNASequence(sq []string) []string{
 	
 }
 
-func parseTree(){
-	tree := biotree.Tree{}
-	ele  := []string{"a", "l", "i"}
+// func parseTree(){
+// 	tree := biotree.Tree{}
+// 	ele  := []string{"a", "l", "i", "m", "a", "r", "r", "i" , "a", "m", "m", "a", "n", "o", "h", "a", "i", "d", "e", "r", "r", "a", "h","m","a","m","a","r","u","k","h"}
 
-	for i , _ := range ele{
-		u, v := tree.AddBranch(ele[i]); if v == nil{
-			fmt.Println("Error:", v)
-		}
-		fmt.Println("Node:", u,	"Tree:", v)	
-	}
+// 	for i , _ := range ele{
+// 		u, v := tree.AddBranch(ele[i]); if v == nil{
+// 			fmt.Println("Error:", v)
+// 		}
+// 		fmt.Println("Node:", u,	"Tree:", &v)	
+// 	}
+
+// }
+
+func bioChemRecord(st2 string){
+	// helx record
+	hlix := *pdb.ParseHelix(st2)
+	fmt.Println("Serial:" , hlix.Serial)
+	fmt.Println("Id:" , hlix.HelixID)
+	fmt.Println("ResName+:" , hlix.InitResName)
+	fmt.Println("ChainId+:" , hlix.InitChainID)
+	fmt.Println("SeqNum+:" , hlix.InitSeqNum)
+	fmt.Println("Icode+:" , hlix.InitICode)
+	fmt.Println("ResName-:" , hlix.EndResName)
+	fmt.Println("ChainId-:" , hlix.EndChainID)
+	fmt.Println("SeqNum-:" , hlix.EndSeqNum)
+	fmt.Println("Icode-:" , hlix.EndICode)
+	fmt.Println("HelixClass:" , hlix.HelixClass)
+	fmt.Println("Length:" , hlix.Length)
+	// parseTree()
+	
+	//strand records
+	stand := *pdb.ParseStrand(st2)
+	fmt.Println("Strand:", stand.Strand)
+	fmt.Println("Num:", stand.NumStrands)
+	fmt.Println("Atom+:", stand.CurAtom)
+
+	//atom records
+	atom := *pdb.ParseAtom(st2)
+	fmt.Println("Serial:", atom.Serial)
+	fmt.Println("AltLocation:", atom.AltLoc)
+	fmt.Println("Name:", atom.Name)
+	fmt.Println("ResName:", atom.ResName)
+	fmt.Println("ChainId:", atom.ChainID)
+	fmt.Println("X:", atom.X)
+	fmt.Println("Y:", atom.Y)
+	fmt.Println("Z:", atom.Z)
+	fmt.Println("temp:", atom.TempFactor)
+	fmt.Println("Occupancy:", atom.Occupancy)
+	fmt.Println("Element:", atom.Element)
+	fmt.Println("Charge:", atom.Charge)
+		
 
 }
+
+func RNAToAminoAcids(s []string) []*amino.AminoClass{
+
+	bases := []string{}
+	for i , _ := range s{
+		bases = append(bases, s[i])
+	}
+
+	proteins := amino.AminoClass{}
+    
+		ls := proteins.Bases(bases)
+
+		return ls
+}
+
