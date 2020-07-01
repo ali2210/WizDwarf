@@ -1317,8 +1317,10 @@ func SequenceFile(serverFile *os.File, userFile os.FileInfo) {
 
 	//readBio := strings.NewReader(st2)
 	bioChemRecord(st2)	
-	a := RNAToAminoAcids(rna35)
-	fmt.Println("List:", a)
+	RNAToAminoAcids(rna35)
+	/*for i , _ := range a{
+		fmt.Println("List:", a[i].Name)
+	}*/
 }
 
 func DoAscii(seq byte) string {
@@ -1400,17 +1402,22 @@ func bioChemRecord(st2 string){
 
 }
 
-func RNAToAminoAcids(s []string) []*amino.AminoClass{
+func RNAToAminoAcids(s []string) {
 
-	 proteins := amino.AminoClass{}
 	bases := []string{}
 	for i , _ := range s{
 		bases = append(bases, s[i])
 	}
+
+	 //size := (len(bases) -4)
+	proteins := amino.AminoClass{}
+    //ls :=  make([]*amino.AminoClass, size)
 	
-	 ls := proteins.Bases(bases)
-	 return ls
-	
-	
+    
+		ls := proteins.Bases(bases)
+
+	   for i , _ := range ls{
+	   	fmt.Println("My Chain:" , ls[i])
+	   }
 }
 
