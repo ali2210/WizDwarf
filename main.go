@@ -271,30 +271,50 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				var name string = "Covid-19"
 				svrFile := FileReadFromDisk(w, name)
 				println("Please Wait", svrFile.Name(), "...")
-				SequenceFile(file, svrFile)
+				genome , capsid, err := SequenceFile(file, svrFile); if err != nil{
+					fmt.Println("Error:", err)
+					return
+				}
+				fmt.Println("Human:", genome, "Virus:", capsid)
 
 			case "2":
 				var name string = "FlaviDengue"
 				svrFile := FileReadFromDisk(w, name)
-				SequenceFile(file, svrFile)
+				genome , capsid, err := SequenceFile(file, svrFile); if err != nil{
+					fmt.Println("Error:", err)
+					return
+				}
+				fmt.Println("Human:", genome, "Virus:", capsid)
 
 			case "3":
 				var name string = "KenyaEbola"
 				svrFile := FileReadFromDisk(w, name)
 				println("Please Wait", svrFile.Name(), "...")
-				SequenceFile(file, svrFile)
+				genome , capsid, err := SequenceFile(file, svrFile); if err != nil{
+					fmt.Println("Error:", err)
+					return
+				}
+				fmt.Println("Human:", genome, "Virus:", capsid)
 
 			case "4":
 				var name string = "ZikaVirusBrazil"
 				svrFile := FileReadFromDisk(w, name)
 				println("Please Wait", svrFile.Name(), "...")
-				SequenceFile(file, svrFile)
+				genome , capsid, err := SequenceFile(file, svrFile); if err != nil{
+					fmt.Println("Error:", err)
+					return
+				}
+				fmt.Println("Human:", genome, "Virus:", capsid)
 
 			case "5":
 				var name string = "MersSaudiaArabia"
 				svrFile := FileReadFromDisk(w, name)
 				println("Please Wait", svrFile.Name(), "...")
-				SequenceFile(file, svrFile)
+				genome , capsid, err  := SequenceFile(file, svrFile); if err != nil{
+					fmt.Println("Error:", err)
+					return
+				}
+				fmt.Println("Human:", genome, "Virus:", capsid)
 
 			default:
 				temFile := template.Must(template.ParseFiles("dashboard.html"))
@@ -1286,13 +1306,13 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 	return nil
 }
 
-func SequenceFile(serverFile *os.File, userFile os.FileInfo) {
+func SequenceFile(serverFile *os.File, userFile os.FileInfo) ([]*amino.AminoClass, []*amino.AminoClass, error){
 
 
 	//own pdb file ... old file is not very friendly..... boooah...
 	seq, err := ReadSequence(userFile.Name());if err != nil {
 		println("Error in read file", err)
-		return
+		return nil, nil, err
 	}
 
 
@@ -1311,17 +1331,17 @@ func SequenceFile(serverFile *os.File, userFile os.FileInfo) {
 	rna35 := RNASequence(gen)
 	fmt.Println("single:", rna35)
 
-	 st1 := rna35
+	st1 := rna35
 	st2 := strings.Join(st1, "")
 
 	
-	bioChemRecord(st2)	
+	helixOrgan := bioChemRecord(st2)
+	fmt.Println("Helix Organsim:", helixOrgan)	
 	proteins := RNAToAminoAcids(rna35)
-	fmt.Println("Proteins:", proteins)
 
 	pathogen , err := ReadSequence(serverFile.Name()); ;if err != nil {
 		println("Error in read file", err)
-		return
+		return nil, nil, err
 	}
 
 	var genV []string
@@ -1343,11 +1363,12 @@ func SequenceFile(serverFile *os.File, userFile os.FileInfo) {
 	st21 := strings.Join(st, "")
 
 	
-	bioChemRecord(st21)	
+	helixVirus := bioChemRecord(st21)	
+	fmt.Println("helix Virus:", helixVirus)
 	caspidProteins := RNAToAminoAcids(rnaVirus)
-	fmt.Println("Proteins:", caspidProteins)
 
-	
+	// DB ....
+	return proteins, caspidProteins	, nil
 	
 }
 
@@ -1376,20 +1397,11 @@ func RNASequence(sq []string) []string{
 	
 }
 
-// func parseTree(){
-// 	tree := biotree.Tree{}
-// 	ele  := []string{"a", "l", "i", "m", "a", "r", "r", "i" , "a", "m", "m", "a", "n", "o", "h", "a", "i", "d", "e", "r", "r", "a", "h","m","a","m","a","r","u","k","h"}
 
-// 	for i , _ := range ele{
-// 		u, v := tree.AddBranch(ele[i]); if v == nil{
-// 			fmt.Println("Error:", v)
-// 		}
-// 		fmt.Println("Node:", u,	"Tree:", &v)	
-// 	}
 
-// }
+func bioChemRecord(st2 string) structs.MolecularBio{
 
-func bioChemRecord(st2 string){
+	molecule := structs.MolecularBio{}
 	// helx record
 	hlix := *pdb.ParseHelix(st2)
 	fmt.Println("Serial:" , hlix.Serial)
@@ -1411,23 +1423,12 @@ func bioChemRecord(st2 string){
 	fmt.Println("Strand:", stand.Strand)
 	fmt.Println("Num:", stand.NumStrands)
 	fmt.Println("Atom+:", stand.CurAtom)
+	
 
-	//atom records
-	atom := *pdb.ParseAtom(st2)
-	fmt.Println("Serial:", atom.Serial)
-	fmt.Println("AltLocation:", atom.AltLoc)
-	fmt.Println("Name:", atom.Name)
-	fmt.Println("ResName:", atom.ResName)
-	fmt.Println("ChainId:", atom.ChainID)
-	fmt.Println("X:", atom.X)
-	fmt.Println("Y:", atom.Y)
-	fmt.Println("Z:", atom.Z)
-	fmt.Println("temp:", atom.TempFactor)
-	fmt.Println("Occupancy:", atom.Occupancy)
-	fmt.Println("Element:", atom.Element)
-	fmt.Println("Charge:", atom.Charge)
-		
+	molecule.HelixA = hlix	
+	molecule.StrandB = stand
 
+	return molecule
 }
 
 func RNAToAminoAcids(s []string) []*amino.AminoClass{
