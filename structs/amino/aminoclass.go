@@ -23,12 +23,12 @@ func (bioclass *AminoClass) Bases(class []string)[]*AminoClass{
 
 
 	size := (len(class)- 4) 
-	peplideChain := make([]*AminoClass, size)
+	peptideBond := make([]*AminoClass, size)
 
 	for i := 0; i < (len(class) - 4); i++{
-		fmt.Println("input_i:", class[i+0])
-		fmt.Println("input_j:", class[i+1])
-		fmt.Println("input_k:", class[i+2])
+		// fmt.Println("input_i:", class[i+0])
+		// fmt.Println("input_j:", class[i+1])
+		// fmt.Println("input_k:", class[i+2])
 		  if (class[i+0] == "U"  && class[i+1] == "U" &&  class[i+2] == "U")|| (class[i+0] == "U" && class[i+1] == "U" && class[i+2] == "C"){
 			bioclass.Symbol = "F"
 			bioclass.Name = "Phenylalanine"
@@ -36,7 +36,7 @@ func (bioclass *AminoClass) Bases(class []string)[]*AminoClass{
 			bioclass.TypeChain = "Aromatic"
 			bioclass.Hydrophobic = true
 			fmt.Println("class:", bioclass)
-			peplideChain = append(peplideChain, bioclass)
+			peptideBond = append(peptideBond, bioclass)
 			
 		}else if (class[i+0] == "U" && class[i+1] == "U" && class[i+2] == "A")|| (class[i+0] == "U" && class[i+1] =="U" && class[i+2] =="G")|| (class[i+0] == "C" && class[i+1] =="U" && class[i+2] == "U") || (class[i+0] ==  "C" && class[i+1] =="U" && class[i+2] == "C")|| (class[i+0] ==  "C" &&  class[i+1] =="U"  && class[i+2] =="A") || (class[i+0] ==  "C" && class[i+1] =="U" && class[i+2] =="G") {
 			bioclass.Symbol = "L"
@@ -45,7 +45,7 @@ func (bioclass *AminoClass) Bases(class []string)[]*AminoClass{
 			bioclass.TypeChain = "Aliphatic"
 			bioclass.Hydrophobic = true
 			fmt.Println("class:",bioclass)
-			peplideChain = append(peplideChain, bioclass)
+			peptideBond = append(peptideBond, bioclass)
 			
 		}else if (class[i+0] ==  "U" && class[i+1] =="C" && class[i+2] =="U")|| (class[i+0] ==  "U" &&  class[i+1] =="C" && class[i+2] =="C")|| (class[i+0] ==  "U" && class[i+1] == "C" && class[i+2] == "A")|| (class[i+0] ==  "U" &&  class[i+1] == "C" && class[i+2] ==  "G")|| (class[i+0] ==  "A" && class[i+1] == "G" && class[i+2] == "U")|| (class[i+0] == "A" &&  class[i+1] == "G" && class[i+2] == "C") {
 			bioclass.Symbol = "S"
@@ -54,7 +54,7 @@ func (bioclass *AminoClass) Bases(class []string)[]*AminoClass{
 			bioclass.Charge = false
 			bioclass.Hydrophobic = false
 			fmt.Println("class:",bioclass)
-			peplideChain = append(peplideChain, bioclass)
+			peptideBond = append(peptideBond, bioclass)
 			
 			
 		}else if (class[i+0] ==  "C" && class[i+1] == "C" && class[i+2] == "U")|| (class[i+0] ==  "C" && class[i+1] == "C" && class[i+2] == "C")|| (class[i+0] ==  "C" && class[i+1] == "C" && class[i+2] == "A")|| (class[i+0] == "C" && class[i+1] == "C" && class[i+2] == "G" ){
@@ -64,7 +64,7 @@ func (bioclass *AminoClass) Bases(class []string)[]*AminoClass{
 			bioclass.TypeChain = "Aliphatic"
 			bioclass.Hydrophobic = true
 			fmt.Println("class:",bioclass)
-			peplideChain = append(peplideChain, bioclass)
+			peptideBond = append(peptideBond, bioclass)
 			
 			
 		}else if (class[i+0] ==  "A" && class[i+1] == "A" && class[i+2] == "U")|| (class[i+0] ==  "A" && class[i+1] == "U" && class[i+2] == "C")|| (class[i+0] == "A" && class[i+1] == "U" && class[i+2] == "A" ) {
@@ -74,7 +74,7 @@ func (bioclass *AminoClass) Bases(class []string)[]*AminoClass{
 			bioclass.TypeChain = "Aliphatic"
 			bioclass.Hydrophobic = true
 			fmt.Println("class:",bioclass)
-			peplideChain = append(peplideChain, bioclass)
+			peptideBond = append(peptideBond, bioclass)
 			
 			
 		}else if class[i+0] ==  "A" && class[i+1] == "U" && class[i+2] == "G"  {
@@ -84,7 +84,7 @@ func (bioclass *AminoClass) Bases(class []string)[]*AminoClass{
 			bioclass.Charge = false
 			bioclass.codon_Start = true
 			fmt.Println("class:",bioclass)
-			peplideChain = append(peplideChain, bioclass)
+			peptideBond = append(peptideBond, bioclass)
 			
 			
 		}else if (class[i+0] ==  "A" && class[i+1] == "C" && class[i+2] == "U")|| (class[i+0] ==  "A" && class[i+1] == "C" && class[i+2] == "C")|| (class[i+0] == "A" && class[i+1] == "C" && class[i+2] == "A" )|| (class[i+0] == "A" && class[i+1] == "C" && class[i+2] == "G") {
@@ -93,7 +93,7 @@ func (bioclass *AminoClass) Bases(class []string)[]*AminoClass{
 			bioclass.Polar = true
 			bioclass.Charge = false
 			fmt.Println("class:",bioclass)
-			peplideChain = append(peplideChain, bioclass)
+			peptideBond = append(peptideBond, bioclass)
 			
 			
 		}else if (class[i+0] ==  "G" && class[i+1] == "U" && class[i+2] == "U") || (class[i+0] == "G" && class[i+1] == "U" && class[i+2] == "C" )|| (class[i+0] == "G" && class[i+1] == "U" && class[i+2] == "A" )|| (class[i+0] == "G" && class[i+1] == "U" && class[i+2] == "G" ){
@@ -103,7 +103,7 @@ func (bioclass *AminoClass) Bases(class []string)[]*AminoClass{
 			bioclass.TypeChain = "Aliphatic"
 			bioclass.Hydrophobic = true
 			fmt.Println("class:",bioclass)
-			peplideChain = append(peplideChain, bioclass)
+			peptideBond = append(peptideBond, bioclass)
 			
 			
 		}else if (class[i+0] ==   "G" && class[i+1] == "C" && class[i+2] == "U")|| (class[i+0] == "G" && class[i+1] == "C" && class[i+2] == "C")|| (class[i+0] == "G" && class[i+1] == "C" && class[i+2] == "A" )|| (class[i+0] == "G" && class[i+1] == "C" && class[i+2] == "G") {
@@ -112,7 +112,7 @@ func (bioclass *AminoClass) Bases(class []string)[]*AminoClass{
 			bioclass.TypeChain = "Aliphatic"
 			bioclass.Hydrophobic = true
 			fmt.Println("class:",bioclass)
-			peplideChain = append(peplideChain, bioclass)
+			peptideBond = append(peptideBond, bioclass)
 			
 			
 		}else if (class[i+0] ==   "U" && class[i+1] == "A" && class[i+2] == "U" )||  (class[i+0] == "U" && class[i+1] == "A" && class[i+2] == "C")  {
@@ -121,14 +121,14 @@ func (bioclass *AminoClass) Bases(class []string)[]*AminoClass{
 			bioclass.Polar = true
 			bioclass.TypeChain = "Aromatic"
 			fmt.Println("class:",bioclass)
-			peplideChain = append(peplideChain, bioclass)
+			peptideBond = append(peptideBond, bioclass)
 			
 			
 		}else if (class[i+0] ==   "U" && class[i+1] == "A" && class[i+2] == "A") || (class[i+0] ==  "U" && class[i+1] == "A" && class[i+2] == "G")|| (class[i+0] == "U" && class[i+1] == "G" && class[i+2] == "A")  {
 			bioclass.Symbol = "X"
 			bioclass.codon_End = true
 			fmt.Println("class:",bioclass)
-			peplideChain = append(peplideChain, bioclass)
+			peptideBond = append(peptideBond, bioclass)
 			
 
 		}else if (class[i+0] ==   "C" && class[i+1] == "A" && class[i+2] == "U") || (class[i+0] == "C" && class[i+1] == "A" && class[i+2] == "C")  {
@@ -140,7 +140,7 @@ func (bioclass *AminoClass) Bases(class []string)[]*AminoClass{
 			bioclass.TypeChain = "Aromatic"
 			bioclass.Hydrophobic = false
 			fmt.Println("class:",bioclass)
-			peplideChain = append(peplideChain, bioclass)
+			peptideBond = append(peptideBond, bioclass)
 			
 			
 		}else if (class[i+0] ==   "C" && class[i+1] == "A" && class[i+2] == "A") || (class[i+0] ==  "C" && class[i+1] == "A" && class[i+2] == "G")  {
@@ -149,7 +149,7 @@ func (bioclass *AminoClass) Bases(class []string)[]*AminoClass{
 			bioclass.Polar = true
 			bioclass.Charge = false
 			fmt.Println("class:",bioclass)
-			peplideChain = append(peplideChain, bioclass)
+			peptideBond = append(peptideBond, bioclass)
 			
 			
 		}else if (class[i+0] ==   "C" && class[i+1] == "G" && class[i+2] == "U") || (class[i+0] == "C" && class[i+1] == "G" && class[i+2] == "C" )|| (class[i+0] == "C" && class[i+1] == "G" && class[i+2] == "A")|| (class[i+0] == "C" && class[i+1] == "G" && class[i+2] == "G" )|| (class[i+0] == "A" && class[i+1] == "G" && class[i+2] == "A" )|| (class[i+0] == "A" && class[i+1] == "G" && class[i+2] == "G")  {
@@ -161,7 +161,7 @@ func (bioclass *AminoClass) Bases(class []string)[]*AminoClass{
 			bioclass.Hydrophobic= false
 			bioclass.PK= 12.5
 			fmt.Println("class:",bioclass)
-			peplideChain = append(peplideChain, bioclass)
+			peptideBond = append(peptideBond, bioclass)
 			
 			
 		}else if (class[i+0] ==   "A" && class[i+1] == "A" && class[i+2] == "U") || (class[i+0] == "A" && class[i+1] == "A" && class[i+2] == "C")  {
@@ -170,7 +170,7 @@ func (bioclass *AminoClass) Bases(class []string)[]*AminoClass{
 			bioclass.Polar = true
 			bioclass.Charge = false
 			fmt.Println("class:",bioclass)
-			peplideChain = append(peplideChain, bioclass)
+			peptideBond = append(peptideBond, bioclass)
 			
 		}else if (class[i+0] ==   "A" && class[i+1] == "A" && class[i+2] == "A") || (class[i+0] == "A" && class[i+1] == "A" && class[i+2] == "G")  {
 			bioclass.Symbol = "K"
@@ -181,7 +181,7 @@ func (bioclass *AminoClass) Bases(class []string)[]*AminoClass{
 			bioclass.ChargeType = "Positive"
 			bioclass.PK = 10.5
 			fmt.Println("class:",bioclass)
-			peplideChain = append(peplideChain, bioclass)
+			peptideBond = append(peptideBond, bioclass)
 			
 		}else if (class[i+0] ==   "G" && class[i+1] == "A" && class[i+2] == "U") || (class[i+0] == "G" && class[i+1] == "A" && class[i+2] == "C")  {
 			bioclass.Symbol = "D"
@@ -192,7 +192,7 @@ func (bioclass *AminoClass) Bases(class []string)[]*AminoClass{
 			bioclass.PK = 3.9
 			bioclass.ChargeType = "Negative"
 			fmt.Println("class:",bioclass)
-			peplideChain = append(peplideChain, bioclass)
+			peptideBond = append(peptideBond, bioclass)
 			
 		}else if (class[i+0] ==   "G" && class[i+1] == "A" && class[i+2] == "A") || (class[i+0] ==  "G" && class[i+1] == "A" && class[i+2] == "G")  {
 			bioclass.Symbol = "E"
@@ -203,7 +203,7 @@ func (bioclass *AminoClass) Bases(class []string)[]*AminoClass{
 			bioclass.PK = 4.2
 			bioclass.ChargeType = "Negative"
 			fmt.Println("class:",bioclass)
-			peplideChain = append(peplideChain, bioclass)
+			peptideBond = append(peptideBond, bioclass)
 			
 			
 		}else if (class[i] ==   "G" && class[i] == "G" && class[i] == "U" )|| (class[i+0] == "G" && class[i+1] == "G" && class[i+2] == "C" )|| (class[i+0] == "G" && class[i+1] == "G" && class[i+2] == "A" )|| (class[i+0] == "G" && class[i+1] == "G" && class[i+2] == "G")  {
@@ -213,7 +213,7 @@ func (bioclass *AminoClass) Bases(class []string)[]*AminoClass{
 			bioclass.TypeChain = "Aliphatic"
 			bioclass.Hydrophobic = true
 			fmt.Println("class:",bioclass)
-			peplideChain = append(peplideChain, bioclass)
+			peptideBond = append(peptideBond, bioclass)
 			
 		}else if (class[i+0] ==   "U" && class[i+1] == "G" && class[i+2] == "U" )|| (class[i+0] == "U" && class[i+1] == "G" && class[i+2] == "C")  {
 			bioclass.Symbol = "C"
@@ -221,7 +221,7 @@ func (bioclass *AminoClass) Bases(class []string)[]*AminoClass{
 			bioclass.Polar = true
 			bioclass.Charge = false
 			fmt.Println("class:",bioclass)
-			peplideChain = append(peplideChain, bioclass)
+			peptideBond = append(peptideBond, bioclass)
 			
 			
 		}else if class[i+0] ==   "U" && class[i+1] == "G" && class[i+2] == "G" {
@@ -231,11 +231,11 @@ func (bioclass *AminoClass) Bases(class []string)[]*AminoClass{
 			bioclass.TypeChain = "Aromatic"
 			bioclass.Hydrophobic = true
 			fmt.Println("class:",bioclass)
-			peplideChain = append(peplideChain, bioclass)
+			peptideBond = append(peptideBond, bioclass)
 		}	
    	}
    	
-	return peplideChain
+	return peptideBond
 
 }
 
