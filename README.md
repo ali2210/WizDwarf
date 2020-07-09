@@ -11,16 +11,16 @@ Language [GO(1.14/Linux)]
      ###   .Design
              .Bootstrap CDN [85%]
      ###   .Firestore DB
-             .Add(70%)
-             .Get(70%)
+             .Add(100%)
+             .Get(100%)
      ###   .Security
-             .Authorization [Strong](50%)
-             .Checks(30%)
+             .Authorization [Strong](70%)
+             .Checks(7UPD0%)
      ###   .Automation
               .github[Action(100%)]
      ###   .Docker(0%)
      ###   .Documentation(0%)
-     ###   .Payement Method(20%)
-     ###   .Algorithms(40%)
+     ###   .Payement Method(100%)
+     ###   .Algorithms(50%)
      ###   .Notification(0%)
  
