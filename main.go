@@ -35,7 +35,7 @@ import (
 	"strings"
 	"github.com/fogleman/ribbon/pdb"
 	 "./structs/amino"
-	// "./structs/biotree"
+	
 )
 
 // Struts
@@ -79,6 +79,7 @@ var (
 	ETHAddressInstance string = ""
 	WalletPubKey string = ""
 	WalletSecureKey string  = ""
+	LifeCode []amino.AminoClass
 )
 
 
@@ -91,6 +92,8 @@ const (
 	EtherMainClientUrl  string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
 	// Rickeby for test purpose
 	RinkebyClientUrl  	string = "https://rinkeby.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"	
+	
+
 )
 
 // Functions
@@ -112,6 +115,7 @@ func main() {
 	routing.HandleFunc("/{title}/transact", Transacts)
 	routing.HandleFunc("/{title}/transact/send", Send)
 	routing.HandleFunc("/{title}/transact/treasure", Treasure)
+	routing.HandleFunc("/{title}/visualize", Visualize)
 
 
 		// Static Files
@@ -140,6 +144,16 @@ func Home(w http.ResponseWriter, r *http.Request){
 		temp.Execute(w, "Home")
 	}
 
+}
+
+
+func Visualize(w http.ResponseWriter, r *http.Request){
+	temp := template.Must(template.ParseFiles("visualize.html"))
+	if r.Method == "GET" {
+		fmt.Println("Url:", r.URL.Path)
+		fmt.Println("Method:" + r.Method)
+		temp.Execute(w,LifeCode)
+	}
 }
 
 
@@ -271,51 +285,53 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				var name string = "Covid-19"
 				svrFile := FileReadFromDisk(w, name)
 				println("Please Wait", svrFile.Name(), "...")
-				genome , capsid, err := SequenceFile(file, svrFile); if err != nil{
+				genome , _, err := SequenceFile(file, svrFile); if err != nil{
 					fmt.Println("Error:", err)
 					return
 				}
-				fmt.Println("Human:", genome, "Virus:", capsid)
-
+				LifeCode = genome 
+				// fmt.Println("Virus:", capsid)
+				
 			case "2":
 				var name string = "FlaviDengue"
 				svrFile := FileReadFromDisk(w, name)
-				genome , capsid, err := SequenceFile(file, svrFile); if err != nil{
+				genome , _, err := SequenceFile(file, svrFile); if err != nil{
 					fmt.Println("Error:", err)
 					return
 				}
-				fmt.Println("Human:", genome, "Virus:", capsid)
-
+				LifeCode = genome 
+				// fmt.Println("Virus:", capsid)
 			case "3":
 				var name string = "KenyaEbola"
 				svrFile := FileReadFromDisk(w, name)
 				println("Please Wait", svrFile.Name(), "...")
-				genome , capsid, err := SequenceFile(file, svrFile); if err != nil{
+				genome , _, err := SequenceFile(file, svrFile); if err != nil{
 					fmt.Println("Error:", err)
 					return
 				}
-				fmt.Println("Human:", genome, "Virus:", capsid)
-
+				LifeCode = genome 
+				// fmt.Println("Virus:", capsid)
 			case "4":
 				var name string = "ZikaVirusBrazil"
 				svrFile := FileReadFromDisk(w, name)
 				println("Please Wait", svrFile.Name(), "...")
-				genome , capsid, err := SequenceFile(file, svrFile); if err != nil{
+				genome ,_, err := SequenceFile(file, svrFile); if err != nil{
 					fmt.Println("Error:", err)
 					return
 				}
-				fmt.Println("Human:", genome, "Virus:", capsid)
-
+				LifeCode = genome 
+				// fmt.Println("Virus:", capsid)				
 			case "5":
 				var name string = "MersSaudiaArabia"
 				svrFile := FileReadFromDisk(w, name)
 				println("Please Wait", svrFile.Name(), "...")
-				genome , capsid, err  := SequenceFile(file, svrFile); if err != nil{
+				genome , _, err  := SequenceFile(file, svrFile); if err != nil{
 					fmt.Println("Error:", err)
 					return
 				}
-				fmt.Println("Human:", genome, "Virus:", capsid)
-
+				LifeCode = genome 
+				// fmt.Println("Virus:", capsid)
+				
 			default:
 				temFile := template.Must(template.ParseFiles("dashboard.html"))
 				temFile.Execute(w, "Dashboard")
@@ -1059,6 +1075,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 }
 
 
+
 // Functions
 
 func SetFirestoreCredentials() *firebase.App {
@@ -1306,7 +1323,7 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 	return nil
 }
 
-func SequenceFile(serverFile *os.File, userFile os.FileInfo) ([]*amino.AminoClass, []*amino.AminoClass, error){
+func SequenceFile(serverFile *os.File, userFile os.FileInfo) ([]amino.AminoClass, []amino.AminoClass, error){
 
 
 	//own pdb file ... old file is not very friendly..... boooah...
@@ -1431,7 +1448,7 @@ func bioChemRecord(st2 string) structs.MolecularBio{
 	return molecule
 }
 
-func RNAToAminoAcids(s []string) []*amino.AminoClass{
+func RNAToAminoAcids(s []string) []amino.AminoClass{
 
 	bases := []string{}
 	for i , _ := range s{
@@ -1444,4 +1461,3 @@ func RNAToAminoAcids(s []string) []*amino.AminoClass{
 
 		return ls
 }
-
