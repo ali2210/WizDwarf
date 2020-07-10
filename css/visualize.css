@@ -1,0 +1,25 @@
+.canvas-graphcs{
+	width: 100%;   
+	height: 100%;     
+}
+
+
+.color-box{
+	column-gap: 20px;
+	column-width: 50px;
+}
+  
+.style-amino{
+	border-style: solid;
+	color : #FFFFFF;
+	width: 100%;
+	height: 100;
+	border-radius: 20%;
+	margin-left: 20px;
+}
+.red{
+	background: #FF0000;
+}
+  .text-color{
+	margin-left: 20px;
+}

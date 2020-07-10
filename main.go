@@ -153,6 +153,7 @@ func Visualize(w http.ResponseWriter, r *http.Request){
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
 		temp.Execute(w,LifeCode)
+		
 	}
 }
 
@@ -290,6 +291,9 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 				LifeCode = genome 
+				w.WriteHeader(http.StatusOK)
+	    		r.Method = "GET"
+	    		Visualize(w,r)
 				// fmt.Println("Virus:", capsid)
 				
 			case "2":
