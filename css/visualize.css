@@ -4,22 +4,168 @@
 }
 
 
-.color-box{
-	column-gap: 20px;
-	column-width: 50px;
+.color-box-1, .color-box-2{
+	column-gap: 10px;
+	column-width: 100px;
+	margin-left: 20px;
 }
   
-.style-amino{
-	border-style: solid;
-	color : #FFFFFF;
-	width: 100%;
-	height: 100;
-	border-radius: 20%;
-	margin-left: 20px;
+.amino-red{
+	background-color: #FF0000;
+	border : 10px solid red;
+	border-radius: 30%;
+	text-align: center;
+	color: #FFFFFF;
 }
-.red{
-	background: #FF0000;
+
+.amino-green{
+	background-color: #008000;
+	border : 10px solid green;
+	border-radius: 30%;
+	text-align: center;
+	color: #FFFFFF;
 }
-  .text-color{
-	margin-left: 20px;
+
+.amino-blue{
+	background-color: #0000FF;
+	border : 10px solid blue;
+	text-align: center;
+	border-radius: 30%;
+	color: #FFFFFF;
+}
+
+.amino-aqua{
+	background-color: #00FFFF;
+	border : 10px solid aqua;
+	border-radius: 30%;
+	color: #FFFFFF;
+	text-align: center;
+}
+
+  
+.amino-purple{
+	background-color: #800080;
+	border : 10px solid purple;
+	border-radius: 30%;
+	text-align: center;
+	color: #FFFFFF;
+}
+
+.amino-teal{
+	background-color: #008080;
+	border : 10px solid teal;
+	border-radius: 30%;
+	text-align: center;
+	color: #FFFFFF;
+}
+
+.amino-fuchsia{
+	background-color: #FF00FF;
+	border : 10px solid fuchsia;
+	text-align: center;
+	border-radius: 30%;
+	color: #FFFFFF;
+}
+
+.amino-lime{
+	background-color: #00FF00;
+	border : 10px solid lime;
+	border-radius: 30%;
+	color: #FFFFFF;
+	text-align: center;
+}
+
+.amino-sarcoline{
+	background-color: #FFDDAA;
+	border : 10px solid #FFDDAA;
+	border-radius: 30%;
+	text-align: center;
+	color: #FFFFFF;
+}
+
+.amino-indiared{
+	background-color: #CD5C5C;
+	border : 10px solid #CD5C5C;
+	border-radius: 30%;
+	text-align: center;
+	color: #FFFFFF;
+}
+
+.amino-coquelicot{
+	background-color: #FF3800;
+	border : 10px solid #FF3800;
+	text-align: center;
+	border-radius: 30%;
+	color: #FFFFFF;
+}
+
+.amino-smaragdin{
+	background-color: #4A9976;
+	border : 10px solid #4A9976;
+	border-radius: 30%;
+	color: #FFFFFF;
+	text-align: center;
+}
+
+.amino-mikado{
+	background-color: #FFC40C;
+	border : 10px solid #FFC40C;
+	border-radius: 30%;
+	text-align: center;
+	color: #FFFFFF;
+}
+
+.amino-glaucous{
+	background-color: #6082B6;
+	border : 10px solid #6082B6;
+	border-radius: 30%;
+	text-align: center;
+	color: #FFFFFF;
+}
+
+.amino-wenge{
+	background-color: #645452;
+	border : 10px solid #645452;
+	text-align: center;
+	border-radius: 30%;
+	color: #FFFFFF;
+}
+
+.amino-fulvous{
+	background-color: #E48400;
+	border : 10px solid #E48400;
+	border-radius: 30%;
+	color: #FFFFFF;
+	text-align: center;
+}
+.amino-xanadu{
+	background-color: #738678;
+	border : 10px solid #738678;
+	border-radius: 30%;
+	text-align: center;
+	color: #FFFFFF;
+}
+
+.amino-falu{
+	background-color: #7F1917;
+	border : 10px solid #7F1917;
+	border-radius: 30%;
+	text-align: center;
+	color: #FFFFFF;
+}
+
+.amino-eburnean{
+	background-color: #FBE6C4;
+	border : 10px solid #FBE6C4;
+	text-align: center;
+	border-radius: 30%;
+	color: #FFFFFF;
+}
+
+.amino-amaranth{
+	background-color: #E52B50;
+	border : 10px solid #E52B50;
+	border-radius: 30%;
+	color: #FFFFFF;
+	text-align: center;
 }
