@@ -24,21 +24,7 @@
       </div>
     </div>
 
-    <!-- <div class="horzontialList">
-    {{range .}}
-        {{if ne .Symbol " "}}
-            <span>{{.Symbol}}</span>
-          {{end}}
-    {{end}}
-    <table>
-      <tr>
-        {{range $element := .}}
-          <h5>ele : {{$element}}</h5>
-        {{end}}
-      </tr>
-    </table>
-   </div> -->
-      <div class="color-box-1">
+<!--       <div class="color-box-1">
         <div class="amino-red">
            <span>R</span>
         </div>
@@ -101,15 +87,24 @@
         <div class="amino-falu">
          <span>F</span>
         </div>
-    </div>
+    </div> -->
 
     <div class="container-canvas">
-      <canvas id="vizPoint" class="canvas-graphcs" resize></canvas>
+      <div class="horzontialList" id="List">
+        {{range .}}
+        <!-- <table> -->
+        {{if ne .Name " "}} 
+             <span>{{.Name}}</span>
+         {{end}}
+       <!-- </table> -->
+        {{end}}
+      </div> 
+      <!-- <canvas id="vizPoint" class="canvas-graphcs" resize></canvas> -->
     </div>
-    <script type="text/javascript" src="/js/paperjs-v0.12.11/dist/paper-core.js"></script>
+   <!--  <script type="text/javascript" src="/js/paperjs-v0.12.11/dist/paper-core.js"></script>
     <script type="text/javascript" src="/js/paperjs-v0.12.11/dist/paper-core.min.js"></script>
     <script type="text/javascript" src="/js/paperjs-v0.12.11/dist/paper-full.js"></script>
     <script type="text/javascript" src="/js/paperjs-v0.12.11/dist/paper-full.min.js"></script>
-    <script type="text/paperscript" canvas="vizPoint" src="/js/visual.js"></script>
+    <script type="text/paperscript" src="/js/visual.js" canvas="vizPoint"></script> -->
 </body>
 </html>
