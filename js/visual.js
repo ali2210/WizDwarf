@@ -1,5 +1,10 @@
 
 
+// var symbol = document.getElementById("List");
+
+// console.log("List:", symbol);
+// var spans = symbol.getElementsByTagName("span");
+// 	console.log("SPan:", spans[0].innerHTML);
 
 var circlesNum = 100;
 var circlesArr = [];
@@ -8,7 +13,7 @@ for (var i = 0; i < circlesNum; i++) {
 		var circlePath = new Path.Circle({
 			fillColor : 'red',
 			center : [i * circlesNum , circlesNum],
-			radius : 50
+			radius : 10
 	});
 
 	circlesArr.push(circlePath);
