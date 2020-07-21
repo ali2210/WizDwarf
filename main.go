@@ -74,7 +74,8 @@ var (
 	appName  *firebase.App  = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
 	cloud   db.DBFirestore = db.NewCloudInstance()
 	ledger  db.PublicLedger = db.NewCollectionInstance()
-	userSessions *sessions.CookieStore = nil
+	userSessions *sessions.CookieStore = nil //user level
+	cryptoSessions *sessions.CookieStore = nil // crypto level
 	clientInstance *ethclient.Client = nil
 	ETHAddressInstance string = ""
 	WalletPubKey string = ""
@@ -598,7 +599,7 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 
 		signWallet , err := json.Marshal(myWallet); if err != nil{
 				fmt.Println("Error:", err)
-				Repon := Response{true,"Sorry! JSON Marshal Stream ", "WizDawrf/dashboard"}
+				Repon := Response{true,"Sorry! JSON Marshal Stream ", "WizDawrf/createWallet"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
@@ -606,7 +607,7 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 
 		err = json.Unmarshal(signWallet, &myWallet); if err != nil{
 				fmt.Println("Error:", err)
-				Repon := Response{true,"Sorry! JSON Unmarshal Stream", "WizDawrf/dashboard"}
+				Repon := Response{true,"Sorry! JSON Unmarshal Stream", "WizDawrf/createWallet"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
@@ -614,7 +615,7 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 
 		//dataabse -- FindAddress 
 		ok , ethAdd := FindAddress(&acc); if ok && ethAdd != nil {
-				Repon := Response{true,"Sorry! Data Already register ", "WizDawrf/dashboard"}
+				Repon := Response{true,"Sorry! Data Already register ", "WizDawrf/open"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
@@ -631,7 +632,7 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 
 		merchant , err := ledger.CreatePublicAddress(&myWallet, appName); if err != nil{
 				fmt.Println("Error:", err)
-				Repon := Response{true,"Sorry! Invalid Ethereum Account ", "WizDawrf/dashboard"}
+				Repon := Response{true,"Sorry! Invalid Ethereum Account ", "WizDawrf/open"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
@@ -742,13 +743,21 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 		//dataabse -- FindAddress 
 			secureWallet, ok := FindEthWallet(&acc); if !ok && secureWallet != nil {
 				fmt.Println("Error", err)
-				Repon := Response{true,"Sorry! No Account Exist ", "WizDawrf/open"}
+				Repon := Response{true,"Sorry! No Account Exist ", "WizDawrf/createWallet"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
 			}
 			fmt.Println("MyEthAddress Details:", secureWallet)
+			cryptoSessions = blockSession(LifeCode[0].Id)
+			fmt.Println("Session:", cryptoSessions)
 
+			err := Authentication(w, r); if err != nil {
+					Repon := Response{true,"Sorry! No Account Exist ", "WizDawrf/createWallet"}
+					println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+					temp.Execute(w, Repon)
+					return 
+			}
 
 			w.WriteHeader(http.StatusOK)
 	  	   	r.Method = "GET"
@@ -915,7 +924,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 			return
 		 		}
 		 		println("Id :", sessId, "user:", userSessions)
-		 }else{
+		 }/*else{
 		 	sessId , _ := userSessions.Get(r, "session-name")
 		 	sessId.Values["authenticated"] = true
 		 	err = sessId.Save(r,w); if err != nil{
@@ -927,7 +936,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 		return
 		 	}
 		 	println("Id :", sessId)
-		 }
+		 }*/
 		
 		
 		 // Login page 
@@ -1465,3 +1474,20 @@ func RNAToAminoAcids(s []string) []amino.AminoClass{
 
 		return ls
 }
+
+func blockSession(id int) *sessions.CookieStore{
+
+	return sessions.NewCookieStore([]byte(strconv.Itoa(id)))
+}
+
+
+func Authentication(w http.ResponseWriter, r * http.Request) error{
+
+	sessId , _ := cryptoSessions.Get(r, "session-name")
+	sessId.Values["authenticated"] = true
+	err := sessId.Save(r,w); if err != nil{
+		return err
+	}
+	return nil
+}
+
