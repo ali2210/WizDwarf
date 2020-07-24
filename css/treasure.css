@@ -11,11 +11,14 @@
 	margin-bottom: 30px;
 }
 
-.div-send-in, .div-receive-in{
+.div-send-in, 
+.div-receive-in{
 	margin-top: 10px;
 }
 
-.btn-in,.btn-in-rec,.in-rece{
+.btn-in,
+.btn-in-rec,
+.in-rece{
 	margin-left: 5px;
 }
 
@@ -31,6 +34,8 @@
 	background-color: snow;
 	color: black;
 	margin-top: 5px;
+	border: 1px solid grey;
+	cursor: pointer;
 }
 
 .in-send, 

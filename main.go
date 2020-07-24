@@ -131,7 +131,7 @@ func main() {
 	routing.HandleFunc("/dummy", server)
 
 		// Server
-	log.Println("Listening at 9101 ... please wait...")
+	log.Println("please wait... Listening at 9101")
 	http.ListenAndServe(":9101", routing)
 
 }
@@ -154,7 +154,9 @@ func Visualize(w http.ResponseWriter, r *http.Request){
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
 		temp.Execute(w,LifeCode)
-		
+	}
+	err := SessionExpire(w,r); if err != nil {
+		return 
 	}
 }
 
@@ -294,7 +296,8 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				LifeCode = genome 
 				w.WriteHeader(http.StatusOK)
 	    		r.Method = "GET"
-	    		Visualize(w,r)
+	    		Wallet(w,r)
+	    		//Visualize(w,r)
 				// fmt.Println("Virus:", capsid)
 				
 			case "2":
@@ -304,7 +307,10 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 					fmt.Println("Error:", err)
 					return
 				}
-				LifeCode = genome 
+				LifeCode = genome
+				w.WriteHeader(http.StatusOK)
+	    		r.Method = "GET" 
+				Wallet(w,r)
 				// fmt.Println("Virus:", capsid)
 			case "3":
 				var name string = "KenyaEbola"
@@ -314,7 +320,10 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 					fmt.Println("Error:", err)
 					return
 				}
-				LifeCode = genome 
+				LifeCode = genome
+				w.WriteHeader(http.StatusOK)
+	    		r.Method = "GET" 
+				Wallet(w,r)
 				// fmt.Println("Virus:", capsid)
 			case "4":
 				var name string = "ZikaVirusBrazil"
@@ -324,7 +333,10 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 					fmt.Println("Error:", err)
 					return
 				}
-				LifeCode = genome 
+				LifeCode = genome
+				w.WriteHeader(http.StatusOK)
+	    		r.Method = "GET" 
+				Wallet(w,r)
 				// fmt.Println("Virus:", capsid)				
 			case "5":
 				var name string = "MersSaudiaArabia"
@@ -334,7 +346,10 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 					fmt.Println("Error:", err)
 					return
 				}
-				LifeCode = genome 
+				LifeCode = genome
+				w.WriteHeader(http.StatusOK)
+	    		r.Method = "GET"
+				Wallet(w,r)
 				// fmt.Println("Virus:", capsid)
 				
 			default:
@@ -463,7 +478,7 @@ func Send(w http.ResponseWriter, r *http.Request){
 		switch choice{
 			case "Normal":
 				block.GasPrice = gasPrice 
-				fee.SetInt64(1)
+				fee.SetInt64(2)
 				result.Mul(block.GasPrice , fee)
 				fmt.Println("Block:" , block)
 			case "Fair":
@@ -503,6 +518,9 @@ func Send(w http.ResponseWriter, r *http.Request){
 		// Send Transaction
 		err = clientInstance.SendTransaction(context.Background(), sign); if err != nil {
 			fmt.Println("Error:", err)
+			session := SessionExpire(w,r); if err != nil {
+				fmt.Println("EXpire :", session)
+			}
 			Repon := Response{true,"Error {Transaction Failed , Insufficent Balance}", "WizDawrf/transact"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
@@ -510,6 +528,10 @@ func Send(w http.ResponseWriter, r *http.Request){
 		}
 
 		fmt.Println("Send:", sign.Hash().Hex())
+		w.WriteHeader(http.StatusOK)
+	    r.Method = "GET"
+		Visualize(w,r)
+
 	}
 }
 
@@ -536,7 +558,7 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 			acc.Terms = false
 		}
 		
-		client , err := ethclient.Dial(RinkebyClientUrl); if err != nil {
+		client , err := ethclient.Dial(EtherMainClientUrl); if err != nil {
 			fmt.Println("Error :" , err)
 			return
 		}
@@ -644,27 +666,29 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 			// Repon := Response{false,acc.EthAddress, "WizDawrf/dashboard"}
 			// println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			// temp.Execute(w, Repon)
-		w.WriteHeader(http.StatusOK)
+		/*.WriteHeader(http.StatusOK)
 	    r.Method = "GET"
-		Wallet(w,r)
+		Wallet(w,r)*/
 	}
 }
 
 func Transacts(w http.ResponseWriter, r *http.Request){
 	
-	temp := template.Must(template.ParseFiles("transact.html"))	
-	acc := structs.Static{}
-	if r.Method == "GET" {
-		fmt.Println("Url:", r.URL.Path)
-		fmt.Println("Method:" + r.Method)
-		acc.Eth = ETHAddressInstance
-		acc.Balance = GetBalance(&acc); if acc.Balance == nil{
+
+		temp := template.Must(template.ParseFiles("transact.html"))	
+		acc := structs.Static{}
+		if r.Method == "GET" {
+			fmt.Println("Url:", r.URL.Path)
+			fmt.Println("Method:" + r.Method)
+
+			acc.Eth = ETHAddressInstance
+			acc.Balance = GetBalance(&acc); if acc.Balance == nil{
 			fmt.Println("Error:")
 		}
 		fmt.Println("Details:", acc )
 		temp.Execute(w,acc)
+		}
 	
-	}
 }
 
 
@@ -690,7 +714,7 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 		acc.Password = r.FormValue("password")
 		
 
-		client , err := ethclient.Dial(RinkebyClientUrl); if err != nil {
+		client , err := ethclient.Dial(EtherMainClientUrl); if err != nil {
 			fmt.Println("Error :" , err)
 			return
 		}
@@ -762,7 +786,7 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 			w.WriteHeader(http.StatusOK)
 	  	   	r.Method = "GET"
 	     	Transacts(w,r)			
-		}
+		} 
 	}
 }
 
@@ -1490,4 +1514,15 @@ func Authentication(w http.ResponseWriter, r * http.Request) error{
 	}
 	return nil
 }
+
+func SessionExpire(w http.ResponseWriter , r *http.Request)error{
+		sessId , _ := cryptoSessions.Get(r, "session-name")
+		 	sessId.Values["authenticated"] = false
+		 	err := sessId.Save(r,w); if err != nil{
+		 		// log.Fatal("Error", err)		 		
+		 		return err
+		 	}
+		 	return nil
+}
+
 
