@@ -3,8 +3,8 @@ package db
 
 
 import (
-	wallet "./cloudwalletclass"
-	walletAcc "../structs"
+	wallet "github.com/ali2210/wizdwarf/db/cloudwalletclass"
+	walletAcc "github.com/ali2210/wizdwarf/structs"
 	"fmt"
 	"context"
 	firebase "firebase.google.com/go"
