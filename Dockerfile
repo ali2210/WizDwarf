@@ -4,7 +4,9 @@
 
 FROM golang:latest as builder
 
-VOLUME [${LOG_DIR}]
+ENV GO111MODULE=on
+
+ENV GOFLAGS= mod=vendor
 
 LABEL maintainer="Ali Hassan <Alideveloper95@protonmail.com>"
 
@@ -21,6 +23,7 @@ RUN go get -u -d ./...
 RUN apk add ca-certificates
 
 RUN go build -o wiz
+
 
 EXPOSE 9101
 
