@@ -17,9 +17,9 @@ import (
 	"net/http"
 	"os"
 	"regexp"
-	"./db"
-	"./structs"
-	cloudWallet "./db/cloudwalletclass"
+	"github.com/ali2210/wizdwarf/db"
+	"github.com/ali2210/wizdwarf/structs"
+	cloudWallet "github.com/ali2210/wizdwarf/db/cloudwalletclass"
 	"encoding/json"
 	"google.golang.org/api/option"
 	"golang.org/x/crypto/sha3"
@@ -34,7 +34,7 @@ import (
 	"math/big"
 	"strings"
 	"github.com/fogleman/ribbon/pdb"
-	 "./structs/amino"
+	"github.com/ali2210/wizdwarf/structs/amino"
 	
 )
 
