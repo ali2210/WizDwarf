@@ -1,8 +1,6 @@
 
 
-# Docker Build ---[WIZDWARF]
-
-FROM golang:latest as builder
+FROM golang:latest
 
 ENV GO111MODULE=on
 
@@ -20,11 +18,6 @@ COPY . .
 
 RUN go get -u -d ./...
 
-RUN apk add ca-certificates
-
 RUN go build -o wiz
 
-
 EXPOSE 9101
-
-#	 ---End--- DockerFile 
