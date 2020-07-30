@@ -18,6 +18,8 @@ COPY . .
 
 RUN go get -u -d ./...
 
-RUN go build -o wiz
-
 EXPOSE 9101
+
+RUN go build main
+
+CMD ["./main"]

@@ -663,12 +663,9 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 		fmt.Println("merchant:" , merchant)
 		clientInstance = nil
 			// Server response
-			// Repon := Response{false,acc.EthAddress, "WizDawrf/dashboard"}
-			// println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
-			// temp.Execute(w, Repon)
-		/*.WriteHeader(http.StatusOK)
-	    r.Method = "GET"
-		Wallet(w,r)*/
+		Repon := Response{false,"Account Created!!! , Please don't share your key  & click on the link for futher...", "WizDawrf/dashboard"}
+		println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+		temp.Execute(w, Repon)
 	}
 }
 
