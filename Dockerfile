@@ -1,25 +1,29 @@
 
 
-FROM golang:latest
+FROM golang:1.14-alpine3.12
 
-ENV GO111MODULE=on
+#ENV GO111MODULE=on
 
-ENV GOFLAGS= mod=vendor
+#ENV GOFLAGS= mod=vendor
 
-LABEL maintainer="Ali Hassan <Alideveloper95@protonmail.com>"
+#LABEL maintainer="Ali Hassan <Alideveloper95@protonmail.com>"
+
+RUN mkdir /app
+
+ADD . /app
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
+#COPY go.mod go.sum ./
 
-RUN go mod download
+#RUN go mod download
 
-COPY . .
+#COPY . .
 
-RUN go get -u -d ./...
+#RUN go get -u -d ./...
 
-EXPOSE 9101
+   #EXPOSE 9101
 
-RUN go build main
+RUN go build -o main
 
-CMD ["./main"]
+CMD ["/app/main"]

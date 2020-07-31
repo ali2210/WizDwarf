@@ -105,7 +105,7 @@ func main() {
 	routing := mux.NewRouter()
 
 	// Links 
-	routing.HandleFunc("/{title}/home", Home)
+	routing.HandleFunc("/", Home)
 	routing.HandleFunc("/{title}/signup", NewUser)
 	routing.HandleFunc("/{title}/login", Existing)
 	routing.HandleFunc("/{title}/dashboard",Dashboard)
@@ -131,8 +131,8 @@ func main() {
 	routing.HandleFunc("/dummy", server)
 
 		// Server
-	log.Println("please wait... Listening at 9101")
-	http.ListenAndServe(":9101", routing)
+	log.Println("please wait... Listening at 5000")
+	http.ListenAndServe(":5000", routing)
 
 }
 
