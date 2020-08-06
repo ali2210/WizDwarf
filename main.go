@@ -35,7 +35,8 @@ import (
 	"strings"
 	"github.com/fogleman/ribbon/pdb"
 	"github.com/ali2210/wizdwarf/structs/amino"
-	
+	/*"runtime"
+	"path/filepath"*/
 )
 
 // Struts
@@ -81,6 +82,11 @@ var (
 	WalletPubKey string = ""
 	WalletSecureKey string  = ""
 	LifeCode []amino.AminoClass
+	configFilename string = "htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
+	googleCredentials string = ""
+
+	/*_, b, _, _ = runtime.Caller(0)
+    basepath   = filepath.Dir(b)*/
 )
 
 
@@ -88,7 +94,7 @@ var (
 
 const (
 	projectId          string = "htickets-cb4d0"
-	Google_Credentials string = "/home/ali/Desktop/htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
+	//Google_Credentials string = "/home/ali/Desktop/htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"	
 	// Main application
 	EtherMainClientUrl  string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
 	// Rickeby for test purpose
@@ -128,8 +134,11 @@ func main() {
 	routing.PathPrefix("/css/").Handler(css)
 	js := http.StripPrefix("/js/", http.FileServer(http.Dir("./js")))
 	routing.PathPrefix("/js/").Handler(js)
+
 	routing.HandleFunc("/dummy", server)
 
+	// fmt.Println("Basepath:", basepath)
+	
 		// Server
 	log.Println("please wait... Listening at 5000")
 	http.ListenAndServe(":5000", routing)
@@ -1114,20 +1123,31 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 
 func SetFirestoreCredentials() *firebase.App {
 
+	file , err := os.Stat("config/"+configFilename); if os.IsExist(err){
+		fmt.Println("File Doesn't exist...", err)
+		return nil
+	}
+	//fmt.Println("Filename:", file.Name())
+
+	googleCredentials = "config/"+file.Name()
+
 	// set credentials
 	conf := &firebase.Config{ProjectID: projectId}
-	opt := option.WithCredentialsFile(Google_Credentials)
-	app, err := firebase.NewApp(context.Background(), conf, opt)
-	if err != nil {
-		println("Error in Connection with Firestore", err)
+	if googleCredentials != " "{
+		opt := option.WithCredentialsFile(googleCredentials)
+		app, err := firebase.NewApp(context.Background(), conf, opt)
+		if err != nil {
+			println("Error in Connection with Firestore", err)
 				// temp := template.Must(template.ParseFiles("server.html"))
 				// Res := Response{true, "Sorry, Internet Connection Failed", ""}
 				// println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				// temp.Execute(w, Res)
-		return nil
+			return nil
+		}
+		println("Connected... Welcome to Firestore")
+		return app
 	}
-	println("Connected... Welcome to Firestore")
-	return app
+	return nil
 }
 
 func StringToInt(s string)(int, error){
@@ -1313,7 +1333,7 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 	if err != nil {
 		fmt.Println("Error failed.... retry", err)
 		 temp := template.Must(template.ParseFiles("server.html"))
-		 Res := Response{true, "Sorry Error in Upload File", "WizDawrf/dashboard"}
+		 Res := Response{true, "Sorry Error in Upload File {TYPE : MIME}", "WizDawrf/dashboard"}
 		 println("Server Response:", Res.Flag,Res.Message,Res.Links)
 		temp.Execute(w, Res)
 		return nil
@@ -1333,7 +1353,7 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 		if err != nil {
 			fmt.Println("Error received while uploading!", err)
 			temp := template.Must(template.ParseFiles("server.html"))
-			Res := Response{true, "Sorry Upload File must have .txt extension ", "WizDawrf/dashboard"}
+			Res := Response{true, "Sorry Upload File must have MIME TYPE: ", "WizDawrf/dashboard"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			return nil 
