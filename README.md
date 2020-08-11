@@ -21,6 +21,9 @@ Language [GO(1.14/Linux)]
      ###   .Docker(0%)
      ###   .Documentation(0%)
      ###   .Payement Method(100%)
-     ###   .Algorithms(50%)
+     ###   .Algorithms
+             ####. Get Data(100%)
+             ####. CONTEXT FREE GARMMAR(0%)
+             ####. Stimulation/Visualization(0%)
      ###   .Notification(0%)
  
