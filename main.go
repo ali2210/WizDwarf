@@ -111,18 +111,18 @@ func main() {
 	routing := mux.NewRouter()
 
 	// Links 
-	routing.HandleFunc("/", Home)
-	routing.HandleFunc("/{title}/signup", NewUser)
-	routing.HandleFunc("/{title}/login", Existing)
-	routing.HandleFunc("/{title}/dashboard",Dashboard)
-	routing.HandleFunc("/{title}/logout", Logout)
-	routing.HandleFunc("/{title}/createWallet",CreateWallet)
-	routing.HandleFunc("/{title}/terms",Terms)
-	routing.HandleFunc("/{title}/open", Wallet)
-	routing.HandleFunc("/{title}/transact", Transacts)
-	routing.HandleFunc("/{title}/transact/send", Send)
-	routing.HandleFunc("/{title}/transact/treasure", Treasure)
-	routing.HandleFunc("/{title}/visualize", Visualize)
+	routing.HandleFunc("/home", Home)
+	routing.HandleFunc("/signup", NewUser)
+	routing.HandleFunc("/login", Existing)
+	routing.HandleFunc("/dashboard",Dashboard)
+	routing.HandleFunc("/logout", Logout)
+	routing.HandleFunc("/createWallet",CreateWallet)
+	routing.HandleFunc("/terms",Terms)
+	routing.HandleFunc("/open", Wallet)
+	routing.HandleFunc("/transact", Transacts)
+	routing.HandleFunc("/transact/send", Send)
+	routing.HandleFunc("/transact/treasure", Treasure)
+	routing.HandleFunc("/visualize", Visualize)
 
 
 		// Static Files
@@ -1123,13 +1123,13 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *Create
 
 func SetFirestoreCredentials() *firebase.App {
 
-	file , err := os.Stat("config/"+configFilename); if os.IsExist(err){
+	_ , err := os.Stat("config/"+configFilename); if os.IsExist(err){
 		fmt.Println("File Doesn't exist...", err)
 		return nil
 	}
 	//fmt.Println("Filename:", file.Name())
 
-	googleCredentials = "config/"+file.Name()
+	googleCredentials = "config/"+configFilename
 
 	// set credentials
 	conf := &firebase.Config{ProjectID: projectId}
