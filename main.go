@@ -149,6 +149,10 @@ func main() {
 
 func Home(w http.ResponseWriter, r *http.Request){
 	temp := template.Must(template.ParseFiles("index.html"))
+	// vars := mux.Vars(r)
+	// title := vars["title"]
+	// fmt.Println("Title:", title)
+	
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)																										
 		temp.Execute(w, "Home")
@@ -167,6 +171,9 @@ func Visualize(w http.ResponseWriter, r *http.Request){
 	err := SessionExpire(w,r); if err != nil {
 		return 
 	}
+	w.WriteHeader(http.StatusOK)
+	r.Method = "GET"
+	Dashboard(w,r)
 }
 
 
@@ -273,6 +280,7 @@ func Treasure(w http.ResponseWriter, r *http.Request){
 
 func Dashboard(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("dashboard.html"))
+
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
 		fmt.Println("Url:", r.URL.Path)
