@@ -40,12 +40,6 @@ import (
 )
 
 
-type SignedKey struct {
-	reader string
-	signed string
-	tx *ecdsa.PrivateKey
-}
-
 // Variables
  
 var (
@@ -64,6 +58,7 @@ var (
 	LifeCode []amino.AminoClass
 	configFilename string = "htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
 	googleCredentials string = ""
+	//complex structs.ComplexHandler = structs.ComplexHandler{}
 
 	/*_, b, _, _ = runtime.Caller(0)
     basepath   = filepath.Dir(b)*/
@@ -852,7 +847,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 			temp.Execute(w, Res)
 			return
 		}
-		println("encryted data", encrypted.reader)
+		println("encryted data", encrypted.Reader)
 		println("FamilyName:", user.Fname)
 		println("Address", user.Address)
 		println("Address2", user.Address2)
@@ -863,7 +858,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		// println("check:", user.check_me_out)
 		println("User record:", user.Name, user.Email)
 		// println("phase:", KeyTx)
-		addVistor(w, r, &user, encrypted.reader)
+		addVistor(w, r, &user, encrypted.Reader)
 	}
 
 }
@@ -925,20 +920,21 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	return 
 		 }
 		 	if data != nil{
-		 	fmt.Printf("Search Data:%v", data.Id)
-
-		 	// User Session
-		 	if userSessions == nil {
-		 		userSessions = SessionsInit(data.Id)
-		 		sessId , _ := userSessions.Get(r, "session-name")
-		 		sessId.Values["authenticated"] = true
-		 		err = sessId.Save(r,w); if err != nil{
-		 		// log.Fatal("Error", err)
-		 		temp := template.Must(template.ParseFiles("server.html"))
-				Res := structs.Response{true, "Sorry We have no Record, Please Regsiter", "WizDawrf/signup"}
-				println("Server Response:", Res.Flag,Res.Message,Res.Links)
-				temp.Execute(w, Res)
-		 			return
+		 		fmt.Printf("Search Data:%v", data.Id)
+		 	
+		 		//complex.AddByName(data.Name)
+		 		// User Session
+		 		if userSessions == nil {
+		 			userSessions = SessionsInit(data.Id)
+		 			sessId , _ := userSessions.Get(r, "session-name")
+		 			sessId.Values["authenticated"] = true
+		 			err = sessId.Save(r,w); if err != nil{
+		 			// log.Fatal("Error", err)
+		 			temp := template.Must(template.ParseFiles("server.html"))
+					Res := structs.Response{true, "Sorry We have no Record, Please Regsiter", "WizDawrf/signup"}
+					println("Server Response:", Res.Flag,Res.Message,Res.Links)
+					temp.Execute(w, Res)
+		 				return
 		 		}
 		 		println("Id :", sessId, "user:", userSessions)
 		 }/*else{
@@ -1294,8 +1290,8 @@ func ReadSequence(filename string) ([]byte, error) {
 	return []byte(body), nil
 }
 
-func MessageToHash(w http.ResponseWriter,matchE, matchP bool, user structs.Create_User) (bool, *SignedKey) {
-	code := SignedKey{}
+func MessageToHash(w http.ResponseWriter,matchE, matchP bool, user structs.Create_User) (bool, *structs.SignedKey) {
+	code := structs.SignedKey{}
 	if matchE && matchP {
 		h := sha256.New()
 		// h.Write([]byte(user.email))
@@ -1306,7 +1302,7 @@ func MessageToHash(w http.ResponseWriter,matchE, matchP bool, user structs.Creat
 		// h1.Write([]byte(user.password))
 		hashp := h1.Sum([]byte(user.Password))
 		fmt.Println("pass:", hex.EncodeToString(hashp))
-		code.reader, code.signed, code.tx = Key(w,hex.EncodeToString(hashe), hex.EncodeToString(hashp))
+		code.Reader, code.Signed, code.Tx = Key(w,hex.EncodeToString(hashe), hex.EncodeToString(hashp))
 		// println("data get :", code.reader, code.signed)
 		return true, &code
 	}

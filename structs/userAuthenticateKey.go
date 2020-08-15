@@ -6,7 +6,7 @@ import(
 )
 
 type SignedKey struct {
-	reader string
-	signed string
-	tx *ecdsa.PrivateKey
+	Reader string
+	Signed string
+	Tx *ecdsa.PrivateKey
 }
