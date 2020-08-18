@@ -98,7 +98,7 @@ func main() {
 	routing.HandleFunc("/transact/send", Send)
 	routing.HandleFunc("/transact/treasure", Treasure)
 	routing.HandleFunc("/visualize", Visualize)
-
+	/*routing.HandleFunc("/transact/advance-fileoption", Blocks)*/
 
 		// Static Files
 	// routing.HandleFunc("/{title}/action", addVistor)
@@ -249,6 +249,17 @@ func Treasure(w http.ResponseWriter, r *http.Request){
 
 	}
 }
+
+
+/*func Blocks(w http.ResponseWriter, r *http.Request){
+	temp := template.Must(template.ParseFiles("swarm.html"))
+
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Url:", r.URL.Path)
+		temp.Execute(w, "Blocks")
+	}
+}*/
 
 func Dashboard(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("dashboard.html"))

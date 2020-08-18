@@ -111,10 +111,10 @@
 .changePic{
 	color: indigo;
 	position: absolute;
-	top: 70.5%;
+	top: 53.5%;
 	left: 56.7%;
-	padding: 2.0px 2.0x;
-	-ms-transform:translate(-50%,-50%);
+	padding: 2.0px 2.0px;
+	-ms-transform: translate(-50%,-50%);
 	transform: translate(-50%,-50%);
 	background: antiquewhite;
 	cursor: pointer;
@@ -123,9 +123,9 @@
 .reverse{
 	color: fuchsia;
 	position: absolute;
-	top: 70.5%;
+	top: 53.5%;
 	left: 43.5%;
-	padding: 2.0px 2.0x;
+	padding: 2.0px 2.0px;
 	-ms-transform:translate(-50%,-50%);
 	transform: translate(-50%,-50%);
 	background: antiquewhite;
@@ -139,5 +139,9 @@
 }
 .eth-img{
 	width: 3%;
+}
+.main-div{
+	display: flex;
+	justify-content: center;
 }
 
