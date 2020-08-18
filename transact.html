@@ -8,14 +8,15 @@
   
   <!-- <link rel="shortcut icon" type="image/png" href="/images/favicon.png"> -->
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
-  <!-- <link rel="stylesheet" href="/css/dashboard.css"> -->
+  <link rel="stylesheet" href="/css/dashboard.css">
   <link rel="stylesheet" type="text/css" href="/css/seed.css">
   <link rel="stylesheet" type="text/css" href="/css/transact.css">
   <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
   <title>WizDwarfs</title>
 </head>
 <body>
-	<div class="main-div">
+
+	<div class="main">
 		<div class="static-field">
 			<div class="static-img">
 				<img src="/images/logo.png" alt ="WizDwarfs" class="img-logo"/>
@@ -28,7 +29,7 @@
 					<button type="button" class="changePic" id="male" onclick="ChangePic()"><i class="fa fa-plus-square"></i>
 					</button>
 					<button type="button" class="reverse" id="female" 
-					onclick="Reverse()"	disabled>
+					onclick="Reverse()"	disabled="true">
 						<i class="fa fa-minus-square"></i>
 					</button>  
 				</div>
@@ -45,7 +46,7 @@
 					<button type="button" class="btn-Send" onclick="PayByEth()" id="btn">
 						<i class="fa fa-shopping-basket" aria-hidden="true">Pay</i>
 					</button>
-					<a href="/transact/treasure" ><span class="span-link">Treasure</span></a>
+					<a href="/transact/treasure" ><span class="span-link">Treasure</span> <i class="fa fa-diamond" aria-hidden="true"></i></a>
 					<div class="form-send">
 						<form action="/transact/send" method="post" 
 						class="form-1">
@@ -65,18 +66,17 @@
             				</select>
             				<!-- Indiviual -->
             				<div class="btn-more">
-            					<button type="button" class="more-btn" id="more" onclick="CompleteTransact ()" disabled>
+            					<button type="button" class="more-btn" id="more" onclick="CompleteTransact ()" disabled="true">
             						<i class="fa fa-chevron-circle-down"></i> 10$/-
             					</button>
             					<div class="more col-sm-8">
-            						<input type="number" name="amount" id="amount" class="class-amount" value="4100000" readonly>             						<!-- <input type="number" placeholder="Nonce" id="nonce" name="nonce" class="class-nonce" required> -->
-            						<!-- <input type="number" name="gas" id="gas" class="class-gas" placeholder="Gas Price" required> -->
+            						<input type="number" name="amount" id="amount" class="class-amount" value="4100000" readonly> 
             					</div>
             				</div>
             				</div>
             					<div class="btns">
-            						<button type="submit" class="btn-ok" id="ok" disabled>
-										<i class="fa fa-cubes" aria-hidden="true">
+            						<button type="submit" class="btn-ok" id="ok" disabled="true">
+										<i class="fa fa-btc" aria-hidden="true">
 										Pay</i>
 									</button>
 									<button type="button" class="btn-okx" id="cancel" onclick="Cancel()" disabled="true">
@@ -88,7 +88,8 @@
 					</div>
 				</div>
 			</div>
-	</div>
+
+
 		<script type="text/javascript" src="/js/transact.js"></script>
 		<script type="text/javascript" src="/js/wallet.js"></script>
 		<!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
