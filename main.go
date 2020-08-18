@@ -557,6 +557,13 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 		}else{
 			acc.Terms = false
 		}
+
+		if r.FormValue("allow")  == "on"{
+			fmt.Println("allow:" , r.FormValue("allow"))
+			acc.Allowed = true
+		}else{
+			acc.Allowed = false
+		}
 		
 		client , err := ethclient.Dial(EtherMainClientUrl); if err != nil {
 			fmt.Println("Error :" , err)
@@ -649,6 +656,7 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 		myWallet.Password = acc.Password
 		myWallet.EthAddress = acc.EthAddress
 		myWallet.Terms = acc.Terms
+		myWallet.Allowed = acc.Allowed
 		myWallet.PrvteKey = acc.PrvteKey
 
 
