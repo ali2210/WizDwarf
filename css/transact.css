@@ -1,3 +1,4 @@
+
 .btn-connect{
 	margin-top: 5px;
 	margin-left: 200px;
@@ -91,7 +92,8 @@
 .recAdd-input,
 .dropdown-trans, 
 .form-dropdown-control,
-.btn-ok,  
+.btn-ok,
+.btn-okx,  
 .class-amount,
 .class-nonce,
 .class-gas,
@@ -103,7 +105,8 @@
 	align-items: center;
 	margin-top: 20px;
 }
-.form-1, .rece{
+.form-1, 
+.rece{
 	align-content: center;
 	margin-top: 10px;
 }
@@ -111,10 +114,10 @@
 .changePic{
 	color: indigo;
 	position: absolute;
-	top: 70.5%;
+	top: 58.5%;
 	left: 56.7%;
-	padding: 2.0px 2.0x;
-	-ms-transform:translate(-50%,-50%);
+	padding: 2.0px 2.0px;
+	-ms-transform: translate(-50%,-50%);
 	transform: translate(-50%,-50%);
 	background: antiquewhite;
 	cursor: pointer;
@@ -125,7 +128,7 @@
 	position: absolute;
 	top: 70.5%;
 	left: 43.5%;
-	padding: 2.0px 2.0x;
+	padding: 2.0px 2.0px;
 	-ms-transform:translate(-50%,-50%);
 	transform: translate(-50%,-50%);
 	background: antiquewhite;
@@ -140,4 +143,5 @@
 .eth-img{
 	width: 3%;
 }
+
 

@@ -15,7 +15,7 @@ type EthereumWalletAcc struct{
 	Password string `json:"Password"`
 	EthAddress string `json:"EthAddress"`
 	Terms bool `json:"Terms"`
-	// PubKey string `json:"PubKey"`
+	Allowed bool `json:"Allowed"`
 	PrvteKey string `json:"PrvteKey"`
 }
 

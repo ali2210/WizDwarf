@@ -14,7 +14,8 @@ type Acc struct{
 	Terms bool
 	EthAddress string
 	PubKey string
-	PrvteKey string 
+	PrvteKey string
+	Allowed bool 
 }
 
 
