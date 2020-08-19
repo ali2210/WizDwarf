@@ -2,14 +2,6 @@ package cloudwalletclass
 
 
 
-/*import(
-	 "crypto/ecdsa"
-	"fmt"
-)*/
-
-
-// var WalletPrivateKey  string = ""
-
 type EthereumWalletAcc struct{
 	Email string `json:"Email"`
 	Password string `json:"Password"`
@@ -21,15 +13,3 @@ type EthereumWalletAcc struct{
 
 
 
-// func (a *EthereumWalletAcc)SetPrivateKey(){
-// 	WalletPrivateKey = (*a).PrvteKey 
-// 	fmt.Println("WalletPrivateKey:", WalletPrivateKey)
-// }
-
-// func(*EthereumWalletAcc)GetPrivateKey()(string){
-
-// 	if WalletPrivateKey == ""{
-// 	return WalletPrivateKey
-// 	}
-//  return WalletPrivateKey
-// }
