@@ -58,6 +58,7 @@ var (
 	LifeCode []amino.AminoClass
 	configFilename string = "htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
 	googleCredentials string = ""
+
 	//complex structs.ComplexHandler = structs.ComplexHandler{}
 
 	/*_, b, _, _ = runtime.Caller(0)
@@ -769,9 +770,14 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 				ETHAddressInstance = acc.EthAddress
 				fmt.Println("myWallet:", ETHAddressInstance)
 
-			 // add this address in html page as static. 
+				// read file and add swarm
+				if add.Allowed {
 
-		//dataabse -- FindAddress 
+					
+				}
+			 	// add this address in html page as static. 
+
+				//dataabse -- FindAddress 
 			secureWallet, ok := FindEthWallet(&acc); if !ok && secureWallet != nil {
 				fmt.Println("Error", err)
 				Repon := structs.Response{true,"Sorry! No Account Exist ", "/createWallet"}
@@ -780,6 +786,9 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 				return
 			}
 			fmt.Println("MyEthAddress Details:", secureWallet)
+
+
+
 			cryptoSessions = blockSession(LifeCode[0].Id)
 			fmt.Println("Session:", cryptoSessions)
 
@@ -1333,6 +1342,8 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 			temp.Execute(w, Res)
 			return nil
 		}
+
+		// upload file by user...
 		upldFile, err := ioutil.TempFile("user_data", handler.Filename+"-*.txt")
 		if err != nil {
 			fmt.Println("Error received while uploading!", err)
