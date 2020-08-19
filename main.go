@@ -384,7 +384,7 @@ func Send(w http.ResponseWriter, r *http.Request){
 		choice :=  r.FormValue("transact")
 		amount := r.FormValue("amount")
 		block.Balance = ReadBalanceFromBlock(&block); if block.Balance == nil{
-			Repon := structs.Response{true,"Some Issue ; [Balance]", "WizDawrf/transact"}
+			Repon := structs.Response{true,"Some Issue ; [Balance]", "/transact"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
 			fmt.Println("Error:")
@@ -393,7 +393,7 @@ func Send(w http.ResponseWriter, r *http.Request){
 		// Block number 
 		header, err := clientInstance.HeaderByNumber(context.Background(), nil); if err != nil{
 			fmt.Println("Error:", err)
-			Repon := structs.Response{true,"Error {HeaderByNumber}", "WizDawrf/transact"}
+			Repon := structs.Response{true,"Error {HeaderByNumber}", "/transact"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
 			return
@@ -405,7 +405,7 @@ func Send(w http.ResponseWriter, r *http.Request){
 		// private key to public address
 		secure , err := crypto.HexToECDSA(WalletSecureKey); if err != nil {
 			fmt.Println("Error:", err)
-			Repon := structs.Response{true,"Error {Your Account dont have any Priavte key, use valid address}", "WizDawrf/transact/"}
+			Repon := structs.Response{true,"Error {Your Account dont have any Priavte key, use valid address}", "/transact"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
 			return 
@@ -416,7 +416,7 @@ func Send(w http.ResponseWriter, r *http.Request){
 		// Convert Public key
 		ecdsaPubKey , ok := walletPublicKey.(*ecdsa.PublicKey); if !ok{
 			fmt.Println("Error:", err)
-			Repon := structs.Response{true,"Error {No Public Key}", "WizDawrf/transact"}
+			Repon := structs.Response{true,"Error {No Public Key}", "/transact"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
 			return
@@ -429,7 +429,7 @@ func Send(w http.ResponseWriter, r *http.Request){
 
 		// nonce pending 
 		 noncePending , err := clientInstance.PendingNonceAt(context.Background(), ethAdd); if err != nil {
-		 	Repon := structs.Response{true,"Error {Get Nonce}", "WizDawrf/transact"}
+		 	Repon := structs.Response{true,"Error {Get Nonce}", "/transact"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
 		 	fmt.Println("Error:", err)
@@ -453,7 +453,7 @@ func Send(w http.ResponseWriter, r *http.Request){
 		
 		gasPrice , err := clientInstance.SuggestGasPrice(context.Background()); if err != nil {
 				fmt.Println("Error:", err)
-				Repon := structs.Response{true,"Error :{Gas Price Flucation}", "WizDawrf/transact"}
+				Repon := structs.Response{true,"Error :{Gas Price Error}", "/transact"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
 				return 
@@ -463,7 +463,7 @@ func Send(w http.ResponseWriter, r *http.Request){
 			//Conversion
 		charge , err := StringToInt(amount); if err != nil {
 			fmt.Println("Error:", err)
-			Repon := structs.Response{true,"Error :{Conversion}", "WizDawrf/transact"}
+			Repon := structs.Response{true,"Error :{Conversion}", "/transact"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
 			return 
@@ -509,7 +509,7 @@ func Send(w http.ResponseWriter, r *http.Request){
 		// Signed Transaction
 		sign , err := types.SignTx(tx, types.NewEIP155Signer(chainId), secure); if err != nil {
 			fmt.Println("Error:", err)
-			Repon := structs.Response{true,"Error in Upload File", "WizDawrf/transact"}
+			Repon := structs.Response{true,"Error in Upload File", "/transact"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
 			return 
@@ -521,7 +521,7 @@ func Send(w http.ResponseWriter, r *http.Request){
 			session := SessionExpire(w,r); if err != nil {
 				fmt.Println("EXpire :", session)
 			}
-			Repon := structs.Response{true,"Error {Transaction Failed , Insufficent Balance}", "WizDawrf/transact"}
+			Repon := structs.Response{true,"Error {Transaction Failed , Insufficent Balance}", "/transact"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
 			return 
@@ -559,7 +559,6 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 		}
 
 		if r.FormValue("allow")  == "on"{
-			fmt.Println("allow:" , r.FormValue("allow"))
 			acc.Allowed = true
 		}else{
 			acc.Allowed = false
@@ -617,7 +616,7 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 			valid := isYourPublcAdresValid(ethereum); if valid {
 				// smart contract address
 				fmt.Println("smart contract address :" , valid)
-				Repon := structs.Response{true,"Sorry! This is Smart Contact Adddress , We will handle in future", "WizDawrf/dashboard"}
+				Repon := structs.Response{true,"Sorry! This is Smart Contact Adddress , We will handle in future", "/dashboard"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
@@ -628,7 +627,7 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 
 		signWallet , err := json.Marshal(myWallet); if err != nil{
 				fmt.Println("Error:", err)
-				Repon := structs.Response{true,"Sorry! JSON Marshal Stream ", "WizDawrf/createWallet"}
+				Repon := structs.Response{true,"Sorry! JSON Marshal Stream ", "/createWallet"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
@@ -636,7 +635,7 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 
 		err = json.Unmarshal(signWallet, &myWallet); if err != nil{
 				fmt.Println("Error:", err)
-				Repon := structs.Response{true,"Sorry! JSON Unmarshal Stream", "WizDawrf/createWallet"}
+				Repon := structs.Response{true,"Sorry! JSON Unmarshal Stream", "/createWallet"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
@@ -644,7 +643,7 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 
 		//dataabse -- FindAddress 
 		ok , ethAdd := FindAddress(&acc); if ok && ethAdd != nil {
-				Repon := structs.Response{true,"Sorry! Data Already register ", "WizDawrf/open"}
+				Repon := structs.Response{true,"Sorry! Data Already register ", "/open"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
@@ -662,7 +661,7 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 
 		merchant , err := ledger.CreatePublicAddress(&myWallet, appName); if err != nil{
 				fmt.Println("Error:", err)
-				Repon := structs.Response{true,"Sorry! Invalid Ethereum Account ", "WizDawrf/open"}
+				Repon := structs.Response{true,"Sorry! Invalid Ethereum Account ", "/open"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
@@ -671,9 +670,12 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 		fmt.Println("merchant:" , merchant)
 		clientInstance = nil
 			// Server response
-		Repon := structs.Response{false,"Account Created!!! , Please don't share your key  & click on the link for futher...", "WizDawrf/dashboard"}
+		/*Repon := structs.Response{false,"Account Created!!! , Please don't share your key  & click on the link for futher...", "/dashboard"}
 		println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
-		temp.Execute(w, Repon)
+		temp.Execute(w, Repon)*/
+		w.WriteHeader(http.StatusOK)
+	    r.Method = "GET"
+		Dashboard(w,r)
 	}
 }
 
@@ -734,7 +736,7 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 
 			signWallet , err := json.Marshal(myWallet); if err != nil{
 				fmt.Println("Error:", err)
-				Repon := structs.Response{true,"Sorry! JSON Marshal Stream ", "WizDawrf/open"}
+				Repon := structs.Response{true,"Sorry! JSON Marshal Stream ", "/open"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
@@ -742,13 +744,13 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 
 			err = json.Unmarshal(signWallet, &myWallet); if err != nil{
 				fmt.Println("Error:", err)
-				Repon := structs.Response{true,"Sorry! JSON Unmarshal Stream", "WizDawrf/open"}
+				Repon := structs.Response{true,"Sorry! JSON Unmarshal Stream", "/open"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
 			}		
 			add, ok := MyEthAddress(&acc); if !ok {
-				Repon := structs.Response{true,"Sorry! No Account Exist ", "WizDawrf/open"}
+				Repon := structs.Response{true,"Sorry! No Account Exist ", "/open"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
@@ -772,7 +774,7 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 		//dataabse -- FindAddress 
 			secureWallet, ok := FindEthWallet(&acc); if !ok && secureWallet != nil {
 				fmt.Println("Error", err)
-				Repon := structs.Response{true,"Sorry! No Account Exist ", "WizDawrf/createWallet"}
+				Repon := structs.Response{true,"Sorry! No Account Exist ", "/createWallet"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
@@ -782,7 +784,7 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 			fmt.Println("Session:", cryptoSessions)
 
 			err := Authentication(w, r); if err != nil {
-					Repon := structs.Response{true,"Sorry! No Account Exist ", "WizDawrf/createWallet"}
+					Repon := structs.Response{true,"Sorry! No Account Exist ", "/createWallet"}
 					println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 					temp.Execute(w, Repon)
 					return 
@@ -840,7 +842,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			println("invalid regular expression", err)
 			temp := template.Must(template.ParseFiles("server.html"))
-			Res := structs.Response{true, "Data must be valid", "WizDawrf/signup"}
+			Res := structs.Response{true, "Data must be valid", "/signup"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			return
@@ -850,7 +852,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			println("invalid regular expression", err)
 			temp := template.Must(template.ParseFiles("server.html"))
-			Res := structs.Response{true, "Data must be valid", "WizDawrf/signup"}
+			Res := structs.Response{true, "Data must be valid", "/signup"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			return
@@ -861,7 +863,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 		hashRet, encrypted := MessageToHash(w, matchE, matchP, user)
 		if hashRet == false {
 			temp := template.Must(template.ParseFiles("server.html"))
-			Res := structs.Response{true, "Data must be valid", "WizDawrf/signup"}
+			Res := structs.Response{true, "Data must be valid", "/signup"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			return
@@ -908,7 +910,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		if !ok {
 			println("invalid regular expression", !ok)
 			temp := template.Must(template.ParseFiles("server.html"))
-			Res := structs.Response{true, "Data must be valid", "WizDawrf/login"}
+			Res := structs.Response{true, "Data must be valid", "/login"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			return
@@ -919,7 +921,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		if !okx {
 			println("invalid regular expression", !okx)
 			temp := template.Must(template.ParseFiles("server.html"))
-			Res := structs.Response{true, "Data must be valid", "WizDawrf/login"}
+			Res := structs.Response{true, "Data must be valid", "/login"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			return
@@ -933,7 +935,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 	// log.Fatal("Error", err)
 		 	// w.Write([]byte(`{error: No Result Found }`))
 		 	temp := template.Must(template.ParseFiles("server.html"))
-			Res := structs.Response{true, "No Record Exist", "WizDawrf/login"}
+			Res := structs.Response{true, "No Record Exist", "/login"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 		 	return 
@@ -950,34 +952,22 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 			err = sessId.Save(r,w); if err != nil{
 		 			// log.Fatal("Error", err)
 		 			temp := template.Must(template.ParseFiles("server.html"))
-					Res := structs.Response{true, "Sorry We have no Record, Please Regsiter", "WizDawrf/signup"}
+					Res := structs.Response{true, "Sorry We have no Record, Please Regsiter", "/signup"}
 					println("Server Response:", Res.Flag,Res.Message,Res.Links)
 					temp.Execute(w, Res)
 		 				return
 		 		}
 		 		println("Id :", sessId, "user:", userSessions)
-		 }/*else{
-		 	sessId , _ := userSessions.Get(r, "session-name")
-		 	sessId.Values["authenticated"] = true
-		 	err = sessId.Save(r,w); if err != nil{
-		 		// log.Fatal("Error", err)
-		 		temp := template.Must(template.ParseFiles("server.html"))
-				Res := Response{true, "Sorry We donot have any record , please register", "WizDawrf/signup"}
-				println("Server Response:", Res.Flag,Res.Message,Res.Links)
-				temp.Execute(w, Res)
-		 		return
-		 	}
-		 	println("Id :", sessId)
-		 }*/
+		 }
 		
 		
 		 // Login page 
-		 w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusOK)
 	    r.Method = "GET"
 		Dashboard(w,r)
 		}else{
 				temp := template.Must(template.ParseFiles("server.html"))
-				Res := structs.Response{true, "Sorry We donot have any record , please register", "WizDawrf/signup"}
+				Res := structs.Response{true, "Sorry We donot have any record , please register", "/signup"}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(w, Res)
 		 		return
@@ -1001,7 +991,7 @@ func Logout(w http.ResponseWriter, r *http.Request){
 		 	err := sessId.Save(r,w); if err != nil{
 		 		// log.Fatal("Error", err)
 		 		temp := template.Must(template.ParseFiles("server.html"))
-				Res := structs.Response{true, "Sorry We have no Record, Please Regsiter", "WizDawrf/signup"}
+				Res := structs.Response{true, "Sorry We have no Record, Please Regsiter", "/signup"}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(w, Res)
 		 		return
@@ -1026,10 +1016,6 @@ func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string)(*db.Vis
 		data, err = cloud.FindData(email,pass, appName); if err != nil && data != nil{
 			// log.Fatal("Error", err)
 			println("Error:", err)
-				/*temp := template.Must(template.ParseFiles("server.html"))
-				Res := Response{true, "Sorry We have no Record, Please Regsiter", "WizDawrf/signup"}
-				println("Server Response:", Res.Flag,Res.Message,Res.Links)
-				temp.Execute(w, Res)*/
 			return nil, err 
 		}
 		println("Data:", data)
@@ -1064,7 +1050,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *struct
 		data, err  := json.Marshal(member); if err != nil{
 			fmt.Printf("Error in Marshal%v\n", err)
 				temp := template.Must(template.ParseFiles("server.html"))
-				Res := structs.Response{true, "Sorry Data must be in Format", "WizDawrf/signup"}
+				Res := structs.Response{true, "Sorry Data must be in Format", "/signup"}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(response, Res)
 			return
@@ -1072,7 +1058,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *struct
 		err = json.Unmarshal(data, &member); if err != nil{
 			fmt.Printf("Error%v\n", err)
 				temp := template.Must(template.ParseFiles("server.html"))
-				Res := structs.Response{true, "Sorry Data Format Issue", "WizDawrf/signup"}
+				Res := structs.Response{true, "Sorry Data Format Issue", "/signup"}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(response, Res)
 			return
@@ -1098,7 +1084,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *struct
 		record ,err := cloud.SaveData(&member, appName); if err != nil {
 			fmt.Printf("Error%v\n", err)
 				temp := template.Must(template.ParseFiles("server.html"))
-				Res := structs.Response{true, "Sorry Data is not save yet", "WizDawrf/signup"}
+				Res := structs.Response{true, "Sorry Data is not save yet", "/signup"}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(response, Res)
 			return	
@@ -1112,7 +1098,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *struct
 		}
 			fmt.Printf("Search Data:%v", candidate.Email)
 			temp := template.Must(template.ParseFiles("server.html"))
-			Res := structs.Response{true, "Your Data Already in DB", "WizDawrf/signup"}
+			Res := structs.Response{true, "Your Data Already in DB", "/signup"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(response, Res)
 	}
@@ -1140,10 +1126,6 @@ func SetFirestoreCredentials() *firebase.App {
 		app, err := firebase.NewApp(context.Background(), conf, opt)
 		if err != nil {
 			println("Error in Connection with Firestore", err)
-				// temp := template.Must(template.ParseFiles("server.html"))
-				// Res := Response{true, "Sorry, Internet Connection Failed", ""}
-				// println("Server Response:", Res.Flag,Res.Message,Res.Links)
-				// temp.Execute(w, Res)
 			return nil
 		}
 		println("Connected... Welcome to Firestore")
@@ -1246,7 +1228,7 @@ func FileReadFromDisk(w http.ResponseWriter, filename string) os.FileInfo {
 	if err != nil {
 		println("FILE Open Error ... ", err)
 		temp := template.Must(template.ParseFiles("server.html"))
-		Res := structs.Response{true, "Sorry Error in open File", "WizDawrf/dashboard"}
+		Res := structs.Response{true, "Sorry Error in open File", "/dashboard"}
 		println("Server Response:", Res.Flag,Res.Message,Res.Links)
 		temp.Execute(w, Res)
 		return nil
@@ -1256,7 +1238,7 @@ func FileReadFromDisk(w http.ResponseWriter, filename string) os.FileInfo {
 	if err != nil {
 		println("File Info not found", err)
 		temp := template.Must(template.ParseFiles("server.html"))
-		Res := structs.Response{true, "Sorry, Server have NO INFORMATION", "WizDawrf/dashboard"}
+		Res := structs.Response{true, "Sorry, Server have NO INFORMATION", "/dashboard"}
 		println("Server Response:", Res.Flag,Res.Message,Res.Links)
 		temp.Execute(w, Res)
 		return nil
@@ -1272,7 +1254,7 @@ func Key(w http.ResponseWriter, h1, h2 string) (string, string, *ecdsa.PrivateKe
 		if err != nil {
 			// panic(err)
 			temp := template.Must(template.ParseFiles("server.html"))
-			Res := structs.Response{true, "Sorry Error in encrytion", "WizDawrf/signup"}
+			Res := structs.Response{true, "Sorry Error in encrytion", "/signup"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			return "", "", nil
@@ -1290,7 +1272,7 @@ func Key(w http.ResponseWriter, h1, h2 string) (string, string, *ecdsa.PrivateKe
 		println("Reader_reg:", rand.Reader)
 		if err != nil {
 			temp := template.Must(template.ParseFiles("server.html"))
-			Res := structs.Response{true, "Sorry Error in encrytion", "WizDawrf/signup"}
+			Res := structs.Response{true, "Sorry Error in encrytion", "/signup"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			// panic(err)
@@ -1335,7 +1317,7 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 	if err != nil {
 		fmt.Println("Error failed.... retry", err)
 		 temp := template.Must(template.ParseFiles("server.html"))
-		 Res := structs.Response{true, "Sorry Error in Upload File {TYPE : MIME}", "WizDawrf/dashboard"}
+		 Res := structs.Response{true, "Sorry Error in Upload File {TYPE : MIME}", "/dashboard"}
 		 println("Server Response:", Res.Flag,Res.Message,Res.Links)
 		temp.Execute(w, Res)
 		return nil
@@ -1346,7 +1328,7 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 		if _, err := os.Stat(handler.Filename); os.IsExist(err) {
 			fmt.Println("File not exist ", err)
 			 temp := template.Must(template.ParseFiles("server.html"))
-			Res := structs.Response{true, "Sorry Error , No Such Directory", "WizDawrf/dashboard"}
+			Res := structs.Response{true, "Sorry Error , No Such Directory", "/dashboard"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			return nil
@@ -1355,7 +1337,7 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 		if err != nil {
 			fmt.Println("Error received while uploading!", err)
 			temp := template.Must(template.ParseFiles("server.html"))
-			Res := structs.Response{true, "Sorry Upload File must have MIME TYPE: ", "WizDawrf/dashboard"}
+			Res := structs.Response{true, "Sorry Upload File must have MIME TYPE: ", "/dashboard"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			return nil 
@@ -1366,7 +1348,7 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 		if err != nil {
 			fmt.Println("Error received while reading!", err)
 			temp := template.Must(template.ParseFiles("server.html"))
-			Res := structs.Response{true, "Error in Reading File", "WizDawrf/dashboard"}
+			Res := structs.Response{true, "Error in Reading File", "/dashboard"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
 			return nil
