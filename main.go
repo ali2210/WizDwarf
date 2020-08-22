@@ -35,6 +35,7 @@ import (
 	"strings"
 	"github.com/fogleman/ribbon/pdb"
 	"github.com/ali2210/wizdwarf/structs/amino"
+	// swarmClient "github.com/ethersphere/swarm/api/client"
 	/*"runtime"
 	"path/filepath"*/
 )
@@ -58,7 +59,7 @@ var (
 	LifeCode []amino.AminoClass
 	configFilename string = "htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
 	googleCredentials string = ""
-
+	FILENAME string = ""
 	//complex structs.ComplexHandler = structs.ComplexHandler{}
 
 	/*_, b, _, _ = runtime.Caller(0)
@@ -773,7 +774,7 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 				// read file and add swarm
 				if add.Allowed {
 
-					
+					AddFilesEthereumSwarm()
 				}
 			 	// add this address in html page as static. 
 
@@ -1345,6 +1346,9 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 
 		// upload file by user...
 		upldFile, err := ioutil.TempFile("user_data", handler.Filename+"-*.txt")
+		/*fmt.Println("file:", upldFile.Name())*/
+		FILENAME = upldFile.Name()
+
 		if err != nil {
 			fmt.Println("Error received while uploading!", err)
 			temp := template.Must(template.ParseFiles("server.html"))
@@ -1536,5 +1540,17 @@ func SessionExpire(w http.ResponseWriter , r *http.Request)error{
 		 	}
 		 	return nil
 }
+
+func AddFilesEthereumSwarm(){
+
+	_ , err := os.Stat(FILENAME) ; if os.IsExist(err){
+		fmt.Println("Error:", err)
+		return
+	}
+
+	
+	
+}
+
 
 
