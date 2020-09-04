@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  
+
   <!-- <link rel="shortcut icon" type="image/png" href="/images/favicon.png"> -->
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="/css/seed.css">
-  <link rel="stylesheet" type="text/css" href="/css/transact.css">
+  <link rel="stylesheet" type="text/css" href="/css/seed.css"/>
+  <link rel="stylesheet" type="text/css" href="/css/transact.css"/>
   <link rel="stylesheet" type="text/css" href="/css/treasure.css"></link>
   <link rel="stylesheet" type="text/css" href="/css/visualize.css"></link>
-  <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+  <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
   <title>WizDwarfs</title>
 </head>
 <body>
@@ -20,85 +20,20 @@
   <div class="static-field">
       <div class="static-img">
         <img src="/images/logo.png" alt ="WizDwarfs" class="img-logo"/>
-        <h4 class="text">Proteins Visualization</h4>
+        <h4 class="text">Visualization</h4>
       </div>
     </div>
 
-<!--       <div class="color-box-1">
-        <div class="amino-red">
-           <span>R</span>
-        </div>
-        <div class="amino-green">
-          <span>H</span>
-        </div>
-        <div class="amino-blue">
-          <span>K</span>
-        </div>
-        <div class="amino-aqua">
-          <span>D</span>
-        </div>
-        <div class="amino-sarcoline">
-          <span>Q</span>
-        </div>
-        <div class="amino-indiared">
-          <span>C</span>
-        </div>
-        <div class="amino-coquelicot">
-          <span>G</span>
-        </div>
-        <div class="amino-smaragdin">
-          <span>P</span>
-        </div>
-        <div class="amino-mikado">
-          <span>A</span>
-        </div>
-        <div class="amino-glaucous">
-          <span>V</span>
-        </div>
-        <div class="amino-wenge">
-          <span>I</span>
-        </div>
-        <div class="amino-fulvous">
-          <span>L</span>
-        </div>
-        <div class="amino-eburnean">
-          <span>Y</span>
-        </div>
-        <div class="amino-amaranth">
-          <span>W</span>
-        </div>
-      </div>
-    <div class="color-box-2">
-        <div class="amino-purple">
-          <span>E</span>
-       </div>
-        <div class="amino-teal">
-           <span>S</span>
-        </div>
-        <div class="amino-fuchsia">
-          <span>T</span>
-        </div>
-        <div class="amino-lime">
-         <span>N</span>
-        </div>
-        <div class="amino-xanadu">
-          <span>M</span>
-        </div>
-        <div class="amino-falu">
-         <span>F</span>
-        </div>
-    </div> -->
 
     <div class="container-canvas">
-      <div class="horzontialList" id="List">
+      <span>{{.Probablity}}</span>
+      <!-- <div class="horzontialList" id="List">
         {{range .}}
-        <!-- <table> -->
-        {{if ne .Name " "}} 
+        {{if ne .Name " "}}
              <span>{{.Name}}</span>
          {{end}}
-       <!-- </table> -->
         {{end}}
-      </div> 
+      </div>  -->
       <!-- <canvas id="vizPoint" class="canvas-graphcs" resize></canvas> -->
     </div>
    <!--  <script type="text/javascript" src="/js/paperjs-v0.12.11/dist/paper-core.js"></script>
