@@ -32,17 +32,15 @@ import (
 	"github.com/biogo/biogo/alphabet"
 	"strconv"
 	"math/big"
-	"strings"
+	// "strings"
 	"github.com/fogleman/ribbon/pdb"
 	"github.com/ali2210/wizdwarf/structs/amino"
-	// swarmClient "github.com/ethersphere/swarm/api/client"
-	/*"runtime"
-	"path/filepath"*/
+
 )
 
 
 // Variables
- 
+
 var (
 	emailexp string         = "([A-Z][a-z]|[0-9])*[@][a-z]*"
 	passexp  string         = "([A-Z][a-z]*[0-9])*"
@@ -56,10 +54,11 @@ var (
 	ETHAddressInstance string = ""
 	WalletPubKey string = ""
 	WalletSecureKey string  = ""
-	LifeCode []amino.AminoClass
+	// LifeCode []amino.AminoClass
 	configFilename string = "htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
 	googleCredentials string = ""
 	FILENAME string = ""
+	edit structs.Levenshtein = structs.Levenshtein{}
 	//complex structs.ComplexHandler = structs.ComplexHandler{}
 
 	/*_, b, _, _ = runtime.Caller(0)
@@ -71,12 +70,12 @@ var (
 
 const (
 	projectId          string = "htickets-cb4d0"
-	//Google_Credentials string = "/home/ali/Desktop/htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"	
+	//Google_Credentials string = "/home/ali/Desktop/htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
 	// Main application
 	EtherMainClientUrl  string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
 	// Rickeby for test purpose
-	RinkebyClientUrl  	string = "https://rinkeby.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"	
-	
+	RinkebyClientUrl  	string = "https://rinkeby.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
+
 
 )
 
@@ -87,7 +86,7 @@ func main() {
 	// Routing
 	routing := mux.NewRouter()
 
-	// Links 
+	// Links
 	routing.HandleFunc("/home", Home)
 	routing.HandleFunc("/signup", NewUser)
 	routing.HandleFunc("/login", Existing)
@@ -115,7 +114,7 @@ func main() {
 	routing.HandleFunc("/dummy", server)
 
 	// fmt.Println("Basepath:", basepath)
-	
+
 		// Server
 	log.Println("please wait... Listening at 5000")
 	http.ListenAndServe(":5000", routing)
@@ -126,9 +125,9 @@ func main() {
 
 func Home(w http.ResponseWriter, r *http.Request){
 	temp := template.Must(template.ParseFiles("index.html"))
-	
+
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)																										
+		fmt.Println("Method:" + r.Method)
 		temp.Execute(w, "Home")
 	}
 
@@ -137,27 +136,27 @@ func Home(w http.ResponseWriter, r *http.Request){
 
 func Visualize(w http.ResponseWriter, r *http.Request){
 	temp := template.Must(template.ParseFiles("visualize.html"))
-	if r.Method == "GET" {
+	if r.Method == "GET" && edit.Probablity > 0.0 {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
-		temp.Execute(w,LifeCode)
+		temp.Execute(w,edit)
 	}
-	err := SessionExpire(w,r); if err != nil {
-		return 
-	}
-	w.WriteHeader(http.StatusOK)
-	r.Method = "GET"
-	Dashboard(w,r)
+	// err := SessionExpire(w,r); if err != nil {
+	// 	return
+	// }
+	// w.WriteHeader(http.StatusOK)
+	// r.Method = "GET"
+	// Dashboard(w,r)
 }
 
 
 func Treasure(w http.ResponseWriter, r *http.Request){
-	temp := template.Must(template.ParseFiles("treasure.html"))	
+	temp := template.Must(template.ParseFiles("treasure.html"))
 	acc := structs.Static{}
 	block := structs.Block{}
-	
+
 	if r.Method == "GET" {
-		
+
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
 		acc.Eth = ETHAddressInstance
@@ -168,10 +167,10 @@ func Treasure(w http.ResponseWriter, r *http.Request){
 		temp.Execute(w,acc)
 
 	}else{
-		
+
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
-		
+
 		r.ParseForm()
 		block.TxSen = r.FormValue("send")
 		block.TxRec = r.FormValue("rece")
@@ -182,13 +181,13 @@ func Treasure(w http.ResponseWriter, r *http.Request){
 		blockNumber := big.NewInt(6677972)
 		bNum , err := clientInstance.BlockByNumber(context.Background(), blockNumber); if err != nil {
 				fmt.Println("Error:",err)
-				return 
+				return
 		}
 
 		fmt.Println("Length:", len(bNum.Transactions()))
 		fmt.Println("Hash:", bNum.Hash().Hex())
 		fmt.Println("Block:", bNum.Number().Uint64())
-		
+
 
 		for _ , tx := range bNum.Transactions(){
 			fmt.Println("To:", tx.To().Hex())
@@ -198,21 +197,21 @@ func Treasure(w http.ResponseWriter, r *http.Request){
 
 			chainId, err := clientInstance.NetworkID(context.Background()); if err != nil {
 				fmt.Println("Error:",err)
-				return 
+				return
 			}
 
 
 			// get recipt address
 			message , err := tx.AsMessage(types.NewEIP155Signer(chainId)); if err != nil {
 				fmt.Println("Error:",err)
-				return 
+				return
 			}
 
 			fmt.Println("Message From:", message.From().Hex())
 
 			recp, err := clientInstance.TransactionReceipt(context.Background(), tx.Hash()); if err != nil {
 				fmt.Println("Error:",err)
-				return 
+				return
 			}
 
 			fmt.Println("Status:", recp.Status)
@@ -224,14 +223,14 @@ func Treasure(w http.ResponseWriter, r *http.Request){
 		// Number of Transaction
 		count , err := clientInstance.TransactionCount(context.Background(), txs); if err != nil {
 				fmt.Println("Error:",err)
-				return 
+				return
 		}
 		fmt.Println("Num #:", count)
 
 		for i := uint(0); i < count; i++{
 			Tx , err := clientInstance.TransactionInBlock(context.Background(), txs, i); if err != nil {
 				fmt.Println("Error:",err)
-				return 
+				return
 	 		}
 
 	 		fmt.Println("Tx Hash:", Tx.Hash().Hex())
@@ -241,12 +240,12 @@ func Treasure(w http.ResponseWriter, r *http.Request){
 	 		// Transaction status
 	 		tx , isPending, err := clientInstance.TransactionByHash(context.Background(), txHash); if err != nil {
 				fmt.Println("Error:",err)
-				return 
+				return
 			}
 
 			fmt.Println("hash:", tx.Hash().Hex())
 			fmt.Println("Transaction_Pending:", isPending)
-			
+
 	 	}
 
 	}
@@ -291,69 +290,78 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				var name string = "Covid-19"
 				svrFile := FileReadFromDisk(w, name)
 				println("Please Wait", svrFile.Name(), "...")
-				genome , _, err := SequenceFile(file, svrFile); if err != nil{
+				meGenome ,virusGenome , err := SequenceFile(file, svrFile); if err != nil{
 					fmt.Println("Error:", err)
 					return
 				}
-				LifeCode = genome 
+				distance := structs.EditDistanceStrings(meGenome,virusGenome)
+				edit.Probablity = edit.Result(distance, len(virusGenome))
 				w.WriteHeader(http.StatusOK)
+				// LifeCode = genome
 	    		r.Method = "GET"
-	    		Wallet(w,r)
-	    		//Visualize(w,r)
+	    		// Wallet(w,r)
+	    		Visualize(w,r)
 				// fmt.Println("Virus:", capsid)
-				
+
 			case "2":
 				var name string = "FlaviDengue"
 				svrFile := FileReadFromDisk(w, name)
-				genome , _, err := SequenceFile(file, svrFile); if err != nil{
+				meGenome ,virusGenome,  err := SequenceFile(file, svrFile); if err != nil{
 					fmt.Println("Error:", err)
 					return
 				}
-				LifeCode = genome
+				distance := structs.EditDistanceStrings(meGenome,virusGenome)
+				edit.Probablity = edit.Result(distance , len(virusGenome))
 				w.WriteHeader(http.StatusOK)
-	    		r.Method = "GET" 
-				Wallet(w,r)
+	    		r.Method = "GET"
+				Visualize(w,r)
+				// Wallet(w,r)
 				// fmt.Println("Virus:", capsid)
 			case "3":
 				var name string = "KenyaEbola"
 				svrFile := FileReadFromDisk(w, name)
 				println("Please Wait", svrFile.Name(), "...")
-				genome , _, err := SequenceFile(file, svrFile); if err != nil{
+				meGenome ,virusGenome, err := SequenceFile(file, svrFile); if err != nil{
 					fmt.Println("Error:", err)
 					return
 				}
-				LifeCode = genome
+				distance := structs.EditDistanceStrings(meGenome,virusGenome)
+				edit.Probablity = edit.Result(distance , len(virusGenome))
 				w.WriteHeader(http.StatusOK)
-	    		r.Method = "GET" 
-				Wallet(w,r)
+	    		r.Method = "GET"
+				Visualize(w,r)
+
 				// fmt.Println("Virus:", capsid)
 			case "4":
 				var name string = "ZikaVirusBrazil"
 				svrFile := FileReadFromDisk(w, name)
 				println("Please Wait", svrFile.Name(), "...")
-				genome ,_, err := SequenceFile(file, svrFile); if err != nil{
+				meGenome ,virusGenome, err := SequenceFile(file, svrFile); if err != nil{
 					fmt.Println("Error:", err)
 					return
 				}
-				LifeCode = genome
+				distance := structs.EditDistanceStrings(meGenome,virusGenome)
+				edit.Probablity = edit.Result(distance , len(virusGenome))
 				w.WriteHeader(http.StatusOK)
-	    		r.Method = "GET" 
-				Wallet(w,r)
-				// fmt.Println("Virus:", capsid)				
+	    		r.Method = "GET"
+				Visualize(w,r)
+
+				// fmt.Println("Virus:", capsid)
 			case "5":
 				var name string = "MersSaudiaArabia"
 				svrFile := FileReadFromDisk(w, name)
 				println("Please Wait", svrFile.Name(), "...")
-				genome , _, err  := SequenceFile(file, svrFile); if err != nil{
+				meGenome ,virusGenome, err  := SequenceFile(file, svrFile); if err != nil{
 					fmt.Println("Error:", err)
 					return
 				}
-				LifeCode = genome
+				distance := structs.EditDistanceStrings(meGenome,virusGenome)
+				edit.Probablity = edit.Result(distance ,len(virusGenome))
 				w.WriteHeader(http.StatusOK)
 	    		r.Method = "GET"
-				Wallet(w,r)
+				Visualize(w,r)
 				// fmt.Println("Virus:", capsid)
-				
+
 			default:
 				temFile := template.Must(template.ParseFiles("dashboard.html"))
 				temFile.Execute(w, "Dashboard")
@@ -373,7 +381,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 func Send(w http.ResponseWriter, r *http.Request){
 
 	temp := template.Must(template.ParseFiles("server.html"))
-	
+
 	block := structs.Block{}
 
 	if(r.Method == "POST"){
@@ -392,7 +400,7 @@ func Send(w http.ResponseWriter, r *http.Request){
 			fmt.Println("Error:")
 			return
 		}
-		// Block number 
+		// Block number
 		header, err := clientInstance.HeaderByNumber(context.Background(), nil); if err != nil{
 			fmt.Println("Error:", err)
 			Repon := structs.Response{true,"Error {HeaderByNumber}", "/transact"}
@@ -410,7 +418,7 @@ func Send(w http.ResponseWriter, r *http.Request){
 			Repon := structs.Response{true,"Error {Your Account dont have any Priavte key, use valid address}", "/transact"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
-			return 
+			return
 		}
 		walletPublicKey :=  secure.Public()
 
@@ -427,15 +435,15 @@ func Send(w http.ResponseWriter, r *http.Request){
 		fmt.Println("Your Adddress:", ethAdd)
 
 		fmt.Println("EthAddress:", block.TxRec)
-		
 
-		// nonce pending 
+
+		// nonce pending
 		 noncePending , err := clientInstance.PendingNonceAt(context.Background(), ethAdd); if err != nil {
 		 	Repon := structs.Response{true,"Error {Get Nonce}", "/transact"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
 		 	fmt.Println("Error:", err)
-		 	return 
+		 	return
 		 }
 		 fmt.Println("Pending Nonce:", noncePending)
 
@@ -445,20 +453,20 @@ func Send(w http.ResponseWriter, r *http.Request){
 
 		 block.Nonce = noncePending
 
-		 
+
 		/*block.Nonce = r.FormValue("nonce")*/
 		fmt.Println("choice:", choice)
 
 		// gas
 		gasLImit := uint64(21000)
 		block.GasLimit = gasLImit
-		
+
 		gasPrice , err := clientInstance.SuggestGasPrice(context.Background()); if err != nil {
 				fmt.Println("Error:", err)
 				Repon := structs.Response{true,"Error :{Gas Price Error}", "/transact"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
-				return 
+				return
 			}
 			fmt.Println("Gas:", gasPrice)
 
@@ -468,18 +476,18 @@ func Send(w http.ResponseWriter, r *http.Request){
 			Repon := structs.Response{true,"Error :{Conversion}", "/transact"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
-			return 
+			return
 		}
 
 		gwei := new(big.Int).SetInt64(int64(charge))
 		block.Amount = gwei
 
 		fee := new(big.Int)
-		result := new(big.Int) 
-		
+		result := new(big.Int)
+
 		switch choice{
 			case "Normal":
-				block.GasPrice = gasPrice 
+				block.GasPrice = gasPrice
 				fee.SetInt64(2)
 				result.Mul(block.GasPrice , fee)
 				fmt.Println("Block:" , block)
@@ -507,14 +515,14 @@ func Send(w http.ResponseWriter, r *http.Request){
 		var nofield []byte
 
 		tx := types.NewTransaction(block.Nonce, transfer,block.Amount, block.GasLimit, block.GasPrice, nofield)
-		
+
 		// Signed Transaction
 		sign , err := types.SignTx(tx, types.NewEIP155Signer(chainId), secure); if err != nil {
 			fmt.Println("Error:", err)
 			Repon := structs.Response{true,"Error in Upload File", "/transact"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
-			return 
+			return
 		}
 
 		// Send Transaction
@@ -526,7 +534,7 @@ func Send(w http.ResponseWriter, r *http.Request){
 			Repon := structs.Response{true,"Error {Transaction Failed , Insufficent Balance}", "/transact"}
 			println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 			temp.Execute(w, Repon)
-			return 
+			return
 		}
 
 		fmt.Println("Send:", sign.Hash().Hex())
@@ -538,22 +546,22 @@ func Send(w http.ResponseWriter, r *http.Request){
 }
 
 func CreateWallet(w http.ResponseWriter, r*http.Request){
-	
+
 	temp := template.Must(template.ParseFiles("seed.html"))
-	acc := structs.Acc{} 
+	acc := structs.Acc{}
 
 	if r.Method == "GET" {
-		
+
 		fmt.Println("Method:" + r.Method)
 		temp.Execute(w, "Seed")
 	}else{
-		
+
 		temp := template.Must(template.ParseFiles("server.html"))
 		fmt.Println("Method:"+ r.Method)
 		r.ParseForm()
 		acc.Email = r.FormValue("email")
 		acc.Password = r.FormValue("password")
-		
+
 		if r.FormValue("agreeTerms") == "on"{
 			acc.Terms = true
 		}else{
@@ -565,25 +573,25 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 		}else{
 			acc.Allowed = false
 		}
-		
+
 		client , err := ethclient.Dial(EtherMainClientUrl); if err != nil {
 			fmt.Println("Error :" , err)
 			return
 		}
-		
+
 		fmt.Printf("Connection successfull ....%v\n", client)
 		clientInstance = client
-		
+
 		println("Email:"+ acc.Email + "Password:"+ acc.Password)
 
-		
-		// private key 
+
+		// private key
 		privateKey ,err := crypto.GenerateKey(); if err != nil{
 			println("Error:" , err)
 			return
 		}
 
-			// private key into bytes 
+			// private key into bytes
 		PrvateKyByte := crypto.FromECDSA(privateKey)
 
 		key := hexutil.Encode(PrvateKyByte)[2:]
@@ -607,14 +615,14 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 		acc.PrvteKey = key
 
 
-		// hash 
+		// hash
 		hshCode := sha3.NewLegacyKeccak256()
 		hshCode.Write(publicBytes[1:])
 		ethereum := hexutil.Encode(hshCode.Sum(nil)[12:])
 		fmt.Println("Hash_sha3-256:", ethereum) //ethereum address
 		acc.EthAddress = ethereum
 
-			// valid address 
+			// valid address
 			valid := isYourPublcAdresValid(ethereum); if valid {
 				// smart contract address
 				fmt.Println("smart contract address :" , valid)
@@ -625,7 +633,7 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 			}
 			fmt.Println("smart address:" , valid)
 
-		myWallet := cloudWallet.EthereumWalletAcc{} 
+		myWallet := cloudWallet.EthereumWalletAcc{}
 
 		signWallet , err := json.Marshal(myWallet); if err != nil{
 				fmt.Println("Error:", err)
@@ -641,9 +649,9 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
-		}		
+		}
 
-		//dataabse -- FindAddress 
+		//dataabse -- FindAddress
 		ok , ethAdd := FindAddress(&acc); if ok && ethAdd != nil {
 				Repon := structs.Response{true,"Sorry! Data Already register ", "/open"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
@@ -682,9 +690,9 @@ func CreateWallet(w http.ResponseWriter, r*http.Request){
 }
 
 func Transacts(w http.ResponseWriter, r *http.Request){
-	
 
-		temp := template.Must(template.ParseFiles("transact.html"))	
+
+		temp := template.Must(template.ParseFiles("transact.html"))
 		acc := structs.Static{}
 		if r.Method == "GET" {
 			fmt.Println("Url:", r.URL.Path)
@@ -697,7 +705,7 @@ func Transacts(w http.ResponseWriter, r *http.Request){
 		fmt.Println("Details:", acc )
 		temp.Execute(w,acc)
 		}
-	
+
 }
 
 
@@ -710,7 +718,7 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
 		temp.Execute(w,"Wallet")
-	
+
 	}else{
 
 		temp := template.Must(template.ParseFiles("server.html"))
@@ -721,20 +729,20 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 
 		acc.Email = r.FormValue("email")
 		acc.Password = r.FormValue("password")
-		
+
 
 		client , err := ethclient.Dial(EtherMainClientUrl); if err != nil {
 			fmt.Println("Error :" , err)
 			return
 		}
-		
+
 		fmt.Printf("Connection successfull ....%v\n", client)
-		
+
 			clientInstance = client
 			println("Email:"+ acc.Email + "Password:"+ acc.Password)
 
 
-			myWallet := cloudWallet.EthereumWalletAcc{} 
+			myWallet := cloudWallet.EthereumWalletAcc{}
 
 			signWallet , err := json.Marshal(myWallet); if err != nil{
 				fmt.Println("Error:", err)
@@ -750,14 +758,14 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
-			}		
+			}
 			add, ok := MyEthAddress(&acc); if !ok {
 				Repon := structs.Response{true,"Sorry! No Account Exist ", "/open"}
 				println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
 				temp.Execute(w, Repon)
 				return
 			}
-			if add != nil{ 
+			if add != nil{
 				fmt.Println("Address:" , add)
 				acc.EthAddress = add.EthAddress
 				// Secure Key
@@ -776,9 +784,9 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 
 					AddFilesEthereumSwarm()
 				}
-			 	// add this address in html page as static. 
+			 	// add this address in html page as static.
 
-				//dataabse -- FindAddress 
+				//dataabse -- FindAddress
 			secureWallet, ok := FindEthWallet(&acc); if !ok && secureWallet != nil {
 				fmt.Println("Error", err)
 				Repon := structs.Response{true,"Sorry! No Account Exist ", "/createWallet"}
@@ -790,20 +798,20 @@ func Wallet(w http.ResponseWriter, r *http.Request){
 
 
 
-			cryptoSessions = blockSession(LifeCode[0].Id)
-			fmt.Println("Session:", cryptoSessions)
+			// fmt.Println("Session:", cryptoSessions)
 
-			err := Authentication(w, r); if err != nil {
-					Repon := structs.Response{true,"Sorry! No Account Exist ", "/createWallet"}
-					println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
-					temp.Execute(w, Repon)
-					return 
-			}
+			// cryptoSessions = blockSession(LifeCode[0].Id)
+			// err := Authentication(w, r); if err != nil {
+			// 		Repon := structs.Response{true,"Sorry! No Account Exist ", "/createWallet"}
+			// 		println("Server Response:", Repon.Flag,Repon.Message,Repon.Links)
+			// 		temp.Execute(w, Repon)
+			// 		return
+			// }
 
 			w.WriteHeader(http.StatusOK)
 	  	   	r.Method = "GET"
-	     	Transacts(w,r)			
-		} 
+	     	Transacts(w,r)
+		}
 	}
 }
 
@@ -900,7 +908,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "GET"{
 		fmt.Printf("\nMethod:%v", r.Method)
-		temp.Execute(w, "Login")	
+		temp.Execute(w, "Login")
 	}else{
 		// Parse Form
 		r.ParseForm()
@@ -948,11 +956,11 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 			Res := structs.Response{true, "No Record Exist", "/login"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
-		 	return 
+		 	return
 		 }
 		 	if data != nil{
 		 		fmt.Printf("Search Data:%v", data.Id)
-		 	
+
 		 		//complex.AddByName(data.Name)
 		 		// User Session
 		 		if userSessions == nil {
@@ -969,9 +977,9 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		 		}
 		 		println("Id :", sessId, "user:", userSessions)
 		 }
-		
-		
-		 // Login page 
+
+
+		 // Login page
 		w.WriteHeader(http.StatusOK)
 	    r.Method = "GET"
 		Dashboard(w,r)
@@ -1011,11 +1019,11 @@ func Logout(w http.ResponseWriter, r *http.Request){
 }
 
 
-//  Advance Functions 
+//  Advance Functions
 
 
 func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string)(*db.Vistors, error){
-	
+
 	 var data *db.Vistors
 	 var err error
 	// w.Header().Set("Content-Type", "application/json")
@@ -1026,7 +1034,7 @@ func SearchDB(w http.ResponseWriter, r *http.Request, email,pass string)(*db.Vis
 		data, err = cloud.FindData(email,pass, appName); if err != nil && data != nil{
 			// log.Fatal("Error", err)
 			println("Error:", err)
-			return nil, err 
+			return nil, err
 		}
 		println("Data:", data)
 	}
@@ -1050,7 +1058,7 @@ func getVistorData(response http.ResponseWriter, request *http.Request) {
 }
 
 func addVistor(response http.ResponseWriter, request *http.Request, user *structs.Create_User, im string) {
-	
+
 	// var err error
 	//response.Header().Set("Content-Type", "application/json")
 	if request.Method == "GET" {
@@ -1087,7 +1095,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *struct
 			member.Eve = user.Madam
 		}
 		member.Address = user.Address
-		member.LAddress	= user.Address2																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									
+		member.LAddress	= user.Address2
 		member.City = user.City
 		member.Zip = user.Zip
 		member.Country = user.Country
@@ -1097,14 +1105,14 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *struct
 				Res := structs.Response{true, "Sorry Data is not save yet", "/signup"}
 				println("Server Response:", Res.Flag,Res.Message,Res.Links)
 				temp.Execute(response, Res)
-			return	
+			return
 		}
 
 		println("Record:", record.Id)
 		response.WriteHeader(http.StatusOK)
 		request.Method = "GET"
 		Existing(response,request)
-			return 
+			return
 		}
 			fmt.Printf("Search Data:%v", candidate.Email)
 			temp := template.Must(template.ParseFiles("server.html"))
@@ -1112,7 +1120,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *struct
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(response, Res)
 	}
-	
+
 }
 
 
@@ -1148,14 +1156,14 @@ func StringToInt(s string)(int, error){
 
 	i, err := strconv.Atoi(s); if err != nil {
 		fmt.Println("Error:", err)
-		return 0 , err 
+		return 0 , err
 	}
 	return i, nil
 
 }
 
 func GetBalance(account *structs.Static)(*big.Int){
-	
+
 	wallet :=  common.HexToAddress(account.Eth)
 	balnce , err := clientInstance.BalanceAt(context.Background(), wallet, nil); if err != nil{
 		fmt.Println("Error:", err)
@@ -1183,7 +1191,7 @@ func FindAddress(w *structs.Acc)(bool, *cloudWallet.EthereumWalletAcc){
 		return false, nil
 	}
 	if ethAcc != nil{
-		return false, nil	
+		return false, nil
 	}
 	return true, ethAcc
 
@@ -1196,9 +1204,9 @@ func MyEthAddress(w *structs.Acc)(*cloudWallet.EthereumWalletAcc, bool){
 		return nil, false
 	}
 	if acc == nil{
-		return nil,false	
+		return nil,false
 	}
-	return acc,true		
+	return acc,true
 }
 
 func FindEthWallet(w *structs.Acc)(*cloudWallet.EthereumWalletAcc,bool){
@@ -1254,7 +1262,7 @@ func FileReadFromDisk(w http.ResponseWriter, filename string) os.FileInfo {
 		return nil
 	}
 	println("File Info", finfo.Name())
-	return finfo
+	return   finfo
 }
 
 func Key(w http.ResponseWriter, h1, h2 string) (string, string, *ecdsa.PrivateKey) {
@@ -1355,7 +1363,7 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 			Res := structs.Response{true, "Sorry Upload File must have MIME TYPE: ", "/dashboard"}
 			println("Server Response:", Res.Flag,Res.Message,Res.Links)
 			temp.Execute(w, Res)
-			return nil 
+			return nil
 		}
 		defer upldFile.Close()
 		// file convert into bytes
@@ -1375,11 +1383,9 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 	}
 	return nil
 }
+// []amino.AminoClass, []amino.AminoClass
+func SequenceFile(serverFile *os.File, userFile os.FileInfo) ([]string, []string, error){
 
-func SequenceFile(serverFile *os.File, userFile os.FileInfo) ([]amino.AminoClass, []amino.AminoClass, error){
-
-
-	//own pdb file ... old file is not very friendly..... boooah...
 	seq, err := ReadSequence(userFile.Name());if err != nil {
 		println("Error in read file", err)
 		return nil, nil, err
@@ -1396,18 +1402,18 @@ func SequenceFile(serverFile *os.File, userFile os.FileInfo) ([]amino.AminoClass
 	}
 	fmt.Println("Gen:{", gen , "}")
 
-	// Dna to rna 
+	// Dna to rna
 
-	rna35 := RNASequence(gen)
-	fmt.Println("single:", rna35)
-
-	st1 := rna35
-	st2 := strings.Join(st1, "")
-
-	
-	helixOrgan := bioChemRecord(st2)
-	fmt.Println("Helix Organsim:", helixOrgan)	
-	proteins := RNAToAminoAcids(rna35)
+	// rna35 := RNASequence(gen)
+	// fmt.Println("single:", rna35)
+	//
+	// st1 := rna35
+	// st2 := strings.Join(st1, "")
+	//
+	//
+	// helixOrgan := bioChemRecord(st2)
+	// fmt.Println("Helix Organsim:", helixOrgan)
+	// proteins := RNAToAminoAcids(rna35)
 
 	pathogen , err := ReadSequence(serverFile.Name()); ;if err != nil {
 		println("Error in read file", err)
@@ -1424,30 +1430,31 @@ func SequenceFile(serverFile *os.File, userFile os.FileInfo) ([]amino.AminoClass
 	}
 	fmt.Println("Genes:{", genV , "}")
 
-	// Dna to rna 
+	// Dna to rna
 
-	rnaVirus := RNASequence(genV)
-	fmt.Println("single:", rnaVirus)
+	// rnaVirus := RNASequence(genV)
+	// fmt.Println("single:", rnaVirus)
+	//
+	//  st := rnaVirus
+	// st21 := strings.Join(st, "")
+	//
+	//
+	// helixVirus := bioChemRecord(st21)
+	// fmt.Println("helix Virus:", helixVirus)
+	// caspidProteins := RNAToAminoAcids(rnaVirus)
 
-	 st := rnaVirus
-	st21 := strings.Join(st, "")
 
-	
-	helixVirus := bioChemRecord(st21)	
-	fmt.Println("helix Virus:", helixVirus)
-	caspidProteins := RNAToAminoAcids(rnaVirus)
+	// return proteins, caspidProteins	, nil
+	return gen, genV , nil
 
-	// DB ....
-	return proteins, caspidProteins	, nil
-	
 }
 
 func DoAscii(seq byte) string {
-	
-	if seq >= 65 && seq < 91{ 
+
+	if seq >= 65 && seq < 91{
 		return string(alphabet.Letter(seq))
 	}
-	return string(alphabet.Letter(seq))	
+	return string(alphabet.Letter(seq))
 }
 
 func RNASequence(sq []string) []string{
@@ -1456,7 +1463,7 @@ func RNASequence(sq []string) []string{
 
 
 	for i , _ := range sq{
-		
+
 		if sq[i] == "T"{
 			sq[i] = "U"
 		}
@@ -1464,7 +1471,7 @@ func RNASequence(sq []string) []string{
 	}
 
 	return k
-	
+
 }
 
 
@@ -1487,15 +1494,15 @@ func bioChemRecord(st2 string) structs.MolecularBio{
 	fmt.Println("HelixClass:" , hlix.HelixClass)
 	fmt.Println("Length:" , hlix.Length)
 	// parseTree()
-	
+
 	//strand records
 	stand := *pdb.ParseStrand(st2)
 	fmt.Println("Strand:", stand.Strand)
 	fmt.Println("Num:", stand.NumStrands)
 	fmt.Println("Atom+:", stand.CurAtom)
-	
 
-	molecule.HelixA = hlix	
+
+	molecule.HelixA = hlix
 	molecule.StrandB = stand
 
 	return molecule
@@ -1509,7 +1516,7 @@ func RNAToAminoAcids(s []string) []amino.AminoClass{
 	}
 
 	proteins := amino.AminoClass{}
-    
+
 		ls := proteins.Bases(bases)
 
 		return ls
@@ -1535,7 +1542,7 @@ func SessionExpire(w http.ResponseWriter , r *http.Request)error{
 		sessId , _ := cryptoSessions.Get(r, "session-name")
 		 	sessId.Values["authenticated"] = false
 		 	err := sessId.Save(r,w); if err != nil{
-		 		// log.Fatal("Error", err)		 		
+		 		// log.Fatal("Error", err)
 		 		return err
 		 	}
 		 	return nil
@@ -1548,9 +1555,6 @@ func AddFilesEthereumSwarm(){
 		return
 	}
 
-	
-	
+
+
 }
-
-
-

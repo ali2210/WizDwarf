@@ -11,7 +11,7 @@ type AminoClass struct{
 	Name string
 	Polar bool
 	Charge bool
-	ChargeType string 
+	ChargeType string
 	TypeChain string
 	Hydrophobic bool
 	PKa float64
@@ -24,7 +24,7 @@ type AminoClass struct{
 func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 
 
-	size := (len(class)- 4) 
+	size := (len(class)- 4)
 	peptideBond := make([]AminoClass, size)
 
 	for _ , _ = range class{
@@ -34,7 +34,7 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 	bioclass.Id = rand.Intn((len(class)-4)) * len(class)
 
 	for i := 0; i < (len(class) - 4); i++{
-		
+
 		  if (class[i+0] == "U"  && class[i+1] == "U" &&  class[i+2] == "U")|| (class[i+0] == "U" && class[i+1] == "U" && class[i+2] == "C"){
 			bioclass.Symbol = "F"
 			bioclass.Name = "Phenylalanine"
@@ -47,7 +47,7 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 			bioclass.Codon_Start = false
 			bioclass.Codon_End = false
 			peptideBond = append(peptideBond, bioclass)
-			
+
 		}else if (class[i+0] == "U" && class[i+1] == "U" && class[i+2] == "A")|| (class[i+0] == "U" && class[i+1] =="U" && class[i+2] =="G")|| (class[i+0] == "C" && class[i+1] =="U" && class[i+2] == "U") || (class[i+0] ==  "C" && class[i+1] =="U" && class[i+2] == "C")|| (class[i+0] ==  "C" &&  class[i+1] =="U"  && class[i+2] =="A") || (class[i+0] ==  "C" && class[i+1] =="U" && class[i+2] =="G") {
 			bioclass.Symbol = "L"
 			bioclass.Name = "Leucine"
@@ -60,7 +60,7 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 			bioclass.Charge = false
 			bioclass.ChargeType =  " "
 			peptideBond = append(peptideBond, bioclass)
-			
+
 		}else if (class[i+0] ==  "U" && class[i+1] =="C" && class[i+2] =="U")|| (class[i+0] ==  "U" &&  class[i+1] =="C" && class[i+2] =="C")|| (class[i+0] ==  "U" && class[i+1] == "C" && class[i+2] == "A")|| (class[i+0] ==  "U" &&  class[i+1] == "C" && class[i+2] ==  "G")|| (class[i+0] ==  "A" && class[i+1] == "G" && class[i+2] == "U")|| (class[i+0] == "A" &&  class[i+1] == "G" && class[i+2] == "C") {
 			bioclass.Symbol = "S"
 			bioclass.Name = "Serine"
@@ -73,8 +73,8 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 			bioclass.Codon_End = false
 			bioclass.ChargeType =  " "
 			peptideBond = append(peptideBond, bioclass)
-			
-			
+
+
 		}else if (class[i+0] ==  "C" && class[i+1] == "C" && class[i+2] == "U")|| (class[i+0] ==  "C" && class[i+1] == "C" && class[i+2] == "C")|| (class[i+0] ==  "C" && class[i+1] == "C" && class[i+2] == "A")|| (class[i+0] == "C" && class[i+1] == "C" && class[i+2] == "G" ){
 			bioclass.Symbol = "P"
 			bioclass.Name = "Proline"
@@ -87,8 +87,8 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 			bioclass.Charge = false
 			bioclass.ChargeType =  " "
 			peptideBond = append(peptideBond, bioclass)
-			
-			
+
+
 		}else if (class[i+0] ==  "A" && class[i+1] == "A" && class[i+2] == "U")|| (class[i+0] ==  "A" && class[i+1] == "U" && class[i+2] == "C")|| (class[i+0] == "A" && class[i+1] == "U" && class[i+2] == "A" ) {
 			bioclass.Symbol = "I"
 			bioclass.Name = "Isoleucine"
@@ -101,8 +101,8 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 			bioclass.Charge = false
 			bioclass.ChargeType =  " "
 			peptideBond = append(peptideBond, bioclass)
-			
-			
+
+
 		}else if class[i+0] ==  "A" && class[i+1] == "U" && class[i+2] == "G"  {
 			bioclass.Symbol = "M"
 			bioclass.Name = "Methionine"
@@ -115,8 +115,8 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 			bioclass.Hydrophobic = false
 			bioclass.TypeChain = " "
 			peptideBond = append(peptideBond, bioclass)
-			
-			
+
+
 		}else if (class[i+0] ==  "A" && class[i+1] == "C" && class[i+2] == "U")|| (class[i+0] ==  "A" && class[i+1] == "C" && class[i+2] == "C")|| (class[i+0] == "A" && class[i+1] == "C" && class[i+2] == "A" )|| (class[i+0] == "A" && class[i+1] == "C" && class[i+2] == "G") {
 			bioclass.Symbol = "T"
 			bioclass.Name = "Threonine"
@@ -129,8 +129,8 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 			bioclass.ChargeType =  " "
 			bioclass.TypeChain = " "
 			peptideBond = append(peptideBond, bioclass)
-			
-			
+
+
 		}else if (class[i+0] ==  "G" && class[i+1] == "U" && class[i+2] == "U") || (class[i+0] == "G" && class[i+1] == "U" && class[i+2] == "C" )|| (class[i+0] == "G" && class[i+1] == "U" && class[i+2] == "A" )|| (class[i+0] == "G" && class[i+1] == "U" && class[i+2] == "G" ){
 			bioclass.Symbol = "V"
 			bioclass.Name = "Valine"
@@ -143,8 +143,8 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 			bioclass.Charge = false
 			bioclass.ChargeType =  " "
 			peptideBond = append(peptideBond, bioclass)
-			
-			
+
+
 		}else if (class[i+0] ==   "G" && class[i+1] == "C" && class[i+2] == "U")|| (class[i+0] == "G" && class[i+1] == "C" && class[i+2] == "C")|| (class[i+0] == "G" && class[i+1] == "C" && class[i+2] == "A" )|| (class[i+0] == "G" && class[i+1] == "C" && class[i+2] == "G") {
 			bioclass.Symbol = "A"
 			bioclass.Name = "Alanine"
@@ -156,8 +156,8 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 			bioclass.Charge = false
 			bioclass.ChargeType =  " "
 			peptideBond = append(peptideBond, bioclass)
-			
-			
+
+
 		}else if (class[i+0] ==   "U" && class[i+1] == "A" && class[i+2] == "U" )||  (class[i+0] == "U" && class[i+1] == "A" && class[i+2] == "C")  {
 			bioclass.Symbol = "Y"
 			bioclass.Name = "Tyrosine"
@@ -170,8 +170,8 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 			bioclass.ChargeType =  " "
 			bioclass.Hydrophobic = false
 			peptideBond = append(peptideBond, bioclass)
-			
-			
+
+
 		}else if (class[i+0] ==   "U" && class[i+1] == "A" && class[i+2] == "A") || (class[i+0] ==  "U" && class[i+1] == "A" && class[i+2] == "G")|| (class[i+0] == "U" && class[i+1] == "G" && class[i+2] == "A")  {
 			bioclass.Symbol = "X"
 			bioclass.Codon_End = true
@@ -184,7 +184,7 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 			bioclass.Polar = false
 			bioclass.Hydrophobic = false
 			peptideBond = append(peptideBond, bioclass)
-			
+
 
 		}else if (class[i+0] ==   "C" && class[i+1] == "A" && class[i+2] == "U") || (class[i+0] == "C" && class[i+1] == "A" && class[i+2] == "C")  {
 			bioclass.Symbol = "H"
@@ -198,8 +198,8 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 			bioclass.Codon_Start = false
 			bioclass.Codon_End = false
 			peptideBond = append(peptideBond, bioclass)
-			
-			
+
+
 		}else if (class[i+0] ==   "C" && class[i+1] == "A" && class[i+2] == "A") || (class[i+0] ==  "C" && class[i+1] == "A" && class[i+2] == "G")  {
 			bioclass.Symbol = "Q"
 			bioclass.Name = "Glutamine"
@@ -212,8 +212,8 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 			bioclass.ChargeType =  " "
 			bioclass.Hydrophobic = false
 			peptideBond = append(peptideBond, bioclass)
-			
-			
+
+
 		}else if (class[i+0] ==   "C" && class[i+1] == "G" && class[i+2] == "U") || (class[i+0] == "C" && class[i+1] == "G" && class[i+2] == "C" )|| (class[i+0] == "C" && class[i+1] == "G" && class[i+2] == "A")|| (class[i+0] == "C" && class[i+1] == "G" && class[i+2] == "G" )|| (class[i+0] == "A" && class[i+1] == "G" && class[i+2] == "A" )|| (class[i+0] == "A" && class[i+1] == "G" && class[i+2] == "G")  {
 			bioclass.Symbol = "R"
 			bioclass.Name = "Arginine"
@@ -226,8 +226,8 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 			bioclass.Codon_End = false
 			bioclass.Codon_Start = false
 			peptideBond = append(peptideBond, bioclass)
-			
-			
+
+
 		}else if (class[i+0] ==   "A" && class[i+1] == "A" && class[i+2] == "U") || (class[i+0] == "A" && class[i+1] == "A" && class[i+2] == "C")  {
 			bioclass.Symbol = "N"
 			bioclass.Name = "Asparagine"
@@ -239,7 +239,7 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 			bioclass.Charge = false
 			bioclass.ChargeType =  " "
 			peptideBond = append(peptideBond, bioclass)
-			
+
 		}else if (class[i+0] ==   "A" && class[i+1] == "A" && class[i+2] == "A") || (class[i+0] == "A" && class[i+1] == "A" && class[i+2] == "G")  {
 			bioclass.Symbol = "K"
 			bioclass.Name = "Lysine"
@@ -252,7 +252,7 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 			bioclass.Codon_End = false
 			bioclass.Codon_Start = false
 			peptideBond = append(peptideBond, bioclass)
-			
+
 		}else if (class[i+0] ==   "G" && class[i+1] == "A" && class[i+2] == "U") || (class[i+0] == "G" && class[i+1] == "A" && class[i+2] == "C")  {
 			bioclass.Symbol = "D"
 			bioclass.Name = "Aspartic Acid"
@@ -264,9 +264,9 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 			bioclass.Codon_Start = false
 			bioclass.Codon_End = false
 			bioclass.TypeChain = " "
-			
+
 			peptideBond = append(peptideBond, bioclass)
-			
+
 		}else if (class[i+0] ==   "G" && class[i+1] == "A" && class[i+2] == "A") || (class[i+0] ==  "G" && class[i+1] == "A" && class[i+2] == "G")  {
 			bioclass.Symbol = "E"
 			bioclass.Name = "Glutamate"
@@ -279,8 +279,8 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 			bioclass.Codon_End = false
 			bioclass.TypeChain = " "
 			peptideBond = append(peptideBond, bioclass)
-			
-			
+
+
 		}else if (class[i] ==   "G" && class[i] == "G" && class[i] == "U" )|| (class[i+0] == "G" && class[i+1] == "G" && class[i+2] == "C" )|| (class[i+0] == "G" && class[i+1] == "G" && class[i+2] == "A" )|| (class[i+0] == "G" && class[i+1] == "G" && class[i+2] == "G")  {
 			bioclass.Symbol = "G"
 			bioclass.Name = "Glycine"
@@ -293,7 +293,7 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 			bioclass.Charge = false
 			bioclass.ChargeType =  " "
 			peptideBond = append(peptideBond, bioclass)
-			
+
 		}else if (class[i+0] ==   "U" && class[i+1] == "G" && class[i+2] == "U" )|| (class[i+0] == "U" && class[i+1] == "G" && class[i+2] == "C")  {
 			bioclass.Symbol = "C"
 			bioclass.Name = "Cysteine"
@@ -306,8 +306,8 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 			bioclass.ChargeType =  " "
 			bioclass.Hydrophobic = false
 			peptideBond = append(peptideBond, bioclass)
-			
-			
+
+
 		}else if class[i+0] ==   "U" && class[i+1] == "G" && class[i+2] == "G" {
 			bioclass.Symbol = "W"
 			bioclass.Name = "Tryptophan"
@@ -320,11 +320,9 @@ func (bioclass AminoClass) Bases(class []string)[]AminoClass{
 			bioclass.Charge = false
 			bioclass.ChargeType =  " "
 			peptideBond = append(peptideBond, bioclass)
-		}	
+		}
    	}
-   	
+
 	return peptideBond
 
 }
-
-
