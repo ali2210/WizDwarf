@@ -59,7 +59,8 @@ var (
 	googleCredentials string = ""
 	FILENAME string = ""
 	edit structs.Levenshtein = structs.Levenshtein{}
-	//complex structs.ComplexHandler = structs.ComplexHandler{}
+	openStreet structs.Address = structs.Address{}
+
 
 	/*_, b, _, _ = runtime.Caller(0)
     basepath   = filepath.Dir(b)*/
@@ -75,7 +76,7 @@ const (
 	EtherMainClientUrl  string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
 	// Rickeby for test purpose
 	RinkebyClientUrl  	string = "https://rinkeby.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
-
+	openwizweather string = "7efdb33c59a74e09352479b21657aee8"
 
 )
 
@@ -136,10 +137,12 @@ func Home(w http.ResponseWriter, r *http.Request){
 
 func Visualize(w http.ResponseWriter, r *http.Request){
 	temp := template.Must(template.ParseFiles("visualize.html"))
-	if r.Method == "GET" && edit.Probablity > 0.0 {
+
+	if r.Method == "GET" && edit.Probablity >= 0.0 {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
-		temp.Execute(w,edit)
+
+		 temp.Execute(w,"visualize")
 	}
 	// err := SessionExpire(w,r); if err != nil {
 	// 	return
@@ -295,7 +298,19 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 				distance := structs.EditDistanceStrings(meGenome,virusGenome)
-				edit.Probablity = edit.Result(distance, len(virusGenome))
+				edit.Probablity = edit.Result(distance)
+				edit.Name = name
+				edit.Percentage = edit.CalcualtePercentage(edit.Probablity)
+				// openStreet.Country = r.FormValue("country")
+				// openStreet.PostalCode = r.FormValue("code")
+				// openStreet.City = r.FormValue("city")
+				//
+				// street , err := openStreet.CurrentLocationByPostalAddress(openStreet);if err != nil {
+				// 	return
+				// }
+				// fmt.Println("Street:", street)
+
+				fmt.Println("Genome:", len(meGenome), "virusGenome:", len(virusGenome))
 				w.WriteHeader(http.StatusOK)
 				// LifeCode = genome
 	    		r.Method = "GET"
@@ -311,7 +326,10 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 				distance := structs.EditDistanceStrings(meGenome,virusGenome)
-				edit.Probablity = edit.Result(distance , len(virusGenome))
+				edit.Probablity = edit.Result(distance )
+				edit.Name = name
+				edit.Percentage = edit.CalcualtePercentage(edit.Probablity)
+
 				w.WriteHeader(http.StatusOK)
 	    		r.Method = "GET"
 				Visualize(w,r)
@@ -326,7 +344,10 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 				distance := structs.EditDistanceStrings(meGenome,virusGenome)
-				edit.Probablity = edit.Result(distance , len(virusGenome))
+				edit.Probablity = edit.Result(distance )
+				edit.Name = name
+				edit.Percentage = edit.CalcualtePercentage(edit.Probablity)
+
 				w.WriteHeader(http.StatusOK)
 	    		r.Method = "GET"
 				Visualize(w,r)
@@ -341,7 +362,9 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 				distance := structs.EditDistanceStrings(meGenome,virusGenome)
-				edit.Probablity = edit.Result(distance , len(virusGenome))
+				edit.Probablity = edit.Result(distance )
+				edit.Name = name
+				edit.Percentage = edit.CalcualtePercentage(edit.Probablity)
 				w.WriteHeader(http.StatusOK)
 	    		r.Method = "GET"
 				Visualize(w,r)
@@ -356,7 +379,10 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 				distance := structs.EditDistanceStrings(meGenome,virusGenome)
-				edit.Probablity = edit.Result(distance ,len(virusGenome))
+				edit.Probablity = edit.Result(distance )
+				edit.Name = name
+				edit.Percentage = edit.CalcualtePercentage(edit.Probablity)
+
 				w.WriteHeader(http.StatusOK)
 	    		r.Method = "GET"
 				Visualize(w,r)

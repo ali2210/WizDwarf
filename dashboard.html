@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <!-- <link rel="shortcut icon" type="image/png" href="/images/favicon.png"> -->
+  <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/dashboard.css">
   <title>WizDwarfs</title>
@@ -72,6 +72,26 @@
             </span>
           </label>
         </div>
+        <p>
+            <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#location">
+              <i class="fa fa-compass" aria-hidden="true"></i> Add Location
+            </button>
+        </p>
+            <div class="collapse" id="location">
+              <div class="card card-body">
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="globe">
+                        <i class="fa fa-globe" aria-hidden="true"></i>
+                    </span>
+                  </div>
+                  <input type="text" name="country" placeholder="Country">
+                  <input type="checkbox" id="status_country">
+                  <button type="button" class="btn btn-primary" onclick=""/>Verify
+                </div>
+              </div>
+            </div>
+
         <button type="submit" class="btn btn-success mb-2 submit-button">Submit</button>
       </div>
     </form>
