@@ -1,20 +1,10 @@
-  if (!! window.WebGLRenderingContext){
-    var canvas = document.createElement("canvas"),
-    name = ["webgl", "experimental-webgl", "moz-webgl", "webkit-3d"],
-    context = false;
 
-
-    for (var i in name){
-      try {
-          context = canvas.getContext(name[i]);
-          if (context && typeof context.getParameter === "function") {
-            console.log(name[i]);
-          }
-      } catch (e) {
-
-      }
-      alert("webgl disable");
-
+function VerifyCountryStatus() {
+    var country = document.getElementById('country');
+    var status = document.getElementById('status_country');
+    if (country) {
+      console.log(country.readOnly);
+      consle.log(status.checked);
     }
-  }
-  alert("webgl not supported");
+    alert("Filed empty");
+}

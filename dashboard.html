@@ -81,12 +81,23 @@
               <div class="card card-body">
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
-                    <span class="globe">
-                        <i class="fa fa-globe" aria-hidden="true"></i>
-                    </span>
+                    <input type="checkbox" id="status_country">
                   </div>
-                  <input type="text" name="country" placeholder="Country">
-                  <input type="checkbox" id="status_country">
+                  <input type="text" name="country" placeholder="Country" id="homeland">
+                  <button type="button" class="btn btn-primary" onclick="VerifyCountryStatus()"/>Verify
+                </div>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <input type="checkbox" id="status_city">
+                  </div>
+                  <input type="text" name="city" placeholder="City" id="mytown">
+                  <button type="button" class="btn btn-primary" onclick=""/>Verify
+                </div>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <input type="checkbox" id="status_postal">
+                  </div>
+                  <input type="text" name="postal" placeholder="Postal" id="area">
                   <button type="button" class="btn btn-primary" onclick=""/>Verify
                 </div>
               </div>
@@ -100,5 +111,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   <script src="/js/dashboard.js"></script>
+  <script src="/js/additional.js"></script>
 </body>
 </html>
