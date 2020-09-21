@@ -1,0 +1,88 @@
+#Homeland,
+#Hometown,
+#buttonTown{
+  visibility: visible;
+}
+
+.main-dashboard-div {
+  background-color:#f9f9f9;
+  font-family: 'Lato', sans-serif;
+  height: 100vh;
+}
+.icon-light {
+  color: black;
+  margin-right: 5px;
+}
+.dropdown-menu {
+  left: 30px;
+}
+h4 {
+  margin: 20px 0px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 20px;
+}
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.infection-field, .file-upload-field  {
+  margin-top: 45px;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.logo {
+  height: 60px;
+}
+.custom-navbar {
+  background-color: #ededed;
+}
+
+[type="file"] {
+  height: 0;
+  overflow: hidden;
+  width: 0;
+}
+
+[type="file"] + label {
+  background: #343a40;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  outline: none;
+  padding: 1rem 50px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.dashboard-form {
+  margin: 109px 0px;
+}
+.submit-button {
+  background: #31dc58;
+  margin-top: 20px;
+  width: 25%;
+}
+.file-uploaded {
+  text-align: center;
+  font-size: 15px;
+}
+.verified-icon {
+  margin-top: 10px;
+  color: #cdf7d7;
+}
+.unveriied-icon{
+  margin-top: 10px;
+  color : #ff0000;
+}
+.Location{
+  background-color: #31dc58;
+  border-style : none;
+  font-size: medium;
+  font-weight: bold;
+}
