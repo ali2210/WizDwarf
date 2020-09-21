@@ -10,8 +10,6 @@ type Address struct{
   City string
   PostalCode string
   State string
-  Long float64
-  Lati float64
 }
 
 type YourGeoStationPoint interface{
@@ -19,7 +17,7 @@ type YourGeoStationPoint interface{
 }
 
 
-func CurrentLocationByPostalAddress(a Address)(geocoder.Location, error)  {
+func (*Address)CurrentLocationByPostalAddress(a Address)(geocoder.Location, error)  {
 
   address := geocoder.Address{
     Country: a.Country,

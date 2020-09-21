@@ -81,24 +81,24 @@
               <div class="card card-body">
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
-                    <input type="checkbox" id="status_country">
+                    <input type="radio" id="status_country">
                   </div>
                   <input type="text" name="country" placeholder="Country" id="homeland">
-                  <button type="button" class="btn btn-primary" onclick="VerifyCountryStatus()"/>Verify
+                  <button type="button" class="btn btn-primary" id="Homeland" onclick="VerifyCountryStatus()"/>Verify
                 </div>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
-                    <input type="checkbox" id="status_city">
+                    <input type="radio" id="status_city">
                   </div>
                   <input type="text" name="city" placeholder="City" id="mytown">
-                  <button type="button" class="btn btn-primary" onclick=""/>Verify
+                  <button type="radio" class="btn btn-primary" id="Hometown" onclick="VerifyCityStatus()"/>Verify
                 </div>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
-                    <input type="checkbox" id="status_postal">
+                    <input type="radio" id="status_postal">
                   </div>
                   <input type="text" name="postal" placeholder="Postal" id="area">
-                  <button type="button" class="btn btn-primary" onclick=""/>Verify
+                  <button type="button" class="btn btn-primary" id="buttonTown" onclick="PostalStatus()"/>Verify
                 </div>
               </div>
             </div>
