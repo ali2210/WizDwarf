@@ -1,43 +1,31 @@
 function VerifyCountryStatus() {
-
-  // ENTER COUNTRY NAME , if country name is not empty then mark it
-    var country = document.getElementById('homeland');
-    var status = document.getElementById('status_country');
-    var button = document.getElementById('Homeland');
-
-    if ((country.value).length > 0){
-        country.readOnly = true;
-        status.checked = true;
-        button.style.visibility = "hidden";
-    }else{
-        alert('Enter Country name! ');
-    }
+    // ENTER COUNTRY NAME , if country name is not empty then mark it
+    VerifyLocationFields(document.getElementById('homeland'), document.getElementById('Homeland'));
 }
 
 function VerifyCityStatus() {
-  var city = document.getElementById('mytown');
-  var status = document.getElementById('status_city');
-  var button = document.getElementById('Hometown');
-
-  if ((city.value).length > 0){
-      city.readOnly = true;
-      status.checked = true;
-      button.style.visibility = "hidden";
-  }else{
-      alert('Enter city name! ');
-  }
+    VerifyLocationFields(document.getElementById('mytown'), document.getElementById('Hometown'));
 }
 
 function PostalStatus() {
-  var postal = document.getElementById('area');
-  var status = document.getElementById('status_postal');
-  var button = document.getElementById('buttonTown');
+    VerifyLocationFields(document.getElementById('area'), document.getElementById('buttonTown'));
+}
 
-  if ((postal.value).length > 0){
-      postal.readOnly = true;
-      status.checked = true;
-      button.style.visibility = "hidden";
-  }else{
-      alert('Enter postal name! ');
-  }
+function VerifyLocationFields(inputField, verifyButton) {
+    var checkIcon = verifyButton.parentElement.getElementsByClassName("verified-icon")[0];
+    var uncheckedIcon = verifyButton.parentElement.getElementsByClassName("unveriied-icon")[0];
+    if ((inputField.value).length > 0){
+        inputField.readOnly = true;
+        checkIcon.classList.remove('d-none');
+        uncheckedIcon.classList.add('d-none');
+        verifyButton.innerHTML = 'verified';
+        verifyButton.classList.remove('btn-primary', 'btm-success', 'btn-danger');
+        verifyButton.classList.add('btn-success');
+    } else {
+        checkIcon.classList.add('d-none');
+        uncheckedIcon.classList.remove('d-none');
+        verifyButton.innerHTML = 'not verified';
+        verifyButton.classList.remove('btn-primary', 'btm-success', 'btn-danger');
+        verifyButton.classList.add('btn-danger');
+    }
 }
