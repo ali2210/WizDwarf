@@ -72,3 +72,17 @@ h4 {
   text-align: center;
   font-size: 15px;
 }
+.verified-icon {
+  margin-top: 10px;
+  color: #cdf7d7;
+}
+.unveriied-icon{
+  margin-top: 10px;
+  color : #ff0000;
+}
+.Location{
+  background-color: #31dc58;
+  border-style : none;
+  font-size: medium;
+  font-weight: bold;
+}
