@@ -11,6 +11,18 @@ function PostalStatus() {
     VerifyLocationFields(document.getElementById('area'), document.getElementById('buttonTown'));
 }
 
+function StreetStatus() {
+    VerifyLocationFields(document.getElementById('address'), document.getElementById('streetAddress'));
+}
+
+function NumStatus() {
+    VerifyLocationFields(document.getElementById('snum'), document.getElementById('snumButton'));
+}
+
+function StateStatus(){
+    VerifyLocationFields(document.getElementById('state'), document.getElementById('stateButton'));
+}
+
 function VerifyLocationFields(inputField, verifyButton) {
     var checkIcon = verifyButton.parentElement.getElementsByClassName("verified-icon")[0];
     var uncheckedIcon = verifyButton.parentElement.getElementsByClassName("unveriied-icon")[0];
