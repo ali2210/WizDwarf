@@ -1,9 +1,3 @@
-#Homeland,
-#Hometown,
-#buttonTown{
-  visibility: visible;
-}
-
 .main-dashboard-div {
   background-color:#f9f9f9;
   font-family: 'Lato', sans-serif;
@@ -85,4 +79,11 @@ h4 {
   border-style : none;
   font-size: medium;
   font-weight: bold;
+}
+#Homeland,
+#Hometown,
+#buttonTown,
+#streetAddress,
+#snumButton{
+  visibility: visible;
 }
