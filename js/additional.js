@@ -23,6 +23,31 @@ function StateStatus(){
     VerifyLocationFields(document.getElementById('state'), document.getElementById('stateButton'));
 }
 
+function SaveLocation(){
+  var map = document.getElementById('saveButton');
+  var geocoder = new  mapkit.Geocoder({
+    language : "en-GB",
+    getsUserLocation : true
+  });
+
+  var street = VerifiedStatusandAppendAddressFormat(document.getElementById('address'), document.getElementById('streetAddress'));
+  var num = VerifiedStatusandAppendAddressFormat(document.getElementById('snum'), document.getElementById('snumButton'));
+  var city = VerifiedStatusandAppendAddressFormat(document.getElementById('mytown'), document.getElementById('Hometown'));
+  var state = VerifiedStatusandAppendAddressFormat(document.getElementById('state'), document.getElementById('stateButton'));
+  var postal = VerifiedStatusandAppendAddressFormat(document.getElementById('area'), document.getElementById('buttonTown'));
+  var country = VerifiedStatusandAppendAddressFormat(document.getElementById('homeland'), document.getElementById('Homeland'));
+
+  var locapi = {
+    Street : street,
+    Route : num,
+    City: city,
+    State : state,
+    Postal: postal,
+    Country: country
+  };
+  console.log("lOCATION :" + locapi['Street']);
+}
+
 function VerifyLocationFields(inputField, verifyButton) {
     var checkIcon = verifyButton.parentElement.getElementsByClassName("verified-icon")[0];
     var uncheckedIcon = verifyButton.parentElement.getElementsByClassName("unveriied-icon")[0];
@@ -40,4 +65,17 @@ function VerifyLocationFields(inputField, verifyButton) {
         verifyButton.classList.remove('btn-primary', 'btm-success', 'btn-danger');
         verifyButton.classList.add('btn-danger');
     }
+}
+
+function VerifiedStatusandAppendAddressFormat(inputField, verifyButton){
+  if (inputField.value.length > 0 && Status(verifyButton)) {
+    return inputField.value
+  }
+}
+
+function Status(verifyButton){
+  if (verifyButton.innerHTML == "verified"){
+    return true;
+  }
+  return false;
 }
