@@ -45,7 +45,20 @@ function SaveLocation(){
     Postal: postal,
     Country: country
   };
-  console.log("lOCATION :" + locapi['Street']);
+
+  var address = formattedAddress(locapi);
+  geocoder.lookup(address, (data,error) =>{
+    if (error) {
+      console.error(error);
+    }else{
+      console.log(data);
+      var long = data.results[0].coordinates.longitude;
+      var lat = data.results[0].coordinates.latitude;
+      console.log("longitude:"+ long);
+      console.log("latitude:" + latitude);
+    }
+
+  });
 }
 
 function VerifyLocationFields(inputField, verifyButton) {
@@ -78,4 +91,10 @@ function Status(verifyButton){
     return true;
   }
   return false;
+}
+
+function formattedAddress(locapi) {
+  var x = locapi['Street']+','+locapi['Route']+','+locapi['City']+','+locapi['State']+','+  locapi['Postal']+','+locapi['Country'];
+  console.log("string :", x)
+  return x
 }
