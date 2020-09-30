@@ -59,7 +59,7 @@ var (
 	googleCredentials string = ""
 	FILENAME string = ""
 	edit structs.Levenshtein = structs.Levenshtein{}
-	openStreet structs.Address = structs.Address{}
+	// openStreet structs.Address = structs.Address{}
 	visualizeReport structs.DataVisualization  = structs.DataVisualization{}
 
 	/*_, b, _, _ = runtime.Caller(0)
@@ -303,36 +303,36 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				edit.Name = name
 				edit.Percentage = edit.CalcualtePercentage(edit.Probablity)
 				visualizeReport.Percentage = edit.Percentage
-				openStreet.Country = r.FormValue("country")
-				openStreet.PostalCode = r.FormValue("postal")
-				openStreet.City = r.FormValue("city")
-				openStreet.State = r.FormValue("state")
-				openStreet.StreetAddress = r.FormValue("street")
-				i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
-					return
-				}
-				openStreet.RouteNum  = i
-				fmt.Println("openStreet:", openStreet)
-				 street , err := openStreet.CurrentLocationByPostalAddress(openStreet);if err != nil {
-					fmt.Println("Error:", err)
-					return
-				 }
-				 fmt.Println("Street:", street)
-				 uv ,err := visualizeReport.OpenWeather(openwizweather); if err != nil {
-					 fmt.Println("Error:", err)
-					return
-				 }
-				 loc := visualizeReport.GetCoordinates(street)
-
-				 if err := uv.Current(loc); err != nil {
-					 fmt.Println("Error:", err)
-					return
-				 }
-				 info , err := uv.UVInformation(); if err != nil {
-					 fmt.Println("Error:", err)
-					return
-				 }
-				 visualizeReport.UVinfo = info
+				// openStreet.Country = r.FormValue("country")
+				// openStreet.PostalCode = r.FormValue("postal")
+				// openStreet.City = r.FormValue("city")
+				// openStreet.State = r.FormValue("state")
+				// openStreet.StreetAddress = r.FormValue("street")
+				// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
+				// 	return
+				// }
+				// openStreet.RouteNum  = i
+				// fmt.Println("openStreet:", openStreet)
+				//  street , err := openStreet.CurrentLocationByPostalAddress(openStreet);if err != nil {
+				// 	fmt.Println("Error:", err)
+				// 	return
+				//  }
+				//  fmt.Println("Street:", street)
+				//  uv ,err := visualizeReport.OpenWeather(openwizweather); if err != nil {
+				// 	 fmt.Println("Error:", err)
+				// 	return
+				//  }
+				//  loc := visualizeReport.GetCoordinates(street)
+				//
+				//  if err := uv.Current(loc); err != nil {
+				// 	 fmt.Println("Error:", err)
+				// 	return
+				//  }
+				//  info , err := uv.UVInformation(); if err != nil {
+				// 	 fmt.Println("Error:", err)
+				// 	return
+				//  }
+				//  visualizeReport.UVinfo = info
 				w.WriteHeader(http.StatusOK)
 				// LifeCode = genome
 	    		r.Method = "GET"
@@ -351,36 +351,36 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				edit.Probablity = edit.Result(distance )
 				edit.Name = name
 				edit.Percentage = edit.CalcualtePercentage(edit.Probablity)
-				 openStreet.Country = r.FormValue("country")
-				 openStreet.PostalCode = r.FormValue("postal")
-				openStreet.City = r.FormValue("city")
-				openStreet.State = r.FormValue("state")
-				openStreet.StreetAddress = r.FormValue("street")
-				i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
-					return
-				}
-				openStreet.RouteNum  = i
-				fmt.Println("state:", openStreet)
-				street , err := openStreet.CurrentLocationByPostalAddress(openStreet);if err != nil {
-					fmt.Println("Error:", err)
-					return
-				 }
-				 fmt.Println("Street:", street)
-				 uv ,err := visualizeReport.OpenWeather(openwizweather); if err != nil {
-					 fmt.Println("Error:", err)
-					return
-				 }
-				 loc := visualizeReport.GetCoordinates(street)
-
-				 if err := uv.Current(loc); err != nil {
-					 fmt.Println("Error:", err)
-					return
-				 }
-				 info , err := uv.UVInformation(); if err != nil {
-					 fmt.Println("Error:", err)
-					return
-				 }
-				 visualizeReport.UVinfo = info
+				//  openStreet.Country = r.FormValue("country")
+				//  openStreet.PostalCode = r.FormValue("postal")
+				// openStreet.City = r.FormValue("city")
+				// openStreet.State = r.FormValue("state")
+				// openStreet.StreetAddress = r.FormValue("street")
+				// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
+				// 	return
+				// }
+				// openStreet.RouteNum  = i
+				// fmt.Println("state:", openStreet)
+				// street , err := openStreet.CurrentLocationByPostalAddress(openStreet);if err != nil {
+				// 	fmt.Println("Error:", err)
+				// 	return
+				//  }
+				//  fmt.Println("Street:", street)
+				//  uv ,err := visualizeReport.OpenWeather(openwizweather); if err != nil {
+				// 	 fmt.Println("Error:", err)
+				// 	return
+				//  }
+				//  loc := visualizeReport.GetCoordinates(street)
+				//
+				//  if err := uv.Current(loc); err != nil {
+				// 	 fmt.Println("Error:", err)
+				// 	return
+				//  }
+				//  info , err := uv.UVInformation(); if err != nil {
+				// 	 fmt.Println("Error:", err)
+				// 	return
+				//  }
+				//  visualizeReport.UVinfo = info
 				w.WriteHeader(http.StatusOK)
 	    		r.Method = "GET"
 				Visualize(w,r)
@@ -398,36 +398,36 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				edit.Probablity = edit.Result(distance )
 				edit.Name = name
 				edit.Percentage = edit.CalcualtePercentage(edit.Probablity)
-				 openStreet.Country = r.FormValue("country")
-				 openStreet.PostalCode = r.FormValue("postal")
-				openStreet.City = r.FormValue("city")
-				openStreet.State = r.FormValue("state")
-				openStreet.StreetAddress = r.FormValue("street")
-				i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
-					return
-				}
-				openStreet.RouteNum  = i
-				fmt.Println("state:", openStreet)
-				 street , err := openStreet.CurrentLocationByPostalAddress(openStreet);if err != nil {
-					fmt.Println("Error:", err)
-					return
-				 }
-				 fmt.Println("Street:", street)
-				 uv ,err := visualizeReport.OpenWeather(openwizweather); if err != nil {
-					 fmt.Println("Error:", err)
-					return
-				 }
-				 loc := visualizeReport.GetCoordinates(street)
-
-				 if err := uv.Current(loc); err != nil {
-					 fmt.Println("Error:", err)
-					return
-				 }
-				 info , err := uv.UVInformation(); if err != nil {
-					 fmt.Println("Error:", err)
-					return
-				 }
-				 visualizeReport.UVinfo = info
+				//  openStreet.Country = r.FormValue("country")
+				//  openStreet.PostalCode = r.FormValue("postal")
+				// openStreet.City = r.FormValue("city")
+				// openStreet.State = r.FormValue("state")
+				// openStreet.StreetAddress = r.FormValue("street")
+				// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
+				// 	return
+				// }
+				// openStreet.RouteNum  = i
+				// fmt.Println("state:", openStreet)
+				//  street , err := openStreet.CurrentLocationByPostalAddress(openStreet);if err != nil {
+				// 	fmt.Println("Error:", err)
+				// 	return
+				//  }
+				//  fmt.Println("Street:", street)
+				//  uv ,err := visualizeReport.OpenWeather(openwizweather); if err != nil {
+				// 	 fmt.Println("Error:", err)
+				// 	return
+				//  }
+				//  loc := visualizeReport.GetCoordinates(street)
+				//
+				//  if err := uv.Current(loc); err != nil {
+				// 	 fmt.Println("Error:", err)
+				// 	return
+				//  }
+				//  info , err := uv.UVInformation(); if err != nil {
+				// 	 fmt.Println("Error:", err)
+				// 	return
+				//  }
+				//  visualizeReport.UVinfo = info
 				w.WriteHeader(http.StatusOK)
 	    		r.Method = "GET"
 				Visualize(w,r)
@@ -445,36 +445,36 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				edit.Probablity = edit.Result(distance )
 				edit.Name = name
 				edit.Percentage = edit.CalcualtePercentage(edit.Probablity)
-				openStreet.Country = r.FormValue("country")
-				openStreet.PostalCode = r.FormValue("postal")
-				openStreet.City = r.FormValue("city")
-				openStreet.State = r.FormValue("state")
-				openStreet.StreetAddress = r.FormValue("street")
-				i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
-					return
-				}
-				openStreet.RouteNum  = i
-				fmt.Println("state:", openStreet)
-				 street , err := openStreet.CurrentLocationByPostalAddress(openStreet);if err != nil {
-					fmt.Println("Error:", err)
-					return
-				 }
-				 fmt.Println("Street:", street)
-				 uv ,err := visualizeReport.OpenWeather(openwizweather); if err != nil {
-					 fmt.Println("Error:", err)
-					return
-				 }
-				 loc := visualizeReport.GetCoordinates(street)
-
-				 if err := uv.Current(loc); err != nil {
-					 fmt.Println("Error:", err)
-					return
-				 }
-				 info , err := uv.UVInformation(); if err != nil {
-					 fmt.Println("Error:", err)
-					return
-				 }
-				 visualizeReport.UVinfo = info
+				// openStreet.Country = r.FormValue("country")
+				// openStreet.PostalCode = r.FormValue("postal")
+				// openStreet.City = r.FormValue("city")
+				// openStreet.State = r.FormValue("state")
+				// openStreet.StreetAddress = r.FormValue("street")
+				// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
+				// 	return
+				// }
+				// openStreet.RouteNum  = i
+				// fmt.Println("state:", openStreet)
+				//  street , err := openStreet.CurrentLocationByPostalAddress(openStreet);if err != nil {
+				// 	fmt.Println("Error:", err)
+				// 	return
+				//  }
+				//  fmt.Println("Street:", street)
+				//  uv ,err := visualizeReport.OpenWeather(openwizweather); if err != nil {
+				// 	 fmt.Println("Error:", err)
+				// 	return
+				//  }
+				//  loc := visualizeReport.GetCoordinates(street)
+				//
+				//  if err := uv.Current(loc); err != nil {
+				// 	 fmt.Println("Error:", err)
+				// 	return
+				//  }
+				//  info , err := uv.UVInformation(); if err != nil {
+				// 	 fmt.Println("Error:", err)
+				// 	return
+				//  }
+				//  visualizeReport.UVinfo = info
 				w.WriteHeader(http.StatusOK)
 	    		r.Method = "GET"
 				Visualize(w,r)
@@ -492,36 +492,36 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				edit.Probablity = edit.Result(distance )
 				edit.Name = name
 				edit.Percentage = edit.CalcualtePercentage(edit.Probablity)
-				 openStreet.Country = r.FormValue("country")
-				 openStreet.PostalCode = r.FormValue("postal")
-				openStreet.City = r.FormValue("city")
-				openStreet.State = r.FormValue("state")
-				openStreet.StreetAddress = r.FormValue("street")
-				i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
-					return
-				}
-				openStreet.RouteNum  = i
-				fmt.Println("state:", openStreet)
-				 street , err := openStreet.CurrentLocationByPostalAddress(openStreet);if err != nil {
-					fmt.Println("Error:", err)
-					return
-				 }
-				 fmt.Println("Street:", street)
-				 uv ,err := visualizeReport.OpenWeather(openwizweather); if err != nil {
-					 fmt.Println("Error:", err)
-					return
-				 }
-				 loc := visualizeReport.GetCoordinates(street)
-
-				 if err := uv.Current(loc); err != nil {
-					 fmt.Println("Error:", err)
-					return
-				 }
-				 info , err := uv.UVInformation(); if err != nil {
-					 fmt.Println("Error:", err)
-					return
-				 }
-				 visualizeReport.UVinfo = info
+				//  openStreet.Country = r.FormValue("country")
+				//  openStreet.PostalCode = r.FormValue("postal")
+				// openStreet.City = r.FormValue("city")
+				// openStreet.State = r.FormValue("state")
+				// openStreet.StreetAddress = r.FormValue("street")
+				// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
+				// 	return
+				// }
+				// openStreet.RouteNum  = i
+				// fmt.Println("state:", openStreet)
+				//  street , err := openStreet.CurrentLocationByPostalAddress(openStreet);if err != nil {
+				// 	fmt.Println("Error:", err)
+				// 	return
+				//  }
+				//  fmt.Println("Street:", street)
+				//  uv ,err := visualizeReport.OpenWeather(openwizweather); if err != nil {
+				// 	 fmt.Println("Error:", err)
+				// 	return
+				//  }
+				//  loc := visualizeReport.GetCoordinates(street)
+				//
+				//  if err := uv.Current(loc); err != nil {
+				// 	 fmt.Println("Error:", err)
+				// 	return
+				//  }
+				//  info , err := uv.UVInformation(); if err != nil {
+				// 	 fmt.Println("Error:", err)
+				// 	return
+				//  }
+				//  visualizeReport.UVinfo = info
 
 				w.WriteHeader(http.StatusOK)
 	    		r.Method = "GET"
