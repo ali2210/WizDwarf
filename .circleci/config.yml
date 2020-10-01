@@ -7,15 +7,15 @@ jobs:
     docker:
       # specify the version
       - image: circleci/golang:1.9
-        auth:
-          username: ali2210
-          password: hackmydockeraccount0511
+        #auth:
+          #username: ali2210
+          #password: hackmydockeraccount0511
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/postgres:9.4
 
-      parallelism: 2
+    #  parallelism: 2
       # environment varibles that build itself such as tests
       environment:
         # path where tests results store
