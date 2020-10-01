@@ -7,20 +7,60 @@ jobs:
     docker:
       # specify the version
       - image: circleci/golang:1.9
-
+        auth:
+          username: ali2210
+          password: hackmydockeraccount0511
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/postgres:9.4
 
+      parallelism: 2
+      # environment varibles that build itself such as tests
+      environment:
+        # path where tests results store
+        TEST_RESULTS: /temp/test-results
+
     #### TEMPLATE_NOTE: go expects specific checkout path representing url
     #### expecting it in the form of
     ####   /go/src/github.com/circleci/go-tool
     ####   /go/src/bitbucket.org/circleci/go-tool
-    working_directory: /go/src/github.com/{{ali2210}}/{{wizdwarf}}
+    working_directory: /go/src/github.com/{{Ali2210}}/{{WizDawrf}}
     steps:
       - checkout
+      ### create TEST_RESULTS Directory
+      - run : mkdir -p $TEST_RESULTS
+
+      - restore_cache : #restore application state if there is no changes
+          keys :
+            - go mod-v4-{{ checksum "go.sum" }}
+      - run :
+          name:  Application started ....
+          command: dockerize -wait tcp://localhost:5000 -timeout 1m
 
       # specify any bash command here prefixed with `run: `
       - run: go get -v -t -d ./...
       - run: go test -v ./...
+
+      # pull and build dependencies
+      -run: make
+
+      # save your cache
+      -save-cache:
+        keys: go mod-v4-{{checksum "go.sum"}}
+        paths: "/go/pkg/mod" #path go mod
+
+        # display artifacts summary
+      -store_artifacts:
+        path: /temp/test-results
+        destination: raw-test-output
+
+        #store test results
+      -store_test_results:
+        path: /temp/test-results
+
+  workflows:
+    version: 2
+    build-workflow:
+      jobs:
+        - build
