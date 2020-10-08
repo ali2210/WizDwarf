@@ -11,6 +11,7 @@
   <link rel="stylesheet" type="text/css" href="/css/treasure.css"> -->
   <link rel="stylesheet" type="text/css" href="/css/visualize.css">
   <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+  <!-- <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script> -->
   <title>WizDwarfs</title>
 </head>
 
@@ -18,12 +19,16 @@
   <div class="static-field">
       <div class="static-img">
         <img src="/images/logo.png" alt ="WizDwarfs" class="img-logo"/>
-        <h4 class="text">Visualization</h4>
+         <h5 class="heading-text">Reports</h5>
       </div>
   </div>
 
-  <div class="data">
-    <span>{{ .Percentage}}</span>
+
+  <div class="canvasdiv">
+    <span id="result" class="div-span">{{ .Percentage}}</span>
+    <div class="canvas">
+      <canvas id="canvasPaper" class="div-canvas"></canvas>
+    </div>
   </div>
 
 
