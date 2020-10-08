@@ -5,3 +5,40 @@
 	display: flex;
 	justify-content: center;
 }
+.static-img{
+	display: flex;
+	justify-content: center;
+	position: absolute;
+	margin-top: 10px;
+ }
+
+.heading-text{
+	margin-top : 50px;
+	display: flex;
+	justify-content:center;
+	position: relative;
+}
+.canvasdiv{
+	display: flex;
+	justify-content: center;
+	position: relative;
+	margin: 150px;
+}
+.div-span{
+	display: flex;
+justify-content: center;
+margin: 50px;
+position: relative;
+text-align: center;
+color: teal;
+font-weight: bolder;
+font-size: large;
+}
+.div-canvas{
+	padding-bottom:50px;
+	display: flex;
+	margin:	auto;
+	justify-content: center;
+	padding-left: 20px;
+	position: relative;
+}
