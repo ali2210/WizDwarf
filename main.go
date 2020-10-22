@@ -117,8 +117,14 @@ func main() {
 	// fmt.Println("Basepath:", basepath)
 
 		// Server
-	log.Println("please wait... Listening at 5000")
-	http.ListenAndServe(":5000", routing)
+		fmt.Println("[OK] Wiz-Dwarfs starting")
+		port := os.Getenv("PORT")
+		if port == " "{
+			port = "4747"
+			log.Println("[Warn] No port allocated , app port used", port)
+		}
+		log.Println("[OK] please wait... Listening at :" , port )
+		http.ListenAndServe(":"+port, routing)
 
 }
 
