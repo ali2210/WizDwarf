@@ -84,47 +84,56 @@ const (
 
 func main() {
 
-	// Routing
-	routing := mux.NewRouter()
-
-	// Links
-	routing.HandleFunc("/home", Home)
-	routing.HandleFunc("/signup", NewUser)
-	routing.HandleFunc("/login", Existing)
-	routing.HandleFunc("/dashboard",Dashboard)
-	routing.HandleFunc("/logout", Logout)
-	routing.HandleFunc("/createWallet",CreateWallet)
-	routing.HandleFunc("/terms",Terms)
-	routing.HandleFunc("/open", Wallet)
-	routing.HandleFunc("/transact", Transacts)
-	routing.HandleFunc("/transact/send", Send)
-	routing.HandleFunc("/transact/treasure", Treasure)
-	routing.HandleFunc("/visualize", Visualize)
-	/*routing.HandleFunc("/transact/advance-fileoption", Blocks)*/
-
-		// Static Files
-	// routing.HandleFunc("/{title}/action", addVistor)
-	// routing.HandleFunc("/{title}/data", getVistorData)
-	images := http.StripPrefix("/images/", http.FileServer(http.Dir("./images")))
-	routing.PathPrefix("/images/").Handler(images)
-	css := http.StripPrefix("/css/", http.FileServer(http.Dir("./css")))
-	routing.PathPrefix("/css/").Handler(css)
-	js := http.StripPrefix("/js/", http.FileServer(http.Dir("./js")))
-	routing.PathPrefix("/js/").Handler(js)
-
-	routing.HandleFunc("/dummy", server)
-
-	// fmt.Println("Basepath:", basepath)
-
 		// Server
 		fmt.Println("[OK] Wiz-Dwarfs starting")
 		port := os.Getenv("PORT")
+
 		if port == " "{
-			port = "4747"
-			log.Println("[Warn] No port allocated , app port used", port)
+			log.Println("[Fail] No Application port allocated")
+			return
+		}else{
+			// specfic port allocated
+			port = "5000"
+			log.Println("[New] Application Default port")
 		}
-		log.Println("[OK] please wait... Listening at :" , port )
-		http.ListenAndServe(":"+port, routing)
+
+		log.Println("[OK] Application :" , port + " Port")
+		// Routing
+		routing := mux.NewRouter()
+
+		// Links
+		routing.HandleFunc("/home", Home)
+		routing.HandleFunc("/signup", NewUser)
+		routing.HandleFunc("/login", Existing)
+		routing.HandleFunc("/dashboard",Dashboard)
+		routing.HandleFunc("/logout", Logout)
+		routing.HandleFunc("/createWallet",CreateWallet)
+		routing.HandleFunc("/terms",Terms)
+		routing.HandleFunc("/open", Wallet)
+		routing.HandleFunc("/transact", Transacts)
+		routing.HandleFunc("/transact/send", Send)
+		routing.HandleFunc("/transact/treasure", Treasure)
+		routing.HandleFunc("/visualize", Visualize)
+		/*routing.HandleFunc("/transact/advance-fileoption", Blocks)*/
+
+			// Static Files
+		// routing.HandleFunc("/{title}/action", addVistor)
+		// routing.HandleFunc("/{title}/data", getVistorData)
+		images := http.StripPrefix("/images/", http.FileServer(http.Dir("./images")))
+		routing.PathPrefix("/images/").Handler(images)
+		css := http.StripPrefix("/css/", http.FileServer(http.Dir("./css")))
+		routing.PathPrefix("/css/").Handler(css)
+		js := http.StripPrefix("/js/", http.FileServer(http.Dir("./js")))
+		routing.PathPrefix("/js/").Handler(js)
+
+		routing.HandleFunc("/dummy", server)
+
+
+
+		err := http.ListenAndServe(":"+port, routing); if err != nil{
+			log.Println("Listening Error: ", err)
+			panic(err)
+		}
 
 }
 

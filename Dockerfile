@@ -6,7 +6,7 @@
 #COPY . .
 #RUN go get ./...
 #RUN GOOS=linux go build -ldflags="-s -w" -o ./bin/web-app ./main.go
- 
+
 #FROM alpine:3.9
 #RUN apk --no-cache add ca-certificates
 #WORKDIR /usr/bin
@@ -15,24 +15,29 @@
 #ENTRYPOINT /go/bin/web-app --port 5000
 
 
- FROM golang:1.14-alpine3.12
+  FROM golang:1.14-alpine3.12
 
- ENV CGO_ENABLED=0
+  ENV CGO_ENABLED=0
 
- RUN mkdir /app
+  ENV PORT=5000
 
- ADD . /app
+  RUN mkdir /app
 
- WORKDIR /app
+  ADD . /app
+
+  WORKDIR /app
 
  RUN go build -o main
+
+ EXPOSE 5000
 
  CMD ["/app/main"]
 
 
 
 
-# Don't Delete the Content # 
+
+# Don't Delete the Content #
 
 #ENV GOFLAGS= mod=vendor
 
@@ -57,4 +62,3 @@
    #EXPOSE 9101
 
 #RUN go build -o main
-
