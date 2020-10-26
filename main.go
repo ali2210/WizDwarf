@@ -38,7 +38,6 @@ import (
 
 )
 
-
 // Variables
 
 var (
@@ -62,10 +61,8 @@ var (
 	// openStreet structs.Address = structs.Address{}
 	visualizeReport structs.DataVisualization  = structs.DataVisualization{}
 
-	/*_, b, _, _ = runtime.Caller(0)
-    basepath   = filepath.Dir(b)*/
-)
 
+)
 
 // Constants
 
@@ -85,8 +82,10 @@ const (
 func main() {
 
 		// Server
-		fmt.Println("[OK] Wiz-Dwarfs starting")
+		log.Println("[OK] Wiz-Dwarfs starting")
 		port := os.Getenv("PORT")
+
+		// env port setting
 
 		if port == " "{
 			log.Println("[Fail] No Application port allocated")
@@ -94,8 +93,7 @@ func main() {
 		}else{
 			if port != "5000"{
 				// any Listening PORT {heroku}
-				port =  " "
-				log.Println("[Open] Application Port")
+				log.Println("[Open] Application Port", port)
 			}else{
 				// specfic port allocated {docker}
 				port = "5000"
@@ -135,8 +133,7 @@ func main() {
 
 		routing.HandleFunc("/dummy", server)
 
-
-
+		// tcp connection
 		err := http.ListenAndServe(":"+port, routing); if err != nil{
 			log.Println("Listening Error: ", err)
 			panic(err)
@@ -224,7 +221,6 @@ func Treasure(w http.ResponseWriter, r *http.Request){
 				fmt.Println("Error:",err)
 				return
 			}
-
 
 			// get recipt address
 			message , err := tx.AsMessage(types.NewEIP155Signer(chainId)); if err != nil {
