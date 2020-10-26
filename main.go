@@ -92,9 +92,16 @@ func main() {
 			log.Println("[Fail] No Application port allocated")
 			return
 		}else{
-			// specfic port allocated
-			port = "5000"
-			log.Println("[New] Application Default port")
+			if port != "5000"{
+				// any Listening PORT {heroku}
+				port =  " "
+				log.Println("[Open] Application Port")
+			}else{
+				// specfic port allocated {docker}
+				port = "5000"
+				log.Println("[New] Application Default port")
+			}
+
 		}
 
 		log.Println("[OK] Application :" , port + " Port")
