@@ -11,22 +11,24 @@ Language [GO(1.14/Linux)]
        your microscopic level . Is there , any proteins or proteins function working properly or not. Stimulate your complex genetic enivornment on your instance (machine). Proper        data visualization tools , in order to understand genetic information or pattern. Genetic Wallets allow you synthesis proteins functions etc. In future your genetic code          use as token so that only you can access to your machine. Parental DNA matching will also provide. 
        
          ##. Current Five virus pattern:
-               1. Covid-19
-               2. Zika
-               3. Flavi Dengue
-               4. Ebola
-               5. Mers
+             [OK]  1. Covid-19
+             [OK]  2. Zika
+             [OK]  3. Flavi Dengue
+             [OK]  4. Ebola
+             [OK]  5. Mers
        
        ##. Status : 
-                 1. Virus Pattern match [ok]
-                 2. UV INFO of your geoposition [failed]
-                 3. UV impact on your dna [not yet started]
-                 4. Visualization 
-                         1. Results visualization [ok]
+               [OK]        1. Virus Pattern match 
+              [FAILED]     2. UV INFO of your geoposition 
+                           3. UV impact on your dna 
+              [OK]         4. Visualization 
+                              [OK]     1. Results visualization 
        
        ##. Tools :
-                 - Firebase cloud [ok]
-                 - Ethereum [completed not incoprate]
-                 - Heroku [not yet]
-                 - Docker-image [ok]
+               [OK]  - Firebase cloud 
+               [NOT]  - Ethereum [completed not incoprate]
+               [OK]  - Heroku 
+                        - Heroku staggering pipline (git)
+                        - App Link : https://peaceful-island-75545.herokuapp.com/home
+               [OK]  - Docker-image 
          
