@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>WizDwarfs</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel='stylesheet' type='text/css' media='screen' href='/css/payement.css'>
+    <script src='/js/payment.js'></script>
+</head>
+<body>
+    <div class='main-dashboard-div'>
+        <nav class="navbar navbar-expand-md navbar-light custom-navbar">
+          <a class="navbar-brand" href="#">
+            <img src="/images/logo.png" alt="Logo" class="logo">
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+              <li class="nav-item active pl-3">
+                <a class="nav-link" href="/home">
+                  <i class="fa fa-home icon-light" aria-hidden="true"></i>
+                  Home
+                </a>
+              </li>
+             </ul>
+        </div>
+        </nav>
+    </div>
+     <form method="post" action="/open/setting/credit" class="credit-form">
+      <div class="main container">
+        <div class="card text-white bg-info md-3 " style="max-width: 18rem;">
+          <div class="card-header"> Credit Card </div>
+          <div class="card-body">
+            <h5 class="card-title"><i class="fa fa-paypal" aria-hidden="true"></i></h5>
+            <p class="card-text">
+               <div class="form row custom col md-3" >
+                  <label for="cardNo" class="custom-form-label"><i></i>Account Number </label> 
+                  <input type="text" class="custom-form-input" id="cardNo" name="cardNo" onchange="InputCardNumberEvent()">
+               </div>
+               <div class="form row custom col md-3" >
+                <label for="name" class="custom-form-label holder"> First Name </label> 
+                <input type="text" class="custom-form-input" id="name" name="fholder">
+               </div>
+             <div class="form row custom col md-3" >
+              <label for="surename" class="custom-form-label holder"> Surename </label> 
+              <input type="text" class="custom-form-input" id="surename" name="surename">
+            </div>
+             <div class="form row custom col md-3" >
+              <label for="expire" class="custom-form-label holder"> Expire date </label> 
+              <input type="month" class="custom-form-input year" id="expire" name="expire">
+            </div>
+            <div class="form row custom col md-3" >
+              <label for="cvv" class="custom-form-label holder"> CVV code </label> 
+              <input type="text" class="custom-form-input" id="cvv" name="cvv">
+           </div>
+              <button type="submit" class="submit-btn"><i class="fa fa-check " aria-hidden="true"></i></button>
+              <button type="reset" class="cancel-btn"><i i class="fa fa-times" aria-hidden="true"></i></button>
+            </p>
+          </div>
+        </div>
+       
+      </div>
+      
+    </form> 
+ </body>
+</html>

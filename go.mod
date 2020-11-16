@@ -21,6 +21,7 @@ require (
 	github.com/jgautheron/goconst v0.0.0-20200920201509-8f5268ce89d5 // indirect
 	github.com/kelvins/geocoder v0.0.0-20200113010004-f579500e9e27
 	github.com/kisielk/errcheck v1.4.0 // indirect
+	github.com/logpacker/PayPal-Go-SDK v2.0.5+incompatible
 	github.com/mdempsky/maligned v0.0.0-20180708014732-6e39bd26a8c8 // indirect
 	github.com/mdempsky/unconvert v0.0.0-20200228143138-95ecdbfc0b5f // indirect
 	github.com/mibk/dupl v1.0.0 // indirect

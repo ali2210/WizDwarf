@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>WizDwarfs</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel='stylesheet' type='text/css' media='screen' href='/css/profile.css'>
+    <script src='/js/profile.js'></script>
+</head>
+<body>
+    <div class='main-dashboard-div'>
+        <nav class="navbar navbar-expand-md navbar-light custom-navbar">
+          <a class="navbar-brand" href="#">
+            <img src="/images/logo.png" alt="Logo" class="logo">
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+              <li class="nav-item active pl-3">
+                <a class="nav-link" href="/home">
+                  <i class="fa fa-home icon-light" aria-hidden="true"></i>
+                  Home
+                </a>
+              </li>
+             </ul>
+        </div>
+        </nav>
+    </div>
+    <div class="register-main-div">
+        <form action="/" method="post" class="register-form">
+          <h4 style="text-align: center; font-family: 'Roboto Mono', monospace; color: #424242;">Update Profile</h4>
+          <div class="form-row custom-form-row ">
+            <div class="form-group col-12 col-md-6">
+              <label for="inputEmail4" class="custom-label">Email</label>
+              <input type="email" class="form-control" id="inputEmail4" placeholder="Email" name="email" required readonly>
+              <div class="sub-buttons">
+                <button type="button" onclick="EmailEditEvent()"><i class="fa fa-trash-o" aria-hidden="true" id="trash" name="edit"></i></button>
+              </div>
+            </div>
+            <div class="form-group col-12 col-md-6">
+              <label for="inputPassword4" class="custom-label">Password</label>
+              <input type="password" class="form-control" id="inputPassword4" placeholder="Password" name="password" required readonly>
+              <div class="sub-buttons">
+                <button type="button" onclick="PasswordEditEvent()"><i class="fa fa-trash-o" aria-hidden="true" id="trash" name="edit"></i></button>
+              </div>
+            </div>
+          </div>
+          <div class="form-row custom-form-row ">
+            <div class="form-group col-12 col-md-6">
+              <label for="name" class="custom-label">Name</label>
+              <input type="text" class="form-control" id="name" name="uname" placeholder="First Name" readonly>
+              <div class="sub-buttons">
+                <button type="button" onclick="NameEditEvent()"><i class="fa fa-trash-o" aria-hidden="true" id="trash" name="edit"></i></button>
+              </div>
+            </div>
+            <div class="form-group col-12 col-md-6">
+              <label for="fname" class="custom-label">Family Name</label>
+              <input type="text" class="form-control" id="fname" name="ufname" placeholder="Family Name" readonly>
+              <div class="sub-buttons">
+                <button type="button" onclick="FamilyNameEditEvent()"><i class="fa fa-trash-o" aria-hidden="true" id="trash" name="edit"></i></button>
+              </div>
+            </div>
+          </div>
+          <div class="form-row ml-1">
+            <div class="form-check form-check-inline gender-box">
+              <input type="radio" id="madam" name="gender" value="female" class="custom-radio" readonly>
+              <label for="madam">Female</label>
+            </div>
+            <div class="form-check form-check-inline gender-box">
+              <input type="radio" id="madam" name="gender" value="male" class="custom-radio" readonly>
+              <label for="madam">Male</label>
+            </div>
+          </div>
+          <div class="form-row custom-form-row mb-1">
+            <div class="form-group col-12">
+              <label for="inputAddress" class="custom-label">Address</label>
+              <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address" readonly>
+              <div class="sub-buttons">
+                <button type="button" onclick="ResidenceEditEvent()"><i class="fa fa-trash-o" aria-hidden="true" id="trash" name="edit"></i></button>
+              </div>
+            </div>
+          </div>
+          <div class="form-row custom-form-row ">
+            <div class="form-group col-12">
+              <label for="inputAddress2" class="custom-label">Address 2</label>
+              <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" name="add" readonly>
+              <div class="sub-buttons">
+                <button type="button" onclick="SubResEditEvent()"><i class="fa fa-trash-o" aria-hidden="true" id="trash" name="edit"></i></button>
+              </div>
+            </div>
+          </div>
+          <div class="form-row custom-form-row mb-1">
+            <div class="form-group col-12">
+              <label for="country" class="custom-label">Country</label>
+              <input type="text" class="form-control" id="country" placeholder="Country Name" name="country" readonly>
+              <div class="sub-buttons">
+                <button type="button" onclick="CountryEditEvent()"><i class="fa fa-trash-o" aria-hidden="true" id="trash" name="edit"></i></button>
+              </div>
+            </div>
+            <div class="form-group  col-12 col-sm-12 col-md-4 ">
+                <div class="form-group col-12">
+                  <label for="phoneNo" class="custom-label">Phone No</label>
+                  <input type="tel" class="form-control" id="phone" placeholder="+(000) 000 000 0" name="phone" readonly>
+                  <div class="sub-buttons">
+                    <button type="button" onclick="TelEditEvent()"><i class="fa fa-trash-o" aria-hidden="true" id="trash" name="edit" ></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group  col-12 col-sm-12 col-md-4">
+              <label for="inputZip" class="custom-label">Zip</label>
+              <input type="number" class="form-control" id="inputZip" name="inputZip" readonly>
+              <div class="sub-buttons">
+                <button type="button" onclick="ZipEditEvent()"><i class="fa fa-trash-o" aria-hidden="true" id="trash" name="edit"></i></button>
+              </div>
+            </div>
+          </div>
+          <div class="submit-form-div">
+            <button type="submit" class="btn mb-2 submit-button" id="submBtn" hidden>Sign in</button>
+          </div>
+          <div class="cancel-form-div">
+            <button type="reset" class="btn mb-2 cancel-button">Cancel </button>
+          </div>
+        </form>
+      </div>
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+      </script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+      </script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+      </script>
+    </body>
+    
+    </html>
+</body>
+</html>

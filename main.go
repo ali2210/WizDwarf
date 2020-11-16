@@ -17,9 +17,8 @@ import (
 	"os"
 	"regexp"
 	"strconv"
-
+	"time"
 	templates "text/template"
-
 	firebase "firebase.google.com/go"
 	"github.com/ali2210/wizdwarf/db"
 	cloudWallet "github.com/ali2210/wizdwarf/db/cloudwalletclass"
@@ -35,9 +34,12 @@ import (
 	"golang.org/x/crypto/sha3"
 	"golang.org/x/net/context"
 	"google.golang.org/api/option"
+	handler "github.com/ali2210/wizdwarf/paypal/handle"
 
 	// "strings"
 	"github.com/ali2210/wizdwarf/structs/amino"
+	
+	weather "github.com/ali2210/wizdwarf/structs/OpenWeather"
 	"github.com/fogleman/ribbon/pdb"
 )
 
@@ -61,8 +63,8 @@ var (
 	googleCredentials string              = ""
 	FILENAME          string              = ""
 	edit              structs.Levenshtein = structs.Levenshtein{}
-	// openStreet structs.Address = structs.Address{}
-	visualizeReport structs.DataVisualization = structs.DataVisualization{}
+	visualizeReport weather.DataVisualization = weather.DataVisualization{}
+	
 )
 
 // Constants
@@ -74,10 +76,15 @@ const (
 	EtherMainClientUrl string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
 	// Rickeby for test purpose
 	RinkebyClientUrl string = "https://rinkeby.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
-	openwizweather   string = "7efdb33c59a74e09352479b21657aee8"
+	geocodeAPI string = "7efdb33c59a74e09352479b21657aee8"
 )
 
 // Functions
+
+type Location struct{
+	x string
+	y string
+}
 
 func main() {
 
@@ -108,23 +115,32 @@ func main() {
 
 	// Links
 	routing.HandleFunc("/", func(arg1 http.ResponseWriter, arg2 *http.Request) {
+		
 		temp := template.Must(template.ParseFiles("initial.html"))
+		
 		if arg2.Method == "GET" {
 			log.Println("[OK] URL :", arg2.URL.Path)
 			temp.Execute(arg1, "MainPage")
 		}
-		arg1.WriteHeader(http.StatusOK)
-		arg2.Method = "GET"
-		Home(arg1, arg2)
+		flag := ProcessWaiit()
+		if !flag{
+			arg1.WriteHeader(http.StatusOK)
+			arg2.Method = "GET"
+			Home(arg1, arg2)
+		}
 	})
 	routing.HandleFunc("/home", Home)
 	routing.HandleFunc("/signup", NewUser)
 	routing.HandleFunc("/login", Existing)
 	routing.HandleFunc("/dashboard", Dashboard)
+	routing.HandleFunc("/dashbaord/setting", Setting)
+	routing.HandleFunc("/dashbaord/setting/profile", Profile)
 	routing.HandleFunc("/logout", Logout)
 	routing.HandleFunc("/createWallet", CreateWallet)
 	routing.HandleFunc("/terms", Terms)
 	routing.HandleFunc("/open", Wallet)
+	// routing.HandleFunc("/open/setting", WalletSettingMenu)
+	routing.HandleFunc("/open/setting/credit", Credit)
 	routing.HandleFunc("/transact", Transacts)
 	routing.HandleFunc("/transact/send", Send)
 	routing.HandleFunc("/transact/treasure", Treasure)
@@ -160,6 +176,63 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
 		temp.Execute(w, "Home")
+	}
+
+}
+
+// func WalletSettingMenu(w http.ResponseWriter, r *http.Request)  {
+// 	temp := template.Must(template.ParseFiles("walletsetting.html"))
+
+// 	if r.Method == "GET" {
+// 		fmt.Println("Method:" + r.Method)
+// 		temp.Execute(w, "WalletSetting")
+// 	}
+// }
+
+func Setting(w http.ResponseWriter, r *http.Request)  {
+	temp := template.Must(template.ParseFiles("settings.html"))
+	if r.Method == "GET" {
+		log.Println("[Accept]" , r.URL.Path)
+		temp.Execute(w,"Settings")
+	}
+}
+
+func Profile(w http.ResponseWriter, r *http.Request)  {
+	temp := template.Must(template.ParseFiles("profile.html"))
+	if r.Method == "GET" {
+		log.Println("[Accept]" , r.URL.Path)
+		temp.Execute(w,"Profile")
+	}
+}
+
+// func MyProfile(w http.ResponseWriter, r *http.Request){
+// 	temp := template.Must(template.ParseFiles("user.html"))
+// 	if r.Method == "GET" {
+// 		log.Println("[Accept]" , r.URL.Path)
+// 		temp.Execute(w,"My Profile")
+// 	}
+// }
+
+func Credit(w http.ResponseWriter, r *http.Request)  {
+	temp := template.Must(template.ParseFiles("credit.html"))
+	if r.Method == "GET" {
+		log.Println("[Accept] Path :" , r.URL.Path)
+		temp.Execute(w,"Credit")
+	}else{
+		log.Println("[Accept ]Path :" , r.URL.Path)
+		log.Println("Method :", r.Method)
+		r.ParseForm()
+
+		card := handler.CreditCardDetails{
+			FirstName : r.FormValue("fholder"),
+			Surename : r.FormValue("surename"),
+			AccountNum : r.FormValue("cardNo"),
+			ExpireDate : r.FormValue("expire"),
+			CVV2 : r.FormValue("cvv"),
+			Id : AutoKeyGenerate(CVV2)
+		 } 
+
+		// store card info in db 
 	}
 
 }
@@ -322,23 +395,17 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 			switch choose {
 			case "0":
 				fmt.Fprintf(w, "Please choose any option ...")
-				temFile := template.Must(template.ParseFiles("dashboard.html"))
-				temFile.Execute(w, "Home")
+				_, err := ChoosePattern(w,r,"", choose,file); if err != nil {
+					return 
+				}
 			case "1":
 				var name string = "Covid-19"
-				svrFile := FileReadFromDisk(w, r, name)
-				println("Please Wait", svrFile.Name(), "...")
-				meGenome, virusGenome, err := SequenceFile(file, svrFile)
-				if err != nil {
-					fmt.Println("Error:", err)
-					return
+				e , err := ChoosePattern(w,r, name, choose,file); if err != nil {
+					return 
 				}
-				fmt.Println("Genome:", len(meGenome), "virusGenome:", len(virusGenome))
-				distance := structs.EditDistanceStrings(meGenome, virusGenome)
-				edit.Probablity = edit.Result(distance)
-				edit.Name = name
-				edit.Percentage = edit.CalcualtePercentage(edit.Probablity)
-				visualizeReport.Percentage = edit.Percentage
+				visualizeReport.Percentage = e.Percentage
+				// v :=  infectedUv()
+				
 				// openStreet.Country = r.FormValue("country")
 				// openStreet.PostalCode = r.FormValue("postal")
 				// openStreet.City = r.FormValue("city")
@@ -347,28 +414,9 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
 				// 	return
 				// }
-				// openStreet.RouteNum  = i
-				// fmt.Println("openStreet:", openStreet)
-				//  street , err := openStreet.CurrentLocationByPostalAddress(openStreet);if err != nil {
-				// 	fmt.Println("Error:", err)
-				// 	return
-				//  }
-				//  fmt.Println("Street:", street)
-				//  uv ,err := visualizeReport.OpenWeather(openwizweather); if err != nil {
-				// 	 fmt.Println("Error:", err)
-				// 	return
-				//  }
-				//  loc := visualizeReport.GetCoordinates(street)
-				//
-				//  if err := uv.Current(loc); err != nil {
-				// 	 fmt.Println("Error:", err)
-				// 	return
-				//  }
-				//  info , err := uv.UVInformation(); if err != nil {
-				// 	 fmt.Println("Error:", err)
-				// 	return
-				//  }
-				//  visualizeReport.UVinfo = info
+				
+				// v.UVinfo = uvslice
+
 				w.WriteHeader(http.StatusOK)
 				// LifeCode = genome
 				r.Method = "GET"
@@ -378,94 +426,27 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 
 			case "2":
 				var name string = "FlaviDengue"
-				svrFile := FileReadFromDisk(w, r, name)
-				meGenome, virusGenome, err := SequenceFile(file, svrFile)
-				if err != nil {
-					fmt.Println("Error:", err)
+				e , err := ChoosePattern(w,r, name, choose,file); if err != nil {
 					return
 				}
-				distance := structs.EditDistanceStrings(meGenome, virusGenome)
-				edit.Probablity = edit.Result(distance)
-				edit.Name = name
-				edit.Percentage = edit.CalcualtePercentage(edit.Probablity)
-				//  openStreet.Country = r.FormValue("country")
-				//  openStreet.PostalCode = r.FormValue("postal")
-				// openStreet.City = r.FormValue("city")
-				// openStreet.State = r.FormValue("state")
-				// openStreet.StreetAddress = r.FormValue("street")
-				// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
-				// 	return
-				// }
-				// openStreet.RouteNum  = i
-				// fmt.Println("state:", openStreet)
-				// street , err := openStreet.CurrentLocationByPostalAddress(openStreet);if err != nil {
-				// 	fmt.Println("Error:", err)
-				// 	return
-				//  }
-				//  fmt.Println("Street:", street)
-				//  uv ,err := visualizeReport.OpenWeather(openwizweather); if err != nil {
-				// 	 fmt.Println("Error:", err)
-				// 	return
-				//  }
-				//  loc := visualizeReport.GetCoordinates(street)
-				//
-				//  if err := uv.Current(loc); err != nil {
-				// 	 fmt.Println("Error:", err)
-				// 	return
-				//  }
-				//  info , err := uv.UVInformation(); if err != nil {
-				// 	 fmt.Println("Error:", err)
-				// 	return
-				//  }
-				//  visualizeReport.UVinfo = info
+				visualizeReport.Percentage = e.Percentage
+				// v :=  infectedUv()				
+				// v.UVinfo = uvslice	
 				w.WriteHeader(http.StatusOK)
+				
 				r.Method = "GET"
 				Visualize(w, r)
 				// Wallet(w,r)
 				// fmt.Println("Virus:", capsid)
 			case "3":
 				var name string = "KenyaEbola"
-				svrFile := FileReadFromDisk(w, r, name)
-				println("Please Wait", svrFile.Name(), "...")
-				meGenome, virusGenome, err := SequenceFile(file, svrFile)
-				if err != nil {
-					fmt.Println("Error:", err)
-					return
+				e , err := ChoosePattern(w,r, name, choose,file); if err != nil {
+					return 
 				}
-				distance := structs.EditDistanceStrings(meGenome, virusGenome)
-				edit.Probablity = edit.Result(distance)
-				edit.Name = name
-				edit.Percentage = edit.CalcualtePercentage(edit.Probablity)
-				//  openStreet.Country = r.FormValue("country")
-				//  openStreet.PostalCode = r.FormValue("postal")
-				// openStreet.City = r.FormValue("city")
-				// openStreet.State = r.FormValue("state")
-				// openStreet.StreetAddress = r.FormValue("street")
-				// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
-				// 	return
-				// }
-				// openStreet.RouteNum  = i
-				// fmt.Println("state:", openStreet)
-				//  street , err := openStreet.CurrentLocationByPostalAddress(openStreet);if err != nil {
-				// 	fmt.Println("Error:", err)
-				// 	return
-				//  }
-				//  fmt.Println("Street:", street)
-				//  uv ,err := visualizeReport.OpenWeather(openwizweather); if err != nil {
-				// 	 fmt.Println("Error:", err)
-				// 	return
-				//  }
-				//  loc := visualizeReport.GetCoordinates(street)
-				//
-				//  if err := uv.Current(loc); err != nil {
-				// 	 fmt.Println("Error:", err)
-				// 	return
-				//  }
-				//  info , err := uv.UVInformation(); if err != nil {
-				// 	 fmt.Println("Error:", err)
-				// 	return
-				//  }
-				//  visualizeReport.UVinfo = info
+				visualizeReport.Percentage = e.Percentage
+				// v :=  infectedUv()
+				// v.UVinfo = uvslice
+				
 				w.WriteHeader(http.StatusOK)
 				r.Method = "GET"
 				Visualize(w, r)
@@ -473,17 +454,11 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				// fmt.Println("Virus:", capsid)
 			case "4":
 				var name string = "ZikaVirusBrazil"
-				svrFile := FileReadFromDisk(w, r, name)
-				println("Please Wait", svrFile.Name(), "...")
-				meGenome, virusGenome, err := SequenceFile(file, svrFile)
-				if err != nil {
-					fmt.Println("Error:", err)
-					return
+				e , err := ChoosePattern(w,r, name, choose,file); if err != nil {
+					return 
 				}
-				distance := structs.EditDistanceStrings(meGenome, virusGenome)
-				edit.Probablity = edit.Result(distance)
-				edit.Name = name
-				edit.Percentage = edit.CalcualtePercentage(edit.Probablity)
+				visualizeReport.Percentage = e.Percentage
+				// v :=  infectedUv()
 				// openStreet.Country = r.FormValue("country")
 				// openStreet.PostalCode = r.FormValue("postal")
 				// openStreet.City = r.FormValue("city")
@@ -492,28 +467,9 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
 				// 	return
 				// }
-				// openStreet.RouteNum  = i
-				// fmt.Println("state:", openStreet)
-				//  street , err := openStreet.CurrentLocationByPostalAddress(openStreet);if err != nil {
-				// 	fmt.Println("Error:", err)
-				// 	return
-				//  }
-				//  fmt.Println("Street:", street)
-				//  uv ,err := visualizeReport.OpenWeather(openwizweather); if err != nil {
-				// 	 fmt.Println("Error:", err)
-				// 	return
-				//  }
-				//  loc := visualizeReport.GetCoordinates(street)
-				//
-				//  if err := uv.Current(loc); err != nil {
-				// 	 fmt.Println("Error:", err)
-				// 	return
-				//  }
-				//  info , err := uv.UVInformation(); if err != nil {
-				// 	 fmt.Println("Error:", err)
-				// 	return
-				//  }
-				//  visualizeReport.UVinfo = info
+				
+				//v.UVinfo = uvslice
+
 				w.WriteHeader(http.StatusOK)
 				r.Method = "GET"
 				Visualize(w, r)
@@ -521,18 +477,11 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				// fmt.Println("Virus:", capsid)
 			case "5":
 				var name string = "MersSaudiaArabia"
-				svrFile := FileReadFromDisk(w, r, name)
-				println("Please Wait", svrFile.Name(), "...")
-				meGenome, virusGenome, err := SequenceFile(file, svrFile)
-				if err != nil {
-					fmt.Println("Error:", err)
-					return
+				e , err := ChoosePattern(w,r, name, choose,file); if err != nil {
+					return 
 				}
-				distance := structs.EditDistanceStrings(meGenome, virusGenome)
-				edit.Probablity = edit.Result(distance)
-				edit.Name = name
-				edit.Percentage = edit.CalcualtePercentage(edit.Probablity)
-				//  openStreet.Country = r.FormValue("country")
+				visualizeReport.Percentage = e.Percentage
+				// v :=  infectedUv()				//  openStreet.Country = r.FormValue("country")
 				//  openStreet.PostalCode = r.FormValue("postal")
 				// openStreet.City = r.FormValue("city")
 				// openStreet.State = r.FormValue("state")
@@ -540,30 +489,9 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
 				// 	return
 				// }
-				// openStreet.RouteNum  = i
-				// fmt.Println("state:", openStreet)
-				//  street , err := openStreet.CurrentLocationByPostalAddress(openStreet);if err != nil {
-				// 	fmt.Println("Error:", err)
-				// 	return
-				//  }
-				//  fmt.Println("Street:", street)
-				//  uv ,err := visualizeReport.OpenWeather(openwizweather); if err != nil {
-				// 	 fmt.Println("Error:", err)
-				// 	return
-				//  }
-				//  loc := visualizeReport.GetCoordinates(street)
-				//
-				//  if err := uv.Current(loc); err != nil {
-				// 	 fmt.Println("Error:", err)
-				// 	return
-				//  }
-				//  info , err := uv.UVInformation(); if err != nil {
-				// 	 fmt.Println("Error:", err)
-				// 	return
-				//  }
-				//  visualizeReport.UVinfo = info
-
+				// v.UVinfo = uvslice	
 				w.WriteHeader(http.StatusOK)
+				
 				r.Method = "GET"
 				Visualize(w, r)
 				// fmt.Println("Virus:", capsid)
@@ -582,10 +510,7 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				log.Println("[Error]: checks logs...", err)
 			}
-			// print("size must be less than 512MB")
-			// Repon := structs.Response{true, "Error in Upload File {size must not exceed with 512MB}", "/dashboard"}
-			// println("Server Response:", Repon.Flag, Repon.Message, Repon.Links)
-			// temp.Execute(w, Repon)
+			
 		}
 
 	}
@@ -1010,7 +935,7 @@ func CreateWallet(w http.ResponseWriter, r *http.Request) {
 		log.Println("[Accept] Welcome ! Your Account Has been created", merchant)
 		w.WriteHeader(http.StatusOK)
 		r.Method = "GET"
-		Dashboard(w, r)
+		Existing(w, r)
 	}
 }
 
@@ -1163,7 +1088,7 @@ func Wallet(w http.ResponseWriter, r *http.Request) {
 
 			w.WriteHeader(http.StatusOK)
 			r.Method = "GET"
-			Transacts(w, r)
+			// Transacts(w, r)
 		}
 	}
 }
@@ -1526,7 +1451,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *struct
 			log.Println("Records:", record, "Info: ", candidate)
 			response.WriteHeader(http.StatusOK)
 			request.Method = "GET"
-			Existing(response, request)
+			CreateWallet(response,request)
 
 		}
 
@@ -1986,3 +1911,49 @@ func blockSession(id int) *sessions.CookieStore {
 
 	return sessions.NewCookieStore([]byte(strconv.Itoa(id)))
 }
+
+
+func ChoosePattern(w http.ResponseWriter, r *http.Request, fname , choose string, file *os.File) (structs.Levenshtein, error) {
+	
+	
+	i  , err := strconv.Atoi(choose); if err != nil {
+		log.Fatalln("[Fail] Sorry there is some issue report!", err)
+		return edit, err
+	}
+	if (i > 0 && i < 6) && (fname != " ") {
+		svrFile := FileReadFromDisk(w, r, fname)		
+		Usr, Virus, err := SequenceFile(file, svrFile); if err != nil {
+					log.Fatalln("[Fail] Sequence DataFile Error", err)
+					return  edit, err
+		}
+		log.Println("Genome:", len(Usr), "virus:", len(Virus))
+		distance := structs.EditDistanceStrings(Usr,Virus)
+		edit.Probablity = edit.Result(distance)
+		edit.Name = fname
+		edit.Percentage = edit.CalcualtePercentage(edit.Probablity)
+		return edit, err
+	}else if i == 0{
+		temFile := template.Must(template.ParseFiles("dashboard.html"))
+		temFile.Execute(w, "Dashbaord")
+	}
+	return edit, err
+
+
+}
+
+func ProcessWaiit() bool {
+	clockHand := time.NewTimer(3 * time.Second)
+	<-clockHand.C
+	stop := clockHand.Stop()
+	return stop
+}
+
+func AutoKeyGenerate(s1 string) string{
+	h0 := sha256.New()
+	h1 := h0.Sum([]byte(s1)) // hash of string-1 
+	e := hex.EncodeToString([]byte(h1))
+	h := hex.EncodeToString([]byte(e))[:8]
+	return h
+}
+
+
