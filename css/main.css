@@ -1,8 +1,57 @@
-.geoloaction-toggele,
-.notification-toggle, 
-.light{
-    margin-top: 120px;
-    margin-left: 30px;
-    margin-right: 100px;
+.row{
+    display: flex;
+    justify-content: center;
     position: relative;
+}
+
+.logo{
+    width: 500px;
+    margin-bottom: 20px ;
+}
+
+.row{
+    margin-top: 2%;
+}
+.globe-ok, 
+.globe-btn, 
+.navigate-ok, 
+.navigate, 
+.ambient-ok,
+.ambient{
+    background-color: green;
+    color: white;
+    border-radius: 20%;
+}
+.person-record{
+    color: black;
+    font-family: fantasy;
+    font-weight: 100;
+    margin-left: 10%;
+}
+.paypal-logo{
+    width: 30%;
+    height: 10%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.checkbox-geo{
+    margin-right: 5px;
+    margin-top: 10px;
+}
+.checkbox-notification{
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-right: 5px;
+}
+.checkbox-ambient{
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-right: 5px;
+}
+.btn-checkbox{
+    margin-bottom: 20%;
+    margin-top: 40%;
+    margin-right: 50px;
+    display: flex;
+    justify-content: center;
 }

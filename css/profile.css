@@ -37,6 +37,7 @@
     width: 30%;
     color: white;
     font-weight: bolder;
+    visibility: hidden;
   }
 
   .cancel-button{
@@ -68,7 +69,14 @@
     top: -5px;
     margin-right: 10px;
   }
-  .trash{
-    background: #dc313a;
-    visibility: hidden;
+  .edit-input{
+    
+    visibility: visible;
+    width: fit-content;
+    font-size: larger;
+    border: none;
+    display: flex;
+    justify-content: center;
+    
   }
+
