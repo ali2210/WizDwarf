@@ -19,11 +19,11 @@ function EmailEditEvent(){
     email.readonly = false;
 }
 
-function PasswordEditEvent(){
-    var password_in = document.getElementById('inputPassword4');
-    EditEvent();
-    password_in.readonly = false;
-}
+// function PasswordEditEvent(){
+//     var password_in = document.getElementById('inputPassword4');
+//     EditEvent();
+//     password_in.readonly = false;
+// }
 
 function NameEditEvent(){
     var name_in = document.getElementById('name');
