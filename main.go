@@ -34,7 +34,7 @@ import (
 	"golang.org/x/crypto/sha3"
 	"golang.org/x/net/context"
 	"google.golang.org/api/option"
-	handler "github.com/ali2210/wizdwarf/paypal/handle"
+	"github.com/ali2210/wizdwarf/structs/paypal/handler"
 
 	// "strings"
 	"github.com/ali2210/wizdwarf/structs/amino"
@@ -229,8 +229,9 @@ func Credit(w http.ResponseWriter, r *http.Request)  {
 			AccountNum : r.FormValue("cardNo"),
 			ExpireDate : r.FormValue("expire"),
 			CVV2 : r.FormValue("cvv"),
-			Id : AutoKeyGenerate(CVV2)
-		 } 
+		 }
+		 card.Id =  AutoKeyGenerate(card.CVV2) 
+		 log.Println("Id generated:" , card.Id)
 
 		// store card info in db 
 	}
@@ -1492,7 +1493,7 @@ func SetFirestoreCredentials() *firebase.App {
 			log.Fatal("[Fail] Connection Reject", err)
 			return nil
 		}
-		log.Println("[Accept] Concection build with cloud firestore database", app)
+		log.Println("[Accept] Concection build with cloud firestore database")
 		return app
 	}
 	return nil
