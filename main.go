@@ -37,7 +37,7 @@ import (
 	"github.com/ali2210/wizdwarf/db"
 	"github.com/ali2210/wizdwarf/structs/paypal/handler"
 	"github.com/ali2210/wizdwarf/structs/users"
-	// "strings"
+	 "reflect"
 	"github.com/ali2210/wizdwarf/structs/amino"
 	
 	weather "github.com/ali2210/wizdwarf/structs/OpenWeather"
@@ -130,6 +130,8 @@ func main() {
 		if !flag{
 			arg1.WriteHeader(http.StatusOK)
 			arg2.Method = "GET"
+		}
+		flag = ProcessWaiit(); if !flag {
 			Home(arg1, arg2)
 		}
 	})
@@ -197,18 +199,16 @@ func Setting(w http.ResponseWriter, r *http.Request)  {
 	
 	temp := template.Must(template.ParseFiles("settings.html"))
 	
-	if r.Method == "GET" {
+	bankProfile , _ := paypalMini.RetrieveCreditCardInfo(accountID)
+
+	if r.Method == "GET" &&  reflect.ValueOf(bankProfile) == reflect.ValueOf(pay.CreditCard{}) {
 		log.Println("[Accept]" , r.URL.Path)
 		temp.Execute(w,"Setting")
+	 }else{
+	
+	 	log.Println("[Accept]" , r.URL.Path)
+	 	temp.Execute(w,bankProfile)
 	 }
-	// else{
-	// 	ret , err := paypalMini.RetrieveCreditCardInfo(accountID); if err != nil {
-	// 		log.Fatalln("[Fail] Operation:", err)
-	// 		return 
-	// 	}
-	// 	log.Println("[Accept]" , r.URL.Path)
-	// 	temp.Execute(w,ret)
-	// }
 
 }
 
