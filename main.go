@@ -197,15 +197,18 @@ func Setting(w http.ResponseWriter, r *http.Request)  {
 	
 	temp := template.Must(template.ParseFiles("settings.html"))
 	
-	ret , err := paypalMini.RetrieveCreditCardInfo(accountID); if err != nil {
-		log.Fatalln("[Fail] Operation:", err)
-		return 
-	}
-	
 	if r.Method == "GET" {
 		log.Println("[Accept]" , r.URL.Path)
-		temp.Execute(w,ret)
-	}
+		temp.Execute(w,"Setting")
+	 }
+	// else{
+	// 	ret , err := paypalMini.RetrieveCreditCardInfo(accountID); if err != nil {
+	// 		log.Fatalln("[Fail] Operation:", err)
+	// 		return 
+	// 	}
+	// 	log.Println("[Accept]" , r.URL.Path)
+	// 	temp.Execute(w,ret)
+	// }
 
 }
 
