@@ -18,9 +18,9 @@ import (
 	"regexp"
 	"strconv"
 	"time"
+	pay "github.com/logpacker/PayPal-Go-SDK"
 	templates "text/template"
 	firebase "firebase.google.com/go"
-	"github.com/ali2210/wizdwarf/db"
 	cloudWallet "github.com/ali2210/wizdwarf/db/cloudwalletclass"
 	"github.com/ali2210/wizdwarf/structs"
 	"github.com/biogo/biogo/alphabet"
@@ -34,8 +34,9 @@ import (
 	"golang.org/x/crypto/sha3"
 	"golang.org/x/net/context"
 	"google.golang.org/api/option"
+	"github.com/ali2210/wizdwarf/db"
 	"github.com/ali2210/wizdwarf/structs/paypal/handler"
-
+	"github.com/ali2210/wizdwarf/structs/users"
 	// "strings"
 	"github.com/ali2210/wizdwarf/structs/amino"
 	
@@ -50,8 +51,9 @@ var (
 	passexp            string                = "([A-Z][a-z]*[0-9])*"
 	addressexp         string                = "(^0x[0-9a-fA-F]{40}$)"
 	appName            *firebase.App         = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
-	cloud              db.DBFirestore        = db.NewCloudInstance()
+	cloud              users.DBFirestore        = users.NewCloudInstance()
 	ledger             db.PublicLedger       = db.NewCollectionInstance()
+	paypalMini         handler.PaypalClientLevel  =handler.PaypalClientGo()
 	userSessions       *sessions.CookieStore = nil //user level
 	cryptoSessions     *sessions.CookieStore = nil // crypto level
 	clientInstance     *ethclient.Client     = nil
@@ -64,6 +66,8 @@ var (
 	FILENAME          string              = ""
 	edit              structs.Levenshtein = structs.Levenshtein{}
 	visualizeReport weather.DataVisualization = weather.DataVisualization{}
+	accountID string 				= " "
+	
 	
 )
 
@@ -190,28 +194,90 @@ func Home(w http.ResponseWriter, r *http.Request) {
 // }
 
 func Setting(w http.ResponseWriter, r *http.Request)  {
+	
 	temp := template.Must(template.ParseFiles("settings.html"))
+	
+	ret , err := paypalMini.RetrieveCreditCardInfo(accountID); if err != nil {
+		log.Fatalln("[Fail] Operation:", err)
+		return 
+	}
+	
 	if r.Method == "GET" {
 		log.Println("[Accept]" , r.URL.Path)
-		temp.Execute(w,"Settings")
+		temp.Execute(w,ret)
 	}
+
 }
 
 func Profile(w http.ResponseWriter, r *http.Request)  {
+
 	temp := template.Must(template.ParseFiles("profile.html"))
+	if accountID == ""{	
+		log.Fatal("[Error ] Please login  ")
+			response := structs.Response{}
+			temp := server(w, r)
+			_ = response.ClientRequestHandle(true, "Sorry Session expire   ", "/login", w, r)
+			response.ClientLogs()
+			err := response.Run(temp); if err != nil {
+				log.Println("[Error]: checks logs...", err)
+			}
+	}
+
+	detailsAcc , err := cloud.FindDataByID(accountID, appName); if err != nil {
+		log.Fatalln("[Fail] Operation..", err)
+		return 
+	}
+
 	if r.Method == "GET" {
 		log.Println("[Accept]" , r.URL.Path)
-		temp.Execute(w,"Profile")
+		temp.Execute(w,detailsAcc)
+	}else{
+		log.Println("[Accept] Method:", r.Method)
+		log.Println("[Accept] Path:", r.URL.Path)
+
+		r.ParseForm()
+
+		// save value in db
+		MyProfile := users.UpdateProfile{
+			Email : r.FormValue("email"),
+			Phone : r.FormValue("phone"),
+			FirstName : r.FormValue("uname"),
+			LastName : r.FormValue("ufname"),
+			HouseAddress : r.FormValue("inputAddress"),
+			SubAddress : r.FormValue("inputAddress2"),
+			Country : r.FormValue("country"),
+			Zip : r.FormValue("inputZip"),
+		}
+
+		if accountID == ""{
+			log.Fatal("[Error ] Please login  ")
+			response := structs.Response{}
+			temp := server(w, r)
+			_ = response.ClientRequestHandle(true, "Sorry Session expire   ", "/login", w, r)
+			response.ClientLogs()
+			err := response.Run(temp); if err != nil {
+				log.Println("[Error]: checks logs...", err)
+			}
+		}
+		MyProfile.Id = accountID
+		
+		male := r.FormValue("gender")
+		if male == "on"{
+			MyProfile.Male = true 
+		}
+		MyProfile.Male = false
+
+		profile, err  := cloud.UpdateProfiles(appName, &MyProfile); if err != nil {
+			log.Fatalln("[Fail] Operation..", err)
+			return 
+		} 
+		 
+		log.Println("[Accept] Profile updated... ", profile)
+
 	}
 }
 
-// func MyProfile(w http.ResponseWriter, r *http.Request){
-// 	temp := template.Must(template.ParseFiles("user.html"))
-// 	if r.Method == "GET" {
-// 		log.Println("[Accept]" , r.URL.Path)
-// 		temp.Execute(w,"My Profile")
-// 	}
-// }
+
 
 func Credit(w http.ResponseWriter, r *http.Request)  {
 	temp := template.Must(template.ParseFiles("credit.html"))
@@ -222,18 +288,42 @@ func Credit(w http.ResponseWriter, r *http.Request)  {
 		log.Println("[Accept ]Path :" , r.URL.Path)
 		log.Println("Method :", r.Method)
 		r.ParseForm()
-
-		card := handler.CreditCardDetails{
+		card := pay.CreditCard{
 			FirstName : r.FormValue("fholder"),
-			Surename : r.FormValue("surename"),
-			AccountNum : r.FormValue("cardNo"),
-			ExpireDate : r.FormValue("expire"),
-			CVV2 : r.FormValue("cvv"),
-		 }
-		 card.Id =  AutoKeyGenerate(card.CVV2) 
-		 log.Println("Id generated:" , card.Id)
+			LastName : r.FormValue("surename"),
+			Number : r.FormValue("cardNo"),
+			ExpireMonth : r.FormValue("expire"),
+		 	CVV2 : r.FormValue("cvv"),
+		}
 
-		// store card info in db 
+		 card.ID =  AutoKeyGenerate(card.CVV2) 
+		 log.Println("Id generated:" , card)
+
+		// store credit card information.
+		mini := handler.PaypalMiniVersion{}
+	  	client, err := paypalMini.NewClient(); if err != nil {
+			log.Fatalln("[Fail] Operation:", err)
+			  return
+		}
+		mini.Client = client
+		
+		token , err := paypalMini.Token();if err != nil {
+			log.Fatalln("[Fail] Operation:", err)
+			return 
+		}
+		store, err := paypalMini.StoreCreditCardInfo(card); if err != nil {
+			log.Fatalln("[Fail] Operation:", err)
+			return 
+		}
+		ret , err := paypalMini.RetrieveCreditCardInfo(store.ID); if err != nil {
+			log.Fatalln("[Fail] Operation:", err)
+			return 
+		}
+
+		log.Println("[Accept] Token issue:", token, "retInfo:", ret)
+
+
+
 	}
 
 }
@@ -1254,6 +1344,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 
 		}
 		if data != nil {
+			accountID = data.Id
 			fmt.Printf("Search Data:%v", data.Id)
 			act := structs.RouteParameter{}
 			//complex.AddByName(data.Name)
@@ -1337,16 +1428,16 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 
 //  Advance Functions
 
-func SearchDB(w http.ResponseWriter, r *http.Request, email, pass string) (*db.Vistors, error) {
+func SearchDB(w http.ResponseWriter, r *http.Request, email, pass string) (*users.Vistors, error) {
 
-	var data *db.Vistors
+	var data *users.Vistors
 	var err error
 	// w.Header().Set("Content-Type", "application/json")
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
 	} else {
 		fmt.Println("Method:" + r.Method)
-		data, err = cloud.FindData(email, pass, appName)
+		data, err = cloud.FindAllData(appName, email, pass)
 		if err != nil && data != nil {
 			log.Fatal("[Fail] No info  ", err)
 			response := structs.Response{}
@@ -1387,7 +1478,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *struct
 	if request.Method == "GET" {
 		fmt.Println("Method:" + request.Method)
 	} else {
-		var member db.Vistors
+		var member users.Vistors
 		data, err := json.Marshal(member)
 		if err != nil {
 			log.Fatal("[Fail] Poor DATA JSON FORMAT  ", err)

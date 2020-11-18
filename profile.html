@@ -52,47 +52,50 @@
             <div class="form-group col-12 col-md-6">
               <label for="name" class="custom-label">Name</label>
               <input type="text" class="form-control" id="name" name="uname" placeholder="First Name" readonly>
-                <button type="button" onclick="NameEditEvent()"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
+                <button type="button" onclick="NameEditEvent()"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit" value={{.Name}}></i></button>
             </div>
             <div class="form-group col-12 col-md-6">
-              <label for="fname" class="custom-label">Family Name</label>
-              <input type="text" class="form-control" id="fname" name="ufname" placeholder="Family Name" readonly>
-                <button type="button" onclick="FamilyNameEditEvent()"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
+              <label for="fname" class="custom-label">SureName</label>
+              <input type="text" class="form-control" id="fname" name="ufname" placeholder="SureName" readonly>
+                <button type="button" onclick="FamilyNameEditEvent()"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit" value={{.FName}}></i></button>
             </div>
           </div>
           <div class="form-row ml-1">
             <div class="form-check form-check-inline gender-box">
-              <input type="radio" id="madam" name="gender" value="female" class="custom-radio" readonly>
-              <label for="madam">Female</label>
+              {{if .Eve}}
+                <input type="radio" id="madam" name="gender" class="custom-radio" checked readonly>
+                <label for="madam">Female</label>
             </div>
+             {{ else }}
             <div class="form-check form-check-inline gender-box">
-              <input type="radio" id="madam" name="gender" value="male" class="custom-radio" readonly>
+              <input type="radio" id="madam" name="gender" class="custom-radio" checked readonly>
               <label for="madam">Male</label>
             </div>
+            {{ end}}
           </div>
           <div class="form-row custom-form-row mb-1">
             <div class="form-group col-12">
               <label for="inputAddress" class="custom-label">Address</label>
-              <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address" readonly>
+              <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address" value="{{.Address}}" readonly>
                 <button type="button" onclick="ResidenceEditEvent()"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
             </div>
           </div>
           <div class="form-row custom-form-row ">
             <div class="form-group col-12">
               <label for="inputAddress2" class="custom-label">Address 2</label>
-              <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" name="add" readonly>
+              <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" name="add" value="{{.LAddress}}" readonly>
                 <button type="button" onclick="SubResEditEvent()"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
             </div>
           </div>
           <div class="form-row custom-form-row mb-1">
             <div class="form-group col-12">
               <label for="country" class="custom-label">Country</label>
-              <input type="text" class="form-control" id="country" placeholder="Country Name" name="country" readonly>
+              <input type="text" class="form-control" id="country" placeholder="Country Name" name="country" value="{{.Country}}" readonly>
                 <button type="button" onclick="CountryEditEvent()"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
             </div>
               <div class="form-group  col-12 col-sm-12 col-md-4 ">
               <label for="inputZip" class="custom-label">Zip</label>
-              <input type="number" class="form-control" id="inputZip" name="inputZip" placeholder="1234" readonly>
+              <input type="number" class="form-control" id="inputZip" name="inputZip" placeholder="1234" value="{{.Zip}}" readonly>
                 <button type="button" onclick="ZipEditEvent()"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
               </input>
               </div>
