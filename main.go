@@ -126,14 +126,8 @@ func main() {
 			log.Println("[OK] URL :", arg2.URL.Path)
 			temp.Execute(arg1, "MainPage")
 		}
-		flag := ProcessWaiit()
-		if !flag{
-			arg1.WriteHeader(http.StatusOK)
-			arg2.Method = "GET"
-		}
-		flag = ProcessWaiit(); if !flag {
-			Home(arg1, arg2)
-		}
+		_ = ProcessWaiit()
+		
 	})
 	routing.HandleFunc("/home", Home)
 	routing.HandleFunc("/signup", NewUser)
@@ -200,15 +194,16 @@ func Setting(w http.ResponseWriter, r *http.Request)  {
 	temp := template.Must(template.ParseFiles("settings.html"))
 	
 	bankProfile , _ := paypalMini.RetrieveCreditCardInfo(accountID)
-
-	if r.Method == "GET" &&  reflect.ValueOf(bankProfile) == reflect.ValueOf(pay.CreditCard{}) {
+	emptyCard := &pay.CreditCard{}
+	
+	if r.Method == "GET" &&  reflect.ValueOf(bankProfile) != reflect.ValueOf(emptyCard) && bankProfile.Number == " " {
 		log.Println("[Accept]" , r.URL.Path)
 		temp.Execute(w,"Setting")
-	 }else{
+	}else if r.Method == "Get" &&  reflect.ValueOf(bankProfile) != reflect.ValueOf(emptyCard)  && bankProfile.Number != " "  {
 	
 	 	log.Println("[Accept]" , r.URL.Path)
 	 	temp.Execute(w,bankProfile)
-	 }
+	}
 
 }
 
