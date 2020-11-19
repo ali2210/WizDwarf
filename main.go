@@ -196,7 +196,7 @@ func Setting(w http.ResponseWriter, r *http.Request)  {
 	bankProfile , _ := paypalMini.RetrieveCreditCardInfo(accountID)
 	emptyCard := &pay.CreditCard{}
 	
-	if r.Method == "GET" &&  reflect.ValueOf(bankProfile) != reflect.ValueOf(emptyCard) && bankProfile.Number == " " {
+	if r.Method == "GET" && bankProfile.Number == "" {
 		log.Println("[Accept]" , r.URL.Path)
 		temp.Execute(w,"Setting")
 	}else if r.Method == "Get" &&  reflect.ValueOf(bankProfile) != reflect.ValueOf(emptyCard)  && bankProfile.Number != " "  {
