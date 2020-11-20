@@ -2,7 +2,9 @@
     background-color:#f9f9f9;
     font-family: 'Lato', sans-serif;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: center;
+    margin-left: 150px;
     align-items: center;
   }
   .logo {
@@ -39,6 +41,10 @@
     font-weight: bolder;
     visibility: hidden;
   }
+  .button-input{
+    background: green;
+    margin-left: 100px;
+  }
 
   .cancel-button{
     background: #dc313a;
@@ -72,11 +78,9 @@
   .edit-input{
     
     visibility: visible;
-    width: fit-content;
-    font-size: larger;
-    border: none;
     display: flex;
     justify-content: center;
+    color: whitesmoke;
     
   }
 
