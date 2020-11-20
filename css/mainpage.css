@@ -7,8 +7,8 @@
     padding: 50px;
     background-color: white;
     transition: transform .2s; /* Animation */
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     margin: 0 auto;
     cursor: progress;
     cursor: wait;
@@ -42,7 +42,7 @@
     justify-content: center;
     margin-top: auto;
     margin-left: -250px;
-    margin-bottom: 80px;
+    margin-bottom: 1px;
   }
 
   .link{
