@@ -193,18 +193,13 @@ func Setting(w http.ResponseWriter, r *http.Request)  {
 	
 	temp := template.Must(template.ParseFiles("settings.html"))
 	
-	bankProfile , _ := paypalMini.RetrieveCreditCardInfo(accountID)
-	//emptyCard := &pay.CreditCard{}
+	// bankProfile , _ := paypalMini.RetrieveCreditCardInfo(accountID)
 	
-	if r.Method == "GET" && bankProfile.Number == "" {
+	if r.Method == "GET" {
 		log.Println("[Accept]" , r.URL.Path)
 		temp.Execute(w,"Setting")
 	}
-	// }else if r.Method == "Get" &&  reflect.ValueOf(bankProfile) != reflect.ValueOf(emptyCard)  && bankProfile.Number != " "  {
 	
-	//  	log.Println("[Accept]" , r.URL.Path)
-	//  	temp.Execute(w,bankProfile)
-	// }
 
 }
 
