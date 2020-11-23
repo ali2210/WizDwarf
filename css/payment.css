@@ -1,0 +1,17 @@
+
+.credit-form{
+    display: flex;
+    justify-content: center;
+    margin-left: 27em;
+    margin-top: 2em;
+    position: relative;
+}
+.logo{
+    width: 50%;
+}
+.submit-btn{
+    color: green ;
+}
+.cancel-btn{
+    color: red;
+}
