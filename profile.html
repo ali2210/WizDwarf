@@ -24,9 +24,10 @@
           <div class="row">
             <div class="col-3">
               <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <a class="nav-link" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Home</a>
-                <a class="nav-link active" id="v-pills-profile-tab" data-toggle="pill" href="/dashbaord/setting/profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Profile</a>
-                <a class="nav-link" id="v-pills-payement-tab" data-toggle="pill" href="/open/setting/credit" role="tab" aria-controls="v-pills-payement" aria-selected="false">Payement</a>
+                <a class="nav-link" id="v-pills-home-tab" data-toggle="pill" href="/dashbaord" role="tab" aria-controls="v-pills-home" aria-selected="true"> <i class="fa fa-home" aria-hidden="true"></i> Home</a>
+                <a class="nav-link active" id="v-pills-profile-tab" data-toggle="pill" href="/dashbaord/setting/profile" role="tab" aria-controls="v-pills-profile" aria-selected="false"> <i class="fa fa-user" aria-hidden="true"></i> Profile</a>
+                <a class="nav-link" id="v-pills-payement-tab" data-toggle="pill" href="/open/setting/credit" role="tab" aria-controls="v-pills-payement" aria-selected="false"> <i class="fa fa-credit-card-alt" aria-hidden="true"></i> Payement</a>
+                <a class="nav-link" id="v-pills-about-tab" data-toggle="pill" href="#" role="tab" aria-controls="v-pills-about-me" aria-selected="false"> <i class="fa fa-smile-o" aria-hidden="true"></i> About Me</a>
               </div>
             </div>
             <div class="col-9">
@@ -34,47 +35,43 @@
                 <div class="tab-pane fade" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
                   </div>
                   </div>
-              </div>
-              <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                <div class="register-main-div">
-                  <form action="/" method="post" class= "update-form">
-                    <h4 style="text-align: center; font-family: 'Roboto Mono', monospace; color: #424242;">Update</h4>
-                    <div class="form-row custom-form-row ">
-                      <div class="form-group col-12 col-md-6">
-                        <label for="inputEmail4" class="custom-label">Email</label>
-                        <input type="email" class="form-control" id="inputEmail4" placeholder="Email" name="email" required readonly>
-                        <button type="button" onclick="EmailEditEvent()" class="button-input"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="nameedit"></i></button>
-                      </div>
-                      <div class="form-group col-12 col-md-6">
-                        <label for="phoneNo" class="custom-label">Phone No</label>
-                            <input type="tel" class="form-control" id="phone" placeholder="+(000) 000 000 0" name="phone" readonly>
-                              <button type="button" class="button-input" onclick="TelEditEvent()"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit" ></i></button>
-                      </div>
+                   <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                       <div class="register-main-div">
+                        <form action="/dashbaord/setting/profile" method="post" class= "update-form">
+                        <h4 style="text-align: center; font-family: 'Roboto Mono', monospace; color: #424242;">Update</h4>
+                      <div class="form-row custom-form-row ">
+                        <div class="form-group col-12 col-md-6">
+                          <label for="inputEmail4" class="custom-label">Email</label>
+                          <input type="email" class="form-control" id="inputEmail4" placeholder="Email" name="email" value="{{.Email}}" required readonly>
+                          <button type="button" onclick="EmailEditEvent()" class="button-input"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="nameedit"></i></button>
+                         </div>
+                          <div class="form-group col-12 col-md-6">
+                          <label for="phoneNo" class="custom-label">Phone No</label>
+                          <input type="tel" class="form-control" id="phone" placeholder="+(000) 000 000 0" name="phone" readonly>
+                          <button type="button" class="button-input" onclick="TelEditEvent()"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit" ></i></button>
+                         </div>
                     </div>
                     <div class="form-row custom-form-row ">
                       <div class="form-group col-12 col-md-6">
                         <label for="name" class="custom-label">Name</label>
-                        <input type="text" class="form-control" id="name" name="uname" placeholder="First Name" readonly>
+                        <input type="text" class="form-control" id="name" name="uname" placeholder="First Name"  value="{{.Name}}" readonly>
                           <button type="button" onclick="NameEditEvent()" class="button-input"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit" value={{.Name}}></i></button>
                       </div>
                       <div class="form-group col-12 col-md-6">
                         <label for="fname" class="custom-label">SureName</label>
-                        <input type="text" class="form-control" id="fname" name="ufname" placeholder="SureName" readonly>
+                        <input type="text" class="form-control" id="fname" name="ufname" placeholder="SureName" value="{{.FName}}" readonly>
                           <button type="button" onclick="FamilyNameEditEvent()" class="button-input"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit" value={{.FName}}></i></button>
                       </div>
                     </div>
                     <div class="form-row ml-1">
                       <div class="form-check form-check-inline gender-box">
-                        {{if .Eve}}
-                          <input type="radio" id="madam" name="gender" class="custom-radio" checked readonly>
+                          <input type="radio" id="madam" name="gender" class="custom-radio" value="{{.Eve}}" readonly>
                           <label for="madam">Female</label>
                       </div>
-                       {{ else }}
                       <div class="form-check form-check-inline gender-box">
-                        <input type="radio" id="madam" name="gender" class="custom-radio" checked readonly>
+                        <input type="radio" id="madam" name="gender" class="custom-radio" value="{{.Eve}}" readonly>
                         <label for="madam">Male</label>
                       </div>
-                      {{ end}}
                     </div>
                     <div class="form-row custom-form-row mb-1">
                       <div class="form-group col-12">
@@ -98,7 +95,7 @@
                       </div>
                         <div class="form-group  col-12 col-sm-12 col-md-4 ">
                         <label for="inputZip" class="custom-label">Zip</label>
-                        <input type="number" class="form-control" id="inputZip" name="inputZip" placeholder="1234" value="{{.Zip}}" readonly>
+                        <input type="number" class="form-control" id="inputZip" name="inputZip" placeholder="1234" readonly>
                           <button type="button" onclick="ZipEditEvent()" class="button-input"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
                         </input>
                         </div>
@@ -111,18 +108,11 @@
                       <button type="reset" class="btn mb-2 cancel-button">Cancel </button>
                     </div>
                   </form>
-              <div class="tab-pane fade" id="v-pills-payement" role="tabpanel" aria-labelledby="v-pills-payement-tab">...</div>
+                 <div class="tab-pane fade" id="v-pills-payement" role="tabpanel" aria-labelledby="v-pills-payement-tab"></div>
+                <div class="tab-pane fade" id="v-pills-about" role="tabpanel" aria-labelledby="v-pills-about-tab"></div>
               </div>
-          <!-- <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
-              <li class="nav-item active pl-3">
-                <a class="nav-link" href="/home">
-                  <i class="fa fa-home icon-light" aria-hidden="true"></i>
-                  Home
-                </a>
-              </li>
-             </ul>
-        </div> -->
+         </div>
+          
         </nav>
     </div>
    

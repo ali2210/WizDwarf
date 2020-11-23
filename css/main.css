@@ -1,17 +1,30 @@
 .row{
     display: flex;
-    justify-content: center;
     position: relative;
+    margin-top: 10%;
+    margin-right: 70%;
+}
+.col-9, .col-3{
+    display: flex;
+    position: absolute;
+    margin-bottom: 20px;
+    margin-left: 20px;
+
+}
+
+.geo-container{
+    margin-top: 40px;
+    margin-bottom: 40px;
+    padding-block-start: 0.1em;
+    padding-left: 10.5em;
 }
 
 .logo{
-    width: 500px;
-    margin-bottom: 20px ;
+    width: 100%;
+    margin-bottom: 10px ;
 }
 
-.row{
-    margin-top: 2%;
-}
+
 .globe-ok, 
 .globe-btn, 
 .navigate-ok, 
