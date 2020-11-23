@@ -6,81 +6,75 @@ var submit = document.getElementById('submBtn');
 
 function EditEvent(){
     var trash = document.getElementById('trash');
-        trash.style.background = "green";
+        trash.style.background = "red";
         submit.style.visibility = "visible";    
 }
 
 
 function EmailEditEvent(){
-    var email = document.getElementById('inputEmail4');
-    if (email.textContent != " "){
-        email.textContent = " ";
-    } 
-    EditEvent();
+    var email = document.getElementById('inputEmail4'); 
     email.readonly = false;
+    if (email.textContent.length>0){
+        EditEvent();
+    }
+
 }
 
 
 
 function NameEditEvent(){
-    var name_in = document.getElementById('name');
-    if (name_in.textContent != " "){
-        name_in.textContent = " ";
-    } 
-    EditEvent();
+    var name_in = document.getElementById('name'); 
     name_in.readonly = false;
+    if(name_in.textContent.length>0){
+        EditEvent();
+    }
+    
 }
 
 function FamilyNameEditEvent(){
-    var fname_in = document.getElementById('fname');
-    if (fname_in.textContent != " "){
-        fname_in.textContent = " ";
-    } 
-    EditEvent();
+    var fname_in = document.getElementById('fname'); 
     fname_in.readonly = false;
+    if(fname_in.textContent.length>0){
+        EditEvent();
+    }
 }
 
 function ResidenceEditEvent(){
     var res_in = document.getElementById('inputAddress');
-    if (res_in.textContent != " "){
-        res_in.textContent = " ";
-    } 
-    EditEvent();
     res_in.readonly = false;
+    if(res_in.textContent.length>0){
+        EditEvent();
+    }
 }
 
 function SubResEditEvent(){
     var sres_in = document.getElementById('inputAddress2');
-    if (sres_in.textContent != " "){
-        sres_in.textContent = " ";
-    } 
-    EditEvent();
     sres_in.readonly = false;
+    if(sres_in.textContent.length>0){
+        EditEvent();
+    }
 }
 
 function CountryEditEvent(){
     var coun_in = document.getElementById('country');
-    if (coun_in.textContent != " "){
-        coun_in.textContent = " ";
-    } 
-    EditEvent();
     coun_in.readonly = false;
+    if(coun_in.textContent.length>0){
+        EditEvent();
+    }
 }
 
 function TelEditEvent(){
     var tel_in = document.getElementById('phone');
-    if (tel_in.textContent != " "){
-        tel_in.textContent = " ";
-    } 
-    EditEvent();
     tel_in.readonly = false;
+    if(tel_in.textContent.length>0){
+        EditEvent();
+    }
 }
 
 function ZipEditEvent(){
-    var zip_in = document.getElementById('inputZip');
-    if (zip_in.textContent != " "){
-        zip_in.textContent = " ";
-    } 
-    EditEvent();
+    var zip_in = document.getElementById('inputZip'); 
     zip_in.readonly = false;
+    if(zip_in.textContent.length>0){
+        EditEvent();
+    }
 }
