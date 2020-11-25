@@ -1,0 +1,46 @@
+.logo{
+    width: 30%;
+}
+.form-container{
+    max-width: 20rem;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    border: 2px grey solid ;
+    margin-left: 30em;
+    margin-top: 10em;
+}
+
+.delete-card-form{
+    margin-top: 2em;
+}
+.input-with-pre-icon{
+    margin: 10px;
+}
+.cancel{
+    color:whitesmoke;
+}
+.buttons{
+    display: flex;
+    justify-content: center;
+    position: relative;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+.btn-accept{
+    background-color: green;
+    color: wheat;
+}
+.recycle{
+    color: whitesmoke;
+}
+.btn-reset{
+    background-color: red;
+    color: wheat;
+}
+
+.main-dashboard-div{
+    display: flex;
+    position: relative;
+    
+}

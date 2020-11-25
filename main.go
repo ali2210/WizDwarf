@@ -138,12 +138,13 @@ func main() {
 	routing.HandleFunc("/createWallet", CreateWallet)
 	routing.HandleFunc("/terms", Terms)
 	routing.HandleFunc("/open", Wallet)
-	// routing.HandleFunc("/open/setting", WalletSettingMenu)
+	routing.HandleFunc("/open/setting/about", AboutMe)
 	routing.HandleFunc("/open/setting/credit", Credit)
 	routing.HandleFunc("/transact", Transacts)
 	routing.HandleFunc("/transact/send", Send)
 	routing.HandleFunc("/transact/treasure", Treasure)
 	routing.HandleFunc("/visualize", Visualize)
+	routing.HandleFunc("/open/setting/credit/delete", DeleteCard)
 	/*routing.HandleFunc("/transact/advance-fileoption", Blocks)*/
 
 	// Static Files
@@ -179,6 +180,40 @@ func Home(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func DeleteCard(w http.ResponseWriter, r *http.Request){
+	temp := template.Must(template.ParseFiles("delete.html"))
+	if r.Method == "GET" {
+		log.Println("[Accept]" , r.URL.Path)
+		temp.Execute(w,"DeleteForm")
+	}else{
+		log.Println("[Accept]" , r.URL.Path)
+		r.ParseForm()
+		ccv := r.FormValue("prefixInside")
+		hashcode := AutoKeyGenerate(ccv)
+		if HashMatch(cardInfoID, hashcode){
+			client, err := paypalMini.NewClient(); if err != nil {
+				log.Fatalln("[Fail] Operation:", err)
+			 	 return
+			}
+		
+			token , err := paypalMini.Token();if err != nil {
+				log.Fatalln("[Fail] Operation:", err)
+				return 
+			}
+			ret , err := paypalMini.RetrieveCreditCardInfo(hashcode); if err != nil {
+				log.Fatalln("[Fail]" , err)
+				return 
+			}
+			err = paypalMini.RemoveCard(ret.ID); if err != nil {
+				log.Fatalln("[Fail]" , err)
+				return 
+			}
+			log.Println("[Accept:]", client, token)
+			temp.Execute(w,"Complete")
+		}
+	}
+}
+
 func AboutMe(w http.ResponseWriter, r *http.Request)  {
 	temp := template.Must(template.ParseFiles("about.html"))
 	if r.Method == "GET" {
@@ -189,10 +224,21 @@ func AboutMe(w http.ResponseWriter, r *http.Request)  {
 			return 
 		}
 		if cardInfoID != ""{
-			ret , err := paypalMini.RetrieveCreditCardInfo(cardInfoID); if err != nil {
+			hashcode := AutoKeyGenerate(cardInfoID)
+			client, err := paypalMini.NewClient(); if err != nil {
+				log.Fatalln("[Fail] Operation:", err)
+				  return
+			}
+			
+			token , err := paypalMini.Token();if err != nil {
+				log.Fatalln("[Fail] Operation:", err)
+				return 
+			}
+			ret , err := paypalMini.RetrieveCreditCardInfo(hashcode); if err != nil {
 				log.Fatalln("[Fail]" , err)
 				return 
 			}
+			log.Println("[Accept:]", client, token)
 			account := digitalCode.LinkCard(ret, detailsAcc, publicAddress)
 			acc := digitalCode.VoidStruct()
 			if acc != account{
@@ -2058,6 +2104,13 @@ func AutoKeyGenerate(s1 string) string{
 	e := hex.EncodeToString([]byte(h1))
 	h := hex.EncodeToString([]byte(e))[:8]
 	return h
+}
+
+func HashMatch(s1 , s2 string )bool{
+	if s1 == s2 {
+		return true
+	}
+	return false
 }
 
 

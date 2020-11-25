@@ -20,6 +20,7 @@ type PaypalClientLevel interface{
 	Token()(*paypalSdk.TokenResponse, error)
 	RetrieveCreditCardInfo(id string)(*paypalSdk.CreditCard, error)
 	StoreCreditCardInfo(c paypalSdk.CreditCard)(*paypalSdk.CreditCard, error)
+	RemoveCard(id string) error
 }
 
 type PaypalMiniVersion struct{	
@@ -41,6 +42,10 @@ func (p *PaypalMiniVersion) Token() (*paypalSdk.TokenResponse, error) {
 	
 		token , err := (*p).Client.GetAccessToken()
 		return token, err
+}
+
+func (p *PaypalMiniVersion) RemoveCard(id string) error  {
+	return (*p).Client.DeleteCreditCard(id)
 }
 
 func (p *PaypalMiniVersion) RetrieveCreditCardInfo(id string)(*paypalSdk.CreditCard, error)  {

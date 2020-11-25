@@ -1,17 +1,34 @@
 
-.credit-form{
+ .credit-form{
     display: flex;
     justify-content: center;
     margin-left: 27em;
     margin-top: 2em;
-    position: relative;
+    position: relative; 
 }
 .logo{
-    width: 50%;
+    width: 30%;
+    position: relative;
+}
+.main-dashboard-div{
+    display: flex;
+    margin-top: 2em;
 }
 .submit-btn{
     color: green ;
+    margin-left: 0.1em;
+    margin-top: 2em;
+}
+.card-header{
+    text-align: center;
+    color: black;
+}
+.card-body{
+    text-align: center;
+    color: whitesmoke;
 }
 .cancel-btn{
     color: red;
 }
+
+
