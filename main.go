@@ -37,7 +37,6 @@ import (
 	"github.com/ali2210/wizdwarf/db"
 	"github.com/ali2210/wizdwarf/structs/paypal/handler"
 	"github.com/ali2210/wizdwarf/structs/users"
-	// "reflect"
 	"github.com/ali2210/wizdwarf/structs/amino"
 	
 	weather "github.com/ali2210/wizdwarf/structs/OpenWeather"
@@ -52,22 +51,21 @@ var (
 	addressexp         string                = "(^0x[0-9a-fA-F]{40}$)"
 	appName            *firebase.App         = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
 	cloud              users.DBFirestore        = users.NewCloudInstance()
+	digitalCode        users.CreditCardInfo 	 = users.NewClient()
 	ledger             db.PublicLedger       = db.NewCollectionInstance()
 	paypalMini         handler.PaypalClientLevel  =handler.PaypalClientGo()
 	userSessions       *sessions.CookieStore = nil //user level
-	cryptoSessions     *sessions.CookieStore = nil // crypto level
 	clientInstance     *ethclient.Client     = nil
 	ETHAddressInstance string                = ""
 	WalletPubKey       string                = ""
 	WalletSecureKey    string                = ""
-	// LifeCode []amino.AminoClass
-	configFilename    string              = "htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
 	googleCredentials string              = ""
 	FILENAME          string              = ""
+	publicAddress     string              = ""
 	edit              structs.Levenshtein = structs.Levenshtein{}
 	visualizeReport weather.DataVisualization = weather.DataVisualization{}
 	accountID string 				= " "
-	
+	cardInfoID string  				= ""
 	
 )
 
@@ -75,6 +73,7 @@ var (
 
 const (
 	projectId string = "htickets-cb4d0"
+	configFilename    string              = "htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
 	//Google_Credentials string = "/home/ali/Desktop/htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
 	// Main application
 	EtherMainClientUrl string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
@@ -180,14 +179,31 @@ func Home(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// func WalletSettingMenu(w http.ResponseWriter, r *http.Request)  {
-// 	temp := template.Must(template.ParseFiles("walletsetting.html"))
+func AboutMe(w http.ResponseWriter, r *http.Request)  {
+	temp := template.Must(template.ParseFiles("about.html"))
+	if r.Method == "GET" {
+		log.Println("[Accept]" , r.URL.Path)
+		cardInfoID =  digitalCode.GetAuthorizeNum()
+		detailsAcc , err := cloud.FindDataByID(accountID, appName); if err != nil {
+			log.Fatalln("[Fail] Operation..", err)
+			return 
+		}
+		if cardInfoID != ""{
+			ret , err := paypalMini.RetrieveCreditCardInfo(cardInfoID); if err != nil {
+				log.Fatalln("[Fail]" , err)
+				return 
+			}
+			account := digitalCode.LinkCard(ret, detailsAcc, publicAddress)
+			acc := digitalCode.VoidStruct()
+			if acc != account{
+				temp.Execute(w,account)
+			}
+			
 
-// 	if r.Method == "GET" {
-// 		fmt.Println("Method:" + r.Method)
-// 		temp.Execute(w, "WalletSetting")
-// 	}
-// }
+		}
+		
+	}
+}
 
 func Setting(w http.ResponseWriter, r *http.Request)  {
 	
@@ -291,6 +307,7 @@ func Credit(w http.ResponseWriter, r *http.Request)  {
 		}
 
 		 card.ID =  AutoKeyGenerate(card.CVV2) 
+		 cardInfoID = card.ID
 		 log.Println("Id generated:" , card)
 
 		// store credit card information.
@@ -927,7 +944,7 @@ func CreateWallet(w http.ResponseWriter, r *http.Request) {
 		ethereum := hexutil.Encode(hshCode.Sum(nil)[12:])
 
 		acc.EthAddress = ethereum
-
+		
 		// valid address
 		valid := isYourPublcAdresValid(ethereum)
 		if valid {
@@ -1139,8 +1156,9 @@ func Wallet(w http.ResponseWriter, r *http.Request) {
 		if addr != nil {
 
 			acc.EthAddress = addr.EthAddress
-			// Secure Key
+			publicAddress = acc.EthAddress
 
+			// Secure Key
 			WalletSecureKey = addr.PrvteKey
 
 			// variable address for futher processing

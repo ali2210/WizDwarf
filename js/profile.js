@@ -1,6 +1,4 @@
 
-
-
 // button
 var submit = document.getElementById('submBtn');
 

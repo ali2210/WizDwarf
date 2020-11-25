@@ -16,7 +16,7 @@ function GeolocationPermission(){
             loc.checked = true;
         }
 
-        })
+    })
 }
 
 function NotificationPermission(){
@@ -51,8 +51,7 @@ function AmbientLightPermission(){
             }
             ambientSensor.start();
         }
-    }    
-}
+}    
 
 
 

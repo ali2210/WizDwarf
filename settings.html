@@ -22,31 +22,28 @@
           <div class="row">
             <div class="col-3">
               <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="/home" role="tab" aria-controls="v-pills-home" aria-selected="true"> <i class="fa fa-wrench" aria-hidden="true"></i> Settings</a>
-                <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="/dashbaord/setting/profile" role="tab" aria-controls="v-pills-profile" aria-selected="false"><i class="fa fa-user" aria-hidden="true"></i> Profile</a>
+                <a class="nav-link" id="v-pills-home-tab" data-toggle="pill" href="/dashbaord" role="tab" aria-controls="v-pills-home" aria-selected="true"> <i class="fa fa-home" aria-hidden="true"></i> Home</a>
+                <a class="nav-link active" id="v-pills-profile-tab" data-toggle="pill" href="/dashbaord/setting/profile" role="tab" aria-controls="v-pills-profile" aria-selected="false"> <i class="fa fa-user" aria-hidden="true"></i> Profile</a>
                 <a class="nav-link" id="v-pills-payement-tab" data-toggle="pill" href="/open/setting/credit" role="tab" aria-controls="v-pills-payement" aria-selected="false"> <i class="fa fa-credit-card-alt" aria-hidden="true"></i> Payement</a>
-                <a class="nav-link" id="v-pills-about-tab" data-toggle="pill" href="#v-pills-about" role="tab" aria-controls="v-pills-about" aria-selected="false"> <i class="fa fa-smile-o" aria-hidden="true"></i> About me</a> 
+                <a class="nav-link" id="v-pills-about-tab" data-toggle="pill" href="#" role="tab" aria-controls="v-pills-about-me" aria-selected="false"> <i class="fa fa-smile-o" aria-hidden="true"></i> About Me</a>
               </div>
+            </div>
             </div>
             <div class="col-9">
               <div class="tab-content" id="v-pills-tabContent">
                 <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
-                    <div class="geo-container">
-                      <div class="btn-checkbox">
-                        <input type="radio" class="checkbox-geo"> <button type="button" class="globe-btn" onclick="GeolocationPermission()"> <i class="fa fa-globe globe-ok" aria-hidden="true"></i></button>
-                        <input type="radio" class="checkbox-notification"> <button type="button" class="navigate" onclick="NotificationPermission()"> <i class="fa fa-bell navigate-ok" aria-hidden="true"></i></button>
-                        <input type="radio" class="checkbox-ambient"> <button type="button" class="ambient" onclick="AmbientLightPermission()"> <i class="fa fa-lightbulb-o ambient-ok" aria-hidden="true"></i></button>
-                        </div>
-                      </div>
-                        </div>
+                  <div class="geo-container">
+                    <div class="btn-checkbox">
+                      <input type="radio" class="checkbox-geo"> <button type="button" class="globe-btn" onclick="GeolocationPermission()"> <i class="fa fa-globe globe-ok" aria-hidden="true"></i></button>
+                      <input type="radio" class="checkbox-notification"> <button type="button" class="navigate" onclick="NotificationPermission()"> <i class="fa fa-bell navigate-ok" aria-hidden="true"></i></button>
+                      <input type="radio" class="checkbox-ambient"> <button type="button" class="ambient" onclick="AmbientLightPermission()"> <i class="fa fa-lightbulb-o ambient-ok" aria-hidden="true"></i></button>
+                     </div>
                     </div>
-                    
                 </div>
-                <div class="tab-pane fade " id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                </div>
-                <div class="tab-pane fade" id="v-pills-payement" role="tabpanel" aria-labelledby="v-pills-payement-tab"></div>
-                <div class="tab-pane fade" id="v-pills-about" role="tabpanel" aria-labelledby="v-pills-about-tab"></div>
               </div>
+                <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab"></div>
+                <div class="tab-pane fade" id="v-pills-payment" role="tabpanel" aria-labelledby="v-pills-payment-tab"></div>
+                <div class="tab-pane fade" id="v-pills-about" role="tabpanel" aria-labelledby="v-pills-about-tab"></div>
             </div>
           </div>
       </nav>
