@@ -1,0 +1,29 @@
+.logo{
+    width: 100%;
+}
+.main-dashboard-div{
+    display: flex;
+    justify-content: center;
+    margin-top: 2em;
+}
+.details-profile {
+    position: absolute;
+    text-align: center;
+    margin-left: 0em;
+}
+.row{
+    display: flex;
+    position: relative;
+    margin-left: 1em;
+}
+.col-3{
+    display: flex;
+    position: inherit;
+    margin-left: 0em;
+}
+.col-9{
+    display: flex;
+    align-self: center;
+    position: relative;
+    margin-top: 1em;
+}

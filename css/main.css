@@ -1,15 +1,25 @@
 .row{
     display: flex;
     position: relative;
-    margin-top: 10%;
+    margin-top: 1em;
     margin-right: 70%;
+    margin-bottom: 2em;
 }
-.col-9, .col-3{
+.col-3{
+    display: flex;
+    /* position: absolute; */
+    margin-bottom: 5em;
+    margin-left: 2px;
+    justify-content: inherit;
+    margin-top: 1em;
+
+}
+.col-9{
     display: flex;
     position: absolute;
-    margin-bottom: 20px;
-    margin-left: 20px;
-
+    margin-top: 3em;
+    margin-left: 3em;
+    justify-content: center;
 }
 
 .geo-container{
