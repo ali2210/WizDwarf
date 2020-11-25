@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WizDwarfs</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel='stylesheet' type='text/css' media='screen' href='/css/delete.css'>
+     <!-- <script src='/js/about.js'></script>  -->
+</head>
+<body>
+    <div class='main-dashboard-div'>
+        <nav class="navbar navbar-expand-md navbar-light custom-navbar">
+          <a class="navbar-brand" href="#">
+            <img src="/images/logo.png" alt="Logo" class="logo">
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+              <li class="nav-item active pl-3">
+                <a class="nav-link" href="/home">
+                  <i class="fa fa-home icon-light" aria-hidden="true"></i>
+                  Home
+                </a>
+              </li>
+             </ul>
+        </div>
+        </nav>
+    </div>
+    <div class="form-container">
+        <form method="post" action="/open/setting/credit/delete" class="delete-card-form">
+            <div class="md-form input-with-pre-icon">
+                <i class="fa fa-credit-card input-prefix" aria-hidden="true">  <label for="prefixInside"> <h5>Add Your ccv2 code !</h5> </label></i>
+                <input type="text" id="prefixInside" class="form-control">
+              </div>
+              <div class="buttons">
+                <button type="submit" class="btn-accept"> <i class="fa fa-trash recycle" aria-hidden="true"></i> Delete </button>
+                <button type="reset" class="btn-reset"> <i class="fa fa-ban cancel" aria-hidden="true"></i> Cancel</button>
+              </div>
+        </form>
+    </div>
+          
+</body>
+</html>

@@ -20,7 +20,6 @@ type DigialProfile struct{
 type CreditCardInfo interface{
 	SetAuthorizeNum(id string) 
 	GetAuthorizeNum()string
-	FindCard(id string, client *paypalSdk.Client) (bool, error)
 	LinkCard(c *paypalSdk.CreditCard,  info *Vistors, eth string)(*DigialProfile)
 	VoidStruct() *DigialProfile
 }
@@ -40,14 +39,9 @@ func (*DigitalPrint) GetAuthorizeNum()string {
 	return persona
 }
 
-func (d *DigitalPrint) FindCard(id string, client *paypalSdk.Client) (bool, error){
-  card, err := client.GetCreditCard(id)
-  if (paypalSdk.CreditCard{}) != *card{
-	return true, err
-  }
-  return false, err
 
-}
+
+
 
 func (*DigitalPrint) LinkCard(c *paypalSdk.CreditCard, info *Vistors, eth string)(*DigialProfile)  {
 	avatarMe := DigialProfile{}
