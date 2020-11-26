@@ -23,10 +23,13 @@
 }
 
 .geo-container{
-    margin-top: 40px;
+    margin-top: 50px;
     margin-bottom: 40px;
-    padding-block-start: 0.1em;
-    padding-left: 10.5em;
+    padding-block-start: 0.5em;
+    padding-left: 1.5em;
+    display: flex;
+    position: absolute;
+    margin-left: 50px;
 }
 
 .logo{
