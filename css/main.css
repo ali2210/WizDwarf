@@ -1,65 +1,48 @@
-.row{
-    display: flex;
-    position: relative;
-    margin-top: 1em;
-    margin-right: 70%;
-    margin-bottom: 2em;
-}
-.col-3{
-    display: flex;
-    /* position: absolute; */
-    margin-bottom: 5em;
-    margin-left: 2px;
-    justify-content: inherit;
-    margin-top: 1em;
 
-}
-.col-9{
-    display: flex;
-    position: absolute;
-    margin-top: 3em;
-    margin-left: 3em;
-    justify-content: center;
-}
 
 .geo-container{
-    margin-top: 50px;
-    margin-bottom: 40px;
-    padding-block-start: 0.5em;
-    padding-left: 1.5em;
     display: flex;
     position: absolute;
+    max-width: 10px;
     margin-left: 50px;
+}
+.span-geo, .notificate, .ambient-class{
+    color: blueviolet;
+    font-size: medium;
+    margin-left: 1.2px;
+    margin-top: 2px;
+    margin-right: 2px;
 }
 
 .logo{
-    width: 100%;
+    width: 30%;
     margin-bottom: 10px ;
 }
-
 
 .globe-ok, 
 .globe-btn, 
 .navigate-ok, 
-.navigate, 
+.notify-class, 
 .ambient-ok,
 .ambient{
     background-color: green;
     color: white;
     border-radius: 20%;
+    
 }
-.person-record{
-    color: black;
-    font-family: fantasy;
-    font-weight: 100;
-    margin-left: 10%;
+
+.globe-btn{
+    display: block;
+    position: inherit;
 }
-.paypal-logo{
-    width: 30%;
-    height: 10%;
-    margin-top: 10px;
-    margin-bottom: 10px;
+
+.navigate{
+
 }
+.ambient{
+
+}
+
 .checkbox-geo{
     margin-right: 5px;
     margin-top: 10px;

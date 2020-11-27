@@ -1,22 +1,28 @@
 .logo{
-    width: 100%;
+    width: 30%;
 }
 .main-dashboard-div{
     display: flex;
-    justify-content: center;
     margin-top: 2em;
 }
 .details-profile {
-    position: absolute;
-    text-align: center;
-    margin-left: 0em;
+    display: grid;
+    justify-content: flex-start;
+    margin-left: 5em;
+    text-align: inherit;
 }
+
+.bg-warning{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .row{
     display: flex;
-    position: relative;
-    margin-left: 1em;
+    justify-content: space-around;
+    margin-bottom: 10px;
 }
-.col-3{
+/* .col-3{
     display: flex;
     position: inherit;
     margin-left: 0em;
@@ -26,9 +32,4 @@
     align-self: center;
     position: relative;
     margin-top: 1em;
-}
-.trash-card{
-    margin-top: 0.2em;
-    margin-left: 0em;
-    position: relative;
-}
+} */
