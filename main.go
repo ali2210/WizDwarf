@@ -138,13 +138,13 @@ func main() {
 	routing.HandleFunc("/createWallet", CreateWallet)
 	routing.HandleFunc("/terms", Terms)
 	routing.HandleFunc("/open", Wallet)
-	routing.HandleFunc("/open/setting/about", AboutMe)
-	routing.HandleFunc("/open/setting/credit", Credit)
+	routing.HandleFunc("/dashbaord/setting/about", AboutMe)
+	routing.HandleFunc("/dashboard/setting/pay", Credit)
 	routing.HandleFunc("/transact", Transacts)
 	routing.HandleFunc("/transact/send", Send)
 	routing.HandleFunc("/transact/treasure", Treasure)
 	routing.HandleFunc("/visualize", Visualize)
-	routing.HandleFunc("/open/setting/credit/delete", DeleteCard)
+	routing.HandleFunc("/dashbaord/setting/credit/delete", DeleteCard)
 	/*routing.HandleFunc("/transact/advance-fileoption", Blocks)*/
 
 	// Static Files
@@ -1237,7 +1237,7 @@ func Wallet(w http.ResponseWriter, r *http.Request) {
 
 			w.WriteHeader(http.StatusOK)
 			r.Method = "GET"
-			// Transacts(w, r)
+			Dashboard(w,r)
 		}
 	}
 }

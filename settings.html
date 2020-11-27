@@ -14,42 +14,47 @@
     
 </head>
 <body>
-  <div class='main-dashboard-div'>
-    <nav class="navbar navbar-expand-md navbar-light custom-navbar">
-      <a class="navbar-brand" href="#">
-        <img src="/images/logo.png" alt="Logo" class="logo">
-      </a>
-      <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
-        <span class="navbar-toggler-icon"></span>
-      </button> -->
-      <div class="row">
-        <div class="col-3">
-          <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-            <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="/dashbaord" role="tab" aria-controls="v-pills-home" aria-selected="true"> <i class="fa fa-home" aria-hidden="true"></i> Home</a>
-            <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="/dashbaord/setting/profile" role="tab" aria-controls="v-pills-profile" aria-selected="false"> <i class="fa fa-user" aria-hidden="true"></i> Profile</a>
-            <a class="nav-link" id="v-pills-payement-tab" data-toggle="pill" href="/open/setting/credit" role="tab" aria-controls="v-pills-payement" aria-selected="false"> <i class="fa fa-credit-card-alt" aria-hidden="true"></i> Payement</a>
-            <a class="nav-link" id="v-pills-about-tab" data-toggle="pill" href="/open/setting/about" role="tab" aria-controls="v-pills-about-me" aria-selected="false"> <i class="fa fa-smile-o" aria-hidden="true"></i> About </a>
-          </div>
-        </div>
-        <div class="col-9">
-          <div class="tab-content" id="v-pills-tabContent">
-            <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
-              <div class="geo-container">
-                <div class="btn-checkbox">
-                  <input type="radio" class="checkbox-geo"> <button type="button" class="globe-btn" onclick="GeolocationPermission()"> <i class="fa fa-globe globe-ok" aria-hidden="true"></i></button>
-                  <input type="radio" class="checkbox-notification"> <button type="button" class="navigate" onclick="NotificationPermission()"> <i class="fa fa-bell navigate-ok" aria-hidden="true"></i></button>
-                  <input type="radio" class="checkbox-ambient"> <button type="button" class="ambient" onclick="AmbientLightPermission()"> <i class="fa fa-lightbulb-o ambient-ok" aria-hidden="true"></i></button>
-                 </div>
-                </div>
+      <div class='main-dashboard-div'>
+        <nav class="navbar navbar-expand-md navbar-light custom-navbar">
+          <a class="navbar-brand" href="#">
+            <img src="/images/logo.png" alt="Logo" class="logo">
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+              <li class="nav-item active pl-3">
+                <a class="nav-link" href="/home">
+                  <i class="fa fa-home icon-light" aria-hidden="true"></i>
+                  Home
+                </a>
+              </li>
+          <li class="nav-item dropdown pl-3">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-briefcase" aria-hidden="true"></i>
+               Services 
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="/dashbaord/setting/profile"><i class="fa fa-user-circle-o" aria-hidden="true"></i> Edit Profile</a>
+              <a class="dropdown-item" href="/dashboard/setting/pay"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Monetize</a>
+              <a class="dropdown-item" href="/dashbaord/setting/about"><i class="fa fa-book" aria-hidden="true"></i> Biography</a>
             </div>
-          </div>
-          <div class="tab-pane fade " id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab"></div>
-            <div class="tab-pane fade" id="v-pills-payement" role="tabpanel" aria-labelledby="v-pills-payement-tab"></div>
-            <div class="tab-pane fade" id="v-pills-about" role="tabpanel" aria-labelledby="v-pills-about-tab"></div>
-          </div>
-     </div>
-      
-    </nav>
-</div>       
+          </li>
+         </ul>
+        </div>
+      </div>  
+      </div>
+      <div class="geo-container">
+        <div class="btn-checkbox">
+          <input type="radio" class="checkbox-geo"> <button type="button" class="globe-btn" onclick="GeolocationPermission()"><i class="fa fa-globe globe-ok" aria-hidden="true"></i></button> <span class="span-geo" > Location </span>
+          <input type="radio" class="checkbox-notification"> <button type="button" class="notify-class" onclick="NotificationPermission()"> <i class="fa fa-bell navigate-ok" aria-hidden="true"></i></button> <span class="notificate"> Notification</span>
+          <input type="radio" class="checkbox-ambient"> <button type="button" class="ambient" onclick="AmbientLightPermission()"> <i class="fa fa-lightbulb-o ambient-ok" aria-hidden="true"></i></button> <span class="ambient-class"> Ambient</span>
+         </div>
+        </div>
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>
+     

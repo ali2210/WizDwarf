@@ -13,44 +13,37 @@
     <script src='/js/profile.js'></script>
 </head>
 <body>
-    <div class='main-dashboard-div'>
-        <nav class="navbar navbar-expand-md navbar-light custom-navbar">
-          <a class="navbar-brand" href="#">
-            <img src="/images/logo.png" alt="Logo" class="logo">
+  <div class='main-dashboard-div'>
+  <nav class="navbar navbar-expand-md navbar-light custom-navbar">
+    <a class="navbar-brand" href="#">
+      <img src="/images/logo.png" alt="Logo" class="logo">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item active pl-3">
+          <a class="nav-link" href="/home">
+            <i class="fa fa-home icon-light" aria-hidden="true"></i>
+            Home
           </a>
-          <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
-            <span class="navbar-toggler-icon"></span>
-          </button> -->
-          <div class="row">
-            <div class="col-3">
-              <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <a class="nav-link" id="v-pills-home-tab" data-toggle="pill" href="/dashbaord" role="tab" aria-controls="v-pills-home" aria-selected="true"> <i class="fa fa-home" aria-hidden="true"></i> Home</a>
-                <a class="nav-link active" id="v-pills-profile-tab" data-toggle="pill" href="/dashbaord/setting/profile" role="tab" aria-controls="v-pills-profile" aria-selected="false"> <i class="fa fa-user" aria-hidden="true"></i> Profile</a>
-                <a class="nav-link" id="v-pills-payement-tab" data-toggle="pill" href="/open/setting/credit" role="tab" aria-controls="v-pills-payement" aria-selected="false"> <i class="fa fa-credit-card-alt" aria-hidden="true"></i> Payement</a>
-                <a class="nav-link" id="v-pills-about-tab" data-toggle="pill" href="/open/setting/about" role="tab" aria-controls="v-pills-about-me" aria-selected="false"> <i class="fa fa-smile-o" aria-hidden="true"></i> About </a>
-              </div>
-            </div>
-            <div class="col-9">
-              <div class="tab-content" id="v-pills-tabContent">
-                <div class="tab-pane fade" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
-                  </div>
-                  </div>
-                   <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                       <div class="register-main-div">
-                        <form action="/dashbaord/setting/profile" method="post" class= "update-form">
-                        <h4 style="text-align: center; font-family: 'Roboto Mono', monospace; color: #424242;">Update</h4>
-                      <div class="form-row custom-form-row ">
-                        <div class="form-group col-12 col-md-6">
-                          <label for="inputEmail4" class="custom-label">Email</label>
-                          <input type="email" class="form-control" id="inputEmail4" placeholder="Email" name="email" value="{{.Email}}" required readonly>
-                          <button type="button" onclick="EmailEditEvent()" class="button-input"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="nameedit"></i></button>
-                         </div>
-                          <div class="form-group col-12 col-md-6">
-                          <label for="phoneNo" class="custom-label">Phone No</label>
-                          <input type="tel" class="form-control" id="phone" placeholder="+(000) 000 000 0" name="phone" readonly>
-                          <button type="button" class="button-input" onclick="TelEditEvent()"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit" ></i></button>
-                         </div>
-                    </div>
+        </li>
+    <li class="nav-item dropdown pl-3">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fa fa-briefcase" aria-hidden="true"></i>
+         Services 
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        <a class="dropdown-item" href="/dashbaord/setting/profile"><i class="fa fa-user-circle-o" aria-hidden="true"></i> Edit Profile</a>
+        <a class="dropdown-item" href="/dashboard/setting/pay"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Monetize</a>
+        <a class="dropdown-item" href="/dashbaord/setting/about"><i class="fa fa-book" aria-hidden="true"></i> Biography</a>
+      </div>
+    </li>
+   </ul>
+  </div>
+</div>  
+</div>
                     <div class="form-row custom-form-row ">
                       <div class="form-group col-12 col-md-6">
                         <label for="name" class="custom-label">Name</label>
