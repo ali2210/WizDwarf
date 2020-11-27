@@ -1,10 +1,10 @@
-1. WorkInProgress(https://www.loom.com/share/e5710b59eebf482f86a0ac7be3424914)
+1. IntialVersion(https://www.loom.com/share/e5710b59eebf482f86a0ac7be3424914)
 
-2. ElephantClock(https://upload.wikimedia.org/wikipedia/commons/7/76/Al-jazari_elephant_clock.png)[masterpiece of goldern time]
+2. [ElephantClock(https://upload.wikimedia.org/wikipedia/commons/7/76/Al-jazari_elephant_clock.png)]
 
-3. Heroku(https://peaceful-island-75545.herokuapp.com/home)
+3. [Heroku(https://peaceful-island-75545.herokuapp.com/home)]
 
-4. Docker(ali2210/wizdwarf)
+4. [Docker(ali2210/wizdwarfs)]
 
 
 Language [GO(1.14/Linux)]
@@ -25,9 +25,14 @@ This applicationn allow you can upload  genetic material(DNA). Based on your gen
 3. UV impact on your dna [not yet started]
 4. Visualization 
        1. Results visualization [ok]
+5. payment handle [ok[0.1]]
+6. ambient [ok[0.1]]
+7 notification [ok[0/1]]
+8. geocode  [ok[0/1]]
 ## Tools :
 - Firebase cloud [ok]
 - Ethereum [completed not incoprate]
 - Heroku [ok]
 - Docker-image [ok]
-         
+- paypal added[ok]         
+- pdb file storage [feature]
