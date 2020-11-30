@@ -47,9 +47,19 @@
       </div>
       <div class="geo-container">
         <div class="btn-checkbox">
-          <input type="radio" class="checkbox-geo"> <button type="button" class="globe-btn" onclick="GeolocationPermission()"><i class="fa fa-globe globe-ok" aria-hidden="true"></i></button> <span class="span-geo" > Location </span>
-          <input type="radio" class="checkbox-notification"> <button type="button" class="notify-class" onclick="NotificationPermission()"> <i class="fa fa-bell navigate-ok" aria-hidden="true"></i></button> <span class="notificate"> Notification</span>
-          <input type="radio" class="checkbox-ambient"> <button type="button" class="ambient" onclick="AmbientLightPermission()"> <i class="fa fa-lightbulb-o ambient-ok" aria-hidden="true"></i></button> <span class="ambient-class"> Ambient</span>
+          <div class="globe-div">
+            <i class="fa fa-globe" aria-hidden="true"></i> <input type="checkbox" class="checkbox-geo" onchange="GeolocationPermission()"> 
+            <span class="span-geo" > Location </span><br>
+          </div>
+          <div class="notification-div">
+            <i class="fa fa-bell" aria-hidden="true"></i> <input type="checkbox" class="checkbox-notification" onchange="NotificationPermission()">
+            <span class="notificate"> Notification</span><br>
+          </div>
+          <div class="ambient-div">
+            <i class="fa fa-lightbulb-o" aria-hidden="true"></i> <input type="checkbox" class="checkbox-ambient" onchange="AmbientLightPermission()"> 
+            <span class="ambient-class"> Ambient</span> <br>
+          </div>     
+           
          </div>
         </div>
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
