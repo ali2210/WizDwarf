@@ -31,29 +31,23 @@
     
 }
 
-.globe-btn{
+.globe-btn, .ambient, .navigate{
     display: block;
     position: inherit;
 }
 
-.navigate{
 
-}
-.ambient{
-
-}
 
 .checkbox-geo{
     margin-right: 5px;
     margin-top: 10px;
 }
 .checkbox-notification{
-    margin-left: 10px;
-    margin-top: 10px;
     margin-right: 5px;
+    margin-top: 10px;
+    /* margin-right: 5px; */
 }
 .checkbox-ambient{
-    margin-left: 10px;
     margin-top: 10px;
     margin-right: 5px;
 }
