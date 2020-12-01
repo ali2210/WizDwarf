@@ -1,20 +1,19 @@
 
-// button
-var submit = document.getElementById('submBtn');
-
 function EditEvent(){
-    var trash = document.getElementById('trash');
-        trash.style.background = "red";
+    var submit = document.getElementById('submBtn');
+    // var trash = document.getElementById('trash');
+    console.log(submit);
+        //trash.style.background = "red";
         submit.style.visibility = "visible";    
 }
 
 
 function EmailEditEvent(){
-    var email = document.getElementById('inputEmail4'); 
-    email.readonly = false;
-    if (email.textContent.length>0){
+    var email = document.getElementById('email'); 
+    var duplicate = document.getElementById('demail');
+    email.remove();
+    duplicate.style.visibility = "visible";
         EditEvent();
-    }
 
 }
 
@@ -22,57 +21,51 @@ function EmailEditEvent(){
 
 function NameEditEvent(){
     var name_in = document.getElementById('name'); 
-    name_in.readonly = false;
-    if(name_in.textContent.length>0){
+    var duplicate = document.getElementById('duname');
+    name_in.remove();
+    duplicate.style.visibility = "visible";
         EditEvent();
-    }
     
 }
 
 function FamilyNameEditEvent(){
     var fname_in = document.getElementById('fname'); 
-    fname_in.readonly = false;
-    if(fname_in.textContent.length>0){
+    var duplicate = document.getElementById('dufname');
+    fname_in.remove();
+    duplicate.style.visibility = "visible";
         EditEvent();
-    }
 }
 
 function ResidenceEditEvent(){
     var res_in = document.getElementById('inputAddress');
-    res_in.readonly = false;
-    if(res_in.textContent.length>0){
+    var duplicate = document.getElementById('daddr');
+    res_in.remove();
+    duplicate.style.visibility = "visible";
         EditEvent();
-    }
 }
 
 function SubResEditEvent(){
     var sres_in = document.getElementById('inputAddress2');
-    sres_in.readonly = false;
-    if(sres_in.textContent.length>0){
+    var duplicate = document.getElementById('dadd');
+    sres_in.remove();
+    duplicate.style.visibility = "visible";
         EditEvent();
-    }
 }
 
 function CountryEditEvent(){
     var coun_in = document.getElementById('country');
-    coun_in.readonly = false;
-    if(coun_in.textContent.length>0){
+    var duplicate = document.getElementById('dcoun');
+    coun_in.remove();
+    duplicate.style.visibility = "visible";
         EditEvent();
-    }
 }
 
-function TelEditEvent(){
-    var tel_in = document.getElementById('phone');
-    tel_in.readonly = false;
-    if(tel_in.textContent.length>0){
-        EditEvent();
-    }
-}
+
 
 function ZipEditEvent(){
     var zip_in = document.getElementById('inputZip'); 
-    zip_in.readonly = false;
-    if(zip_in.textContent.length>0){
+    var duplicate = document.getElementById('dzip');
+    zip_in.remove();
+    duplicate.style.visibility = "visible";
         EditEvent();
-    }
 }
