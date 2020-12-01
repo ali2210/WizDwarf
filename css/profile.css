@@ -36,6 +36,9 @@
     width: auto;
     margin-bottom: auto;
   }
+  .duplicate{
+    visibility: hidden;
+  }
   .gender-box {
     margin: 0px;
     margin-left: 22px;
