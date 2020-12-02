@@ -5,15 +5,25 @@
     display: flex;
     margin-top: 2em;
 }
+
 .details-profile {
     display: grid;
     justify-content: flex-start;
     margin-left: 5em;
     text-align: inherit;
+    font-size: large;
+    font-weight: bold;
+    color: blueviolet;
 }
-
-.bg-warning{
-    margin-top: 10px;
+.span-fragment{
+    white-space: nowrap;
+    margin-left: 20px;
+}
+.change-service-color{
+    color: green;
+}
+.bg-light{
+    margin-top: 20px;
     margin-bottom: 10px;
 }
 
@@ -22,14 +32,3 @@
     justify-content: space-around;
     margin-bottom: 10px;
 }
-/* .col-3{
-    display: flex;
-    position: inherit;
-    margin-left: 0em;
-}
-.col-9{
-    display: flex;
-    align-self: center;
-    position: relative;
-    margin-top: 1em;
-} */

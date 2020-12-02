@@ -1,11 +1,49 @@
+.globe-div{
+    display: grid;
+    position: relative;
+    margin-top: 50px;
+    margin-right: 20px;
+    margin-left: 20px;
+    font-size: x-large;
+    color: dodgerblue;
+}
 
+.btn-checkbox{
+    display: grid;
+    margin-left: 10px;
+    margin-bottom: 5px;
+}
 
 .geo-container{
     display: flex;
-    position: absolute;
-    max-width: 10px;
-    margin-left: 50px;
+    justify-content: center;
+    padding-left: 20px;
 }
+.notification-div{
+    display: grid;
+    position: relative;
+    margin-top: 30px;
+    margin-right: 20px;
+    margin-left: 20px;
+    font-size: x-large;
+    color: lightseagreen;
+}
+.change-service-color{
+    color: green;
+    
+}
+.ambient-div{
+    display: grid;
+    position: relative;
+    margin-top: 30px;
+    margin-right: 20px;
+    margin-left: 20px;
+    font-size: x-large;
+    color: chartreuse;
+}
+
+
+
 .span-geo, .notificate, .ambient-class{
     color: blueviolet;
     font-size: medium;
@@ -19,22 +57,7 @@
     margin-bottom: 10px ;
 }
 
-/* .globe-ok, 
-.globe-btn, 
-.navigate-ok, 
-.notify-class, 
-.ambient-ok,
-.ambient{
-    background-color: green;
-    color: white;
-    border-radius: 20%;
-    
-}
 
-.globe-btn, .ambient, .navigate{
-    display: block;
-    position: inherit;
-} */
 
 
 
@@ -50,11 +73,4 @@
 .checkbox-ambient{
     margin-top: 10px;
     margin-right: 5px;
-}
-.btn-checkbox{
-    margin-bottom: 20%;
-    margin-top: 50%;
-    margin-right: 50px;
-    display: flex;
-    justify-content: center;
 }
