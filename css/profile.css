@@ -51,11 +51,14 @@
     font-weight: bolder;
     visibility: hidden;
   }
-  .button-input{
-    background: green;
+  .button-input{  
+    background: mediumseagreen;
     margin-left: 40px;
   }
 
+  .change-service-color{
+    color: mediumseagreen;
+  }
   .cancel-button{
     background: #dc313a;
     margin-top: 10px;
