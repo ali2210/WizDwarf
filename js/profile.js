@@ -1,10 +1,9 @@
 
 function EditEvent(){
     var submit = document.getElementById('submBtn');
-    // var trash = document.getElementById('trash');
     console.log(submit);
-        //trash.style.background = "red";
-        submit.style.visibility = "visible";    
+    submit.style.visibility = "visible";    
+    
 }
 
 
@@ -13,6 +12,8 @@ function EmailEditEvent(){
     var duplicate = document.getElementById('demail');
     email.remove();
     duplicate.style.visibility = "visible";
+    var button = document.getElementById('button-input');
+    button.style.marginTop = '37px';
         EditEvent();
 
 }
@@ -24,6 +25,8 @@ function NameEditEvent(){
     var duplicate = document.getElementById('duname');
     name_in.remove();
     duplicate.style.visibility = "visible";
+    var button = document.getElementById('button-input-name');
+    button.style.marginTop = '37px';
         EditEvent();
     
 }
@@ -33,6 +36,8 @@ function FamilyNameEditEvent(){
     var duplicate = document.getElementById('dufname');
     fname_in.remove();
     duplicate.style.visibility = "visible";
+    var button = document.getElementById('button-input-fname');
+    button.style.marginTop = '37px';
         EditEvent();
 }
 
@@ -41,6 +46,8 @@ function ResidenceEditEvent(){
     var duplicate = document.getElementById('daddr');
     res_in.remove();
     duplicate.style.visibility = "visible";
+    var button = document.getElementById('button-input-addr');
+    button.style.marginTop = '37px';
         EditEvent();
 }
 
@@ -49,6 +56,8 @@ function SubResEditEvent(){
     var duplicate = document.getElementById('dadd');
     sres_in.remove();
     duplicate.style.visibility = "visible";
+    var button = document.getElementById('button-input-local');
+    button.style.marginTop = '37px';
         EditEvent();
 }
 
@@ -57,6 +66,8 @@ function CountryEditEvent(){
     var duplicate = document.getElementById('dcoun');
     coun_in.remove();
     duplicate.style.visibility = "visible";
+    var button = document.getElementById('button-input-country');
+    button.style.marginTop = '37px';
         EditEvent();
 }
 
@@ -67,5 +78,7 @@ function ZipEditEvent(){
     var duplicate = document.getElementById('dzip');
     zip_in.remove();
     duplicate.style.visibility = "visible";
+    var button = document.getElementById('button-input-zip');
+    button.style.marginTop = '37px';
         EditEvent();
 }

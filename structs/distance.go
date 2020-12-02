@@ -32,7 +32,7 @@ func (*Levenshtein) Result(d int) float32 {
 }
 
 func (*Levenshtein) CalcualtePercentage(p float32) float32 {
-	return ((100 - p) / 100)
+	return (((100 - p) / 100)* 100)
 }
 
 type LevenshteinInterface interface {
