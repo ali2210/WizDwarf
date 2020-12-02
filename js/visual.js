@@ -16,7 +16,7 @@ ctx.lineWidth = 8;
 ctx.lineCap = 'round';
 
 ctx.save();
-for (var i = 0.00; i < 1.02; i++) {
+for (var i = 0; i < 100; i++) {
   ctx.beginPath();
   ctx.rotate(Math.PI/50);
   ctx.moveTo(100,0);
@@ -44,7 +44,7 @@ ctx.restore();
 
   ctx.fillStyle = 'green';
   ctx.save();
-  ctx.rotate(((Math.PI / 50)* valueRes) + (Math.PI/360)* (1.02 - valueRes));
+  ctx.rotate((Math.PI / 50)+valueRes);
   ctx.lineWidth = 15;
   ctx.beginPath();
   ctx.moveTo(-20,0);

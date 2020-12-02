@@ -63,7 +63,9 @@
     color: white;
     font-weight: bolder;
   }
-  .submit-form-div, .image-div, .cancel-form-div {
+  .submit-form-div, 
+  .image-div, 
+  .cancel-form-div {
     display: flex;
     justify-content: center;
   }

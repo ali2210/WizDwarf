@@ -49,13 +49,13 @@
                <label for="name" class="custom-label">Name</label>
                   <input type="text" class="form-control" id="name" name="uname" placeholder="First Name"  value="{{.Name}}" readonly>
                   <input type="text" class="form-control duplicate" id="duname" name="uname" placeholder="Name">
-                  <button type="button" onclick="NameEditEvent()" class="button-input"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit" ></i></button>
+                  <button type="button" onclick="NameEditEvent()" class="button-input" id ="button-input-name"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit" ></i></button>
                   </div>
                    <div class="form-group col-12 col-md-6">
                      <label for="fname" class="custom-label">SureName</label>
                        <input type="text" class="form-control" id="fname" name="ufname" placeholder="SureName" value="{{.FName}}" readonly>
                        <input type="text" class="form-control duplicate" id="dufname" name="ufname" placeholder="SureName">
-                          <button type="button" onclick="FamilyNameEditEvent()" class="button-input"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit" ></i></button>
+                          <button type="button" onclick="FamilyNameEditEvent()" class="button-input" id ="button-input-fname"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit" ></i></button>
                       </div>
                     </div>
                     <div class="form-row ml-1">
@@ -73,7 +73,7 @@
                         <label for="inputAddress" class="custom-label">Address</label>
                         <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address" value="{{.Address}}" readonly>
                         <input type="text" class="form-control duplicate" id="daddr" name="address" placeholder="1234 Main St">
-                          <button type="button" onclick="ResidenceEditEvent()" class="button-input"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
+                          <button type="button" onclick="ResidenceEditEvent()" class="button-input" id ="button-input-addr"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
                       </div>
                     </div>
                     <div class="form-row custom-form-row ">
@@ -81,7 +81,7 @@
                         <label for="inputAddress2" class="custom-label">Address 2</label>
                         <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" name="add" value="{{.LAddress}}" readonly>
                         <input type="text" class="form-control duplicate" id="dadd" name="add" placeholder="Apartment, studio, or floor">
-                          <button type="button" onclick="SubResEditEvent()" class="button-input"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
+                          <button type="button" onclick="SubResEditEvent()" class="button-input" id ="button-input-local"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
                       </div>
                     </div>
                     <div class="form-row custom-form-row mb-1">
@@ -89,27 +89,26 @@
                         <label for="country" class="custom-label">Country</label>
                         <input type="text" class="form-control" id="country" placeholder="Country Name" name="country" value="{{.Country}}" readonly>
                         <input type="text" class="form-control duplicate" id="dcoun" name="country" placeholder="Country">
-                          <button type="button" onclick="CountryEditEvent()" class="button-input"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
+                          <button type="button" onclick="CountryEditEvent()" class="button-input" id ="button-input-country"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
                       </div>
                     </div>
                     <div class="form-row custom-form-row mb-1">
                       <div class="form-group col-12">
                         <label for="tel" class="custom-label">Telephone</label>
                         <input type="text" class="form-control" id="phone" name="phone" placeholder="Telephone">
-                          <button type="button" class="button-input"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
                       </div>
                     </div>
                         <div class="form-row custom-form-row mb-1 ">
                          <label for="inputZip" class="custom-label">Zip</label>
                             <input type="number" class="form-control" id="inputZip" name="inputZip" placeholder="1234" readonly>
                             <input type="text" class="form-control duplicate" id="dzip" name="inputZip" placeholder="Zip">
-                             <button type="button" onclick="ZipEditEvent()" class="button-input"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
+                             <button type="button" onclick="ZipEditEvent()" class="button-input" id ="button-input-zip"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
                             </input>
                             <div class="form-group col-12">
                             <label for="email" class="custom-label">Email</label>
                               <input type="text" class="form-control" id="email" name="email" placeholder="Email"  value="{{.Email}}" readonly>
                               <input type="text" class="form-control duplicate" id="demail" name="email" placeholder="Email">
-                                 <button type="button" onclick="EmailEditEvent()" class="button-input"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
+                                 <button type="button" onclick="EmailEditEvent()" class="button-input" id ="button-input"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
                            </div>
                         </div>
                       </div>

@@ -1,44 +1,59 @@
 
 .static-field{
 	margin-top: 20px;
-	margin-left: 100px;
-	display: flex;
-	justify-content: center;
+    /* margin-left: 100px; */
+    display: flex;
+    /* justify-content: center; */
+    position: inherit;
+}
 }
 .static-img{
 	display: flex;
-	justify-content: center;
-	position: absolute;
-	margin-top: 10px;
+    /* justify-content: center; */
+    /* position: absolute; */
+    margin-top: 10px;
+    max-width: 100%;
+ }
+ .img-logo{
+	width: 30%;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: flex-start;
+    margin-block-start: inherit;
  }
 
 .heading-text{
-	margin-top : 50px;
-	display: flex;
-	justify-content:center;
+	margin-top: 70px;
+    display: flex;
+    justify-content: center;
 	position: relative;
+	margin-right: 18px;
+	
 }
 .canvasdiv{
 	display: flex;
-	justify-content: center;
-	position: relative;
-	margin: 150px;
+    justify-content: center;
+    position: relative;
+    margin-top: 20px;
+	margin-right: 14px;
+	margin-left: 30px;
 }
 .div-span{
 	display: flex;
-justify-content: center;
-margin: 50px;
-position: relative;
-text-align: center;
-color: teal;
-font-weight: bolder;
-font-size: large;
+    /* margin-right: 70px; */
+    margin-top: 160px;
+    position: absolute;
+    /* justify-content: center; */
+    /* margin: 50px; */
+    /* position: relative; */
+    /* text-align: center; */
+    color: teal;
+    font-weight: bolder;
+    font-size: medium;
 }
 .div-canvas{
-	padding-bottom:50px;
 	display: flex;
-	margin:	auto;
-	justify-content: center;
-	padding-left: 20px;
-	position: relative;
+    margin-top: 10px;
+    margin-left: 170px;
+    margin-right: 50px
 }
