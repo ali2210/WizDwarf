@@ -36,3 +36,6 @@ This applicationn allow you can upload  genetic material(DNA). Based on your gen
 - Docker-image [ok]
 - paypal added[ok]         
 - pdb file storage [feature]
+
+
+@Contributor : https://github.com/ali2210/WizDwarf/wiki 
