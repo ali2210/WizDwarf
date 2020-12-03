@@ -1,10 +1,6 @@
 
  .credit-form{
-    display: flex;
-    justify-content: center;
-    margin-left: 27em;
-    margin-top: 2em;
-    position: relative; 
+  
 }
 .logo{
     width: 30%;
@@ -16,8 +12,7 @@
 }
 .submit-btn{
     color: green ;
-    margin-left: 0.1em;
-    margin-top: 2em;
+    
 }
 .card-header{
     text-align: center;
@@ -34,3 +29,24 @@
     color: green;
 }
 
+.form-main{
+    display: flex;
+    justify-content: center;
+}
+.change-service-blue{
+    border: 2px darkmagenta solid;
+    background-color: cornsilk;
+    color: fuchsia;
+}
+#loading {
+    -webkit-animation: rotation 2s infinite alternate-reverse;
+}
+
+@-webkit-keyframes rotation {
+    from {
+            -webkit-transform: rotate(0deg);
+    }
+    to {
+            -webkit-transform: rotate(359deg);
+    }
+}
