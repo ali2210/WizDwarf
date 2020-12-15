@@ -8,9 +8,10 @@ import (
 const(
 	
 	// PAYPAL SANDBOX
-	PaypalClientKey string = "AcnBZ7cYRt1jj5Unnv34idX2kucc1RIDJHk91-V13ftIdR1QqF1_6cajyJLb0PsNOQAQ_Ivo3MIZrjpU"
-	PaypalSecretKey string = "EKCNTKJBJBuc5SncrzKJRU1iuPDBqTZiiihw3VBGzHnFPyr_xisJba76XvpDbO75LXTcQX9W5-VdvIT_"
-	PaypalSandboxApi string = "sb-z7blg3773073@personal.example.com"
+	PaypalClientKey string = "AVWpbSSab2hTMsrGZ3oAeM6ALkXFKOVhYgbjb4nKN6Eu0sG-AnVRmPeGPbkPWBnF3n9w5by3JP6p2oGv"
+	PaypalSecretKey string = "EFbCIMBM5s-shGaXx536oQbu0_QAzutn-_y1usOInfYrIvFNEIwhH_bR6KLv2wZrkZyJhjUk3qI17yp-"
+	PaypalSandboxApi string = "sb-ylmhq4096831@business.example.com"
+	
 )
 // Read html tag and convert into golang client
 
