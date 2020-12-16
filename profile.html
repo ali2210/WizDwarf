@@ -14,121 +14,114 @@
 </head>
 <body>
   <div class='main-dashboard-div'>
-  <nav class="navbar navbar-expand-md navbar-light custom-navbar">
-    <a class="navbar-brand" href="/home">
-      <img src="/images/logo.png" alt="Logo" class="logo">
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav">
-        <li class="nav-item active pl-3">
-          <a class="nav-link" href="/dashboard">
-            <i class="fa fa-home icon-light change-service-color" aria-hidden="true"></i>
-            Home
-          </a>
-        </li>
-    <li class="nav-item dropdown pl-3">
-      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="fa fa-briefcase change-service-color" aria-hidden="true"></i>
-         Services 
+    <nav class="navbar navbar-expand-md navbar-light custom-navbar">
+      <a class="navbar-brand" href="/home">
+        <img src="/images/logo.png" alt="Logo" class="logo">
       </a>
-      <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-        <a class="dropdown-item" href="/dashbaord/setting/profile"><i class="fa fa-user-circle-o change-service-color" aria-hidden="true"></i> Edit Profile</a>
-        <a class="dropdown-item" href="/dashboard/setting/pay"><i class="fa fa-shopping-cart change-service-color" aria-hidden="true"></i> Monetize</a>
-        <a class="dropdown-item" href="/dashbaord/setting/about"><i class="fa fa-book change-service-color" aria-hidden="true"></i> Biography</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item active pl-3">
+            <a class="nav-link" href="/dashboard">
+              <i class="fa fa-home icon-light change-service-color" aria-hidden="true"></i>
+              Home
+            </a>
+          </li>
+      <li class="nav-item dropdown pl-3">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-briefcase change-service-color" aria-hidden="true"></i>
+           Services 
+        </a>
+        <div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="/dashbaord/setting/profile"><i class="fa fa-user-circle-o change-service-color" aria-hidden="true"></i> Edit Profile</a>
+          <a class="dropdown-item" href="/dashboard/setting/pay"><i class="fa fa-shopping-cart change-service-color" aria-hidden="true"></i> Monetize</a>
+          <a class="dropdown-item" href="/dashbaord/setting/about"><i class="fa fa-book change-service-color" aria-hidden="true"></i> Biography</a>
+        </div>
+      </li>
+     </ul>
       </div>
-    </li>
-   </ul>
+      </nav>
   </div>
-</div>  
-</div>
-<form action="/dashboard/setting/profile" method="post" class="register-form">
-       <div class="form-row custom-form-row ">
-          <div class="form-group col-12 col-md-6">
-               <label for="name" class="custom-label">Name</label>
-                  <input type="text" class="form-control" id="name" name="uname" placeholder="First Name"  value="{{.Name}}" readonly>
-                  <input type="text" class="form-control duplicate" id="duname" name="uname" placeholder="Name">
-                  <button type="button" onclick="NameEditEvent()" class="button-input" id ="button-input-name"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit" ></i></button>
+    <form class="register-form " action="/dashboard/setting/profile" method="post">
+      <div class="form-row custom-form-row ">
+        <div class="form-group col-12 col-md-6">
+             <label for="name" class="custom-label">Name</label>
+                <input type="text" class="form-control" id="name" name="uname" placeholder="First Name"  value="{{.Name}}" readonly>
+                <input type="text" class="form-control duplicate" id="duname" name="uname" placeholder="Name">
+                <button type="button" onclick="NameEditEvent()" class="button-input" id ="button-input-name"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit" ></i></button>
+                </div>
+                 <div class="form-group col-12 col-md-6">
+                   <label for="fname" class="custom-label">SureName</label>
+                     <input type="text" class="form-control" id="fname" name="ufname" placeholder="SureName" value="{{.FName}}" readonly>
+                     <input type="text" class="form-control duplicate" id="dufname" name="ufname" placeholder="SureName">
+                        <button type="button" onclick="FamilyNameEditEvent()" class="button-input" id ="button-input-fname"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit" ></i></button>
+                    </div>
                   </div>
-                   <div class="form-group col-12 col-md-6">
-                     <label for="fname" class="custom-label">SureName</label>
-                       <input type="text" class="form-control" id="fname" name="ufname" placeholder="SureName" value="{{.FName}}" readonly>
-                       <input type="text" class="form-control duplicate" id="dufname" name="ufname" placeholder="SureName">
-                          <button type="button" onclick="FamilyNameEditEvent()" class="button-input" id ="button-input-fname"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit" ></i></button>
-                      </div>
-                    </div>
-                    <div class="form-row ml-1">
-                      <div class="form-check form-check-inline gender-box">
-                          <input type="radio" id="madam" name="gender" class="custom-radio">
-                          <label for="madam">Female</label>
-                      </div>
-                      <div class="form-check form-check-inline gender-box">
+                  <div class="form-row ml-1">
+                    <div class="form-check form-check-inline gender-box">
                         <input type="radio" id="madam" name="gender" class="custom-radio">
-                        <label for="madam">Male</label>
+                        <label for="madam">Female</label>
+                    </div>
+                    <div class="form-check form-check-inline gender-box">
+                      <input type="radio" id="madam" name="gender" class="custom-radio">
+                      <label for="madam">Male</label>
+                    </div>
+                  </div>
+                  <div class="form-row custom-form-row mb-1">
+                    <div class="form-group col-12">
+                      <label for="inputAddress" class="custom-label">Address</label>
+                      <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address" value="{{.Address}}" readonly>
+                      <input type="text" class="form-control duplicate" id="daddr" name="address" placeholder="1234 Main St">
+                        <button type="button" onclick="ResidenceEditEvent()" class="button-input-long" id ="button-input-addr"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
+                    </div>
+                  </div>
+                  <div class="form-row custom-form-row ">
+                    <div class="form-group col-12">
+                      <label for="inputAddress2" class="custom-label">Address 2</label>
+                      <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" name="add" value="{{.LAddress}}" readonly>
+                      <input type="text" class="form-control duplicate" id="dadd" name="add" placeholder="Apartment, studio, or floor">
+                        <button type="button" onclick="SubResEditEvent()" class="button-input-long" id ="button-input-local"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
+                    </div>
+                  </div>
+                  <div class="form-row custom-form-row mb-1">
+                    <div class="form-group col-12">
+                      <label for="country" class="custom-label">Country</label>
+                      <input type="text" class="form-control" id="country" placeholder="Country Name" name="country" value="{{.Country}}" readonly>
+                      <input type="text" class="form-control duplicate" id="dcoun" name="country" placeholder="Country">
+                        <button type="button" onclick="CountryEditEvent()" class="button-input-long" id ="button-input-country"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
+                    </div>
+                  </div>
+                  <div class="form-row custom-form-row mb-1">
+                    <div class="form-group col-12">
+                      <label for="tel" class="custom-label">Telephone</label>
+                      <input type="text" class="form-control" id="phone" name="phone" placeholder="Telephone">
+                    </div>
+                  </div>
+                      <div class="form-row custom-form-row mb-1 ">
+                       <label for="inputZip" class="custom-label">Zip</label>
+                          <input type="number" class="form-control" id="inputZip" name="inputZip" placeholder="1234" readonly>
+                          <input type="text" class="form-control duplicate" id="dzip" name="inputZip" placeholder="Zip">
+                           <button type="button" onclick="ZipEditEvent()" class="button-input-long" id ="button-input-zip"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
+                          </input>
+                          <div class="form-group col-12">
+                          <label for="email" class="custom-label">Email</label>
+                            <input type="text" class="form-control" id="email" name="email" placeholder="Email"  value="{{.Email}}" readonly>
+                            <input type="text" class="form-control duplicate" id="demail" name="email" placeholder="Email">
+                               <button type="button" onclick="EmailEditEvent()" class="button-input-long" id ="button-input"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
+                         </div>
                       </div>
                     </div>
-                    <div class="form-row custom-form-row mb-1">
-                      <div class="form-group col-12">
-                        <label for="inputAddress" class="custom-label">Address</label>
-                        <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address" value="{{.Address}}" readonly>
-                        <input type="text" class="form-control duplicate" id="daddr" name="address" placeholder="1234 Main St">
-                          <button type="button" onclick="ResidenceEditEvent()" class="button-input" id ="button-input-addr"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
-                      </div>
-                    </div>
-                    <div class="form-row custom-form-row ">
-                      <div class="form-group col-12">
-                        <label for="inputAddress2" class="custom-label">Address 2</label>
-                        <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" name="add" value="{{.LAddress}}" readonly>
-                        <input type="text" class="form-control duplicate" id="dadd" name="add" placeholder="Apartment, studio, or floor">
-                          <button type="button" onclick="SubResEditEvent()" class="button-input" id ="button-input-local"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
-                      </div>
-                    </div>
-                    <div class="form-row custom-form-row mb-1">
-                      <div class="form-group col-12">
-                        <label for="country" class="custom-label">Country</label>
-                        <input type="text" class="form-control" id="country" placeholder="Country Name" name="country" value="{{.Country}}" readonly>
-                        <input type="text" class="form-control duplicate" id="dcoun" name="country" placeholder="Country">
-                          <button type="button" onclick="CountryEditEvent()" class="button-input" id ="button-input-country"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
-                      </div>
-                    </div>
-                    <div class="form-row custom-form-row mb-1">
-                      <div class="form-group col-12">
-                        <label for="tel" class="custom-label">Telephone</label>
-                        <input type="text" class="form-control" id="phone" name="phone" placeholder="Telephone">
-                      </div>
-                    </div>
-                        <div class="form-row custom-form-row mb-1 ">
-                         <label for="inputZip" class="custom-label">Zip</label>
-                            <input type="number" class="form-control" id="inputZip" name="inputZip" placeholder="1234" readonly>
-                            <input type="text" class="form-control duplicate" id="dzip" name="inputZip" placeholder="Zip">
-                             <button type="button" onclick="ZipEditEvent()" class="button-input" id ="button-input-zip"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
-                            </input>
-                            <div class="form-group col-12">
-                            <label for="email" class="custom-label">Email</label>
-                              <input type="text" class="form-control" id="email" name="email" placeholder="Email"  value="{{.Email}}" readonly>
-                              <input type="text" class="form-control duplicate" id="demail" name="email" placeholder="Email">
-                                 <button type="button" onclick="EmailEditEvent()" class="button-input" id ="button-input"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
-                           </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="submit-form-div">
-                      <button type="submit" class="btn mb-2 submit-button" id="submBtn"n>Sign in</button>
-                    </div>
-                    <div class="cancel-form-div">
-                      <button type="reset" class="btn mb-2 cancel-button">Cancel </button>
-                    </div>
-                  </form>
-                 <div class="tab-pane fade" id="v-pills-payement" role="tabpanel" aria-labelledby="v-pills-payement-tab"></div>
-                <div class="tab-pane fade" id="v-pills-about" role="tabpanel" aria-labelledby="v-pills-about-tab"></div>
-              </div>
-         </div>
-          
-        </nav>
-    </div>
-   
+                  </div>
+                  <div class="submit-form-div">
+                    <button type="submit" class="btn mb-2 submit-button" id="submBtn"n>Sign in</button>
+                  </div>
+                  <div class="cancel-form-div">
+                    <button type="reset" class="btn mb-2 cancel-button">Cancel </button>
+                  </div>
+    </form>
+  
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
       </script>

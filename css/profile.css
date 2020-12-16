@@ -23,7 +23,7 @@
     margin-bottom: 120px;
     margin-top: 120px;
     margin-left: 30%;
-    box-shadow: 0 2px 34px 0 #ddd4d4;
+     /* box-shadow: 0 2px 34px 0 #ddd4d4; */
   }
   .custom-form-row {
     margin: 20px 15px;
@@ -40,9 +40,16 @@
   .duplicate{
     visibility: hidden;
   }
+  .form-control[readonly]{
+    background-color: #e9ecef;
+    opacity: 1;
+    color: darkgreen;
+  }
+
   .gender-box {
     margin: 0px;
-    margin-left: 22px;
+    margin-left: 50px;
+    color:darkblue;
   }
   .submit-button {
     background: #31dc58;
@@ -54,7 +61,12 @@
   }
   .button-input{  
     background: mediumseagreen;
-    margin-left: 40px;
+    margin-left: 90px;
+  }
+
+  .button-input-long{
+    background:mediumseagreen;
+    margin-left: 220px;
   }
 
   .change-service-color{
