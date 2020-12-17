@@ -12,8 +12,12 @@
     
 }
 .text-white{
-    color: green;
+    /* color: green; */
     background: aqua;
+}
+.custom-form-input{
+    margin-left: 5px;
+    
 }
 .form-action{
     margin-top: 7px;
