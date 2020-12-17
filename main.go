@@ -285,6 +285,7 @@ func Profile(w http.ResponseWriter, r *http.Request)  {
 	}
 
 	if r.Method == "GET" {
+		log.Println("[Accept] Method:", r.Method)
 		log.Println("[Accept]" , r.URL.Path)
 		temp.Execute(w,detailsAcc)
 	}else{

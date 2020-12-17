@@ -44,21 +44,21 @@
       </div>
       </nav>
   </div>
-    <form class="register-form " action="/dashboard/setting/profile" method="post">
+    <form class="register-form " action="/dashbaord/setting/profile" method="post">
       <div class="form-row custom-form-row ">
         <div class="form-group col-12 col-md-6">
              <label for="name" class="custom-label">Name</label>
                 <input type="text" class="form-control" id="name" name="uname" placeholder="First Name"  value="{{.Name}}" readonly>
                 <input type="text" class="form-control duplicate" id="duname" name="uname" placeholder="Name">
                 <button type="button" onclick="NameEditEvent()" class="button-input" id ="button-input-name"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit" ></i></button>
-                </div>
+         </div>
                  <div class="form-group col-12 col-md-6">
                    <label for="fname" class="custom-label">SureName</label>
                      <input type="text" class="form-control" id="fname" name="ufname" placeholder="SureName" value="{{.FName}}" readonly>
                      <input type="text" class="form-control duplicate" id="dufname" name="ufname" placeholder="SureName">
                         <button type="button" onclick="FamilyNameEditEvent()" class="button-input" id ="button-input-fname"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit" ></i></button>
-                    </div>
-                  </div>
+                 </div>
+      </div>
                   <div class="form-row ml-1">
                     <div class="form-check form-check-inline gender-box">
                         <input type="radio" id="madam" name="gender" class="custom-radio">
@@ -120,7 +120,7 @@
                   <div class="cancel-form-div">
                     <button type="reset" class="btn mb-2 cancel-button">Cancel </button>
                   </div>
-    </form>
+             </form>
   
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
