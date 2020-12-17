@@ -1,7 +1,4 @@
 
- .credit-form{
-  
-}
 .logo{
     width: 30%;
     position: relative;
@@ -13,6 +10,13 @@
 .submit-btn{
     color: green ;
     
+}
+.text-white{
+    color: green;
+    background: aqua;
+}
+.form-action{
+    margin-top: 7px;
 }
 .card-header{
     text-align: center;
@@ -28,6 +32,15 @@
 .change-service-color{
     color: green;
 }
+.holder{
+    margin-left: 70px;
+    margin-top: 6px;
+    color:teal;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+.custom-form-input{
+    color: darkmagenta;
+}
 
 .form-main{
     display: flex;
@@ -37,12 +50,13 @@
     border: 2px darkmagenta solid;
     background-color: cornsilk;
     color: fuchsia;
+    fill: blueviolet;
 }
 #loading {
-    -webkit-animation: rotation 2s infinite alternate-reverse;
+    animation: rotation 2s infinite alternate-reverse;
 }
 
-@-webkit-keyframes rotation {
+@keyframes rotation {
     from {
             -webkit-transform: rotate(0deg);
     }

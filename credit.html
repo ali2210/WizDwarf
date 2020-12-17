@@ -47,13 +47,13 @@
   <div class="form-main">
     <form method="post" action="/open/setting/credit" class="credit-form">
       <div class="main container card-form">
-        <div class="card text-white bg-info md-3 " style="max-width: 18rem;">
+        <div class="card text-white " style="max-width: 18rem;">
           <div class="card-header"> Credit Card </div>
           <div class="card-body">
             <h5 class="card-title"><i class="fa fa-paypal change-service-blue " aria-hidden="true" id="loading"></i></h5>
             <p class="card-text">
                <div class="form row custom col md-3" >
-                  <label for="cardNo" class="custom-form-label"><i></i>Card Number </label> 
+                  <label for="cardNo" class="custom-form-label holder"><i></i>Card Number </label> 
                   <input type="text" class="custom-form-input" id="cardNo" name="cardNo" onchange="InputCardNumberEvent()" required>
                </div>
                <div class="form row custom col md-3" >
@@ -72,8 +72,10 @@
               <label for="cvv" class="custom-form-label holder"> CVV code </label> 
               <input type="text" class="custom-form-input" id="cvv" name="cvv">
            </div>
+               <div class="form-action">
               <button type="submit" class="submit-btn"><i class="fa fa-address-card " aria-hidden="true"></i></button>
               <button type="reset" class="cancel-btn"><i i class="fa fa-trash-o" aria-hidden="true"></i></button>
+               </div>
             </p>
           </div>
         </div>
