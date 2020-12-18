@@ -1,32 +1,33 @@
 .logo{
-    width: 30%;
+    width: 30%;   
 }
 .form-container{
-    max-width: 20rem;
     display: flex;
-    justify-content: center;
-    text-align: center;
-    border: 2px grey solid ;
-    margin-left: 30em;
-    margin-top: 10em;
+    margin-right: 70px;
 }
 
+.icon-light{
+    color: #BBD2C5;
+    width: 100px;
+}
+.form-control{
+    border-radius: 10px;
+}
 
 .delete-card-form{
     margin-top: 2em;
 }
 .input-with-pre-icon{
     margin: 10px;
+    color: azure;
+    text-align: center;
 }
 .cancel{
     color:whitesmoke;
 }
 .buttons{
-    display: flex;
-    justify-content: center;
+    display: grid;
     position: relative;
-    margin-top: 1em;
-    margin-bottom: 1em;
 }
 .btn-accept{
     background-color: green;
@@ -43,6 +44,214 @@
 
 .main-dashboard-div{
     display: flex;
-    position: relative;
+    position: absolute;
+    margin-bottom: 500px;
     
+}
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+body {
+  background: linear-gradient(to right, #1e3c72, #2a5298);
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  height: 100vh;
+}
+.circle {
+  width: 450px;
+  height: 450px;
+  position: relative;
+  background: #1a3469;
+  box-shadow: 0 50px 40px rgba(0,0,0,0.5), 0 20px 10px rgba(0,0,0,0.3);
+  border-radius: 100%;
+  overflow: hidden;
+}
+.moon {
+  background: #ffa62b;
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  top: 18%;
+  left: 40%;
+  border-radius: 100%;
+}
+.moon2 {
+  background: #ffe05d;
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  top: 19%;
+  left: 44%;
+  border-radius: 100%;
+}
+.crater1 {
+  position: absolute;
+  background: #ffa62b;
+  width: 40px;
+  height: 40px;
+  top: 23%;
+  left: 61%;
+  border-radius: 100%;
+}
+.crater2 {
+  position: absolute;
+  background: #ffa62b;
+  width: 20px;
+  height: 20px;
+  top: 38%;
+  left: 56%;
+  border-radius: 100%;
+}
+.crater3 {
+  position: absolute;
+  background: #ffa62b;
+  width: 10px;
+  height: 10px;
+  top: 36%;
+  left: 70%;
+  border-radius: 100%;
+}
+.land1 {
+  position: absolute;
+  background: linear-gradient(238deg, rgba(25,42,79,0.9865079820990896) 54%, rgba(49,110,49,1) 100%);
+  width: 200px;
+  height: 180px;
+  top: 76%;
+  left: 52%;
+  clip-path: polygon(0% 0%, 85% 0, 73% 58%, 75% 100%, 0% 100%);
+  transform: rotate(180deg);
+}
+.land2 {
+  position: absolute;
+  
+background: linear-gradient(85deg, rgba(37,61,112,1) 54%, rgba(59,129,59,1) 100%);
+  top: 60%;
+  left: 68%;
+  width: 150px;
+  height: 150px;
+  border-radius: 50% 100% 100% 0% / 62% 51% 49% 38%;
+transform: rotate(210deg) skew(-39deg, -6deg);
+}
+.land3 {
+  position: absolute;
+  background: linear-gradient(180deg, rgba(13,42,92,1) 54%, rgba(49,110,49,1) 100%);
+  width: 200px;
+  height: 150px;
+  top: 74%;
+  left: 9%;
+  clip-path: polygon(0% 0%, 85% 0, 73% 58%, 75% 100%, 0% 100%);
+}
+.land4 {
+  position: absolute;
+  background: linear-gradient(0deg, rgba(40,60,134,1) 24%, rgba(50,96,112,1) 46%, rgba(62,138,86,1) 73%, rgba(69,162,71,1) 87%);
+  top: 50%;
+  left: -8%;
+  width: 200px;
+  height: 200px;
+  border-radius: 50% 100% 100% 0% / 62% 51% 49% 38%;
+transform: rotate(32deg) skew(-36deg, -16deg);
+}
+.shadow {
+  background: linear-gradient(to right, #757f9a, #d7dde8);
+  opacity: 0.4;
+  position: absolute;
+  clip-path: ellipse(25% 40% at 50% 50%);
+  top: 65%;
+  left: 25%;
+  width: 75px;
+  height: 30px;
+  transform: skew(-59deg, 0deg);
+} 
+.rabbit {
+  background: #e8e8e8;
+  width: 30px;
+  height: 50px;
+  top: 57%;
+  left: 33%;
+  position: absolute;
+  border-radius: 52% 48% 47% 53% / 69% 70% 30% 31%;
+}
+.ear1 {
+  position: absolute;
+  background: #D7DDE8;
+  width: 10px;
+  height: 25px;
+  top: 54%;
+  left: 34%;
+  border-radius: 40%;
+  transform: rotate(350deg);
+}
+.ear2 {
+  position: absolute;
+  background: #D7DDE8;
+  width: 10px;
+  height: 25px;
+  top: 54%;
+  left: 37%;
+  border-radius: 40%;
+  transform: rotate(15deg);
+}
+.tail {
+  position: absolute;
+  background: #BBD2C5;
+  width: 15px;
+  height: 15px;
+  top: 65%;
+  left: 34%;
+  border-radius: 100%;
+}
+.cloud1 {
+  background: white;
+  position: absolute;
+  top: 30%;
+  left: 10%;
+  height: 15px;
+  width: 90px;
+  border-radius: 50px;
+  opacity: 0.5;
+  animation: 5s linear infinite slidein;
+}
+.cloud2 {
+  background: white;
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  height: 15px;
+  width: 190px;
+  border-radius: 50px;
+  opacity: 0.5;
+  animation: 7s reverse infinite slidein;
+}
+.cloud3 {
+  background: white;
+  position: absolute;
+  top: 42%;
+  left: 10%;
+  height: 20px;
+  width: 250px;
+  border-radius: 50px;
+  opacity: 0.5;
+  animation: 7s linear infinite slidein;
+}
+.cloud4 {
+  background: white;
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  height: 15px;
+  width: 90px;
+  border-radius: 50px;
+  opacity: 0.5;
+  animation: 5s reverse infinite slidein;
+}
+@keyframes slidein {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(500%);
+  }
 }
