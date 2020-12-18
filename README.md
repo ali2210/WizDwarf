@@ -33,10 +33,10 @@ This applicationn allow you can upload  genetic material(DNA). Based on your gen
 - pdb file storage [feature]
 
 
- 1. [![Prototype](https://www.loom.com/share/e5710b59eebf482f86a0ac7be3424914)
+ 1. [Prototype(https://www.loom.com/share/e5710b59eebf482f86a0ac7be3424914)
 
  2. [![ElephantClock](https://upload.wikimedia.org/wikipedia/commons/7/76/Al-jazari_elephant_clock.png)]
 
- 3. [![Docker](https://hub.docker.com/repository/docker/ali2210/wiz-dwarfs)]
+ 3. [Docker(https://hub.docker.com/repository/docker/ali2210/wiz-dwarfs)]
 
   [@Contributor(https://github.com/ali2210/WizDwarf/wiki)] 
