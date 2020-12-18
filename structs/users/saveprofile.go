@@ -122,7 +122,7 @@ func (*cloud_data) FindDataByID(id string, app *firebase.App)(*Vistors, error){
 	var visits Vistors
 	iterator := client.Collection(collection).Where("Id", "==", id).Documents(ctx)
 	
-	defer iterator.Stop()
+	//defer iterator.Stop()
 	for{
 		doc, err := iterator.Next();if err != nil{
 			return nil, err
@@ -183,7 +183,7 @@ func (*cloud_data) GetProfile(clientId *firebase.App , Id string)(*UpdateProfile
 	defer client.Close()
 	iterator := client.Collection(collection).Where("Id", "==", Id).Documents(ctx)
 
-	defer iterator.Stop()
+	//defer iterator.Stop()
 	for{
 		doc, err := iterator.Next();if err != nil{
 			return visits, err
