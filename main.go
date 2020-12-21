@@ -134,17 +134,19 @@ func main() {
 	routing.HandleFunc("/dashboard", Dashboard)
 	routing.HandleFunc("/dashbaord/setting", Setting)
 	routing.HandleFunc("/dashbaord/setting/profile", Profile)
+	routing.HandleFunc("/dashbaord/setting/about", AboutMe)
+	routing.HandleFunc("/dashboard/setting/pay", Credit)
+	routing.HandleFunc("/dashbaord/setting/credit/delete", DeleteCard)
 	routing.HandleFunc("/logout", Logout)
 	routing.HandleFunc("/createWallet", CreateWallet)
 	routing.HandleFunc("/terms", Terms)
 	routing.HandleFunc("/open", Wallet)
-	routing.HandleFunc("/dashbaord/setting/about", AboutMe)
-	routing.HandleFunc("/dashboard/setting/pay", Credit)
 	routing.HandleFunc("/transact", Transacts)
 	routing.HandleFunc("/transact/send", Send)
 	routing.HandleFunc("/transact/treasure", Treasure)
 	routing.HandleFunc("/visualize", Visualize)
-	routing.HandleFunc("/dashbaord/setting/credit/delete", DeleteCard)
+	routing.HandleFunc("/modal/success", Success)
+
 	/*routing.HandleFunc("/transact/advance-fileoption", Blocks)*/
 
 	// Static Files
@@ -180,6 +182,14 @@ func Home(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func Success(w http.ResponseWriter, r *http.Request)  {
+	temp := template.Must(template.ParseFiles("modal-success.html"))
+	if r.Method == "GET" {
+		log.Println("[Accept]" , r.URL.Path)
+		temp.Execute(w, "Success")
+	}
+}
+
 func DeleteCard(w http.ResponseWriter, r *http.Request){
 	temp := template.Must(template.ParseFiles("delete.html"))
 	if r.Method == "GET" {
@@ -210,6 +220,9 @@ func DeleteCard(w http.ResponseWriter, r *http.Request){
 			}
 			log.Println("[Accept:]", client, token)
 			temp.Execute(w,"Complete")
+			w.WriteHeader(http.StatusOK)
+			r.Method = "GET"
+			Success(w, r)
 		}
 	}
 }
@@ -330,6 +343,9 @@ func Profile(w http.ResponseWriter, r *http.Request)  {
 		} 
 		 
 		log.Println("[Accept] Profile updated... ", profile)
+		w.WriteHeader(http.StatusOK)
+		r.Method = "GET"
+		Success(w, r)
 
 	}
 }
@@ -379,7 +395,9 @@ func Credit(w http.ResponseWriter, r *http.Request)  {
 		}
 
 		log.Println("[Accept] Token issue:", token, "retInfo:", ret)
-
+		w.WriteHeader(http.StatusOK)
+		r.Method = "GET"
+		Success(w, r)
 
 
 	}
