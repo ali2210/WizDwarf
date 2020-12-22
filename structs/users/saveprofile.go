@@ -85,7 +85,7 @@ func (*cloud_data) FindAllData(app *firebase.App, email, password string)(*model
 	defer client.Close()
 
 	iterator := client.Collection(collection).Where("Email", "==", email).Where("Password", "==", password).Documents(ctx)
-	// defer iterator.Stop()
+	defer iterator.Stop()
 	for{
 		doc, err := iterator.Next();if err != nil{
 			log.Fatal("Iterator Failed on Vistor: ", err)
@@ -118,18 +118,20 @@ func (*cloud_data) FindDataByID(id string, app *firebase.App)(*model.Vistors, er
 		return nil, err
 	}
 	
-	log.Println("AccountID:", id)
-
 	defer client.Close()
-	var visits model.Vistors
+	log.Println("AccountID:", id)
+	var visits *model.Vistors
 	iterator := client.Collection(collection).Where("Id", "==", id).Documents(ctx)
 	
-	//defer iterator.Stop()
+	defer iterator.Stop()
+	log.Println("Iterate:", iterator)
+	
 	for{
 		doc, err := iterator.Next();if err != nil{
-			return nil, err
+			log.Fatal("Iterator Failed on Vistor: ", err)
+			return visits, err
 		}
-		visits = model.Vistors {
+		visits = &model.Vistors {
 			Id : doc.Data()["Id"].(string),
 			Name : doc.Data()["Name"].(string),
 			Email : doc.Data()["Email"].(string),
@@ -144,7 +146,7 @@ func (*cloud_data) FindDataByID(id string, app *firebase.App)(*model.Vistors, er
 		}
 		break
 	}
-	return &visits, nil
+	return visits, nil
 }
 
 func (*cloud_data) UpdateProfiles(clientId *firebase.App, profile *model.UpdateProfile)(*model.UpdateProfile, error){
@@ -185,7 +187,7 @@ func (*cloud_data) GetProfile(clientId *firebase.App , Id string)(*model.UpdateP
 	defer client.Close()
 	iterator := client.Collection(collection).Where("Id", "==", Id).Documents(ctx)
 
-	//defer iterator.Stop()
+	defer iterator.Stop()
 	for{
 		doc, err := iterator.Next();if err != nil{
 			return visits, err
