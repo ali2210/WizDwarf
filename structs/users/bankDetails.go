@@ -2,6 +2,7 @@ package users
 
 import (
 	paypalSdk "github.com/logpacker/PayPal-Go-SDK"
+	"github.com/ali2210/wizdwarf/structs/users/model"
 )
 
 var(
@@ -13,14 +14,14 @@ var(
 type DigialProfile struct{
 	
 	*paypalSdk.CreditCard
-	*Vistors
+	*model.Vistors
 	 Public string
 }
 
 type CreditCardInfo interface{
 	SetAuthorizeNum(id string) 
 	GetAuthorizeNum()string
-	LinkCard(c *paypalSdk.CreditCard,  info *Vistors, eth string)(*DigialProfile)
+	LinkCard(c *paypalSdk.CreditCard,  info *model.Vistors, eth string)(*DigialProfile)
 	VoidStruct() *DigialProfile
 }
 
@@ -43,7 +44,7 @@ func (*DigitalPrint) GetAuthorizeNum()string {
 
 
 
-func (*DigitalPrint) LinkCard(c *paypalSdk.CreditCard, info *Vistors, eth string)(*DigialProfile)  {
+func (*DigitalPrint) LinkCard(c *paypalSdk.CreditCard, info *model.Vistors, eth string)(*DigialProfile)  {
 	avatarMe := DigialProfile{}
 	avatarMe.CreditCard = c
 	avatarMe.Vistors = info

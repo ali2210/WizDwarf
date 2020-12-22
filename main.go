@@ -37,6 +37,7 @@ import (
 	"github.com/ali2210/wizdwarf/db"
 	"github.com/ali2210/wizdwarf/structs/paypal/handler"
 	"github.com/ali2210/wizdwarf/structs/users"
+	"github.com/ali2210/wizdwarf/structs/users/model"
 	"github.com/ali2210/wizdwarf/structs/amino"
 	
 	weather "github.com/ali2210/wizdwarf/structs/OpenWeather"
@@ -281,6 +282,7 @@ func Setting(w http.ResponseWriter, r *http.Request)  {
 func Profile(w http.ResponseWriter, r *http.Request)  {
 
 	temp := template.Must(template.ParseFiles("profile.html"))
+	
 	if accountID == ""{	
 		log.Fatal("[Error ] Please login  ")
 			response := structs.Response{}
@@ -289,17 +291,21 @@ func Profile(w http.ResponseWriter, r *http.Request)  {
 			response.ClientLogs()
 			err := response.Run(temp); if err != nil {
 				log.Println("[Error]: checks logs...", err)
+				return
 			}
 	}
 
-	detailsAcc , err := cloud.FindDataByID(accountID, appName); if err != nil {
-		log.Fatalln("[Fail] Operation..", err)
-		return 
-	}
 
 	if r.Method == "GET" {
 		log.Println("[Accept] Method:", r.Method)
 		log.Println("[Accept]" , r.URL.Path)
+		
+		detailsAcc , err := cloud.FindDataByID(accountID, appName); if err != nil {
+			log.Fatalln("[Fail] Operation..", err)
+			return 
+		}
+
+		log.Println("Details:", detailsAcc)
 		temp.Execute(w,detailsAcc)
 	}else{
 		log.Println("[Accept] Method:", r.Method)
@@ -308,7 +314,7 @@ func Profile(w http.ResponseWriter, r *http.Request)  {
 		r.ParseForm()
 
 		// save value in db
-		MyProfile := users.UpdateProfile{
+		MyProfile := model.UpdateProfile{
 			Email : r.FormValue("email"),
 			Phone : r.FormValue("phone"),
 			FirstName : r.FormValue("uname"),
@@ -327,6 +333,7 @@ func Profile(w http.ResponseWriter, r *http.Request)  {
 			response.ClientLogs()
 			err := response.Run(temp); if err != nil {
 				log.Println("[Error]: checks logs...", err)
+				return
 			}
 		}
 		MyProfile.Id = accountID
@@ -1505,9 +1512,9 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 
 //  Advance Functions
 
-func SearchDB(w http.ResponseWriter, r *http.Request, email, pass string) (*users.Vistors, error) {
+func SearchDB(w http.ResponseWriter, r *http.Request, email, pass string) (*model.Vistors, error) {
 
-	var data *users.Vistors
+	var data *model.Vistors
 	var err error
 	// w.Header().Set("Content-Type", "application/json")
 	if r.Method == "GET" {
@@ -1555,7 +1562,7 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *struct
 	if request.Method == "GET" {
 		fmt.Println("Method:" + request.Method)
 	} else {
-		var member users.Vistors
+		var member model.Vistors
 		data, err := json.Marshal(member)
 		if err != nil {
 			log.Fatal("[Fail] Poor DATA JSON FORMAT  ", err)
