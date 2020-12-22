@@ -1,4 +1,4 @@
-package users
+package model
 
 
 type UpdateProfile struct{
