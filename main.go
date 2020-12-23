@@ -293,6 +293,7 @@ func Profile(w http.ResponseWriter, r *http.Request)  {
 				log.Println("[Error]: checks logs...", err)
 				return
 			}
+			return
 	}
 	detailsAcc , err := cloud.FindDataByID(accountID, appName); if err != nil {
 		log.Fatalln("[Fail] Operation..", err)

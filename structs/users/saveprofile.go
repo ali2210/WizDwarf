@@ -123,17 +123,14 @@ func (*cloud_data) FindDataByID(id string, app *firebase.App)(*model.Vistors, er
 	var visits model.Vistors
 	iterator := client.Collection(collection).Where("Id", "==", id).Documents(ctx)
 	
-	defer iterator.Stop()
-	log.Println("Iterate:", iterator)
-	
 	for{
 		doc, err := iterator.Next();if err != nil{
 			log.Fatal("Iterator Failed on Vistor: ", err)
 			return &visits, err
 		}
 		visits = model.Vistors {
-			Id : doc.Data()["Id"].(string),
 			Name : doc.Data()["Name"].(string),
+			Id : doc.Data()["Id"].(string),
 			Email : doc.Data()["Email"].(string),
 			Password: doc.Data()["Password"].(string),
 			FName: doc.Data()["FName"].(string),
@@ -146,6 +143,7 @@ func (*cloud_data) FindDataByID(id string, app *firebase.App)(*model.Vistors, er
 		}
 		break
 	}
+	defer iterator.Stop()
 	log.Println("Visitors:", visits)
 	return &visits, err
 }
