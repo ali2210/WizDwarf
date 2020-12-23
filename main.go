@@ -299,6 +299,7 @@ func Profile(w http.ResponseWriter, r *http.Request)  {
 		log.Fatalln("[Fail] Operation..", err)
 		return 
 	}
+	log.Println(detailsAcc)
 
 	if r.Method == "GET" {
 		log.Println("[Accept] Method:", r.Method)
