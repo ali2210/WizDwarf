@@ -25,6 +25,7 @@ type ProfileinJSON struct{
 	Zip string `json:"Zip"`
 	Eve bool `json:"Eve"`
 	Email string `json:"Email"`
+	Phone string `json:"Phone"`
 }
 
 
@@ -36,7 +37,7 @@ type DBFirestore interface{
 	FindDataByID(id string , app *firebase.App)(*model.Vistors, error)
 	FindAllData(app *firebase.App, email , password string)(*model.Vistors, error)
 	UpdateProfiles(clientId *firebase.App, profile *model.UpdateProfile)(*model.UpdateProfile, error)
-	GetProfile(clientId *firebase.App, Id string)(*model.UpdateProfile, error)
+	GetProfile(clientId *firebase.App, Id string)(*ProfileinJSON, error)
 }
 
 type cloud_data struct{}
@@ -112,25 +113,25 @@ func (*cloud_data) FindAllData(app *firebase.App, email, password string)(*model
 }
 
 func (*cloud_data) FindDataByID(id string, app *firebase.App)(*model.Vistors, error){
+	
 	ctx := context.Background()
 	client , err := app.Firestore(ctx); if err != nil{
 		log.Fatal("Client Instance Failed to start", err)
 		return nil, err
 	}
-	
 	defer client.Close()
-	log.Println("AccountID:", id)
+
 	var visits model.Vistors
 	iterator := client.Collection(collection).Where("Id", "==", id).Documents(ctx)
-	
+	defer iterator.Stop()
 	for{
 		doc, err := iterator.Next();if err != nil{
 			log.Fatal("Iterator Failed on Vistor: ", err)
 			return &visits, err
 		}
 		visits = model.Vistors {
+				Id : doc.Data()["Id"].(string),
 			Name : doc.Data()["Name"].(string),
-			Id : doc.Data()["Id"].(string),
 			Email : doc.Data()["Email"].(string),
 			Password: doc.Data()["Password"].(string),
 			FName: doc.Data()["FName"].(string),
@@ -139,7 +140,7 @@ func (*cloud_data) FindDataByID(id string, app *firebase.App)(*model.Vistors, er
 			Zip: doc.Data()["Zip"].(string),
 			Address: doc.Data()["Address"].(string),
 			LAddress: doc.Data()["LAddress"].(string),
-			Eve: doc.Data()["Eve"].(bool),
+			Eve: doc.Data()["Eve"].(bool), 
 		}
 		break
 	}
@@ -174,12 +175,12 @@ func (*cloud_data) UpdateProfiles(clientId *firebase.App, profile *model.UpdateP
 		return profile, nil
 }
 
-func (*cloud_data) GetProfile(clientId *firebase.App , Id string)(*model.UpdateProfile, error)   {
+func (*cloud_data) GetProfile(clientId *firebase.App , Id string)(*ProfileinJSON, error)   {
 	ctx := context.Background()
-	var visits *model.UpdateProfile
+	var visits ProfileinJSON
 	client , err := clientId.Firestore(ctx); if err != nil{
 		log.Fatal("Client Instance Failed to start", err)
-		return visits, err
+		return &visits, err
 	}
 	
 
@@ -189,9 +190,9 @@ func (*cloud_data) GetProfile(clientId *firebase.App , Id string)(*model.UpdateP
 	defer iterator.Stop()
 	for{
 		doc, err := iterator.Next();if err != nil{
-			return visits, err
+			return &visits, err
 		}
-		visits = &model.UpdateProfile {
+		visits = ProfileinJSON {
 			Id : doc.Data()["Id"].(string),
 			FirstName : doc.Data()["FirstName"].(string),
 			Email : doc.Data()["Email"].(string),
@@ -199,12 +200,12 @@ func (*cloud_data) GetProfile(clientId *firebase.App , Id string)(*model.UpdateP
 			LastName: doc.Data()["LastName"].(string),
 			Country: doc.Data()["Country"].(string),
 			Zip: doc.Data()["Zip"].(string),
-			HouseAddress: doc.Data()["HouseAddress1"].(string),
-			SubAddress: doc.Data()["Address"].(string),
-			Male: doc.Data()["Eve"].(bool),
+			HouseAddress1: doc.Data()["HouseAddress1"].(string),
+			HouseAddress2: doc.Data()["Address"].(string),
+			Eve: doc.Data()["Eve"].(bool),
 		}
 		break
 	}
-	return visits, nil	
+	return &visits, err	
 }
 
