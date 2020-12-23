@@ -294,17 +294,15 @@ func Profile(w http.ResponseWriter, r *http.Request)  {
 				return
 			}
 	}
-
+	detailsAcc , err := cloud.FindDataByID(accountID, appName); if err != nil {
+		log.Fatalln("[Fail] Operation..", err)
+		return 
+	}
 
 	if r.Method == "GET" {
 		log.Println("[Accept] Method:", r.Method)
 		log.Println("[Accept]" , r.URL.Path)
 		
-		detailsAcc , err := cloud.FindDataByID(accountID, appName); if err != nil {
-			log.Fatalln("[Fail] Operation..", err)
-			return 
-		}
-
 		log.Println("Details:", detailsAcc)
 		temp.Execute(w,detailsAcc)
 	}else{
