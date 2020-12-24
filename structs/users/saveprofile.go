@@ -34,7 +34,7 @@ type ProfileinJSON struct{
 type DBFirestore interface{
 	
 	SaveData(visitor *model.Vistors, app *firebase.App)(*model.Vistors, error)
-	FindDataByID(id string , app *firebase.App)(*model.Vistors, error)
+	ToFindByGroupSet(id, email string , app *firebase.App)(*model.Vistors, error)
 	FindAllData(app *firebase.App, email , password string)(*model.Vistors, error)
 	UpdateProfiles(clientId *firebase.App, profile *model.UpdateProfile)(*model.UpdateProfile, error)
 	GetProfile(clientId *firebase.App, Id string)(*ProfileinJSON, error)
@@ -112,7 +112,7 @@ func (*cloud_data) FindAllData(app *firebase.App, email, password string)(*model
 
 }
 
-func (*cloud_data) FindDataByID(id string, app *firebase.App)(*model.Vistors, error){
+func (*cloud_data) ToFindByGroupSet(id, email string, app *firebase.App)(*model.Vistors, error){
 	
 	ctx := context.Background()
 	client , err := app.Firestore(ctx); if err != nil{
@@ -122,10 +122,15 @@ func (*cloud_data) FindDataByID(id string, app *firebase.App)(*model.Vistors, er
 	defer client.Close()
 
 	var visits model.Vistors
-	iterator := client.Collection(collection).Where("Id", "==", id).Documents(ctx)
-	defer iterator.Stop()
+	it := client.Collection(collection).Where("Id", "==", id).Where("Email", "==", email).Documents(ctx)
+	
+	defer it.Stop()
 	for{
-		doc, err := iterator.Next();if err != nil{
+		doc, err := it.Next();if err != nil{
+			log.Fatal("Iterator Failed on Vistor: ", err)
+			return &visits, err
+		}
+		if doc.Data() == nil{
 			log.Fatal("Iterator Failed on Vistor: ", err)
 			return &visits, err
 		}
@@ -144,8 +149,6 @@ func (*cloud_data) FindDataByID(id string, app *firebase.App)(*model.Vistors, er
 		}
 		break
 	}
-	defer iterator.Stop()
-	log.Println("Visitors:", visits)
 	return &visits, err
 }
 

@@ -66,8 +66,8 @@ var (
 	edit              structs.Levenshtein = structs.Levenshtein{}
 	visualizeReport weather.DataVisualization = weather.DataVisualization{}
 	accountID string 				= " "
-	cardInfoID string  				= ""
-	
+	cardInfoID string  				= " "
+	accountVisitEmail string  		= " "
 )
 
 // Constants
@@ -233,7 +233,7 @@ func AboutMe(w http.ResponseWriter, r *http.Request)  {
 	if r.Method == "GET" {
 		log.Println("[Accept]" , r.URL.Path)
 		cardInfoID =  digitalCode.GetAuthorizeNum()
-		detailsAcc , err := cloud.FindDataByID(accountID, appName); if err != nil {
+		detailsAcc , err := cloud.ToFindByGroupSet(accountID, accountVisitEmail, appName); if err != nil {
 			log.Fatalln("[Fail] Operation..", err)
 			return 
 		}
@@ -295,10 +295,11 @@ func Profile(w http.ResponseWriter, r *http.Request)  {
 			}
 			return
 	}
-	detailsAcc , err := cloud.FindDataByID(accountID, appName); if err != nil {
+	detailsAcc , err := cloud.ToFindByGroupSet(accountID, accountVisitEmail, appName); if err != nil {
 		log.Fatalln("[Fail] Operation..", err)
 		return 
 	}
+	log.Println(detailsAcc)
 
 	if r.Method == "GET" {
 		log.Println("[Accept] Method:", r.Method)
@@ -1279,7 +1280,7 @@ func Terms(w http.ResponseWriter, r *http.Request) {
 
 func NewUser(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("register.html"))
-	user := structs.Create_User{}
+	user := model.Create_User{}
 
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
@@ -1358,7 +1359,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 
 func Existing(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("login.html"))
-	user := structs.Create_User{}
+	user := model.Create_User{}
 
 	if r.Method == "GET" {
 		fmt.Printf("\nMethod:%v", r.Method)
@@ -1429,6 +1430,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 		if data != nil {
 			accountID = data.Id
 			fmt.Printf("Search Data:%v", data.Id)
+			accountVisitEmail = data.Email
 			act := structs.RouteParameter{}
 			//complex.AddByName(data.Name)
 			// User Session
@@ -1554,7 +1556,7 @@ func SearchDB(w http.ResponseWriter, r *http.Request, email, pass string) (*mode
 //
 // }
 
-func addVistor(response http.ResponseWriter, request *http.Request, user *structs.Create_User, im string) {
+func addVistor(response http.ResponseWriter, request *http.Request, user *model.Create_User, im string) {
 
 	// var err error
 	//response.Header().Set("Content-Type", "application/json")
@@ -1850,7 +1852,7 @@ func ReadSequence(filename string) ([]byte, error) {
 	return []byte(body), nil
 }
 
-func MessageToHash(w http.ResponseWriter, r *http.Request, matchE, matchP bool, user structs.Create_User) (bool, *structs.SignedKey) {
+func MessageToHash(w http.ResponseWriter, r *http.Request, matchE, matchP bool, user model.Create_User) (bool, *structs.SignedKey) {
 	code := structs.SignedKey{}
 	if matchE && matchP {
 		h := sha256.New()
