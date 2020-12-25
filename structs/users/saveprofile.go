@@ -122,7 +122,7 @@ func (*cloud_data) ToFindByGroupSet(id, email string, app *firebase.App)(*model.
 	defer client.Close()
 
 	var visits model.Vistors
-	it := client.Collection(collection).Where("Id", "==", id).Where("Email", "==", email).Documents(ctx)
+	it := client.Collection(collection).Where("Email", "==", email).Where("Id", "==", id).Documents(ctx)
 	
 	defer it.Stop()
 	for{
@@ -131,20 +131,14 @@ func (*cloud_data) ToFindByGroupSet(id, email string, app *firebase.App)(*model.
 			return &visits, err
 		}
 		if doc.Data() == nil{
-			log.Fatal("Iterator Failed on Vistor: ", err)
-			return &visits, err
+			log.Fatal("Iterator Failed on Vistor: ", err, doc.Data())
+			continue
 		}
 		visits = model.Vistors {
 				Id : doc.Data()["Id"].(string),
-			Name : doc.Data()["Name"].(string),
 			Email : doc.Data()["Email"].(string),
-			Password: doc.Data()["Password"].(string),
-			FName: doc.Data()["FName"].(string),
-			City : doc.Data()["City"].(string),
 			Country: doc.Data()["Country"].(string),
 			Zip: doc.Data()["Zip"].(string),
-			Address: doc.Data()["Address"].(string),
-			LAddress: doc.Data()["LAddress"].(string),
 			Eve: doc.Data()["Eve"].(bool), 
 		}
 		break

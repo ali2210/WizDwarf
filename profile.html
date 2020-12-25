@@ -61,12 +61,16 @@
       </div>
                   <div class="form-row ml-1">
                     <div class="form-check form-check-inline gender-box">
-                        <input type="radio" id="madam" name="gender" class="custom-radio">
+                      {{if .Eve}}
+                        <input type="radio" id="madam" name="gender" class="custom-radio" checked>
                         <label for="madam">Female</label>
+                      {{end}}
                     </div>
                     <div class="form-check form-check-inline gender-box">
-                      <input type="radio" id="madam" name="gender" class="custom-radio">
+                      {{if not .Eve}}
+                      <input type="radio" id="madam" name="gender" class="custom-radio" checked>
                       <label for="madam">Male</label>
+                      {{end}}
                     </div>
                   </div>
                   <div class="form-row custom-form-row mb-1">
@@ -101,7 +105,7 @@
                   </div>
                       <div class="form-row custom-form-row mb-1 ">
                        <label for="inputZip" class="custom-label">Zip</label>
-                          <input type="number" class="form-control" id="inputZip" name="inputZip" placeholder="1234" readonly>
+                          <input type="number" class="form-control" id="inputZip" name="inputZip" placeholder="1234" value="{{.Zip}}" readonly>
                           <input type="text" class="form-control duplicate" id="dzip" name="inputZip" placeholder="Zip">
                            <button type="button" onclick="ZipEditEvent()" class="button-input-long" id ="button-input-zip"><i class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
                           </input>
