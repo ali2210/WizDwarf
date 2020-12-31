@@ -4,7 +4,7 @@
  [Category (mathematics and life)]
 
  [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H22YW0G)
- 
+ [NewYear2021]
 
 # Mission
 This applicationn allow you can upload  genetic material(DNA). Based on your genetic material , anyone want to analyses any virus pattern exist. Infuture , platform provide various functions. These functions allow user to interact with our Genes interface easily. Users can share their location. These location calclaute atmostersphic impact on your microscopic level . Is there , any proteins or proteins function working properly or not. Stimulate your complex genetic enivornment on your instance (machine). Proper data visualization tools , in order to understand genetic information or pattern. Genetic Wallets allow you synthesis proteins functions etc. In future your genetic code use as token so that only you can access to your machine. Parental DNA matching will also provide. 
