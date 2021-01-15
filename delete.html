@@ -33,10 +33,14 @@
         </nav>
     </div>
     <div class="form-container">
-        <form method="post" action="/open/setting/credit/delete" class="delete-card-form">
+        <form action="/dashbaord/setting/pay/credit/delete" method="post" class="delete-card-form">
             <div class="md-form input-with-pre-icon">
-                <i class="fa fa-credit-card input-prefix" aria-hidden="true">  <label for="prefixInside"> <h5>Add your CVV Code !</h5> </label></i>
-                <input type="text" id="prefixInside" class="form-control">
+              <div class="field-1"> 
+                <i class="fa fa-credit-card input-prefix" aria-hidden="true">  <label for="prefixInside"></label></i>
+                <input type="text" id="account" class="form-control" placeholder=" Account Number!">
+              </div>
+             
+              
               </div>
               <div class="buttons">
                 <button type="submit" class="btn-accept"> <i class="fa fa-trash recycle" aria-hidden="true"></i> Delete </button>

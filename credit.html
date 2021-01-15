@@ -34,7 +34,7 @@
         </a>
         <div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" href="/dashbaord/setting/profile"><i class="fa fa-user-circle-o change-service-color" aria-hidden="true"></i> Edit Profile</a>
-          <a class="dropdown-item" href="/dashboard/setting/pay"><i class="fa fa-shopping-cart change-service-color" aria-hidden="true"></i> Monetize</a>
+          <a class="dropdown-item" href="/dashboard/setting/pay/credit/add"><i class="fa fa-shopping-cart change-service-color" aria-hidden="true"></i> Monetize</a>
           <a class="dropdown-item" href="/dashbaord/setting/about"><i class="fa fa-book change-service-color" aria-hidden="true"></i> Biography</a>
         </div>
       </li>
@@ -46,7 +46,8 @@
   justify-content: right;
   position: absolute;
   margin-right: 1px;
-  height: 50%; perspective-origin: center ;">
+  height: 50%; perspective-origin: center ; 
+  margin-left: -30%;">
     <div class="main">
       <div class="human">
         <div class="human__hair-b"></div>
@@ -235,7 +236,7 @@
     </div>
   </div>
   <div class="form-main">
-    <form method="post" action="/open/setting/credit" class="credit-form">
+    <form action="/dashboard/setting/pay/credit/add" method="post" class="credit-form">
       <div class="main container card-form">
         <div class="card text-white " style="max-width: 18rem;">
           <div class="card-header"> Credit Card </div>
@@ -243,7 +244,7 @@
             <!-- <h5 class="card-title"><i class="fa fa-paypal change-service-blue " aria-hidden="true" id="loading"></i></h5> -->
             <p class="card-text">
                <div class="form row custom col md-3" >
-                  <label for="cardNo" class="custom-form-label holder"><i></i>Card Number </label> 
+                  <label for="cardNo" class="custom-form-label holder"> Card Number </label> 
                   <input type="text" class="custom-form-input" id="cardNo" name="cardNo" onchange="InputCardNumberEvent()" required>
                </div>
                <div class="form row custom col md-3" >
@@ -253,6 +254,10 @@
              <div class="form row custom col md-3" >
               <label for="surename" class="custom-form-label holder"> Surename </label> 
               <input type="text" class="custom-form-input" id="surename" name="surename">
+            </div>
+            <div class="form row custom col md-3" >
+              <label for="cardtype" class="custom-form-label holder"> Card Type </label> 
+              <input type="text" class="custom-form-input" id="cardtype" name="cardtype">
             </div>
              <div class="form row custom col md-3" >
               <label for="expire" class="custom-form-label holder"> Expire date </label> 

@@ -1,15 +1,4 @@
 
-html{
-	/*min-height: 100%;*/
-	/*overflow: hidden;*/
-
-}
-
-body{
-	/*height: calc(100vh - 8em);*/
-	/*padding: 4em;*/
-}
-
 
 .container-1{
 	margin-top: 50px;
@@ -34,10 +23,6 @@ body{
 .img-logo{
 	width: 80%;	
 }																																																					
-.container-0{
-
-}
-
 
 .line-1{
 	position: relative;
@@ -56,6 +41,12 @@ body{
 	normal both,
 	          blinkTextCursor 500ms steps(44)
 	infinite normal;
+	
+}
+.line-2{
+	color: whitesmoke;
+	background-color: black;
+	margin-top: 20px;
 }
 @keyframes typewriter{
 	from{width: 0;}
@@ -154,5 +145,9 @@ body{
 
 .foot-mark{
 	display: flex;
+	position: relative;
 	justify-content: center;
+	margin-top: 40px;
+	background-color: black;
+	color: whitesmoke;
 }

@@ -8,9 +8,8 @@ import (
 const(
 	
 	// PAYPAL SANDBOX
-	PaypalClientKey string = "AVWpbSSab2hTMsrGZ3oAeM6ALkXFKOVhYgbjb4nKN6Eu0sG-AnVRmPeGPbkPWBnF3n9w5by3JP6p2oGv"
-	PaypalSecretKey string = "EFbCIMBM5s-shGaXx536oQbu0_QAzutn-_y1usOInfYrIvFNEIwhH_bR6KLv2wZrkZyJhjUk3qI17yp-"
-	PaypalSandboxApi string = "sb-ylmhq4096831@business.example.com"
+	PaypalClientKey string = "AS3poQQQOrbsHIyYYpz3M_XzHhG9xlgLSj6uARAmL4CH7_BzyQYoceurrSKImPww7hq0vLJSrQ4hDesw"
+	PaypalSecretKey string = "EKtlmcsXpn0_9UtwTuWDHu_jfeyfiXFoJY1l4RY71VON_mXFlxkPnm53cJd8OIPc0VpouPyXV38RNBab"
 	
 )
 // Read html tag and convert into golang client
@@ -18,44 +17,40 @@ const(
 
 type PaypalClientLevel interface{
 	NewClient()(*paypalSdk.Client, error)
-	Token()(*paypalSdk.TokenResponse, error)
-	RetrieveCreditCardInfo(id string)(*paypalSdk.CreditCard, error)
-	StoreCreditCardInfo(c paypalSdk.CreditCard)(*paypalSdk.CreditCard, error)
-	RemoveCard(id string) error
+	Token(client *paypalSdk.Client)(*paypalSdk.TokenResponse, error)
+	RetrieveCreditCardInfo(id string, client *paypalSdk.Client)(*paypalSdk.CreditCard, error)
+	StoreCreditCardInfo(c paypalSdk.CreditCard, client *paypalSdk.Client)(*paypalSdk.CreditCard, error)
+	RemoveCard(id string, client *paypalSdk.Client) error
 }
 
-type PaypalMiniVersion struct{	
-	
-	Client *paypalSdk.Client
-}
+type PaypalMiniVersion struct{}
 
 func PaypalClientGo() PaypalClientLevel  {
 	return &PaypalMiniVersion{}
 }
 
 func (p *PaypalMiniVersion) NewClient()(*paypalSdk.Client, error)  {
-	client , err := paypalSdk.NewClient(PaypalClientKey, PaypalSecretKey,PaypalSandboxApi)
-	(*p).Client = client
-	return (*p).Client, err
+	client , err := paypalSdk.NewClient(PaypalClientKey, PaypalSecretKey,paypalSdk.APIBaseSandBox)
+	return client, err
 }
 
-func (p *PaypalMiniVersion) Token() (*paypalSdk.TokenResponse, error) {
+func (p *PaypalMiniVersion) Token(client *paypalSdk.Client) (*paypalSdk.TokenResponse, error) {
 	
-		token , err := (*p).Client.GetAccessToken()
+		token , err := client.GetAccessToken()
 		return token, err
 }
 
-func (p *PaypalMiniVersion) RemoveCard(id string) error  {
-	return (*p).Client.DeleteCreditCard(id)
+func (p *PaypalMiniVersion) RemoveCard(id string, client *paypalSdk.Client,) error  {
+	return client.DeleteCreditCard(id)
 }
 
-func (p *PaypalMiniVersion) RetrieveCreditCardInfo(id string)(*paypalSdk.CreditCard, error)  {
+func (p *PaypalMiniVersion) RetrieveCreditCardInfo(id string, client *paypalSdk.Client)(*paypalSdk.CreditCard, error)  {
 		
-	c, err := (*p).Client.GetCreditCard(id)
+	c, err := client.GetCreditCard(id)
 	return c, err
 }
 
-func (p *PaypalMiniVersion) StoreCreditCardInfo(c paypalSdk.CreditCard)(*paypalSdk.CreditCard, error)  {
-	cc , err := (*p).Client.StoreCreditCard(c)
+func (p *PaypalMiniVersion) StoreCreditCardInfo(c paypalSdk.CreditCard, client *paypalSdk.Client)(*paypalSdk.CreditCard, error)  {
+	cc , err := client.StoreCreditCard(c)
 	return cc, err
 }

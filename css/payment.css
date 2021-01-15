@@ -48,7 +48,7 @@
     color: red;
 }
 .change-service-color{
-    color:#04798c;
+    color:violet;
 }
 .holder{
     margin-left: 70px;
@@ -62,11 +62,10 @@
 
 .form-main{
   display: flex;
-  position: absolute;
-  justify-content: center;
-  margin-top: 1400px;
-  margin-right: -10%;
-  margin-left: 65%;
+    position: absolute;
+    justify-content: center;
+    margin-top: 500px;
+    margin-left: 88%;
 }
 .change-service-blue{
     border: 2px darkmagenta solid;
