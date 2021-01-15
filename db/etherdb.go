@@ -24,6 +24,7 @@ type PublicLedger interface{
 	CreatePublicAddress(w *wallet.EthereumWalletAcc , clientID *firebase.App)(*wallet.EthereumWalletAcc, error);
 	FindMyPublicAddress(w *walletAcc.Acc, clientID *firebase.App)(*wallet.EthereumWalletAcc,error);
 	FindMyAddressByEmail(w *walletAcc.Acc, clientID *firebase.App)(*wallet.EthereumWalletAcc,error);
+	
 }
 
 
@@ -64,7 +65,7 @@ func (*ledgerPublic)CreatePublicAddress(w *wallet.EthereumWalletAcc, clientID *f
 }
 
 
-func (*ledgerPublic)FindMyPublicAddress(w *walletAcc.Acc, clientID *firebase.App)(*wallet.EthereumWalletAcc, error){
+func (*ledgerPublic) FindMyPublicAddress(w *walletAcc.Acc, clientID *firebase.App)(*wallet.EthereumWalletAcc, error){
 
 
 	ctx := context.Background()
@@ -97,7 +98,7 @@ func (*ledgerPublic)FindMyPublicAddress(w *walletAcc.Acc, clientID *firebase.App
 	return &ethereumDetials, nil
 }
 
-func (*ledgerPublic)FindMyAddressByEmail(w *walletAcc.Acc, clientID *firebase.App)(*wallet.EthereumWalletAcc,error){
+func (*ledgerPublic) FindMyAddressByEmail(w *walletAcc.Acc, clientID *firebase.App)(*wallet.EthereumWalletAcc,error){
 	ctx := context.Background()
 
 	client , err := clientID.Firestore(ctx); if err != nil {

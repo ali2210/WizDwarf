@@ -39,7 +39,7 @@ import (
 	"github.com/ali2210/wizdwarf/structs/users"
 	"github.com/ali2210/wizdwarf/structs/users/model"
 	"github.com/ali2210/wizdwarf/structs/amino"
-	
+	DBModel "github.com/ali2210/wizdwarf/db/model"
 	weather "github.com/ali2210/wizdwarf/structs/OpenWeather"
 	"github.com/fogleman/ribbon/pdb"
 )
@@ -53,6 +53,7 @@ var (
 	appName            *firebase.App         = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
 	cloud              users.DBFirestore        = users.NewCloudInstance()
 	digitalCode        users.CreditCardInfo 	 = users.NewClient()
+	Vault              DBModel.Private          = DBModel.New()
 	ledger             db.PublicLedger       = db.NewCollectionInstance()
 	paypalMini         handler.PaypalClientLevel  =handler.PaypalClientGo()
 	userSessions       *sessions.CookieStore = nil //user level
@@ -66,7 +67,7 @@ var (
 	edit              structs.Levenshtein = structs.Levenshtein{}
 	visualizeReport weather.DataVisualization = weather.DataVisualization{}
 	accountID string 				= " "
-	cardInfoID string  				= " "
+	accountKey string 				= " "
 	accountVisitEmail string  		= " "
 )
 
@@ -85,10 +86,10 @@ const (
 
 // Functions
 
-type Location struct{
-	x string
-	y string
-}
+// type Location struct{
+// 	x string
+// 	y string
+// }
 
 func main() {
 
@@ -136,8 +137,8 @@ func main() {
 	routing.HandleFunc("/dashbaord/setting", Setting)
 	routing.HandleFunc("/dashbaord/setting/profile", Profile)
 	routing.HandleFunc("/dashbaord/setting/about", AboutMe)
-	routing.HandleFunc("/dashboard/setting/pay", Credit)
-	routing.HandleFunc("/dashbaord/setting/credit/delete", DeleteCard)
+	routing.HandleFunc("/dashboard/setting/pay/credit/add", Credit)
+	routing.HandleFunc("/dashbaord/setting/pay/credit/delete", DeleteCard)
 	routing.HandleFunc("/logout", Logout)
 	routing.HandleFunc("/createWallet", CreateWallet)
 	routing.HandleFunc("/terms", Terms)
@@ -193,75 +194,133 @@ func Success(w http.ResponseWriter, r *http.Request)  {
 
 func DeleteCard(w http.ResponseWriter, r *http.Request){
 	temp := template.Must(template.ParseFiles("delete.html"))
+	
 	if r.Method == "GET" {
+		
 		log.Println("[Accept]" , r.URL.Path)
 		temp.Execute(w,"DeleteForm")
 	}else{
+		
 		log.Println("[Accept]" , r.URL.Path)
+		log.Println("Method:" + r.Method)
+		
 		r.ParseForm()
-		ccv := r.FormValue("prefixInside")
-		hashcode := AutoKeyGenerate(ccv)
-		if HashMatch(cardInfoID, hashcode){
-			client, err := paypalMini.NewClient(); if err != nil {
-				log.Fatalln("[Fail] Operation:", err)
+		
+		//ccv := r.FormValue("prefixInside")
+		accountNum := r.FormValue("account")
+		//cardInfoID :=  digitalCode.GetAuthorizeStoreID()
+		
+		//log.Println("card info:", cardInfoID)
+		// hashcode := AutoKeyGenerate(ccv)
+		
+		client, err := paypalMini.NewClient(); if err != nil {
+				log.Fatalln("[Fail] Client Operation:", err)
 			 	 return
 			}
+
+		token , err := paypalMini.Token(client);if err != nil {
+				log.Fatalln("[Fail]Token Operation:", err)
+				return 
+			}
+
+		ret , err := paypalMini.RetrieveCreditCardInfo(digitalCode.GetAuthorizeStoreID(),client); if err != nil {
+				log.Fatalln("[Fail] CreditCard Info Operation:" , err)
+				return 
+			}
 		
-			token , err := paypalMini.Token();if err != nil {
-				log.Fatalln("[Fail] Operation:", err)
-				return 
+		if accountNum != ""{
+			err := paypalMini.RemoveCard(ret.ID,client); if err != nil {
+						log.Fatalln("[Fail] Remove card operation" , err)
+						return 
 			}
-			ret , err := paypalMini.RetrieveCreditCardInfo(hashcode); if err != nil {
-				log.Fatalln("[Fail]" , err)
-				return 
-			}
-			err = paypalMini.RemoveCard(ret.ID); if err != nil {
-				log.Fatalln("[Fail]" , err)
-				return 
-			}
-			log.Println("[Accept:]", client, token)
-			temp.Execute(w,"Complete")
-			w.WriteHeader(http.StatusOK)
-			r.Method = "GET"
-			Success(w, r)
+		
+		log.Println("[Accept:]", client, token)
+		temp.Execute(w,"Complete")
+		w.WriteHeader(http.StatusOK)
+		r.Method = "GET"
+		Success(w, r)
 		}
 	}
+		
 }
 
+
 func AboutMe(w http.ResponseWriter, r *http.Request)  {
+	
 	temp := template.Must(template.ParseFiles("about.html"))
+	
 	if r.Method == "GET" {
 		log.Println("[Accept]" , r.URL.Path)
-		cardInfoID =  digitalCode.GetAuthorizeNum()
-		detailsAcc , err := cloud.ToFindByGroupSet(accountID, accountVisitEmail, appName); if err != nil {
-			log.Fatalln("[Fail] Operation..", err)
+		
+		// cardInfoID :=  digitalCode.GetAuthorizeStoreID()
+		
+		userProfile , err := cloud.FindAllData(appName, accountVisitEmail, accountKey);if err != nil && userProfile != nil {
+			log.Fatal("[Fail] No info  ", err)
+			response := structs.Response{}
+			temp := server(w, r)
+			_ = response.ClientRequestHandle(true, "Sorry ! No Information ", "/login", w, r)
+			response.ClientLogs()
+			err := response.Run(temp);if err != nil {
+				log.Println("[Error]: checks logs...", err)
+				return 
+			}
+			
+		}
+		// log.Println("User profile:", userProfile)
+		
+		key, address := Vault.GetCryptoDB(publicAddress)
+		access := DBModel.CredentialsPrivate{
+			PublicAddress : address,
+			PrvteKey : key,
+		}
+
+		log.Println("Ledger Info:", access)
+
+		client, err := paypalMini.NewClient(); if err != nil {
+			log.Fatalln("[Fail] Client Operation:", err)
+			  return
+		}
+				
+		_ , err = paypalMini.Token(client);if err != nil {
+			log.Fatalln("[Fail] Token Operation:", err)
 			return 
 		}
-		if cardInfoID != ""{
-			hashcode := AutoKeyGenerate(cardInfoID)
-			client, err := paypalMini.NewClient(); if err != nil {
-				log.Fatalln("[Fail] Operation:", err)
-				  return
-			}
-			
-			token , err := paypalMini.Token();if err != nil {
-				log.Fatalln("[Fail] Operation:", err)
-				return 
-			}
-			ret , err := paypalMini.RetrieveCreditCardInfo(hashcode); if err != nil {
-				log.Fatalln("[Fail]" , err)
-				return 
-			}
-			log.Println("[Accept:]", client, token)
-			account := digitalCode.LinkCard(ret, detailsAcc, publicAddress)
-			acc := digitalCode.VoidStruct()
-			if acc != account{
-				temp.Execute(w,account)
-			}
-			
-
-		}
 		
+		ret , err := paypalMini.RetrieveCreditCardInfo(digitalCode.GetAuthorizeStoreID(),client); if err != nil {
+			log.Fatalln("[Fail] Retrieve Card info Operation:", err)
+			return 
+		}
+
+		// err = paypalMini.RemoveCard(ret.ID,client); if err != nil {
+		// 	log.Fatalln("[Fail] Remove Card operation:", err)
+		// 	return 
+		// }
+
+		profile := model.DigialProfile{
+			
+			Name : userProfile.Name,
+			FName: userProfile.FName,
+			Email : userProfile.Email,
+			Address : userProfile.Address,
+			LAddress : userProfile.LAddress,
+			City : userProfile.City,
+			Zip : userProfile.Zip,
+			Country : userProfile.Country,
+
+			Public : access.PublicAddress,
+			Private : access.PrvteKey,
+
+			Number : ret.Number,
+			Type : ret.Type,
+			ExpireMonth : ret.ExpireMonth,
+			ExpireYear : ret.ExpireYear,
+		}
+
+			
+		log.Println("[Accept] Profile", profile)
+		temp.Execute(w, profile)
+		
+
 	}
 }
 
@@ -363,41 +422,53 @@ func Credit(w http.ResponseWriter, r *http.Request)  {
 	temp := template.Must(template.ParseFiles("credit.html"))
 	if r.Method == "GET" {
 		log.Println("[Accept] Path :" , r.URL.Path)
+		log.Println("Method :", r.Method)
 		temp.Execute(w,"Credit")
 	}else{
 		log.Println("[Accept ]Path :" , r.URL.Path)
 		log.Println("Method :", r.Method)
 		r.ParseForm()
+		 calender := r.FormValue("expire")
+		 sliceByte := []byte(calender)
+		 year := string(sliceByte[:04])
+		 month := string(sliceByte[5:])
+
 		card := pay.CreditCard{
 			FirstName : r.FormValue("fholder"),
 			LastName : r.FormValue("surename"),
 			Number : r.FormValue("cardNo"),
-			ExpireMonth : r.FormValue("expire"),
-		 	CVV2 : r.FormValue("cvv"),
+			CVV2 : r.FormValue("cvv"),
+			Type : r.FormValue("cardtype"), 
+			ExpireMonth : month,
+		 	ExpireYear : year,
 		}
-
-		 card.ID =  AutoKeyGenerate(card.CVV2) 
-		 cardInfoID = card.ID
-		 log.Println("Id generated:" , card)
-
+		 
+		//  card.ID =  AutoKeyGenerate(card.CVV2) 
+		//  cardInfoID = card.ID
+		//  log.Println("Id generated:" , card)
+		  
 		// store credit card information.
-		mini := handler.PaypalMiniVersion{}
+		//mini := handler.PaypalMiniVersion{}
 	  	client, err := paypalMini.NewClient(); if err != nil {
-			log.Fatalln("[Fail] Operation:", err)
+			log.Fatalln("[Fail] Client Operation:", err)
 			  return
 		}
-		mini.Client = client
+		//mini.Client = client
 		
-		token , err := paypalMini.Token();if err != nil {
-			log.Fatalln("[Fail] Operation:", err)
+		token , err := paypalMini.Token(client);if err != nil {
+			log.Fatalln("[Fail] Token Operation:", err)
 			return 
 		}
-		store, err := paypalMini.StoreCreditCardInfo(card); if err != nil {
-			log.Fatalln("[Fail] Operation:", err)
+		
+		store, err := paypalMini.StoreCreditCardInfo(card,client); if err != nil {
+			log.Fatalln("[Fail] CreditCard Operation:", err, card)
 			return 
 		}
-		ret , err := paypalMini.RetrieveCreditCardInfo(store.ID); if err != nil {
-			log.Fatalln("[Fail] Operation:", err)
+		
+		digitalCode.SetAuthorizeStoreID(store.ID)
+
+		ret , err := paypalMini.RetrieveCreditCardInfo(digitalCode.GetAuthorizeStoreID(),client); if err != nil {
+			log.Fatalln("[Fail] Retrieve Card info Operation:", err)
 			return 
 		}
 
@@ -1157,7 +1228,7 @@ func Wallet(w http.ResponseWriter, r *http.Request) {
 
 		acc.Email = r.FormValue("email")
 		acc.Password = r.FormValue("password")
-
+		
 		client, err := ethclient.Dial(EtherMainClientUrl)
 		if err != nil {
 			log.Fatal("[Fail] Connection Reject ", err)
@@ -1232,6 +1303,9 @@ func Wallet(w http.ResponseWriter, r *http.Request) {
 
 			// Secure Key
 			WalletSecureKey = addr.PrvteKey
+			fmt.Println("Wallet key:", WalletSecureKey)
+			Vault.SetCryptoDB(acc.EthAddress, WalletSecureKey)
+
 
 			// variable address for futher processing
 			ETHAddressInstance = acc.EthAddress
@@ -1250,7 +1324,7 @@ func Wallet(w http.ResponseWriter, r *http.Request) {
 				log.Fatal("[Fail] No crypto wallet found against your account ", !ok)
 				response := structs.Response{}
 				temp := server(w, r)
-				_ = response.ClientRequestHandle(true, "Sorry ! NO CRYPTOWALLET   ", "/createWallet", w, r)
+				_ = response.ClientRequestHandle(true, "Sorry ! NO CRYPTO WALLET   ", "/createWallet", w, r)
 				response.ClientLogs()
 				err := response.Run(temp)
 				if err != nil {
@@ -1431,6 +1505,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 			accountID = data.Id
 			fmt.Printf("Search Data:%v", data.Id)
 			accountVisitEmail = data.Email
+			accountKey = data.Password
 			act := structs.RouteParameter{}
 			//complex.AddByName(data.Name)
 			// User Session
@@ -2125,13 +2200,13 @@ func ProcessWaiit() bool {
 	return stop
 }
 
-func AutoKeyGenerate(s1 string) string{
-	h0 := sha256.New()
-	h1 := h0.Sum([]byte(s1)) // hash of string-1 
-	e := hex.EncodeToString([]byte(h1))
-	h := hex.EncodeToString([]byte(e))[:8]
-	return h
-}
+// func AutoKeyGenerate(s1 string) string{
+// 	h0 := sha256.New()
+// 	h1 := h0.Sum([]byte(s1)) // hash of string-1 
+// 	e := hex.EncodeToString([]byte(h1))
+// 	h := hex.EncodeToString([]byte(e))[:8]
+// 	return h
+// }
 
 func HashMatch(s1 , s2 string )bool{
 	if s1 == s2 {

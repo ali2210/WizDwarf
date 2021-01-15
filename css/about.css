@@ -1,9 +1,102 @@
 .logo{
     width: 30%;
 }
+.trash-card{
+    background: padding-box;
+}
 .main-dashboard-div{
     display: flex;
     margin-top: 2em;
+}
+.heading{
+    display: flex;
+    position: relative;
+    justify-content: center;
+}
+.videobtn{
+    display: flex;
+    position: relative;
+    justify-content: center;
+    background: padding-box;
+}
+.policy{
+    display: flex;
+    position: relative;
+    justify-content: center;
+    
+}
+.special{
+    display: flex;
+    position: relative;
+    justify-content: center;
+    margin-left: 20.3%;
+    margin-top: 10px;
+    color:black;
+}
+.camera{
+    position: relative;
+    display: contents;   
+}
+.delete-card{
+    display: flex;
+    position: relative;
+    margin-right: -8%;
+}
+#photo{
+    display: flex;
+    position: relative;
+    /* background: aquamarine; */
+    background: padding-box;
+}
+#video{
+    display: flex;
+    position: relative;
+    border-radius: 2px gray solid;
+    margin-left: 10%;
+    width: 50%;
+    visibility: visible;
+    background: padding-box;
+}
+#canvas{
+    display: flex;
+    position: relative;
+    background-color: aquamarine;
+    border: 2px whitesmoke solid;
+    width: max-content;
+    visibility: visible;
+}
+#startbutton {
+    display: flex;
+    position: relative;
+    perspective-origin: center;
+    margin-bottom: 300px;
+    margin-right: 10px;
+    margin-block: auto;
+    transition: auto;
+    transform: translate3d(10px, 0px, 0px) perspective(0px);
+    color: crimson;
+    border: none;
+    visibility: visible;
+    background: padding-box;
+}
+#savePic{
+    display: flex;
+    position: relative;
+    perspective-origin: center;
+    margin-bottom: 300px;
+    margin-right: 10px;
+    margin-block: auto;
+    transition: auto;
+    transform: translate3d(0px, 0px, 0px) perspective(0px);
+    color: crimson;
+    border: none;
+    visibility: visible;
+    background: padding-box;
+
+}
+.list-group-item{
+    background-color: azure;
+    color: blue;
 }
 
 .details-profile {
@@ -11,24 +104,35 @@
     justify-content: flex-start;
     margin-left: 5em;
     text-align: inherit;
-    font-size: large;
-    font-weight: bold;
-    color: blueviolet;
+    border: 2px red solid;
+    
 }
 .span-fragment{
     white-space: nowrap;
     margin-left: 20px;
+    border: 2px grey;
+    margin-top: 30px;
 }
+
 .change-service-color{
-    color: green;
+    color:black;
 }
 .bg-light{
     margin-top: 20px;
-    margin-bottom: 10px;
 }
 
 .row{
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     margin-bottom: 10px;
+    background: padding-box;
+    color: darkgrey;
+}
+/* .fa{
+   
+} */
+.alter{
+    color: black;
+    background-color: white;
+    color: antiquewhite;
 }

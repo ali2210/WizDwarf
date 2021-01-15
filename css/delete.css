@@ -6,6 +6,18 @@
     margin-right: 70px;
 }
 
+.field-1{
+  display: flex;
+  position: relative;
+  margin-top: 5px;
+}
+.input-prefix{
+  display: flex;
+  position: relative;
+  padding-right: 10px;
+  margin-top: 9px;
+}
+
 .icon-light{
     color: #BBD2C5;
     width: 150px;

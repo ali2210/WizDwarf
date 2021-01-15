@@ -10,62 +10,143 @@
     <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
     <link rel='stylesheet' type='text/css' media='screen' href='/css/about.css'> 
-    <!-- <script src='/js/about.js'></script>  -->
+    <script src='/js/about.js'></script> 
 </head>
-<body>
-    <div class='main-dashboard-div'>
-      <nav class="navbar navbar-expand-md navbar-light custom-navbar">
-        <a class="navbar-brand" href="#">
-          <img src="/images/logo.png" alt="Logo" class="logo">
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul class="navbar-nav">
-            <li class="nav-item active pl-3">
-              <a class="nav-link" href="/home">
-                <i class="fa fa-home icon-light change-service-color" aria-hidden="true"></i>
-                Home
-              </a>
-            </li>
-        <li class="nav-item dropdown pl-3">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fa fa-briefcase change-service-color" aria-hidden="true"></i>
-             Services 
+
+<body style=" display: grid;
+position: relative;margin: 20px;
+    overflow: auto; 
+     ">
+
+<div class='main-dashboard-div'>
+  <nav class="navbar navbar-expand-md navbar-light custom-navbar">
+    <a class="navbar-brand" href="#">
+      <img src="/images/logo.png" alt="Logo" class="logo">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item active pl-3">
+          <a class="nav-link" href="/home">
+            <i class="fa fa-home icon-light change-service-color" aria-hidden="true"></i>
+            Home
           </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <a class="dropdown-item" href="/dashbaord/setting/profile"><i class="fa fa-user-circle-o change-service-color" aria-hidden="true"></i> Edit Profile</a>
-            <a class="dropdown-item" href="/dashboard/setting/pay"><i class="fa fa-shopping-cart change-service-color" aria-hidden="true"></i> Monetize</a>
-            <a class="dropdown-item" href="/dashbaord/setting/about"><i class="fa fa-book change-service-color" aria-hidden="true"></i> Biography</a>
-          </div>
         </li>
-       </ul>
+    <li class="nav-item dropdown pl-3">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fa fa-briefcase change-service-color" aria-hidden="true"></i>
+         Services 
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        <a class="dropdown-item" href="/dashbaord/setting/profile"><i class="fa fa-user-circle-o change-service-color" aria-hidden="true"></i> Edit Profile</a>
+        <a class="dropdown-item" href="/dashboard/setting/pay/credit/add"><i class="fa fa-shopping-cart change-service-color" aria-hidden="true"></i> Monetize</a>
+        <a class="dropdown-item" href="/dashbaord/setting/about"><i class="fa fa-book change-service-color" aria-hidden="true"></i> Biography</a>
       </div>
+    </li>
+   </ul>
+  </div>
+</div>  
+
+<div class="policy">
+  <div class="bg-light row"> <span>Warning:</span>
+    <p>
+    <span class="span-fragment"> Don't share your Monetization Details anyone.. We ensure your digital account<br>
+      integrity,confidentially of your data.However this is not possible without your support. </span>
+      </p>
+  </div>
+</div>
+
+<div class="col-11">
+  <div class="row">
+    <div class="delete-card">
+      <a href="/dashbaord/setting/pay/credit/delete" class="btn btn-danger btn-md active trash-card" role="button" aria-pressed="true"> <i class="fa fa-trash" aria-hidden="true"></i> Delete Credit Card</a>
     </div>  
-    </div>
-    <div class="details-profile">
-      <h5> Profile </h5>
-      FirstName : <span> {{.Name}}</span> <br>
-      LastName : <span> {{.FName}}</span> <br>
-      Address : <span> {{.Address}}, <br> {{.LAddress}},
-       {{.City}},<br> {{.Zip}}, {{.Country}} </span> <br>.
-       <h5> Monetize Detials </h5>
-      Account Number : <span>{{.Number}}</span> <br>
-      Public Address : <span>{{.Public}}</span>               
-      <div class="bg-light row">
-        <span class="span-fragment"> Don't share your Monetization Details.. We ensure your 
-          integrity and protect your digital Identity. In any case your action against our
-           policies then you're heavily pay underthe act of cybercrime EU-2016.  </span>
+   </div>
+</div>
+
+<div class="videobtn">
+  <video id="video">Video stream not available.</video> 
+  <button id="startbutton"> <i class="fa fa-camera-retro" aria-hidden="true"></i></button>
+  <button id="savePic"> <i class="fa fa-plus" aria-hidden="true"></i></button>
+</div>
+
+<div class="card special" style="width: 19rem;">
+  <!-- <img class="card-img-top" src="" alt="Card image cap"> -->
+  <div class="camera">
+   <canvas id="canvas">
+  </canvas>
+   <div class="output">
+    <img id="photo" >
+   </div>
+  </div>
+ 
+  <div class="card-body">
+    <h5 class="card-title heading"> Parsona </h5>
+    <p class="card-text"> 
+     <div id="accordion">
+       <div class="card">
+         <div class="card-header" id="headingZero">
+           <h5 class="mb-0">
+             <button class="btn btn-link alter" data-toggle="collapse" data-target="#collapseZero" aria-expanded="true" aria-controls="collapseZero">
+               <i class="fa fa-user-circle-o alter" aria-hidden="true"></i> My Profile 
+             </button>
+           </h5>
+         </div>
+
+         <div id="collapseZero" class="collapse show" aria-labelledby="headingZero" data-parent="#accordion">
+          <div class="card-body">
+            {{.Name}} {{.FName}} <br> 
+            {{.Email}} <br> 
+            {{.Address}},{{.LAddress}}, {{.City}}, <br> 
+            {{.Zip}} {{.Country}} <br>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="col-11">
-      <div class="row">
-        <div class="delete-card">
-          <a href="/dashboard/setting/credit/delete" class="btn btn-danger btn-md active trash-card" role="button" aria-pressed="true"> <i class="fa fa-trash" aria-hidden="true"></i> Delete Credit Card</a>
-       </div>  
-       </div>
-           
+     </p>
+     <ul class="list-group list-group-flush alter">
+      <li class="list-group-item"> <div id="accordion">
+       <div class="card">
+         <div class="card-header" id="headingOne">
+           <h5 class="mb-0">
+             <button class="btn btn-link alter" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+               <i class="fa fa-credit-card alter" aria-hidden="true"></i> Bank Profile 
+             </button>
+           </h5>
+         </div>
+
+         <div id="collapseOne" class="collapse show alter" aria-labelledby="headingOne" data-parent="#accordion">
+          <div class="card-body">
+            {{.Number}} <br>
+            {{.ExpireMonth}} <br> / {{.ExpireYear}} <br>
+            {{.Type}}
+          </div>
+        </div>
+      </div> 
+    </li>
+    <li class="list-group-item">  <div id="accordion">
+      <div class="card">
+        <div class="card-header" id="headingTwo">
+          <h5 class="mb-0">
+            <button class="btn btn-link alter" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+              <i class="fa fa-key" aria-hidden="true"></i> Ledger Bits 
+            </button>
+          </h5>
+        </div>
+        <div id="collapseTwo" class="collapse show alter" aria-labelledby="headingTwo" data-parent="#accordion">
+          <div class="card-body">
+            {{.Public}} <br>
+            {{.Private}}
+          </div>
+        </div>
+      </div> 
+     </li>
+    </ul>
+  </div>
+  </div>
+  
+  
           <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
           <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
