@@ -21,16 +21,28 @@ This applicationn allow you can upload  genetic material(DNA). Based on your gen
 3. UV impact on your dna [not yet started]
 4. Visualization 
        1. Results visualization [ok]
-5. payment handle [ok[0.1]]
-6. ambient [ok[0.1]]
-7 notification [ok[0/1]]
-8. geocode  [ok[0/1]]
+5. payment handle 
+     0. Paypal , 1. stripe,  2. metamask
+         1. add card [ok]
+         2. link card [ok]
+         3. delete card [not]
+         4. update card [not]
+         5. list of cards 
+                1. add  [not]
+                2. update [not]
+                3. delete [not]
+                
+6. ambient lighting [ok]
+7  notification [ok]
+8. geocode  [ok]
+9. retro picture and video streaming [ok]
+10. persona buildup [ok]
+
 ## Tools :
 - Firebase cloud [ok]
-- Ethereum [completed not incoprate]
+- Ethereum [ok]
 - Heroku [ok]
-- Docker-image [ok]
-- paypal added[ok]         
+- Docker-image [ok] 
 - pdb file storage [feature]
 
 
