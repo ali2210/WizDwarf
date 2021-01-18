@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	contxt "context"
 	"crypto/ecdsa"
 	"crypto/elliptic"
@@ -225,7 +226,7 @@ func deleteCard(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if accountNum != "" {
+		if accountNum != "" && cardNumberValid(accountNum, ret.Number) {
 			err := paypalMini.RemoveCard(ret.ID, client)
 			if err != nil {
 				log.Fatalln("[Fail] Remove card operation", err)
@@ -2216,9 +2217,13 @@ func ProcessWaiit() bool {
 // 	return h
 // }
 
-func HashMatch(s1, s2 string) bool {
-	if s1 == s2 {
+func cardNumberValid(s1, s2 string) bool {
+
+	m, n := []byte(s1), []byte(s2)
+	res := bytes.Compare(m, n)
+	if res == 0 {
 		return true
 	}
 	return false
+
 }
