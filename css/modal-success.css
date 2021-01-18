@@ -29,7 +29,7 @@ body{
        position: relative; 
        top:410px;
    }
-   a{
+   .a{
        position:relative;
        font-size:20px;
       top:60px;
@@ -220,4 +220,8 @@ body{
    h2{
        font-family: 'Coustard', serif;
        font-size: 30px;
+   }
+   .icon-light{
+       color:aliceblue;
+    transform: scale(1.5);
    }
