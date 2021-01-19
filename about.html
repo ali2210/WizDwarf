@@ -86,7 +86,7 @@ position: relative;margin: 20px;
     <h5 class="card-title heading"> Parsona </h5>
     <p class="card-text"> 
      <div id="accordion">
-       <div class="card">
+       <div class="card stateColor">
          <div class="card-header" id="headingZero">
            <h5 class="mb-0">
              <button class="btn btn-link alter" data-toggle="collapse" data-target="#collapseZero" aria-expanded="true" aria-controls="collapseZero">
@@ -96,7 +96,7 @@ position: relative;margin: 20px;
          </div>
 
          <div id="collapseZero" class="collapse show" aria-labelledby="headingZero" data-parent="#accordion">
-          <div class="card-body">
+          <div class="card-body change">
             {{.Name}} {{.FName}} <br> 
             {{.Email}} <br> 
             {{.Address}},{{.LAddress}}, {{.City}}, <br> 
@@ -107,7 +107,7 @@ position: relative;margin: 20px;
      </p>
      <ul class="list-group list-group-flush alter">
       <li class="list-group-item"> <div id="accordion">
-       <div class="card">
+       <div class="card stateColor">
          <div class="card-header" id="headingOne">
            <h5 class="mb-0">
              <button class="btn btn-link alter" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -117,25 +117,25 @@ position: relative;margin: 20px;
          </div>
 
          <div id="collapseOne" class="collapse show alter" aria-labelledby="headingOne" data-parent="#accordion">
-          <div class="card-body">
+          <div class="card-body change">
             {{.Number}} <br>
-            {{.ExpireMonth}} <br> / {{.ExpireYear}} <br>
+            {{.ExpireMonth}} / {{.ExpireYear}} <br>
             {{.Type}}
           </div>
         </div>
       </div> 
     </li>
     <li class="list-group-item">  <div id="accordion">
-      <div class="card">
+      <div class="card stateColor">
         <div class="card-header" id="headingTwo">
           <h5 class="mb-0">
             <button class="btn btn-link alter" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-              <i class="fa fa-key" aria-hidden="true"></i> Ledger Bits 
+              <i class="fa fa-key alter" aria-hidden="true"></i> Ledger Bits 
             </button>
           </h5>
         </div>
         <div id="collapseTwo" class="collapse show alter" aria-labelledby="headingTwo" data-parent="#accordion">
-          <div class="card-body">
+          <div class="card-body change">
             {{.Public}} <br>
             {{.Private}}
           </div>

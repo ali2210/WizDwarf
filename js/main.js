@@ -6,32 +6,35 @@ var option ={
 var options = {
     title : "@notification received from wizdwarfs",
     body : "Good Morning",
-    links : "https://peaceful-island-75545.herokuapp.com/home", 
+    links : "https://peaceful-island-75545.herokuapp.com/", 
     vibrate : [200,200,200],
 };
 
+// html components
+var loc = document.getElementsByClassName("checkbox-geo"); 
+var notify = document.getElementById("wizNotify");
+var screenLight = document.getElementById("wizLight");
 
+// functions
 function GeolocationPermission(){
 
-    // var loc = document.getElementById("checkbox-geo") 
-
+    // Geolocation permission
         navigator.permissions.query({name: 'geolocation'}).then(function(permissionStatus){
             console.log(' status :' +  permissionStatus.state);
-       
+            loc[0].checked = false;
         if (!(permissionStatus.state == "granted")){
             permissionStatus.onchange = function() {
                 console.log('geolocation permission state has changed to ', this.state);
+               
               };
                
             navigator.geolocation.getCurrentPosition((position, error,option) =>{
-                alert('Current Geolocation:');
+                alert('Current Geolocation:'+ `${position.coords.latitude} ` + `${position.coords.longitude}`);
                 console.log(`${position.coords.latitude}`,`${position.coords.longitude}`);
+                loc[0].checked = true;
             });
                 
                   
-        }else{
-            alert("Your browser already set as :", Geolocation_Permission_Success(permissionStatus.state));
-            
         }
 
     })
@@ -41,11 +44,14 @@ function error(err){
 }
 
 function NotificationPermission(){
-    var notify = document.getElementById("checkbox-notification");
+    
+
+    // Notification Permission
         if (!('Notification' in window)){
         alert('Notification is not supported by your browser');
-        }else if (!(Notification.permission == "granted")){
-            console.log(' status :' +  Notification.permission);
+        }else{
+             if (!(Notification.permission == "granted")){
+            
             var permission = Notification.permission;
             Notification.requestPermission().then(function (permission) {
 
@@ -53,34 +59,34 @@ function NotificationPermission(){
                 if (Notification.permission === "granted") {
                   var notification = new Notification("Message Receive: ",options);
                   notification.vibrate;
+                  
                 }else{
+                    notify.checked = false;
                     alert("Notification request permission Block");
+                    
                 }
               });
-        }else{
-            if (Notification.permission === "granted") {
-                var notification = new Notification("Message Receive: ",options);
-                console.log(notification.vibrate);
-              }
+             }
         }
 
 }    
 
 function AmbientLightPermission(){
-    var light = document.getElementById('checkbox-ambient');
+    
 
         if(!('AmbientLightSensor' in window)){
+            wizLight.checked = false;
             alert('Ambient Light Sensor is not supported by your browser');
             
         }else{
             const ambientSensor = new AmbientLightSensor();
             ambientSensor.onreading = () => {
-            console.log('current light level:' +  ambientSensor.illuminance);
+                console.log('current light level:' +  ambientSensor.illuminance);
             }
             ambientSensor.onerror = (event) => {
-            console.log(event.error.name, event.error.message);
+                console.log(event.error.name, event.error.message);
             }
-            ambientSensor.start();
+                ambientSensor.start();
         }
 } 
 

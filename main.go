@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	contxt "context"
 	"crypto/ecdsa"
 	"crypto/elliptic"
@@ -17,79 +18,73 @@ import (
 	"os"
 	"regexp"
 	"strconv"
-	"time"
-	pay "github.com/logpacker/PayPal-Go-SDK"
 	templates "text/template"
+	"time"
+
 	firebase "firebase.google.com/go"
+	"github.com/ali2210/wizdwarf/db"
 	cloudWallet "github.com/ali2210/wizdwarf/db/cloudwalletclass"
+	DBModel "github.com/ali2210/wizdwarf/db/model"
 	"github.com/ali2210/wizdwarf/structs"
+	weather "github.com/ali2210/wizdwarf/structs/OpenWeather"
+	"github.com/ali2210/wizdwarf/structs/amino"
+	"github.com/ali2210/wizdwarf/structs/paypal/handler"
+	"github.com/ali2210/wizdwarf/structs/users"
+	"github.com/ali2210/wizdwarf/structs/users/model"
 	"github.com/biogo/biogo/alphabet"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/fogleman/ribbon/pdb"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
+	pay "github.com/logpacker/PayPal-Go-SDK"
 	"golang.org/x/crypto/sha3"
 	"golang.org/x/net/context"
 	"google.golang.org/api/option"
-	"github.com/ali2210/wizdwarf/db"
-	"github.com/ali2210/wizdwarf/structs/paypal/handler"
-	"github.com/ali2210/wizdwarf/structs/users"
-	"github.com/ali2210/wizdwarf/structs/users/model"
-	"github.com/ali2210/wizdwarf/structs/amino"
-	DBModel "github.com/ali2210/wizdwarf/db/model"
-	weather "github.com/ali2210/wizdwarf/structs/OpenWeather"
-	"github.com/fogleman/ribbon/pdb"
 )
 
 // Variables
 
 var (
-	emailexp           string                = "([A-Z][a-z]|[0-9])*[@][a-z]*"
-	passexp            string                = "([A-Z][a-z]*[0-9])*"
-	addressexp         string                = "(^0x[0-9a-fA-F]{40}$)"
-	appName            *firebase.App         = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
-	cloud              users.DBFirestore        = users.NewCloudInstance()
-	digitalCode        users.CreditCardInfo 	 = users.NewClient()
-	Vault              DBModel.Private          = DBModel.New()
-	ledger             db.PublicLedger       = db.NewCollectionInstance()
-	paypalMini         handler.PaypalClientLevel  =handler.PaypalClientGo()
-	userSessions       *sessions.CookieStore = nil //user level
-	clientInstance     *ethclient.Client     = nil
-	ETHAddressInstance string                = ""
-	WalletPubKey       string                = ""
-	WalletSecureKey    string                = ""
-	googleCredentials string              = ""
-	FILENAME          string              = ""
-	publicAddress     string              = ""
-	edit              structs.Levenshtein = structs.Levenshtein{}
-	visualizeReport weather.DataVisualization = weather.DataVisualization{}
-	accountID string 				= " "
-	accountKey string 				= " "
-	accountVisitEmail string  		= " "
+	emailexp            string                    = "([A-Z][a-z]|[0-9])*[@][a-z]*"
+	passexp             string                    = "([A-Z][a-z]*[0-9])*"
+	addressexp          string                    = "(^0x[0-9a-fA-F]{40}$)"
+	appName             *firebase.App             = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
+	cloud               users.DBFirestore         = users.NewCloudInstance()
+	digitalCode         users.CreditCardInfo      = users.NewClient()
+	vault               DBModel.Private           = DBModel.New()
+	ledger              db.PublicLedger           = db.NewCollectionInstance()
+	paypalMini          handler.PaypalClientLevel = handler.PaypalClientGo()
+	userSessions        *sessions.CookieStore     = nil //user level
+	clientInstance      *ethclient.Client         = nil
+	ethAddrressGenerate string                    = ""
+	ledgerPubcKeys      string                    = ""
+	ledgerBits          string                    = ""
+	googleCredentials   string                    = ""
+	openReadFile        string                    = ""
+	publicAddress       string                    = ""
+	edit                structs.Levenshtein       = structs.Levenshtein{}
+	visualizeReport     weather.DataVisualization = weather.DataVisualization{}
+	accountID           string                    = " "
+	accountKey          string                    = " "
+	accountVisitEmail   string                    = " "
 )
 
 // Constants
 
 const (
-	projectId string = "htickets-cb4d0"
-	configFilename    string              = "htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
+	projectID      string = "htickets-cb4d0"
+	configFilename string = "htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
 	//Google_Credentials string = "/home/ali/Desktop/htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
 	// Main application
-	EtherMainClientUrl string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
+	mainNet string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
 	// Rickeby for test purpose
-	RinkebyClientUrl string = "https://rinkeby.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
-	geocodeAPI string = "7efdb33c59a74e09352479b21657aee8"
+	rinkebyClient string = "https://rinkeby.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
+	geocodeAPI    string = "7efdb33c59a74e09352479b21657aee8"
 )
-
-// Functions
-
-// type Location struct{
-// 	x string
-// 	y string
-// }
 
 func main() {
 
@@ -120,34 +115,34 @@ func main() {
 
 	// Links
 	routing.HandleFunc("/", func(arg1 http.ResponseWriter, arg2 *http.Request) {
-		
+
 		temp := template.Must(template.ParseFiles("initial.html"))
-		
+
 		if arg2.Method == "GET" {
 			log.Println("[OK] URL :", arg2.URL.Path)
 			temp.Execute(arg1, "MainPage")
 		}
 		_ = ProcessWaiit()
-		
+
 	})
-	routing.HandleFunc("/home", Home)
-	routing.HandleFunc("/signup", NewUser)
-	routing.HandleFunc("/login", Existing)
-	routing.HandleFunc("/dashboard", Dashboard)
-	routing.HandleFunc("/dashbaord/setting", Setting)
-	routing.HandleFunc("/dashbaord/setting/profile", Profile)
-	routing.HandleFunc("/dashbaord/setting/about", AboutMe)
-	routing.HandleFunc("/dashboard/setting/pay/credit/add", Credit)
-	routing.HandleFunc("/dashbaord/setting/pay/credit/delete", DeleteCard)
-	routing.HandleFunc("/logout", Logout)
-	routing.HandleFunc("/createWallet", CreateWallet)
-	routing.HandleFunc("/terms", Terms)
-	routing.HandleFunc("/open", Wallet)
-	routing.HandleFunc("/transact", Transacts)
-	routing.HandleFunc("/transact/send", Send)
-	routing.HandleFunc("/transact/treasure", Treasure)
-	routing.HandleFunc("/visualize", Visualize)
-	routing.HandleFunc("/modal/success", Success)
+	routing.HandleFunc("/home", home)
+	routing.HandleFunc("/signup", newUser)
+	routing.HandleFunc("/login", existing)
+	routing.HandleFunc("/dashboard", dashboard)
+	routing.HandleFunc("/dashbaord/setting", setting)
+	routing.HandleFunc("/dashbaord/setting/profile", profile)
+	routing.HandleFunc("/dashbaord/setting/about", aboutMe)
+	routing.HandleFunc("/dashboard/setting/pay/credit/add", credit)
+	routing.HandleFunc("/dashbaord/setting/pay/credit/delete", deleteCard)
+	routing.HandleFunc("/logout", logout)
+	routing.HandleFunc("/createwallet", createWallet)
+	routing.HandleFunc("/terms", terms)
+	routing.HandleFunc("/open", wallet)
+	routing.HandleFunc("/transact", transacts)
+	routing.HandleFunc("/transact/send", send)
+	routing.HandleFunc("/transact/treasure", treasure)
+	routing.HandleFunc("/visualize", visualize)
+	routing.HandleFunc("/modal/success", success)
 
 	/*routing.HandleFunc("/transact/advance-fileoption", Blocks)*/
 
@@ -174,199 +169,206 @@ func main() {
 
 // Routes Handle
 
-func Home(w http.ResponseWriter, r *http.Request) {
+func home(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("index.html"))
 
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
-		temp.Execute(w, "Home")
+		temp.Execute(w, "home")
 	}
 
 }
 
-func Success(w http.ResponseWriter, r *http.Request)  {
+func success(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("modal-success.html"))
 	if r.Method == "GET" {
-		log.Println("[Accept]" , r.URL.Path)
-		temp.Execute(w, "Success")
+		log.Println("[Accept]", r.URL.Path)
+		temp.Execute(w, "success")
 	}
 }
 
-func DeleteCard(w http.ResponseWriter, r *http.Request){
+func deleteCard(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("delete.html"))
-	
+
 	if r.Method == "GET" {
-		
-		log.Println("[Accept]" , r.URL.Path)
-		temp.Execute(w,"DeleteForm")
-	}else{
-		
-		log.Println("[Accept]" , r.URL.Path)
+
+		log.Println("[Accept]", r.URL.Path)
+		temp.Execute(w, "DeleteForm")
+	} else {
+
+		log.Println("[Accept]", r.URL.Path)
 		log.Println("Method:" + r.Method)
-		
+
 		r.ParseForm()
-		
+
 		//ccv := r.FormValue("prefixInside")
 		accountNum := r.FormValue("account")
 		//cardInfoID :=  digitalCode.GetAuthorizeStoreID()
-		
+
 		//log.Println("card info:", cardInfoID)
 		// hashcode := AutoKeyGenerate(ccv)
-		
-		client, err := paypalMini.NewClient(); if err != nil {
-				log.Fatalln("[Fail] Client Operation:", err)
-			 	 return
+
+		client, err := paypalMini.NewClient()
+		if err != nil {
+			log.Fatalln("[Fail] Client Operation:", err)
+			return
+		}
+
+		token, err := paypalMini.Token(client)
+		if err != nil {
+			log.Fatalln("[Fail]Token Operation:", err)
+			return
+		}
+
+		ret, err := paypalMini.RetrieveCreditCardInfo(digitalCode.GetAuthorizeStoreID(), client)
+		if err != nil {
+			log.Fatalln("[Fail] CreditCard Info Operation:", err)
+			return
+		}
+
+		if accountNum != "" && cardNumberValid(accountNum, ret.Number) {
+			err := paypalMini.RemoveCard(ret.ID, client)
+			if err != nil {
+				log.Fatalln("[Fail] Remove card operation", err)
+				return
 			}
 
-		token , err := paypalMini.Token(client);if err != nil {
-				log.Fatalln("[Fail]Token Operation:", err)
-				return 
-			}
-
-		ret , err := paypalMini.RetrieveCreditCardInfo(digitalCode.GetAuthorizeStoreID(),client); if err != nil {
-				log.Fatalln("[Fail] CreditCard Info Operation:" , err)
-				return 
-			}
-		
-		if accountNum != ""{
-			err := paypalMini.RemoveCard(ret.ID,client); if err != nil {
-						log.Fatalln("[Fail] Remove card operation" , err)
-						return 
-			}
-		
-		log.Println("[Accept:]", client, token)
-		temp.Execute(w,"Complete")
-		w.WriteHeader(http.StatusOK)
-		r.Method = "GET"
-		Success(w, r)
+			log.Println("[Accept:]", client, token)
+			temp.Execute(w, "Complete")
+			w.WriteHeader(http.StatusOK)
+			r.Method = "GET"
+			success(w, r)
 		}
 	}
-		
+
 }
 
+func aboutMe(w http.ResponseWriter, r *http.Request) {
 
-func AboutMe(w http.ResponseWriter, r *http.Request)  {
-	
 	temp := template.Must(template.ParseFiles("about.html"))
-	
+
 	if r.Method == "GET" {
-		log.Println("[Accept]" , r.URL.Path)
-		
+		log.Println("[Accept]", r.URL.Path)
+
 		// cardInfoID :=  digitalCode.GetAuthorizeStoreID()
-		
-		userProfile , err := cloud.FindAllData(appName, accountVisitEmail, accountKey);if err != nil && userProfile != nil {
+
+		userProfile, err := cloud.FindAllData(appName, accountVisitEmail, accountKey)
+		if err != nil && userProfile != nil {
 			log.Fatal("[Fail] No info  ", err)
 			response := structs.Response{}
 			temp := server(w, r)
 			_ = response.ClientRequestHandle(true, "Sorry ! No Information ", "/login", w, r)
 			response.ClientLogs()
-			err := response.Run(temp);if err != nil {
+			err := response.Run(temp)
+			if err != nil {
 				log.Println("[Error]: checks logs...", err)
-				return 
+				return
 			}
-			
+
 		}
 		// log.Println("User profile:", userProfile)
-		
-		key, address := Vault.GetCryptoDB(publicAddress)
+
+		key, address := vault.GetCryptoDB(publicAddress)
 		access := DBModel.CredentialsPrivate{
-			PublicAddress : address,
-			PrvteKey : key,
+			PublicAddress: address,
+			PrvteKey:      key,
 		}
 
 		log.Println("Ledger Info:", access)
 
-		client, err := paypalMini.NewClient(); if err != nil {
+		client, err := paypalMini.NewClient()
+		if err != nil {
 			log.Fatalln("[Fail] Client Operation:", err)
-			  return
+			return
 		}
-				
-		_ , err = paypalMini.Token(client);if err != nil {
+
+		_, err = paypalMini.Token(client)
+		if err != nil {
 			log.Fatalln("[Fail] Token Operation:", err)
-			return 
+			return
 		}
-		
-		ret , err := paypalMini.RetrieveCreditCardInfo(digitalCode.GetAuthorizeStoreID(),client); if err != nil {
+
+		ret, err := paypalMini.RetrieveCreditCardInfo(digitalCode.GetAuthorizeStoreID(), client)
+		if err != nil {
 			log.Fatalln("[Fail] Retrieve Card info Operation:", err)
-			return 
+			return
 		}
 
 		// err = paypalMini.RemoveCard(ret.ID,client); if err != nil {
 		// 	log.Fatalln("[Fail] Remove Card operation:", err)
-		// 	return 
+		// 	return
 		// }
 
-		profile := model.DigialProfile{
-			
-			Name : userProfile.Name,
-			FName: userProfile.FName,
-			Email : userProfile.Email,
-			Address : userProfile.Address,
-			LAddress : userProfile.LAddress,
-			City : userProfile.City,
-			Zip : userProfile.Zip,
-			Country : userProfile.Country,
+		myProfile := model.DigialProfile{
 
-			Public : access.PublicAddress,
-			Private : access.PrvteKey,
+			Name:     userProfile.Name,
+			FName:    userProfile.FName,
+			Email:    userProfile.Email,
+			Address:  userProfile.Address,
+			LAddress: userProfile.LAddress,
+			City:     userProfile.City,
+			Zip:      userProfile.Zip,
+			Country:  userProfile.Country,
 
-			Number : ret.Number,
-			Type : ret.Type,
-			ExpireMonth : ret.ExpireMonth,
-			ExpireYear : ret.ExpireYear,
+			Public:  access.PublicAddress,
+			Private: access.PrvteKey,
+
+			Number:      ret.Number,
+			Type:        ret.Type,
+			ExpireMonth: ret.ExpireMonth,
+			ExpireYear:  ret.ExpireYear,
 		}
 
-			
-		log.Println("[Accept] Profile", profile)
-		temp.Execute(w, profile)
-		
+		log.Println("[Accept] Profile", myProfile)
+		temp.Execute(w, myProfile)
 
 	}
 }
 
-func Setting(w http.ResponseWriter, r *http.Request)  {
-	
+func setting(w http.ResponseWriter, r *http.Request) {
+
 	temp := template.Must(template.ParseFiles("settings.html"))
-	
+
 	// bankProfile , _ := paypalMini.RetrieveCreditCardInfo(accountID)
-	
+
 	if r.Method == "GET" {
-		log.Println("[Accept]" , r.URL.Path)
-		temp.Execute(w,"Setting")
+		log.Println("[Accept]", r.URL.Path)
+		temp.Execute(w, "setting")
 	}
-	
 
 }
 
-func Profile(w http.ResponseWriter, r *http.Request)  {
+func profile(w http.ResponseWriter, r *http.Request) {
 
 	temp := template.Must(template.ParseFiles("profile.html"))
-	
-	if accountID == ""{	
+
+	if accountID == "" {
 		log.Fatal("[Error ] Please login  ")
-			response := structs.Response{}
-			temp := server(w, r)
-			_ = response.ClientRequestHandle(true, "Sorry Session expire   ", "/login", w, r)
-			response.ClientLogs()
-			err := response.Run(temp); if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
+		response := structs.Response{}
+		temp := server(w, r)
+		_ = response.ClientRequestHandle(true, "Sorry Session expire   ", "/login", w, r)
+		response.ClientLogs()
+		err := response.Run(temp)
+		if err != nil {
+			log.Println("[Error]: checks logs...", err)
 			return
+		}
+		return
 	}
-	detailsAcc , err := cloud.ToFindByGroupSet(accountID, accountVisitEmail, appName); if err != nil {
+	detailsAcc, err := cloud.ToFindByGroupSet(accountID, accountVisitEmail, appName)
+	if err != nil {
 		log.Fatalln("[Fail] Operation..", err)
-		return 
+		return
 	}
 	log.Println(detailsAcc)
 
 	if r.Method == "GET" {
 		log.Println("[Accept] Method:", r.Method)
-		log.Println("[Accept]" , r.URL.Path)
-		
+		log.Println("[Accept]", r.URL.Path)
+
 		log.Println("Details:", detailsAcc)
-		temp.Execute(w,detailsAcc)
-	}else{
+		temp.Execute(w, detailsAcc)
+	} else {
 		log.Println("[Accept] Method:", r.Method)
 		log.Println("[Accept] Path:", r.URL.Path)
 
@@ -374,115 +376,118 @@ func Profile(w http.ResponseWriter, r *http.Request)  {
 
 		// save value in db
 		MyProfile := model.UpdateProfile{
-			Email : r.FormValue("email"),
-			Phone : r.FormValue("phone"),
-			FirstName : r.FormValue("uname"),
-			LastName : r.FormValue("ufname"),
-			HouseAddress : r.FormValue("inputAddress"),
-			SubAddress : r.FormValue("inputAddress2"),
-			Country : r.FormValue("country"),
-			Zip : r.FormValue("inputZip"),
+			Email:        r.FormValue("email"),
+			Phone:        r.FormValue("phone"),
+			FirstName:    r.FormValue("uname"),
+			LastName:     r.FormValue("ufname"),
+			HouseAddress: r.FormValue("inputAddress"),
+			SubAddress:   r.FormValue("inputAddress2"),
+			Country:      r.FormValue("country"),
+			Zip:          r.FormValue("inputZip"),
 		}
 
-		if accountID == ""{
+		if accountID == "" {
 			log.Fatal("[Error ] Please login  ")
 			response := structs.Response{}
 			temp := server(w, r)
 			_ = response.ClientRequestHandle(true, "Sorry Session expire   ", "/login", w, r)
 			response.ClientLogs()
-			err := response.Run(temp); if err != nil {
+			err := response.Run(temp)
+			if err != nil {
 				log.Println("[Error]: checks logs...", err)
 				return
 			}
 		}
 		MyProfile.Id = accountID
-		
+
 		male := r.FormValue("gender")
-		if male == "on"{
-			MyProfile.Male = true 
+		if male == "on" {
+			MyProfile.Male = true
 		}
 		MyProfile.Male = false
 
-		profile, err  := cloud.UpdateProfiles(appName, &MyProfile); if err != nil {
+		profile, err := cloud.UpdateProfiles(appName, &MyProfile)
+		if err != nil {
 			log.Fatalln("[Fail] Operation..", err)
-			return 
-		} 
-		 
+			return
+		}
+
 		log.Println("[Accept] Profile updated... ", profile)
 		w.WriteHeader(http.StatusOK)
 		r.Method = "GET"
-		Success(w, r)
+		success(w, r)
 
 	}
 }
 
-
-
-func Credit(w http.ResponseWriter, r *http.Request)  {
+func credit(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("credit.html"))
 	if r.Method == "GET" {
-		log.Println("[Accept] Path :" , r.URL.Path)
+		log.Println("[Accept] Path :", r.URL.Path)
 		log.Println("Method :", r.Method)
-		temp.Execute(w,"Credit")
-	}else{
-		log.Println("[Accept ]Path :" , r.URL.Path)
+		temp.Execute(w, "Credit")
+	} else {
+		log.Println("[Accept ]Path :", r.URL.Path)
 		log.Println("Method :", r.Method)
 		r.ParseForm()
-		 calender := r.FormValue("expire")
-		 sliceByte := []byte(calender)
-		 year := string(sliceByte[:04])
-		 month := string(sliceByte[5:])
+		calender := r.FormValue("expire")
+		sliceByte := []byte(calender)
+		year := string(sliceByte[:04])
+		month := string(sliceByte[5:])
 
 		card := pay.CreditCard{
-			FirstName : r.FormValue("fholder"),
-			LastName : r.FormValue("surename"),
-			Number : r.FormValue("cardNo"),
-			CVV2 : r.FormValue("cvv"),
-			Type : r.FormValue("cardtype"), 
-			ExpireMonth : month,
-		 	ExpireYear : year,
+			FirstName:   r.FormValue("fholder"),
+			LastName:    r.FormValue("surename"),
+			Number:      r.FormValue("cardNo"),
+			CVV2:        r.FormValue("cvv"),
+			Type:        r.FormValue("cardtype"),
+			ExpireMonth: month,
+			ExpireYear:  year,
 		}
-		 
-		//  card.ID =  AutoKeyGenerate(card.CVV2) 
+
+		//  card.ID =  AutoKeyGenerate(card.CVV2)
 		//  cardInfoID = card.ID
 		//  log.Println("Id generated:" , card)
-		  
+
 		// store credit card information.
 		//mini := handler.PaypalMiniVersion{}
-	  	client, err := paypalMini.NewClient(); if err != nil {
+		client, err := paypalMini.NewClient()
+		if err != nil {
 			log.Fatalln("[Fail] Client Operation:", err)
-			  return
+			return
 		}
 		//mini.Client = client
-		
-		token , err := paypalMini.Token(client);if err != nil {
+
+		token, err := paypalMini.Token(client)
+		if err != nil {
 			log.Fatalln("[Fail] Token Operation:", err)
-			return 
+			return
 		}
-		
-		store, err := paypalMini.StoreCreditCardInfo(card,client); if err != nil {
+
+		store, err := paypalMini.StoreCreditCardInfo(card, client)
+		if err != nil {
 			log.Fatalln("[Fail] CreditCard Operation:", err, card)
-			return 
+			return
 		}
-		
+
 		digitalCode.SetAuthorizeStoreID(store.ID)
 
-		ret , err := paypalMini.RetrieveCreditCardInfo(digitalCode.GetAuthorizeStoreID(),client); if err != nil {
+		ret, err := paypalMini.RetrieveCreditCardInfo(digitalCode.GetAuthorizeStoreID(), client)
+		if err != nil {
 			log.Fatalln("[Fail] Retrieve Card info Operation:", err)
-			return 
+			return
 		}
 
 		log.Println("[Accept] Token issue:", token, "retInfo:", ret)
 		w.WriteHeader(http.StatusOK)
 		r.Method = "GET"
-		Success(w, r)
-
+		success(w, r)
 
 	}
 
 }
 
-func Visualize(w http.ResponseWriter, r *http.Request) {
+func visualize(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("visualize.html"))
 	log.Println("Report percentage", visualizeReport.Percentage)
 	log.Println("Report uv ", visualizeReport.UVinfo)
@@ -498,10 +503,10 @@ func Visualize(w http.ResponseWriter, r *http.Request) {
 	// }
 	// w.WriteHeader(http.StatusOK)
 	// r.Method = "GET"
-	// Dashboard(w,r)
+	// dashboard(w,r)
 }
 
-func Treasure(w http.ResponseWriter, r *http.Request) {
+func treasure(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("treasure.html"))
 	acc := structs.Static{}
 	block := structs.Block{}
@@ -510,7 +515,7 @@ func Treasure(w http.ResponseWriter, r *http.Request) {
 
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
-		acc.Eth = ETHAddressInstance
+		acc.Eth = ethAddrressGenerate
 		acc.Balance = GetBalance(&acc)
 		if acc.Balance == nil {
 			fmt.Println("Error:")
@@ -547,14 +552,14 @@ func Treasure(w http.ResponseWriter, r *http.Request) {
 
 			// ChainId
 
-			chainId, err := clientInstance.NetworkID(context.Background())
+			chainID, err := clientInstance.NetworkID(context.Background())
 			if err != nil {
 				fmt.Println("Error:", err)
 				return
 			}
 
 			// get recipt address
-			message, err := tx.AsMessage(types.NewEIP155Signer(chainId))
+			message, err := tx.AsMessage(types.NewEIP155Signer(chainID))
 			if err != nil {
 				fmt.Println("Error:", err)
 				return
@@ -618,13 +623,13 @@ func Treasure(w http.ResponseWriter, r *http.Request) {
 	}
 }*/
 
-func Dashboard(w http.ResponseWriter, r *http.Request) {
+func dashboard(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "GET" {
 		temp := template.Must(template.ParseFiles("dashboard.html"))
 		fmt.Println("Method:" + r.Method)
 		fmt.Println("Url:", r.URL.Path)
-		temp.Execute(w, "Dashboard")
+		temp.Execute(w, "dashboard")
 	} else {
 		// temp := template.Must(template.ParseFiles("server.html"))
 		r.ParseForm()
@@ -640,17 +645,19 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 			switch choose {
 			case "0":
 				fmt.Fprintf(w, "Please choose any option ...")
-				_, err := ChoosePattern(w,r,"", choose,file); if err != nil {
-					return 
+				_, err := ChoosePattern(w, r, "", choose, file)
+				if err != nil {
+					return
 				}
 			case "1":
 				var name string = "Covid-19"
-				e , err := ChoosePattern(w,r, name, choose,file); if err != nil {
-					return 
+				e, err := ChoosePattern(w, r, name, choose, file)
+				if err != nil {
+					return
 				}
 				visualizeReport.Percentage = e.Percentage
 				// v :=  infectedUv()
-				
+
 				// openStreet.Country = r.FormValue("country")
 				// openStreet.PostalCode = r.FormValue("postal")
 				// openStreet.City = r.FormValue("city")
@@ -659,48 +666,51 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
 				// 	return
 				// }
-				
+
 				// v.UVinfo = uvslice
 
 				w.WriteHeader(http.StatusOK)
 				// LifeCode = genome
 				r.Method = "GET"
 				// Wallet(w,r)
-				Visualize(w, r)
+				visualize(w, r)
 				// fmt.Println("Virus:", capsid)
 
 			case "2":
 				var name string = "FlaviDengue"
-				e , err := ChoosePattern(w,r, name, choose,file); if err != nil {
+				e, err := ChoosePattern(w, r, name, choose, file)
+				if err != nil {
 					return
-				}
-				visualizeReport.Percentage = e.Percentage
-				// v :=  infectedUv()				
-				// v.UVinfo = uvslice	
-				w.WriteHeader(http.StatusOK)
-				
-				r.Method = "GET"
-				Visualize(w, r)
-				// Wallet(w,r)
-				// fmt.Println("Virus:", capsid)
-			case "3":
-				var name string = "KenyaEbola"
-				e , err := ChoosePattern(w,r, name, choose,file); if err != nil {
-					return 
 				}
 				visualizeReport.Percentage = e.Percentage
 				// v :=  infectedUv()
 				// v.UVinfo = uvslice
-				
+				w.WriteHeader(http.StatusOK)
+
+				r.Method = "GET"
+				visualize(w, r)
+				// Wallet(w,r)
+				// fmt.Println("Virus:", capsid)
+			case "3":
+				var name string = "KenyaEbola"
+				e, err := ChoosePattern(w, r, name, choose, file)
+				if err != nil {
+					return
+				}
+				visualizeReport.Percentage = e.Percentage
+				// v :=  infectedUv()
+				// v.UVinfo = uvslice
+
 				w.WriteHeader(http.StatusOK)
 				r.Method = "GET"
-				Visualize(w, r)
+				visualize(w, r)
 
 				// fmt.Println("Virus:", capsid)
 			case "4":
 				var name string = "ZikaVirusBrazil"
-				e , err := ChoosePattern(w,r, name, choose,file); if err != nil {
-					return 
+				e, err := ChoosePattern(w, r, name, choose, file)
+				if err != nil {
+					return
 				}
 				visualizeReport.Percentage = e.Percentage
 				// v :=  infectedUv()
@@ -712,18 +722,19 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
 				// 	return
 				// }
-				
+
 				//v.UVinfo = uvslice
 
 				w.WriteHeader(http.StatusOK)
 				r.Method = "GET"
-				Visualize(w, r)
+				visualize(w, r)
 
 				// fmt.Println("Virus:", capsid)
 			case "5":
 				var name string = "MersSaudiaArabia"
-				e , err := ChoosePattern(w,r, name, choose,file); if err != nil {
-					return 
+				e, err := ChoosePattern(w, r, name, choose, file)
+				if err != nil {
+					return
 				}
 				visualizeReport.Percentage = e.Percentage
 				// v :=  infectedUv()				//  openStreet.Country = r.FormValue("country")
@@ -734,16 +745,16 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 				// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
 				// 	return
 				// }
-				// v.UVinfo = uvslice	
+				// v.UVinfo = uvslice
 				w.WriteHeader(http.StatusOK)
-				
+
 				r.Method = "GET"
-				Visualize(w, r)
+				visualize(w, r)
 				// fmt.Println("Virus:", capsid)
 
 			default:
 				temFile := template.Must(template.ParseFiles("dashboard.html"))
-				temFile.Execute(w, "Dashboard")
+				temFile.Execute(w, "dashboard")
 			}
 		} else {
 			log.Fatal("[Fail] Size Limit reached 512MB  ")
@@ -755,14 +766,14 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				log.Println("[Error]: checks logs...", err)
 			}
-			
+
 		}
 
 	}
 
 }
 
-func Send(w http.ResponseWriter, r *http.Request) {
+func send(w http.ResponseWriter, r *http.Request) {
 
 	// temp := template.Must(template.ParseFiles("server.html"))
 
@@ -807,10 +818,10 @@ func Send(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// fmt.Println("Block Num :\n", header.Number.String())
-		// fmt.Println("Wallet kEY:", WalletSecureKey)
+		// fmt.Println("Wallet kEY:", ledgerBits)
 
 		// private key to public address
-		secure, err := crypto.HexToECDSA(WalletSecureKey)
+		secure, err := crypto.HexToECDSA(ledgerBits)
 		if err != nil {
 			log.Fatal("[Fail] Secure Wallet Key  ", err)
 			response := structs.Response{}
@@ -935,14 +946,14 @@ func Send(w http.ResponseWriter, r *http.Request) {
 		transfer := common.HexToAddress(block.TxSen)
 
 		// Network ID
-		chainId, err := clientInstance.NetworkID(context.Background())
+		chainID, err := clientInstance.NetworkID(context.Background())
 
 		var nofield []byte
 
 		tx := types.NewTransaction(block.Nonce, transfer, block.Amount, block.GasLimit, block.GasPrice, nofield)
 
 		// Signed Transaction
-		sign, err := types.SignTx(tx, types.NewEIP155Signer(chainId), secure)
+		sign, err := types.SignTx(tx, types.NewEIP155Signer(chainID), secure)
 		if err != nil {
 			log.Fatal("[Fail] Signed Transaction", err)
 			response := structs.Response{}
@@ -985,12 +996,12 @@ func Send(w http.ResponseWriter, r *http.Request) {
 
 		w.WriteHeader(http.StatusOK)
 		r.Method = "GET"
-		Visualize(w, r)
+		visualize(w, r)
 
 	}
 }
 
-func CreateWallet(w http.ResponseWriter, r *http.Request) {
+func createWallet(w http.ResponseWriter, r *http.Request) {
 
 	temp := template.Must(template.ParseFiles("seed.html"))
 	acc := structs.Acc{}
@@ -1019,7 +1030,7 @@ func CreateWallet(w http.ResponseWriter, r *http.Request) {
 			acc.Allowed = false
 		}
 
-		client, err := ethclient.Dial(EtherMainClientUrl)
+		client, err := ethclient.Dial(mainNet)
 		if err != nil {
 			log.Fatal("[Fail] Request Failed  ", err)
 			response := structs.Response{}
@@ -1087,7 +1098,7 @@ func CreateWallet(w http.ResponseWriter, r *http.Request) {
 		ethereum := hexutil.Encode(hshCode.Sum(nil)[12:])
 
 		acc.EthAddress = ethereum
-		
+
 		// valid address
 		valid := isYourPublcAdresValid(ethereum)
 		if valid {
@@ -1177,14 +1188,14 @@ func CreateWallet(w http.ResponseWriter, r *http.Request) {
 
 		clientInstance = nil
 
-		log.Println("[Accept] Welcome ! Your Account Has been created", merchant)
+		log.Println("[Accept] Welcome ! Your Account Has been created", &merchant)
 		w.WriteHeader(http.StatusOK)
 		r.Method = "GET"
-		Existing(w, r)
+		existing(w, r)
 	}
 }
 
-func Transacts(w http.ResponseWriter, r *http.Request) {
+func transacts(w http.ResponseWriter, r *http.Request) {
 
 	temp := template.Must(template.ParseFiles("transact.html"))
 	acc := structs.Static{}
@@ -1192,7 +1203,7 @@ func Transacts(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
 
-		acc.Eth = ETHAddressInstance
+		acc.Eth = ethAddrressGenerate
 		acc.Balance = GetBalance(&acc)
 		if acc.Balance == nil {
 			log.Fatal("[Fail] Connection Reject ", acc.Balance)
@@ -1211,7 +1222,7 @@ func Transacts(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func Wallet(w http.ResponseWriter, r *http.Request) {
+func wallet(w http.ResponseWriter, r *http.Request) {
 
 	temp := template.Must(template.ParseFiles("wallet.html"))
 	acc := structs.Acc{}
@@ -1228,8 +1239,8 @@ func Wallet(w http.ResponseWriter, r *http.Request) {
 
 		acc.Email = r.FormValue("email")
 		acc.Password = r.FormValue("password")
-		
-		client, err := ethclient.Dial(EtherMainClientUrl)
+
+		client, err := ethclient.Dial(mainNet)
 		if err != nil {
 			log.Fatal("[Fail] Connection Reject ", err)
 			response := structs.Response{}
@@ -1302,14 +1313,13 @@ func Wallet(w http.ResponseWriter, r *http.Request) {
 			publicAddress = acc.EthAddress
 
 			// Secure Key
-			WalletSecureKey = addr.PrvteKey
-			fmt.Println("Wallet key:", WalletSecureKey)
-			Vault.SetCryptoDB(acc.EthAddress, WalletSecureKey)
-
+			ledgerBits = addr.PrvteKey
+			fmt.Println("Wallet key:", ledgerBits)
+			vault.SetCryptoDB(acc.EthAddress, ledgerBits)
 
 			// variable address for futher processing
-			ETHAddressInstance = acc.EthAddress
-			log.Println("Your Wallet:", ETHAddressInstance)
+			ethAddrressGenerate = acc.EthAddress
+			log.Println("Your Wallet:", ethAddrressGenerate)
 
 			// read file and add swarm
 			// if add.Allowed {
@@ -1337,12 +1347,12 @@ func Wallet(w http.ResponseWriter, r *http.Request) {
 
 			w.WriteHeader(http.StatusOK)
 			r.Method = "GET"
-			Dashboard(w,r)
+			dashboard(w, r)
 		}
 	}
 }
 
-func Terms(w http.ResponseWriter, r *http.Request) {
+func terms(w http.ResponseWriter, r *http.Request) {
 
 	temp := template.Must(template.ParseFiles("terms.html"))
 	if r.Method == "GET" {
@@ -1352,7 +1362,7 @@ func Terms(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func NewUser(w http.ResponseWriter, r *http.Request) {
+func newUser(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("register.html"))
 	user := model.Create_User{}
 
@@ -1424,14 +1434,14 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 			}
 
 		}
-		log.Println("[Accept] Review your logs.. ", user)
+		log.Println("[Accept] Review your logs.. ")
 		// println("phase:", KeyTx)
 		addVistor(w, r, &user, encrypted.Reader)
 	}
 
 }
 
-func Existing(w http.ResponseWriter, r *http.Request) {
+func existing(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("login.html"))
 	user := model.Create_User{}
 
@@ -1482,7 +1492,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 			}
 
 			// r.Method = "GET"
-			// Existing(w,r)
+			// existing(w,r)
 		}
 		println("regexp_pass:", okx)
 
@@ -1532,7 +1542,7 @@ func Existing(w http.ResponseWriter, r *http.Request) {
 			// Login page
 			w.WriteHeader(http.StatusOK)
 			r.Method = "GET"
-			Dashboard(w, r)
+			dashboard(w, r)
 		} else {
 			response := structs.Response{}
 			temp := server(w, r)
@@ -1561,7 +1571,7 @@ func server(w http.ResponseWriter, r *http.Request) *templates.Template {
 
 }
 
-func Logout(w http.ResponseWriter, r *http.Request) {
+func logout(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "GET" {
 		act := structs.RouteParameter{}
@@ -1582,7 +1592,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 			}
 
 		}
-		Existing(w, r)
+		existing(w, r)
 	}
 }
 
@@ -1611,7 +1621,7 @@ func SearchDB(w http.ResponseWriter, r *http.Request, email, pass string) (*mode
 			}
 
 		}
-		log.Println("[Accept] Your Request results :", data)
+		log.Println("[Accept] Your Request results :")
 	}
 	return data, nil
 }
@@ -1700,10 +1710,10 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *model.
 
 			}
 
-			log.Println("Records:", record, "Info: ", candidate)
+			log.Println("Records:", record)
 			response.WriteHeader(http.StatusOK)
 			request.Method = "GET"
-			CreateWallet(response,request)
+			createWallet(response, request)
 
 		}
 
@@ -1736,7 +1746,7 @@ func SetFirestoreCredentials() *firebase.App {
 	googleCredentials = "config/" + configFilename
 
 	// set credentials
-	conf := &firebase.Config{ProjectID: projectId}
+	conf := &firebase.Config{ProjectID: projectID}
 	if googleCredentials != " " {
 		opt := option.WithCredentialsFile(googleCredentials)
 		app, err := firebase.NewApp(context.Background(), conf, opt)
@@ -1984,7 +1994,7 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 		// upload file by user...
 		upldFile, err := ioutil.TempFile("user_data", handler.Filename+".txt")
 		/*fmt.Println("file:", upldFile.Name())*/
-		FILENAME = upldFile.Name()
+		openReadFile = upldFile.Name()
 		if err != nil {
 			log.Fatal("[Fail] Temporary File    ", err)
 			response := structs.Response{}
@@ -2164,32 +2174,31 @@ func blockSession(id int) *sessions.CookieStore {
 	return sessions.NewCookieStore([]byte(strconv.Itoa(id)))
 }
 
+func ChoosePattern(w http.ResponseWriter, r *http.Request, fname, choose string, file *os.File) (structs.Levenshtein, error) {
 
-func ChoosePattern(w http.ResponseWriter, r *http.Request, fname , choose string, file *os.File) (structs.Levenshtein, error) {
-	
-	
-	i  , err := strconv.Atoi(choose); if err != nil {
+	i, err := strconv.Atoi(choose)
+	if err != nil {
 		log.Fatalln("[Fail] Sorry there is some issue report!", err)
 		return edit, err
 	}
 	if (i > 0 && i < 6) && (fname != " ") {
-		svrFile := FileReadFromDisk(w, r, fname)		
-		Usr, Virus, err := SequenceFile(file, svrFile); if err != nil {
-					log.Fatalln("[Fail] Sequence DataFile Error", err)
-					return  edit, err
+		svrFile := FileReadFromDisk(w, r, fname)
+		Usr, Virus, err := SequenceFile(file, svrFile)
+		if err != nil {
+			log.Fatalln("[Fail] Sequence DataFile Error", err)
+			return edit, err
 		}
 		log.Println("Genome:", len(Usr), "virus:", len(Virus))
-		distance := structs.EditDistanceStrings(Usr,Virus)
+		distance := structs.EditDistanceStrings(Usr, Virus)
 		edit.Probablity = edit.Result(distance)
 		edit.Name = fname
 		edit.Percentage = edit.CalcualtePercentage(edit.Probablity)
 		return edit, err
-	}else if i == 0{
+	} else if i == 0 {
 		temFile := template.Must(template.ParseFiles("dashboard.html"))
 		temFile.Execute(w, "Dashbaord")
 	}
 	return edit, err
-
 
 }
 
@@ -2202,17 +2211,19 @@ func ProcessWaiit() bool {
 
 // func AutoKeyGenerate(s1 string) string{
 // 	h0 := sha256.New()
-// 	h1 := h0.Sum([]byte(s1)) // hash of string-1 
+// 	h1 := h0.Sum([]byte(s1)) // hash of string-1
 // 	e := hex.EncodeToString([]byte(h1))
 // 	h := hex.EncodeToString([]byte(e))[:8]
 // 	return h
 // }
 
-func HashMatch(s1 , s2 string )bool{
-	if s1 == s2 {
+func cardNumberValid(s1, s2 string) bool {
+
+	m, n := []byte(s1), []byte(s2)
+	res := bytes.Compare(m, n)
+	if res == 0 {
 		return true
 	}
 	return false
+
 }
-
-
