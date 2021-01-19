@@ -48,15 +48,15 @@
       <div class="geo-container">
         <div class="btn-checkbox">
           <div class="globe-div">
-            <i class="fa fa-globe" aria-hidden="true"></i> <input type="checkbox" class="checkbox-geo" onchange="GeolocationPermission()"> 
+            <i class="fa fa-globe" aria-hidden="true"></i> <input type="checkbox" class="checkbox-geo" name="geo" onchange="GeolocationPermission()"> 
             <span class="span-geo" > Location </span><br>
           </div>
           <div class="notification-div">
-            <i class="fa fa-bell" aria-hidden="true"></i> <input type="checkbox" class="checkbox-notification" onchange="NotificationPermission()">
+            <i class="fa fa-bell" aria-hidden="true"></i> <input type="checkbox" class="checkbox-notification" id="wizNotify" onchange="NotificationPermission()">
             <span class="notificate"> Notification</span><br>
           </div>
           <div class="ambient-div">
-            <i class="fa fa-lightbulb-o" aria-hidden="true"></i> <input type="checkbox" class="checkbox-ambient" onchange="AmbientLightPermission()"> 
+            <i class="fa fa-lightbulb-o" aria-hidden="true"></i> <input type="checkbox" class="checkbox-ambient" id="wizLight" onchange="AmbientLightPermission()"> 
             <span class="ambient-class"> Ambient</span> <br>
           </div>     
            
