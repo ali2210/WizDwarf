@@ -14,6 +14,7 @@ import (
 	"io/ioutil"
 	"log"
 	"math/big"
+	"net"
 	"net/http"
 	"os"
 	"regexp"
@@ -90,23 +91,32 @@ func main() {
 
 	// Server
 	log.Println("[OK] Wiz-Dwarfs starting")
+	host := os.Getenv("HOST")
 	port := os.Getenv("PORT")
 
-	// env port setting
+	//  env host
+	if host == "" {
 
-	if port == " " {
-		log.Println("[Fail] No Application port allocated")
-		return
-	} else {
-		if port != "5000" {
-			// any Listening PORT {heroku}
-			log.Println("[Open] Application Port", port)
+		// env port setting
+
+		if port == " " {
+			log.Fatalln("[Fail] No Application port allocated", port)
+			log.Fatalln("[Fail] No Application hostname allocated", host)
+			return
 		} else {
-			// specfic port allocated {docker}
-			port = "5000"
-			log.Println("[New] Application Default port")
-		}
+			if port != "5000" {
+				// any Listening PORT {heroku}
+				log.Println("[Open] Application Port", port)
+				log.Println("[Open] Application host", host)
+			} else {
+				// specfic port allocated {docker}
+				port = "5000"
+				log.Println("[New] Application Default port")
+			}
 
+		}
+	} else {
+		log.Println("[Accept] Application hostname allocated", host)
 	}
 
 	log.Println("[OK] Application :", port+" Port")
@@ -159,7 +169,7 @@ func main() {
 	// routing.HandleFunc("/dummy", server)*templates.Template
 
 	// tcp connection
-	err := http.ListenAndServe(":"+port, routing)
+	err := http.ListenAndServe(net.JoinHostPort(host, port), routing)
 	if err != nil {
 		log.Println("Listening Error: ", err)
 		panic(err)
