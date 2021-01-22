@@ -21,7 +21,7 @@
 
   ENV PORT=5000
   
-  ENV HOST=wiz-dwarfs
+  ENV HOST=wizdwarfs
 
   RUN mkdir /app
 

@@ -108,9 +108,9 @@ position: relative;margin: 20px;
 
          <div id="collapseZero" class="collapse show" aria-labelledby="headingZero" data-parent="#accordion">
           <div class="card-body change">
-            {{.Name}} {{.FName}} <br> 
-            {{.Email}} <br> 
-            {{.Address}},{{.LAddress}}, {{.City}}, <br> 
+           Name : {{.Name}} {{.FName}} <br> 
+           Email :{{.Email}} <br> 
+           Address: {{.Address}},{{.LAddress}}, {{.City}}, <br> 
             {{.Zip}} {{.Country}} <br>
           </div>
         </div>
@@ -129,9 +129,9 @@ position: relative;margin: 20px;
 
          <div id="collapseOne" class="collapse show alter" aria-labelledby="headingOne" data-parent="#accordion">
           <div class="card-body change">
-            {{.Number}} <br>
-            {{.ExpireMonth}} / {{.ExpireYear}} <br>
-            {{.Type}}
+            Num : {{.Number}} <br>
+            Valid : {{.ExpireMonth}} / {{.ExpireYear}} <br>
+            Type : {{.Type}}
           </div>
         </div>
       </div> 
@@ -147,8 +147,8 @@ position: relative;margin: 20px;
         </div>
         <div id="collapseTwo" class="collapse show alter" aria-labelledby="headingTwo" data-parent="#accordion">
           <div class="card-body change">
-            {{.Public}} <br>
-            {{.Private}}
+            Public : {{.Public}} <br>
+            Private: {{.Private}}
           </div>
         </div>
       </div> 

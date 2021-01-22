@@ -102,7 +102,6 @@ func main() {
 		if port == " " {
 			log.Fatalln("[Fail] No Application port allocated", port)
 			log.Fatalln("[Fail] No Application hostname allocated", host)
-			return
 		} else {
 			if port != "5000" {
 				// any Listening PORT {heroku}
@@ -111,7 +110,7 @@ func main() {
 			} else {
 				// specfic port allocated {docker}
 				port = "5000"
-				log.Println("[New] Application Default port")
+				log.Println("[New] Application Default port", port)
 			}
 
 		}
@@ -119,7 +118,7 @@ func main() {
 		log.Println("[Accept] Application hostname allocated", host)
 	}
 
-	log.Println("[OK] Application :", port+" Port")
+	log.Println("[OK] Application Explicit Credentials :", host+":", "Port", port)
 	// Routing
 	routing := mux.NewRouter()
 
@@ -1099,18 +1098,18 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 
 		PublicKey := crypto.PubkeyToAddress(*pbcKey).Hex()
 
-		acc.PubKey = PublicKey
-		acc.PrvteKey = key
+		acc.PubKey = PublicKey[:8]
+		acc.PrvteKey = key[:8]
 
 		// hash to ethereum
 		hshCode := sha3.NewLegacyKeccak256()
 		hshCode.Write(publicBytes[1:])
 		ethereum := hexutil.Encode(hshCode.Sum(nil)[12:])
 
-		acc.EthAddress = ethereum
+		acc.EthAddress = ethereum[:8]
 
 		// valid address
-		valid := isYourPublcAdresValid(ethereum)
+		valid := isYourPublcAdresValid(acc.EthAddress)
 		if valid {
 
 			// smart contract address

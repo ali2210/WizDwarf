@@ -148,12 +148,12 @@
     window.addEventListener('load', startup, false);
   })();
 
-  // variables declaration 
+  
 
 
 (function(){
-    
-    let network = null; 
+  // variables declaration   
+    var network = null; 
     var metamaskBtn = null;
     var message = null;
     var node = null;
@@ -195,7 +195,6 @@ async function Metamasklogin(){
   message = document.getElementsByClassName('server-message');
   metamaskBtn = document.getElementsByClassName('metabits');
   const chainId = await ethereum.request({ method: 'eth_chainId' });
-  
   handleChainChanged(chainId);
 
   ethereum.on('chainChanged', handleChainChanged);
@@ -229,8 +228,9 @@ function handleAccountsChanged(accounts){
   if(accounts.length === 0){
     message[0].innerHTML = "No account connected with metamask: \t" + (!window.ethereum.isConnected());
   }else{
+    console.log(accounts[0]);
     if(accounts[0] !== ethAccs){
-      ethAccs = accounts[0];     
+      ethAccs = accounts[0]; 
     }
   }
 }  
