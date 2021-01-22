@@ -30,7 +30,6 @@ function GeolocationPermission(){
                
             navigator.geolocation.getCurrentPosition((position, error,option) =>{
                 alert('Current Geolocation:'+ `${position.coords.latitude} ` + `${position.coords.longitude}`);
-                console.log(`${position.coords.latitude}`,`${position.coords.longitude}`);
                 loc[0].checked = true;
             });
                 

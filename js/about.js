@@ -62,7 +62,7 @@
         ev.preventDefault();
       }, false);
 
-      // savePic take still picture and disable retro camera . No more video streaming
+      // savePic  want to take retro picture
       savePic.addEventListener('click', function(ev){
         RetroStillPicture();
         ev.preventDefault();
@@ -95,7 +95,7 @@
            setTimeout(() =>{
               canvas.style.backgroundColor = "aquamarine";
               canvas.style.visibility = "visible";
-              console.log("state1:", canvas.style.visibility);         
+              // console.log("state1:", canvas.style.visibility);         
            }, 100);
        }, 1000/2);
     }
@@ -147,3 +147,90 @@
     // once loading is complete.
     window.addEventListener('load', startup, false);
   })();
+
+  
+
+
+(function(){
+  // variables declaration   
+    var network = null; 
+    var metamaskBtn = null;
+    var message = null;
+    var node = null;
+    var textNode = null;
+    var ethAccs = null;
+ 
+
+  async function connectFunc(){
+    network = await detectEthereumProvider();    
+    message = document.getElementsByClassName('server-message'); 
+    metamaskBtn = document.getElementsByClassName('metabits');
+   
+    if (network === window.ethereum && window.ethereum.isMetaMask){
+      metamaskBtn[0].style.borderStyle = "dotted";
+      metamaskBtn[0].style.borderColor = "teal";
+      metamaskBtn[0].style.backgroundColor = "lightgreen";
+      window.ethereum.isConnected();
+      const version = await window.ethereum.request({
+        method : 'net_version'
+      }); 
+      message[0].innerHTML = "Greeat !Metamask already installed:\t" + version 
+    }else{
+      message[0].innerHTML = "Please install metamask-exstension on your browser.";
+      node = document.createElement("a");
+      node.href = "https://metamask.io/";
+      textNode = document.createTextNode("Metamask Download");
+      node.appendChild(textNode);
+      message[0].appendChild(node);
+    }
+    
+  }
+  
+
+  
+  window.addEventListener('load', connectFunc, true);
+})();  
+
+async function Metamasklogin(){
+  message = document.getElementsByClassName('server-message');
+  metamaskBtn = document.getElementsByClassName('metabits');
+  const chainId = await ethereum.request({ method: 'eth_chainId' });
+  handleChainChanged(chainId);
+
+  ethereum.on('chainChanged', handleChainChanged);
+
+  function handleChainChanged(_chainId) {
+    // We recommend reloading the page, unless you must do otherwise
+    window.location.reload();
+  }
+  
+ethereum
+  .request({ method: 'eth_accounts' })
+  .then(handleAccountsChanged)
+  .catch((err) => {
+    // Some unexpected error.
+    // For backwards compatibility reasons, if no accounts are available,
+    // eth_accounts will return an empty array.
+    console.error(err);
+  });
+  ethereum.on('accountsChanged', handleAccountsChanged);
+  message[0].innerHTML = "Metamask Connected";
+  // window.ethereum.enable();
+  const metamaskAppInit = await window.ethereum.request({
+    method : 'eth_requestAccounts'
+  })
+  
+}
+  
+function handleAccountsChanged(accounts){
+  
+ 
+  if(accounts.length === 0){
+    message[0].innerHTML = "No account connected with metamask: \t" + (!window.ethereum.isConnected());
+  }else{
+    console.log(accounts[0]);
+    if(accounts[0] !== ethAccs){
+      ethAccs = accounts[0]; 
+    }
+  }
+}  

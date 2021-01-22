@@ -20,6 +20,8 @@
   ENV CGO_ENABLED=0
 
   ENV PORT=5000
+  
+  ENV HOST=wizdwarfs
 
   RUN mkdir /app
 

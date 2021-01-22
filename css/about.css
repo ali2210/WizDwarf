@@ -1,6 +1,35 @@
 .logo{
     width: 30%;
 }
+
+.metabits{
+    display: flex;
+    position: relative;
+    margin-left: 40px;
+    background-color:darksalmon;
+    color: white;
+    border-radius: 20px;
+    width: 100%;
+    border-style:solid;
+    border-color: red;
+}
+
+.server-message{
+    display: flex;
+    position: relative;
+    justify-content: center;
+    background: padding-box;
+}
+.metamask-ext{
+    display: flex;
+    position: relative;
+    margin-left: 20px;
+}
+.span-metamask{
+    position: relative;
+    margin-left: 5px;
+    margin-top: 5px;
+}
 .trash-card{
     background: padding-box;
 }

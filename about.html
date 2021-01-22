@@ -10,14 +10,15 @@
     <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
     <link rel='stylesheet' type='text/css' media='screen' href='/css/about.css'> 
-    <script src='/js/about.js'></script> 
+    <script src='/js/about.js'></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script> -->
+    <script src="https://unpkg.com/@metamask/detect-provider/dist/detect-provider.min.js"></script>
 </head>
 
 <body style=" display: grid;
 position: relative;margin: 20px;
     overflow: auto; 
      ">
-
 <div class='main-dashboard-div'>
   <nav class="navbar navbar-expand-md navbar-light custom-navbar">
     <a class="navbar-brand" href="#">
@@ -49,6 +50,9 @@ position: relative;margin: 20px;
   </div>
 </div>  
 
+<div class="server-message">
+  <span class="textmessage"></span>
+</div>
 <div class="policy">
   <div class="bg-light row"> <span>Warning:</span>
     <p>
@@ -60,10 +64,17 @@ position: relative;margin: 20px;
 
 <div class="col-11">
   <div class="row">
+    <div class="btnMeta">
+      <button class="metabits" type="button" onclick="Metamasklogin()"> <img class="metamask-ext" src="/images/metamask.png" alt="Metamask"> <span class="span-metamask"> @Metamask</span> </button>
+    </div>  
+   </div>
+
+  <div class="row">
     <div class="delete-card">
       <a href="/dashbaord/setting/pay/credit/delete" class="btn btn-danger btn-md active trash-card" role="button" aria-pressed="true"> <i class="fa fa-trash" aria-hidden="true"></i> Delete Credit Card</a>
     </div>  
    </div>
+   
 </div>
 
 <div class="videobtn">
@@ -83,7 +94,7 @@ position: relative;margin: 20px;
   </div>
  
   <div class="card-body">
-    <h5 class="card-title heading"> Parsona </h5>
+    <h5 class="card-title heading"> Persona </h5>
     <p class="card-text"> 
      <div id="accordion">
        <div class="card stateColor">
@@ -97,9 +108,9 @@ position: relative;margin: 20px;
 
          <div id="collapseZero" class="collapse show" aria-labelledby="headingZero" data-parent="#accordion">
           <div class="card-body change">
-            {{.Name}} {{.FName}} <br> 
-            {{.Email}} <br> 
-            {{.Address}},{{.LAddress}}, {{.City}}, <br> 
+           Name : {{.Name}} {{.FName}} <br> 
+           Email :{{.Email}} <br> 
+           Address: {{.Address}},{{.LAddress}}, {{.City}}, <br> 
             {{.Zip}} {{.Country}} <br>
           </div>
         </div>
@@ -118,9 +129,9 @@ position: relative;margin: 20px;
 
          <div id="collapseOne" class="collapse show alter" aria-labelledby="headingOne" data-parent="#accordion">
           <div class="card-body change">
-            {{.Number}} <br>
-            {{.ExpireMonth}} / {{.ExpireYear}} <br>
-            {{.Type}}
+            Num : {{.Number}} <br>
+            Valid : {{.ExpireMonth}} / {{.ExpireYear}} <br>
+            Type : {{.Type}}
           </div>
         </div>
       </div> 
@@ -136,8 +147,8 @@ position: relative;margin: 20px;
         </div>
         <div id="collapseTwo" class="collapse show alter" aria-labelledby="headingTwo" data-parent="#accordion">
           <div class="card-body change">
-            {{.Public}} <br>
-            {{.Private}}
+            Public : {{.Public}} <br>
+            Private: {{.Private}}
           </div>
         </div>
       </div> 
