@@ -1,0 +1,18 @@
+
+
+version: '3'
+services:
+  web:
+    build: .
+    image: golang:1.14-apline3.12
+    working_dir: /app
+    volumes: 
+      - .:/var/lib/docker/volumes/wizlogs/_data
+  dns:
+    hostname:  'wizdwarfs' 
+    image: golang:1.14-apline3.12
+    ports: 
+         - "5000:5000"
+    
+
+
