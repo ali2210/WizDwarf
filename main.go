@@ -29,6 +29,7 @@ import (
 	"github.com/ali2210/wizdwarf/structs"
 	weather "github.com/ali2210/wizdwarf/structs/OpenWeather"
 	"github.com/ali2210/wizdwarf/structs/amino"
+	bio "github.com/ali2210/wizdwarf/structs/bioinformatics"
 	"github.com/ali2210/wizdwarf/structs/paypal/handler"
 	"github.com/ali2210/wizdwarf/structs/users"
 	"github.com/ali2210/wizdwarf/structs/users/model"
@@ -67,7 +68,7 @@ var (
 	googleCredentials   string                    = ""
 	openReadFile        string                    = ""
 	publicAddress       string                    = ""
-	edit                structs.Levenshtein       = structs.Levenshtein{}
+	edit                bio.Levenshtein           = bio.Levenshtein{}
 	visualizeReport     weather.DataVisualization = weather.DataVisualization{}
 	accountID           string                    = " "
 	accountKey          string                    = " "
@@ -2183,7 +2184,7 @@ func blockSession(id int) *sessions.CookieStore {
 	return sessions.NewCookieStore([]byte(strconv.Itoa(id)))
 }
 
-func ChoosePattern(w http.ResponseWriter, r *http.Request, fname, choose string, file *os.File) (structs.Levenshtein, error) {
+func ChoosePattern(w http.ResponseWriter, r *http.Request, fname, choose string, file *os.File) (bio.Levenshtein, error) {
 
 	i, err := strconv.Atoi(choose)
 	if err != nil {
@@ -2198,7 +2199,7 @@ func ChoosePattern(w http.ResponseWriter, r *http.Request, fname, choose string,
 			return edit, err
 		}
 		log.Println("Genome:", len(Usr), "virus:", len(Virus))
-		distance := structs.EditDistanceStrings(Usr, Virus)
+		distance := bio.EditDistanceStrings(Usr, Virus)
 		edit.Probablity = edit.Result(distance)
 		edit.Name = fname
 		edit.Percentage = edit.CalcualtePercentage(edit.Probablity)
