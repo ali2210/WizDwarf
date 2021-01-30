@@ -1,33 +1,50 @@
 package bioinformatics
 
 import (
-	"errors"
+	// "errors"
 	"fmt"
-	"strings"
 	"testing"
+
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+
+	bio "github.com/ali2210/wizdwarf/structs/bioinformatics/model"
 )
 
 var (
-	editTest Levenshtein = Levenshtein{}
+	editTest bio.Levenshtein = bio.Levenshtein{
+		Probablity: 0.0,
+		Percentage: 0.0,
+		Name:       "",
+	}
+	algoTest LevenTable = NewMatch()
 )
 
-func StringLengthTest(a, b []string, t *testing.T) (int, error) {
-	fmt.Println("Test {Status}")
-	err := errors.New("[x] Leveinstein algorithms ")
-
-	s1 := a
-	sArrayCol := strings.Join(s1, " ")
-	arraySplit := strings.Split(sArrayCol, "")
-	s2 := b
-	sArrayRow := strings.Join(s2, " ")
-	arraySplit2 := strings.Split(sArrayRow, "")
-	inputTest := EditDistanceStrings(arraySplit, arraySplit2)
-	if inputTest < 0 {
-		t.Errorf("Test {Failed}%v -- [Leveinstein match failed] ", err)
-		return inputTest, err
-	}
-	return inputTest, nil
+func LevenshteinTestCase(t *testing.T) {
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "Levenshtein Test Cases")
 }
+
+var _ = Describe("Levenshtein Test", func() {
+	a := []string{""}
+	b := []string{""}
+	Context("Empty Objects Handler", func() {
+		It("Empty Object !", func() {
+			Expect(algoTest.EditDistanceStrings(a, b)).Should(BeZero())
+		})
+		It("Calculate Similarity", func() {
+			Expect(editTest.Result(algoTest.EditDistanceStrings(a, b))).Should(BeZero())
+		})
+		It("Calculate Percentage", func() {
+			Expect(editTest.CalcualtePercentage(editTest.Result(algoTest.EditDistanceStrings(a, b)))).Should(BeZero())
+		})
+		It("Get Parameters", func() {
+			parm := editTest.CalcualtePercentage(editTest.Result(algoTest.EditDistanceStrings(a, b)))
+			editTest.SetProbParameter(parm)
+			Expect(editTest.GetProbParameter())
+		})
+	})
+})
 
 type StringLevenstein struct {
 	inp0 []string
@@ -53,13 +70,26 @@ func StringsTableTest(t *testing.T) {
 	for _, tt := range testLeven {
 		testfunc := fmt.Sprintf("%s%s", tt.inp0, tt.inp1)
 		t.Run(testfunc, func(t *testing.T) {
-			expected, err := StringLengthTest(tt.inp0, tt.inp1, t)
-			if err != nil {
-				return
-			}
-			if expected != tt.out || expected < 0 {
-				t.Errorf("value1: %s, value_2%s, expected%d  ", tt.inp0, tt.inp1, expected)
-			}
+			var _ = Describe("Levenshtein Test", func() {
+				a := []string{"a"}
+				b := []string{"aa"}
+				Context("Objects Handler", func() {
+					It("Object !", func() {
+						Expect(algoTest.EditDistanceStrings(a, b)).Should(BeZero())
+					})
+					It("Calculate Similarity", func() {
+						Expect(editTest.Result(algoTest.EditDistanceStrings(a, b))).Should(BeZero())
+					})
+					It("Calculate Percentage", func() {
+						Expect(editTest.CalcualtePercentage(editTest.Result(algoTest.EditDistanceStrings(a, b)))).Should(BeZero())
+					})
+					It("Get Parameters", func() {
+						parm := editTest.CalcualtePercentage(editTest.Result(algoTest.EditDistanceStrings(a, b)))
+						editTest.SetProbParameter(parm)
+						Expect(editTest.GetProbParameter())
+					})
+				})
+			})
 		})
 	}
 }

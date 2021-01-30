@@ -15,25 +15,27 @@
 #ENTRYPOINT /go/bin/web-app --port 5000
 
 
-  FROM golang:1.14-alpine3.12
+FROM golang:1.15-alpine3.13
 
-  ENV CGO_ENABLED=0
+ENV CGO_ENABLED=0
 
-  ENV PORT=5000
-  
-  ENV HOST=wizdwarfs
+ENV PORT=5000
 
-  RUN mkdir /app
+ENV HOST=wizdwarfs
 
-  ADD . /app
+RUN mkdir /app
 
-  WORKDIR /app
+ADD . /app
 
- RUN go build -o main
+WORKDIR /app
 
- EXPOSE 5000
+RUN go test -v ./... 
 
- CMD ["/app/main"]
+RUN go build -o main
+
+EXPOSE 5000
+
+CMD ["/app/main"]
 
 
 
@@ -61,6 +63,6 @@
 
 #RUN go get -u -d ./...
 
-   #EXPOSE 9101
+#EXPOSE 9101
 
 #RUN go build -o main
