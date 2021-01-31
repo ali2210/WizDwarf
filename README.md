@@ -30,10 +30,8 @@ This applicationn allow you can upload  genetic material(DNA). Based on your gen
 3. UV impact on your dna [not yet started]
 4. Visualization 
        1. Results visualization [ok]
-5. payment handle 
-     ## 0. Paypal [ok], 
-     ## 1. stripe, 
-     ## 2. metamask [ok]
+5. payment handle
+     ## 0. Credit Card
         ##  1. add card [ok]
         ##  2. link card [ok]
         ##  3. delete card [not]
@@ -42,16 +40,30 @@ This applicationn allow you can upload  genetic material(DNA). Based on your gen
               ###  1. add  [not]
               ###  2. update [not]
               ###  3. delete [not]
-                
+     ## 1. Paypal 
+        ## PayForService
+        ## RefundService
+     ## 2. stripe
+        ## PayForService
+        ## RefundService
+     ## 3. metamask
+        ## PayForService
+        ## RefundService
+        ## ReciveService
+        ## ConnectWebsite
+     ## 4. EthereumWallet
+        ## PayForService
+        ## RefundService
+        ## ReciveService
 6. ambient lighting [ok]
 7  notification [ok]
 8. geocode  [ok]
 9. retro picture and video streaming [ok]
-10. persona buildup [ok]
+10. persona build up [ok]
 
 ## Tools :
 - Firebase cloud [ok]
-- Ethereum [ok]
+- EthereumWallet [ok]
 - Heroku [ok]
 - Docker-image [ok]
 - Bioinformatics tools [ok]
