@@ -2125,7 +2125,7 @@ func RNASequence(sq []string) []string {
 
 	var k []string
 
-	for i, _ := range sq {
+	for i := range sq {
 
 		if sq[i] == "T" {
 			sq[i] = "U"
@@ -2171,7 +2171,7 @@ func bioChemRecord(st2 string) structs.MolecularBio {
 func RNAToAminoAcids(s []string) []amino.AminoClass {
 
 	bases := []string{}
-	for i, _ := range s {
+	for i := range s {
 		bases = append(bases, s[i])
 	}
 
