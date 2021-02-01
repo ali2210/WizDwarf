@@ -29,6 +29,8 @@ import (
 	"github.com/ali2210/wizdwarf/structs"
 	weather "github.com/ali2210/wizdwarf/structs/OpenWeather"
 	"github.com/ali2210/wizdwarf/structs/amino"
+	bio "github.com/ali2210/wizdwarf/structs/bioinformatics"
+	info "github.com/ali2210/wizdwarf/structs/bioinformatics/model"
 	"github.com/ali2210/wizdwarf/structs/paypal/handler"
 	"github.com/ali2210/wizdwarf/structs/users"
 	"github.com/ali2210/wizdwarf/structs/users/model"
@@ -67,7 +69,8 @@ var (
 	googleCredentials   string                    = ""
 	openReadFile        string                    = ""
 	publicAddress       string                    = ""
-	edit                structs.Levenshtein       = structs.Levenshtein{}
+	edit                bio.LevenTable            = bio.NewMatch()
+	algo                info.Levenshtein          = info.Levenshtein{}
 	visualizeReport     weather.DataVisualization = weather.DataVisualization{}
 	accountID           string                    = " "
 	accountKey          string                    = " "
@@ -500,8 +503,8 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("visualize.html"))
 	log.Println("Report percentage", visualizeReport.Percentage)
 	log.Println("Report uv ", visualizeReport.UVinfo)
-	edit.SetProbParameter(visualizeReport.Percentage)
-	if r.Method == "GET" && edit.GetProbParameter() != -1.0 {
+	algo.SetProbParameter(visualizeReport.Percentage)
+	if r.Method == "GET" && algo.GetProbParameter() != -1.0 {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
 
@@ -654,17 +657,17 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			switch choose {
 			case "0":
 				fmt.Fprintf(w, "Please choose any option ...")
-				_, err := ChoosePattern(w, r, "", choose, file)
+				err := ChoosePattern(w, r, "", choose, file)
 				if err != nil {
 					return
 				}
 			case "1":
 				var name string = "Covid-19"
-				e, err := ChoosePattern(w, r, name, choose, file)
+				err := ChoosePattern(w, r, name, choose, file)
 				if err != nil {
 					return
 				}
-				visualizeReport.Percentage = e.Percentage
+				visualizeReport.Percentage = algo.Percentage
 				// v :=  infectedUv()
 
 				// openStreet.Country = r.FormValue("country")
@@ -687,11 +690,11 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 
 			case "2":
 				var name string = "FlaviDengue"
-				e, err := ChoosePattern(w, r, name, choose, file)
+				err := ChoosePattern(w, r, name, choose, file)
 				if err != nil {
 					return
 				}
-				visualizeReport.Percentage = e.Percentage
+				visualizeReport.Percentage = algo.Percentage
 				// v :=  infectedUv()
 				// v.UVinfo = uvslice
 				w.WriteHeader(http.StatusOK)
@@ -702,11 +705,11 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 				// fmt.Println("Virus:", capsid)
 			case "3":
 				var name string = "KenyaEbola"
-				e, err := ChoosePattern(w, r, name, choose, file)
+				err := ChoosePattern(w, r, name, choose, file)
 				if err != nil {
 					return
 				}
-				visualizeReport.Percentage = e.Percentage
+				visualizeReport.Percentage = algo.Percentage
 				// v :=  infectedUv()
 				// v.UVinfo = uvslice
 
@@ -717,11 +720,11 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 				// fmt.Println("Virus:", capsid)
 			case "4":
 				var name string = "ZikaVirusBrazil"
-				e, err := ChoosePattern(w, r, name, choose, file)
+				err := ChoosePattern(w, r, name, choose, file)
 				if err != nil {
 					return
 				}
-				visualizeReport.Percentage = e.Percentage
+				visualizeReport.Percentage = algo.Percentage
 				// v :=  infectedUv()
 				// openStreet.Country = r.FormValue("country")
 				// openStreet.PostalCode = r.FormValue("postal")
@@ -741,11 +744,11 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 				// fmt.Println("Virus:", capsid)
 			case "5":
 				var name string = "MersSaudiaArabia"
-				e, err := ChoosePattern(w, r, name, choose, file)
+				err := ChoosePattern(w, r, name, choose, file)
 				if err != nil {
 					return
 				}
-				visualizeReport.Percentage = e.Percentage
+				visualizeReport.Percentage = algo.Percentage
 				// v :=  infectedUv()				//  openStreet.Country = r.FormValue("country")
 				//  openStreet.PostalCode = r.FormValue("postal")
 				// openStreet.City = r.FormValue("city")
@@ -1531,7 +1534,8 @@ func existing(w http.ResponseWriter, r *http.Request) {
 			if userSessions == nil {
 				userSessions = SessionsInit(data.Id)
 
-				err := act.NewToken(userSessions, w, r)
+				act.SetContextSession(userSessions, w, r)
+				err := act.NewToken()
 				if err != nil {
 					log.Fatal("[FAIL] No Token generate .. Review logs", err)
 					response := structs.Response{}
@@ -1587,7 +1591,7 @@ func logout(w http.ResponseWriter, r *http.Request) {
 
 		log.Println("[Access] ", r.URL.Path)
 
-		err := act.ExpireToken(userSessions, w, r)
+		err := act.ExpireToken()
 		if err != nil {
 			log.Fatal("[Fail] No Token Expire  ", err)
 			response := structs.Response{}
@@ -2183,31 +2187,31 @@ func blockSession(id int) *sessions.CookieStore {
 	return sessions.NewCookieStore([]byte(strconv.Itoa(id)))
 }
 
-func ChoosePattern(w http.ResponseWriter, r *http.Request, fname, choose string, file *os.File) (structs.Levenshtein, error) {
+func ChoosePattern(w http.ResponseWriter, r *http.Request, fname, choose string, file *os.File) error {
 
 	i, err := strconv.Atoi(choose)
 	if err != nil {
 		log.Fatalln("[Fail] Sorry there is some issue report!", err)
-		return edit, err
+		return err
 	}
 	if (i > 0 && i < 6) && (fname != " ") {
 		svrFile := FileReadFromDisk(w, r, fname)
 		Usr, Virus, err := SequenceFile(file, svrFile)
 		if err != nil {
 			log.Fatalln("[Fail] Sequence DataFile Error", err)
-			return edit, err
+			return err
 		}
 		log.Println("Genome:", len(Usr), "virus:", len(Virus))
-		distance := structs.EditDistanceStrings(Usr, Virus)
-		edit.Probablity = edit.Result(distance)
-		edit.Name = fname
-		edit.Percentage = edit.CalcualtePercentage(edit.Probablity)
-		return edit, err
+		distance := edit.EditDistanceStrings(Usr, Virus)
+		algo.Probablity = algo.Result(distance)
+		algo.Name = fname
+		algo.Percentage = algo.CalcualtePercentage(algo.Probablity)
+		return err
 	} else if i == 0 {
 		temFile := template.Must(template.ParseFiles("dashboard.html"))
 		temFile.Execute(w, "Dashbaord")
 	}
-	return edit, err
+	return err
 
 }
 
