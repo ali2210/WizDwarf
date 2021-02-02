@@ -1,18 +1,46 @@
-
-
 version: '3'
 services:
+  traefik:
+    image: traefik:v1.7.16
+    command: --web --docker --docker.domain=docker.localhost --
+    ports: 
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    networks:
+      - traefik_public
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/traefik.toml
+      - ./acme.json:/acme.json
+    labels:
+      - "traefik.frontend.rule=Host:traefik.wizdwarfs.io"
+      - "traefik.port=8080"
+    container_name: traefik
+    restart: always
   web:
     build: .
-    image: golang:1.14-apline3.12
+    image: golang:1.15-apline3.13
     working_dir: /app
     volumes: 
       - .:/var/lib/docker/volumes/wizlogs/_data
   dns:
     hostname:  'wizdwarfs' 
-    image: golang:1.14-apline3.12
+    image: golang:1.15-apline3.13
     ports: 
          - "5000:5000"
-    
-
-
+    networks:
+      - traefik_public
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_public"
+      - "traefik.goose-service.healthcheck.path=/health"
+      - "traefik.goose-service.healthcheck.interval=10s"
+      - "traefik.goose-service.backend=goose-service"
+      - "traefik.goose-service.frontend.rule=Host:traefik.wizdwarfs.io;PathPrefixStrip: /wizdwarfs/"
+      - "traefik.frontend.goose-service.forward.address=http://localhost:5000"
+      - "traefik.port=5000"
+networks:
+  traefik_public:
+    external: true

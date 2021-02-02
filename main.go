@@ -1590,7 +1590,7 @@ func logout(w http.ResponseWriter, r *http.Request) {
 		act := structs.RouteParameter{}
 
 		log.Println("[Access] ", r.URL.Path)
-
+		act.SetContextSession(userSessions, w, r)
 		err := act.ExpireToken()
 		if err != nil {
 			log.Fatal("[Fail] No Token Expire  ", err)

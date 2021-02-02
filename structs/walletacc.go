@@ -1,33 +1,29 @@
 package structs
 
-import(
-	// "crypto/ecdsa"
-	"fmt"
-)
+// "crypto/ecdsa"
 
+var WalletPrivateKey string = ""
 
-var WalletPrivateKey  string = ""
-
-type Acc struct{
-	Email string
-	Password string
-	Terms bool
+type Acc struct {
+	Email      string
+	Password   string
+	Terms      bool
 	EthAddress string
-	PubKey string
-	PrvteKey string
-	Allowed bool 
+	PubKey     string
+	PrvteKey   string
+	Allowed    bool
 }
 
+func (a *Acc) SetPrivateKey() {
 
-func (a *Acc)SetPrivateKey(){
-	WalletPrivateKey = (*a).PrvteKey 
-	fmt.Println("WalletPrivateKey:", WalletPrivateKey)
+	WalletPrivateKey = (*a).PrvteKey
+
 }
 
-func(*Acc)GetPrivateKey()(string){
+func (*Acc) GetPrivateKey() string {
 
-	if WalletPrivateKey == ""{
-	return WalletPrivateKey
+	if WalletPrivateKey == "" {
+		return WalletPrivateKey
 	}
- return WalletPrivateKey
+	return WalletPrivateKey
 }

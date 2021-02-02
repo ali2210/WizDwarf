@@ -24,9 +24,10 @@ type UsersTokenization interface {
 func (p *RouteParameter) ExpireToken() error {
 
 	param := p.GetContextSession()
-	sessId, _ := param.cookies.Get(param.Request, "session-name")
-	sessId.Values["authenticated"] = false
-	err := sessId.Save(param.Request, param.Response)
+	// print("Param:", param)
+	sessID, _ := param.cookies.Get(param.Request, "session-name")
+	sessID.Values["authenticated"] = false
+	err := sessID.Save(param.Request, param.Response)
 	if err != nil {
 		return err
 	}
@@ -36,9 +37,10 @@ func (p *RouteParameter) ExpireToken() error {
 func (p *RouteParameter) NewToken() error {
 
 	param := p.GetContextSession()
-	sessId, _ := param.cookies.Get(param.Request, "session-name")
-	sessId.Values["authenticated"] = true
-	err := sessId.Save(param.Request, param.Response)
+	// print("Param:", param)
+	sessID, _ := param.cookies.Get(param.Request, "session-name")
+	sessID.Values["authenticated"] = true
+	err := sessID.Save(param.Request, param.Response)
 	if err != nil {
 		return err
 	}
