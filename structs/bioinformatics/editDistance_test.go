@@ -33,15 +33,15 @@ var _ = Describe("Levenshtein Test", func() {
 			Expect(algoTest.EditDistanceStrings(a, b)).Should(BeZero())
 		})
 		It("Calculate Similarity", func() {
-			Expect(editTest.Result(algoTest.EditDistanceStrings(a, b))).Should(BeZero())
+			Expect(editTest.Result(algoTest.EditDistanceStrings(a, b))).ShouldNot(BeZero())
 		})
 		It("Calculate Percentage", func() {
-			Expect(editTest.CalcualtePercentage(editTest.Result(algoTest.EditDistanceStrings(a, b)))).Should(BeZero())
+			Expect(editTest.CalcualtePercentage(editTest.Result(algoTest.EditDistanceStrings(a, b)))).ShouldNot(BeZero())
 		})
 		It("Get Parameters", func() {
 			parm := editTest.CalcualtePercentage(editTest.Result(algoTest.EditDistanceStrings(a, b)))
 			editTest.SetProbParameter(parm)
-			Expect(editTest.GetProbParameter())
+			Expect(editTest.GetProbParameter()).ShouldNot(BeNil())
 		})
 	})
 })
