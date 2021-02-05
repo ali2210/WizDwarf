@@ -174,16 +174,16 @@ func main() {
 
 	// routing.HandleFunc("/dummy", server)*templates.Template
 
-	// tcp connection
-	err := http.ListenAndServe(net.JoinHostPort(host, port), routing)
+	// open browser
+	err := openBrowser(url)
 	if err != nil {
-		log.Println("Listening Error: ", err)
 		panic(err)
 	}
 
-	// open browser
-	err = openBrowser(url)
+	// tcp connection
+	err = http.ListenAndServe(net.JoinHostPort(host, port), routing)
 	if err != nil {
+		log.Println("Listening Error: ", err)
 		panic(err)
 	}
 
@@ -2254,7 +2254,7 @@ func openBrowser(url string) error {
 	var err error
 	switch runtime.GOOS {
 	case "linux":
-		err = exec.Command("xdg-open", url).Start()
+		err = exec.Command("/usr/bin/sensible-browser", url).Start()
 	case "windows":
 		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
 	case "darwin":
