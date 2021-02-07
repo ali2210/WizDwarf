@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap"
+    rel="stylesheet">
+
   <link rel="stylesheet" type="text/css" href="/css/visualize.css">
   <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
   <!-- <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script> -->
@@ -14,24 +17,68 @@
 </head>
 
 <body>
+
   <div class="static-field">
-      <div class="static-img">
-        <img src="/images/logo.png" alt ="WizDwarfs" class="img-logo"/>
-         <h5 class="heading-text">Reports</h5>
-      </div>
+    <div class="static-img">
+      <img src="/images/logo.png" alt="WizDwarfs" class="img-logo" />
+    </div>
   </div>
 
+  <canvas></canvas>
 
-  <div class="canvasdiv">
-    <span id="result" class="div-span"> Results ... {{ .Percentage}}</span>
-    <div class="canvas">
-      <canvas id="canvasPaper" class="div-canvas"></canvas>
+  <div class="card text-center">
+    <div class="card-header">
+      Calculation Completed within seconds
+    </div>
+    <div class="card-body">
+      <h5 class="card-title"> Sequel </h5>
+      <p class="card-text">
+      <div class="progress">
+        <div class="progress-done" data-done="100">
+          100%
+        </div>
+      </div>
+      <p>
+        <a class="btn btn-success" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+          aria-controls="collapseExample"> <i class="fa fa-check-square" aria-hidden="true"></i>
+          <span class="badge badge-light">{{.Process}}</span>
+        </a>
+      </p>
+      <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+          <div class="canvasdiv">
+            <span id="result" class="div-span">
+              Results ... {{ .Percentage}}
+            </span>
+            <div class="canvas">
+              <canvas id="canvasPaper" class="div-canvas"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      </p>
+
+    </div>
+    <div class="card-footer text-muted">
+      {{.SeenBy}}
     </div>
   </div>
 
 
-    <script src="/js/visual.js"></script>
+
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <script src="/js/visual.js"></script>
 
 
 </body>
+
 </html>

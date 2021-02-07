@@ -1,15 +1,12 @@
 
 .static-field{
 	margin-top: 20px;
-    /* margin-left: 100px; */
     display: flex;
-    /* justify-content: center; */
     position: inherit;
+    border: 2px white double;
 }
 .static-img{
 	display: flex;
-    /* justify-content: center; */
-    /* position: absolute; */
     margin-top: 10px;
     max-width: 100%;
  }
@@ -37,15 +34,13 @@
 	margin-right: 14px;
 	margin-left: 30px;
 }
+
 .div-span{
 	display: flex;
-    /* margin-right: 70px; */
+    
     margin-top: 160px;
     position: absolute;
-    /* justify-content: center; */
-    /* margin: 50px; */
-    /* position: relative; */
-    /* text-align: center; */
+    
     color: teal;
     font-weight: bolder;
     font-size: medium;
@@ -56,3 +51,27 @@
     margin-left: 170px;
     margin-right: 50px
 }
+
+.progress {
+    height: 30px;
+    width: 300px;
+    background-color: lightgray;
+    border-radius: 20px;
+    margin-left: 350px;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  
+  .progress-done {
+    height: 100%;
+    width: 0;
+    opacity: 0;
+    background: linear-gradient(to left, #f2709c,#ff9472);
+    color: #fff;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 3px 3px -5px #f2709c, 0 2px 5px #f2709c;
+    transition: 30s ease;
+  }

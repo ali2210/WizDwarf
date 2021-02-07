@@ -17,9 +17,7 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"os/exec"
 	"regexp"
-	"runtime"
 	"strconv"
 	templates "text/template"
 	"time"
@@ -98,7 +96,7 @@ func main() {
 	log.Println("[OK] Wiz-Dwarfs starting")
 	host := os.Getenv("HOST")
 	port := os.Getenv("PORT")
-	//var url string = ""
+	// var url string = ""
 	//  env host
 	if host == "" {
 
@@ -111,14 +109,14 @@ func main() {
 				// any Listening PORT {heroku}
 				log.Println("[Open] Application Port", port)
 				log.Println("[Open] Application host", host)
-				//url = "https://" + "127.0.0.1:" + port + "/"
+				// url = "https://" + "127.0.0.1:" + port + "/"
 			} else {
 				// specfic port allocated {docker}
 				port = "5000"
 				host = "wizdwarfs"
 				log.Println("[New] Application Default port", port)
 				log.Println("[Host] Explicit Host ", host)
-				//url = "https://" + host + ".io" + "/"
+				// url = "https://" + host + ".io" + "/"
 			}
 
 		}
@@ -513,10 +511,26 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("visualize.html"))
 	log.Println("Report percentage", visualizeReport.Percentage)
 	log.Println("Report uv ", visualizeReport.UVinfo)
+	userProfile, err := cloud.FindAllData(appName, accountVisitEmail, accountKey)
+	if err != nil && userProfile != nil {
+		log.Fatal("[Fail] No info  ", err)
+		response := structs.Response{}
+		temp := server(w, r)
+		_ = response.ClientRequestHandle(true, "Sorry ! No Information ", "/login", w, r)
+		response.ClientLogs()
+		err := response.Run(temp)
+		if err != nil {
+			log.Println("[Error]: checks logs...", err)
+			return
+		}
+
+	}
 	algo.SetProbParameter(visualizeReport.Percentage)
 	if r.Method == "GET" && algo.GetProbParameter() != -1.0 {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
+		visualizeReport.Process = 1
+		visualizeReport.SeenBy = userProfile.Name
 
 		temp.Execute(w, visualizeReport)
 	}
@@ -2250,18 +2264,24 @@ func cardNumberValid(s1, s2 string) bool {
 	return false
 
 }
-func openBrowser(url string) error {
-	var err error
-	switch runtime.GOOS {
-	case "linux":
-		err = exec.Command("sensible-browser", url).Start()
-	case "windows":
-		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
-	case "darwin":
-		err = exec.Command("open", url).Start()
-	default:
-		err = fmt.Errorf("Operation fail")
-	}
-	return err
 
-}
+// func openBrowser(url string) error {
+// 	var err error
+// 	switch runtime.GOOS {
+// 	case "linux":
+// 		cmd := exec.Command("/usr/bin/sensible-browser", url)
+// 		err = cmd.Start()
+// 		if err != nil {
+// 			log.Fatalln("Error", err)
+// 		}
+// 		err = cmd.Run()
+// 	case "windows":
+// 		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
+// 	case "darwin":
+// 		err = exec.Command("open", url).Start()
+// 	default:
+// 		err = fmt.Errorf("Operation fail")
+// 	}
+// 	return err
+
+// }
