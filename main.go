@@ -98,7 +98,7 @@ func main() {
 	log.Println("[OK] Wiz-Dwarfs starting")
 	host := os.Getenv("HOST")
 	port := os.Getenv("PORT")
-	var url string = ""
+	//var url string = ""
 	//  env host
 	if host == "" {
 
@@ -111,14 +111,14 @@ func main() {
 				// any Listening PORT {heroku}
 				log.Println("[Open] Application Port", port)
 				log.Println("[Open] Application host", host)
-				url = "https://" + "127.0.0.1:" + port + "/"
+				//url = "https://" + "127.0.0.1:" + port + "/"
 			} else {
 				// specfic port allocated {docker}
 				port = "5000"
 				host = "wizdwarfs"
 				log.Println("[New] Application Default port", port)
 				log.Println("[Host] Explicit Host ", host)
-				url = "https://" + host + ".io" + "/"
+				//url = "https://" + host + ".io" + "/"
 			}
 
 		}
@@ -175,13 +175,13 @@ func main() {
 	// routing.HandleFunc("/dummy", server)*templates.Template
 
 	// open browser
-	err := openBrowser(url)
-	if err != nil {
-		panic(err)
-	}
+	// err := openBrowser(url)
+	// if err != nil {
+	// 	panic(err)
+	// }
 
 	// tcp connection
-	err = http.ListenAndServe(net.JoinHostPort(host, port), routing)
+	err := http.ListenAndServe(net.JoinHostPort(host, port), routing)
 	if err != nil {
 		log.Println("Listening Error: ", err)
 		panic(err)
@@ -2254,7 +2254,7 @@ func openBrowser(url string) error {
 	var err error
 	switch runtime.GOOS {
 	case "linux":
-		err = exec.Command("/usr/bin/sensible-browser", url).Start()
+		err = exec.Command("sensible-browser", url).Start()
 	case "windows":
 		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
 	case "darwin":
