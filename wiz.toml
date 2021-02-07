@@ -1,0 +1,30 @@
+debug = false
+logLevel = "ERROR"
+
+defaultEntryPoint = ["http", "https"]
+
+[web]
+address = ":5000"
+[entryPoints]
+[entryPoints.http]
+address = ":80"
+[entryPoints.http.redirect]
+entryPoints = "https"
+
+[entryPoints.https]
+address = ":443"
+[entryPoints.https.tls]
+[retry]
+
+[docker]
+domain = "taefik.wizdwarfs.io" # Replace this with your traefik subdomain
+endpoint = "unix:///var/run/docker.sock" 
+exposedByDefault = false 
+watch = true 
+[acme]
+email = "AliMatrixCode@protonmail.com" # Replace this with your email address
+entryPoint = "https" 
+onHostRule = true 
+storage = "acme.json" 
+[acme.httpChallenge]
+entryPoint = "http"

@@ -29,9 +29,7 @@ ADD . /app
 
 WORKDIR /app
 
-RUN go test -v ./... 
-
-RUN go build -o main
+RUN go build -o main && go test -v ./... 
 
 EXPOSE 5000
 
