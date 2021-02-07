@@ -34,7 +34,7 @@ function meter() {
 
   ctx.fillStyle = 'green';
   ctx.save();
-  ctx.rotate((Math.PI * 50) / valueRes);
+  ctx.rotate((Math.PI / 50) * valueRes);
   ctx.lineWidth = 15;
   ctx.beginPath();
   ctx.moveTo(-20, 0);
@@ -112,7 +112,3 @@ setTimeout(() => {
   progress.style.opacity = 1;
   progress.style.width = progress.getAttribute('data-done') + '%';
 }, 500)
-
-
-
-

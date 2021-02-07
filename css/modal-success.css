@@ -225,3 +225,10 @@ body{
        color:aliceblue;
     transform: scale(1.5);
    }
+   .foot-mark{
+       display: flex;
+       position:relative;
+       justify-content: flex-end;
+       margin-top: 50%;
+       flex-direction: column-reverse;
+   }
