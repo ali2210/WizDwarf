@@ -62,7 +62,7 @@ var _ = Describe("Profile Data store interface test..", func() {
 			Expect(client.UpdateProfiles(&firebase.App{}, &Profile)).Should(BeNil())
 		})
 		It("Data get", func() {
-			Expect(client.GetProfile(&firebase.App{}, customer.Id)).Should(BeNil())
+			Expect(client.GetProfile(&firebase.App{}, customer.Id, customer.Email)).Should(BeNil())
 		})
 	})
 
