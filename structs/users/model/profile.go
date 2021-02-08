@@ -12,6 +12,7 @@ type UpdateProfile struct {
 	Male         bool
 	Email        string
 	Twitter      string
+	City         string
 }
 
 type Vistors struct {

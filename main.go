@@ -272,7 +272,7 @@ func aboutMe(w http.ResponseWriter, r *http.Request) {
 
 		// cardInfoID :=  digitalCode.GetAuthorizeStoreID()
 
-		userProfile, err := cloud.FindAllData(appName, accountVisitEmail, accountKey)
+		userProfile, err := cloud.GetProfile(appName, accountID, accountVisitEmail)
 		if err != nil && userProfile != nil {
 			log.Fatal("[Fail] No info  ", err)
 			response := structs.Response{}
@@ -314,29 +314,23 @@ func aboutMe(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// err = paypalMini.RemoveCard(ret.ID,client); if err != nil {
-		// 	log.Fatalln("[Fail] Remove Card operation:", err)
-		// 	return
-		// }
-
 		myProfile := model.DigialProfile{
-
-			Name:     userProfile.Name,
-			FName:    userProfile.FName,
-			Email:    userProfile.Email,
-			Address:  userProfile.Address,
-			LAddress: userProfile.LAddress,
-			City:     userProfile.City,
-			Zip:      userProfile.Zip,
-			Country:  userProfile.Country,
-
-			Public:  access.PublicAddress,
-			Private: access.PrvteKey,
-
+			Public:      access.PublicAddress,
+			Private:     access.PrvteKey,
+			Name:        userProfile.FirstName,
+			FName:       userProfile.LastName,
+			Email:       userProfile.Email,
+			Address:     userProfile.HouseAddress1,
+			LAddress:    userProfile.HouseAddress2,
+			City:        userProfile.City,
+			Zip:         userProfile.Zip,
+			Country:     userProfile.Country,
+			Phone:       userProfile.PhoneNo,
+			Twitter:     userProfile.Twitter,
 			Number:      ret.Number,
-			Type:        ret.Type,
 			ExpireMonth: ret.ExpireMonth,
 			ExpireYear:  ret.ExpireYear,
+			Type:        ret.Type,
 		}
 
 		log.Println("[Accept] Profile", myProfile)

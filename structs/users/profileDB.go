@@ -21,9 +21,9 @@ type ProfileinJSON struct {
 	HouseAddress2 string `json:"HouseAddress2"`
 	Country       string `json:"Country"`
 	Zip           string `json:"Zip"`
+	City          string `json:"City"`
 	Eve           bool   `json:"Eve"`
 	Email         string `json:"Email"`
-	Phone         string `json:"Phone"`
 	Twitter       string `json:"Twitter"`
 }
 
@@ -167,6 +167,7 @@ func (*cloud_data) UpdateProfiles(clientId *firebase.App, profile *model.UpdateP
 		"LastName":      profile.LastName,
 		"PhoneNo":       profile.Phone,
 		"Twitter":       profile.Twitter,
+		"City":          profile.City,
 	})
 	if err != nil {
 		// log.Fatal("Failed to retrive Vistor Record:", err)
@@ -196,14 +197,15 @@ func (*cloud_data) GetProfile(clientId *firebase.App, Id, email string) (*Profil
 		visits = ProfileinJSON{
 			Id:            doc.Data()["Id"].(string),
 			FirstName:     doc.Data()["FirstName"].(string),
-			Email:         doc.Data()["Email"].(string),
-			Phone:         doc.Data()["PhoneNo"].(string),
 			LastName:      doc.Data()["LastName"].(string),
-			Country:       doc.Data()["Country"].(string),
-			Zip:           doc.Data()["Zip"].(string),
+			PhoneNo:       doc.Data()["PhoneNo"].(string),
 			HouseAddress1: doc.Data()["HouseAddress1"].(string),
 			HouseAddress2: doc.Data()["Address"].(string),
+			Country:       doc.Data()["Country"].(string),
+			Zip:           doc.Data()["Zip"].(string),
+			City:          doc.Data()["City"].(string),
 			Eve:           doc.Data()["Eve"].(bool),
+			Email:         doc.Data()["Email"].(string),
 			Twitter:       doc.Data()["Twitter"].(string),
 		}
 		break

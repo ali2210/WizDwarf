@@ -15,6 +15,8 @@ type DigialProfile struct {
 	City     string
 	Zip      string
 	Country  string
+	Phone    string
+	Twitter  string
 
 	// credit card details
 	Number      string
