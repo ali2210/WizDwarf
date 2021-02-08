@@ -24,6 +24,7 @@ type ProfileinJSON struct {
 	Eve           bool   `json:"Eve"`
 	Email         string `json:"Email"`
 	Phone         string `json:"Phone"`
+	Twitter       string `json:"Twitter"`
 }
 
 type DBFirestore interface {
@@ -31,7 +32,7 @@ type DBFirestore interface {
 	ToFindByGroupSet(id, email string, app *firebase.App) (*model.Vistors, error)
 	FindAllData(app *firebase.App, email, password string) (*model.Vistors, error)
 	UpdateProfiles(clientId *firebase.App, profile *model.UpdateProfile) (*model.UpdateProfile, error)
-	GetProfile(clientId *firebase.App, Id string) (*ProfileinJSON, error)
+	GetProfile(clientId *firebase.App, Id, email string) (*ProfileinJSON, error)
 }
 
 type cloud_data struct{}
@@ -165,6 +166,7 @@ func (*cloud_data) UpdateProfiles(clientId *firebase.App, profile *model.UpdateP
 		"Country":       profile.Country,
 		"LastName":      profile.LastName,
 		"PhoneNo":       profile.Phone,
+		"Twitter":       profile.Twitter,
 	})
 	if err != nil {
 		// log.Fatal("Failed to retrive Vistor Record:", err)
@@ -173,7 +175,7 @@ func (*cloud_data) UpdateProfiles(clientId *firebase.App, profile *model.UpdateP
 	return profile, nil
 }
 
-func (*cloud_data) GetProfile(clientId *firebase.App, Id string) (*ProfileinJSON, error) {
+func (*cloud_data) GetProfile(clientId *firebase.App, Id, email string) (*ProfileinJSON, error) {
 	ctx := context.Background()
 	var visits ProfileinJSON
 	client, err := clientId.Firestore(ctx)
@@ -183,7 +185,7 @@ func (*cloud_data) GetProfile(clientId *firebase.App, Id string) (*ProfileinJSON
 	}
 
 	defer client.Close()
-	iterator := client.Collection(collection).Where("Id", "==", Id).Documents(ctx)
+	iterator := client.Collection(collection).Where("Id", "==", Id).Where("Email", "==", email).Documents(ctx)
 
 	defer iterator.Stop()
 	for {
@@ -202,6 +204,7 @@ func (*cloud_data) GetProfile(clientId *firebase.App, Id string) (*ProfileinJSON
 			HouseAddress1: doc.Data()["HouseAddress1"].(string),
 			HouseAddress2: doc.Data()["Address"].(string),
 			Eve:           doc.Data()["Eve"].(bool),
+			Twitter:       doc.Data()["Twitter"].(string),
 		}
 		break
 	}

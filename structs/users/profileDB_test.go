@@ -57,6 +57,7 @@ var _ = Describe("Profile Data store interface test..", func() {
 				Zip:          "94300",
 				Male:         true,
 				Email:        "johnDevy@coke.com",
+				Twitter:      "https://twitter.com/john",
 			}
 			Expect(client.UpdateProfiles(&firebase.App{}, &Profile)).Should(BeNil())
 		})

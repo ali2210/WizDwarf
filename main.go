@@ -375,7 +375,7 @@ func profile(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	detailsAcc, err := cloud.ToFindByGroupSet(accountID, accountVisitEmail, appName)
+	detailsAcc, err := cloud.GetProfile(appName, accountID, accountVisitEmail)
 	if err != nil {
 		log.Fatalln("[Fail] Operation..", err)
 		return
@@ -400,10 +400,11 @@ func profile(w http.ResponseWriter, r *http.Request) {
 			Phone:        r.FormValue("phone"),
 			FirstName:    r.FormValue("uname"),
 			LastName:     r.FormValue("ufname"),
-			HouseAddress: r.FormValue("inputAddress"),
+			HouseAddress: r.FormValue("address"),
 			SubAddress:   r.FormValue("inputAddress2"),
 			Country:      r.FormValue("country"),
 			Zip:          r.FormValue("inputZip"),
+			Twitter:      r.FormValue("tweet"),
 		}
 
 		if accountID == "" {

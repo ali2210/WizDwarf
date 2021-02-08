@@ -1,25 +1,24 @@
 package model
 
-type DigialProfile struct{
-	
+type DigialProfile struct {
+
 	// ledger my data
-	Public string
+	Public  string
 	Private string
-	
+
 	// visitor profile
-	Name string
-	FName string
-	Email string
-	Address string
+	Name     string
+	FName    string
+	Email    string
+	Address  string
 	LAddress string
-	City string
-	Zip string
-	Country string
+	City     string
+	Zip      string
+	Country  string
 
 	// credit card details
-	Number string
+	Number      string
 	ExpireMonth string
-	ExpireYear string
-	Type string
-
+	ExpireYear  string
+	Type        string
 }
