@@ -1745,9 +1745,9 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *model.
 			}
 
 			log.Println("Records:", record)
-			response.WriteHeader(http.StatusOK)
-			request.Method = "GET"
-			createWallet(response, request)
+			// response.WriteHeader(http.StatusOK)
+			// request.Method = "GET"
+			// createWallet(response, request)
 
 		}
 
