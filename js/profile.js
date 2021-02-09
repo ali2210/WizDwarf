@@ -12,7 +12,7 @@ function EmailEditEvent() {
     var duplicate = document.getElementById('demail');
     email.remove();
     duplicate.style.visibility = "visible";
-    var button = document.getElementById('button-input');
+    var button = document.getElementById('button-input-email');
     button.style.marginTop = '37px';
     EditEvent();
 }
@@ -86,6 +86,15 @@ function TweetEditEvent() {
     tweet.remove();
     duplicate.style.visibility = "visible";
     var button = document.getElementById('button-twitter');
+    button.style.marginTop = '37px';
+    EditEvent();
+}
+function CityEditEvent() {
+    var city = document.getElementById('city');
+    var duplicate = document.getElementById('dcity');
+    city.remove();
+    duplicate.style.visibility = "visible";
+    var button = document.getElementById('button-input-city');
     button.style.marginTop = '37px';
     EditEvent();
 }

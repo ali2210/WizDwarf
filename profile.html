@@ -133,21 +133,27 @@
       <div class="form-group col-12">
         <label for="email" class="custom-label">Email</label>
         <input type="text" class="form-control" id="email" name="email" placeholder="Email" value="{{.Email}}" readonly>
-        <input type="text" class="form-control duplicate" id="email" name="email" placeholder="Email">
-        <button type="button" onclick="EmailEditEvent()" class="button-input-long" id="button-input"><i
+        <input type="text" class="form-control duplicate" id="demail" name="email" placeholder="Email">
+        <button type="button" onclick="EmailEditEvent()" class="button-input-long" id="button-input-email"><i
             class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
       </div>
     </div>
-    <div class="form-group col-12 ">
-      <label for="inputTweet" class="custom-label">Twitter</label>
-      <input type="number" class="form-control" id="tweet" name="tweet" placeholder="Twitter" value="{{.Twitter}}"
-        readonly>
-      <input type="text" class="form-control duplicate" id="dtweet" name="tweet" placeholder="https://twitter.com/ali">
-      <button type="button" onclick="TweetEditEvent()" class=" button-input-long" id="button-twitter"><i
+    <div class="form-row custom-form-row mb-1 ">
+      <label for="email" class="custom-label">City</label>
+      <input type="text" class="form-control" id="city" name="city" placeholder="City" value="{{.City}}" readonly>
+      <input type="text" class="form-control duplicate" id="dcity" name="city" placeholder="City">
+      <button type="button" onclick="CityEditEvent()" class="button-input-long" id="button-input-city"><i
           class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
-      </input>
-    </div>
-    </div>
+      <div class="form-group col-12">
+        <label for="inputTweet" class="custom-label">Twitter</label>
+        <input type="number" class="form-control" id="tweet" name="tweet" placeholder="Twitter" value="{{.Twitter}}"
+          readonly>
+        <input type="text" class="form-control duplicate" id="dtweet" name="tweet"
+          placeholder="https://twitter.com/ali">
+        <button type="button" onclick="TweetEditEvent()" class=" button-input-long" id="button-twitter"><i
+            class="fa fa-pencil-square-o edit-input" aria-hidden="true" id="trash" name="edit"></i></button>
+        </input>
+      </div>
     </div>
     <div class="submit-form-div">
       <button type="submit" class="btn mb-2 submit-button" id="submBtn" n>Sign in</button>

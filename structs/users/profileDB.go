@@ -13,7 +13,7 @@ const (
 )
 
 type ProfileinJSON struct {
-	Id            string `json:"Id"`
+	ID            string `json:"Id"`
 	FirstName     string `json:"FirstName"`
 	LastName      string `json:"LastName"`
 	PhoneNo       string `json:"PhoneNo"`
@@ -31,17 +31,17 @@ type DBFirestore interface {
 	SaveData(visitor *model.Vistors, app *firebase.App) (*model.Vistors, error)
 	ToFindByGroupSet(id, email string, app *firebase.App) (*model.Vistors, error)
 	FindAllData(app *firebase.App, email, password string) (*model.Vistors, error)
-	UpdateProfiles(clientId *firebase.App, profile *model.UpdateProfile) (*model.UpdateProfile, error)
-	GetProfile(clientId *firebase.App, Id, email string) (*ProfileinJSON, error)
+	UpdateProfiles(clientID *firebase.App, profile *model.UpdateProfile) (*model.UpdateProfile, error)
+	GetProfile(clientID *firebase.App, ID, email string) (*ProfileinJSON, error)
 }
 
-type cloud_data struct{}
+type cloudData struct{}
 
 func NewCloudInstance() DBFirestore {
-	return &cloud_data{}
+	return &cloudData{}
 }
 
-func (*cloud_data) SaveData(visitor *model.Vistors, app *firebase.App) (*model.Vistors, error) {
+func (*cloudData) SaveData(visitor *model.Vistors, app *firebase.App) (*model.Vistors, error) {
 	ctx := context.Background()
 	client, err := app.Firestore(ctx)
 	if err != nil {
@@ -51,7 +51,7 @@ func (*cloud_data) SaveData(visitor *model.Vistors, app *firebase.App) (*model.V
 	defer client.Close()
 
 	_, _, err = client.Collection(collection).Add(ctx, map[string]interface{}{
-		"Id":       visitor.Id,
+		"ID":       visitor.Id,
 		"Name":     visitor.Name,
 		"Email":    visitor.Email,
 		"Password": visitor.Password,
@@ -71,7 +71,7 @@ func (*cloud_data) SaveData(visitor *model.Vistors, app *firebase.App) (*model.V
 
 }
 
-func (*cloud_data) FindAllData(app *firebase.App, email, password string) (*model.Vistors, error) {
+func (*cloudData) FindAllData(app *firebase.App, email, password string) (*model.Vistors, error) {
 	ctx := context.Background()
 	var visit model.Vistors
 	client, err := app.Firestore(ctx)
@@ -92,7 +92,7 @@ func (*cloud_data) FindAllData(app *firebase.App, email, password string) (*mode
 		}
 
 		visit = model.Vistors{
-			Id:       doc.Data()["Id"].(string),
+			Id:       doc.Data()["ID"].(string),
 			Name:     doc.Data()["Name"].(string),
 			Email:    doc.Data()["Email"].(string),
 			Password: doc.Data()["Password"].(string),
@@ -110,7 +110,7 @@ func (*cloud_data) FindAllData(app *firebase.App, email, password string) (*mode
 
 }
 
-func (*cloud_data) ToFindByGroupSet(id, email string, app *firebase.App) (*model.Vistors, error) {
+func (*cloudData) ToFindByGroupSet(id, email string, app *firebase.App) (*model.Vistors, error) {
 
 	ctx := context.Background()
 	client, err := app.Firestore(ctx)
@@ -135,7 +135,7 @@ func (*cloud_data) ToFindByGroupSet(id, email string, app *firebase.App) (*model
 			continue
 		}
 		visits = model.Vistors{
-			Id:      doc.Data()["Id"].(string),
+			Id:      doc.Data()["ID"].(string),
 			Email:   doc.Data()["Email"].(string),
 			Country: doc.Data()["Country"].(string),
 			Zip:     doc.Data()["Zip"].(string),
@@ -146,9 +146,9 @@ func (*cloud_data) ToFindByGroupSet(id, email string, app *firebase.App) (*model
 	return &visits, err
 }
 
-func (*cloud_data) UpdateProfiles(clientId *firebase.App, profile *model.UpdateProfile) (*model.UpdateProfile, error) {
+func (*cloudData) UpdateProfiles(clientID *firebase.App, profile *model.UpdateProfile) (*model.UpdateProfile, error) {
 	ctx := context.Background()
-	client, err := clientId.Firestore(ctx)
+	client, err := clientID.Firestore(ctx)
 	if err != nil {
 		log.Fatal("Client Instance Failed to start", err)
 		return nil, err
@@ -156,7 +156,7 @@ func (*cloud_data) UpdateProfiles(clientId *firebase.App, profile *model.UpdateP
 	defer client.Close()
 
 	_, _, err = client.Collection(collection).Add(ctx, map[string]interface{}{
-		"Id":            profile.Id,
+		"ID":            profile.Id,
 		"FirstName":     profile.FirstName,
 		"Email":         profile.Email,
 		"Eve":           profile.Male,
@@ -176,17 +176,17 @@ func (*cloud_data) UpdateProfiles(clientId *firebase.App, profile *model.UpdateP
 	return profile, nil
 }
 
-func (*cloud_data) GetProfile(clientId *firebase.App, Id, email string) (*ProfileinJSON, error) {
+func (*cloudData) GetProfile(clientID *firebase.App, ID, email string) (*ProfileinJSON, error) {
 	ctx := context.Background()
 	var visits ProfileinJSON
-	client, err := clientId.Firestore(ctx)
+	client, err := clientID.Firestore(ctx)
 	if err != nil {
 		log.Fatal("Client Instance Failed to start", err)
 		return &visits, err
 	}
 
 	defer client.Close()
-	iterator := client.Collection(collection).Where("Id", "==", Id).Where("Email", "==", email).Documents(ctx)
+	iterator := client.Collection(collection).Where("Id", "==", ID).Where("Email", "==", email).Documents(ctx)
 
 	defer iterator.Stop()
 	for {
@@ -195,7 +195,7 @@ func (*cloud_data) GetProfile(clientId *firebase.App, Id, email string) (*Profil
 			return &visits, err
 		}
 		visits = ProfileinJSON{
-			Id:            doc.Data()["Id"].(string),
+			ID:            doc.Data()["ID"].(string),
 			FirstName:     doc.Data()["FirstName"].(string),
 			LastName:      doc.Data()["LastName"].(string),
 			PhoneNo:       doc.Data()["PhoneNo"].(string),

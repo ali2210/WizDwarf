@@ -390,15 +390,17 @@ func profile(w http.ResponseWriter, r *http.Request) {
 
 		// save value in db
 		MyProfile := model.UpdateProfile{
-			Email:        r.FormValue("email"),
-			Phone:        r.FormValue("phone"),
+			Id:           accountID,
 			FirstName:    r.FormValue("uname"),
 			LastName:     r.FormValue("ufname"),
+			Phone:        r.FormValue("phone"),
 			HouseAddress: r.FormValue("address"),
 			SubAddress:   r.FormValue("inputAddress2"),
 			Country:      r.FormValue("country"),
 			Zip:          r.FormValue("inputZip"),
+			Email:        r.FormValue("email"),
 			Twitter:      r.FormValue("tweet"),
+			City:         r.FormValue("city"),
 		}
 
 		if accountID == "" {

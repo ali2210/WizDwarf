@@ -22,7 +22,7 @@ var customer model.Vistors = model.Vistors{
 	Country:  "usa",
 	Eve:      false,
 }
-var client DBFirestore = &cloud_data{}
+var client DBFirestore = &cloudData{}
 
 func profileDBTest(t *testing.T) {
 	RegisterFailHandler(Fail)
