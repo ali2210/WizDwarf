@@ -1,147 +1,82 @@
 
-.btn-connect{
-	margin-top: 5px;
-	margin-left: 200px;
+.logo{
 	display: flex;
-	flex-direction: column-reverse;
-	justify-content: center;
-	align-content: center;
-	border-style: none;
-	color: light;
-	background-color: snow;
-	height: 100%;
-}
-
-.static-field{
-	align-content: center;
-	display: flex;
-	justify-content: center;
-	flex-direction: column;
-}
-.static-img{
-	align-self: center;
-	text-align: center;
-}
-.static-text{
-	text-align: center;
-	margin-top: 5px;
-}
-.avatar-pics{
-	margin-top: 5px;
-}
-.myAvatar{
-	border-radius: 50%;
-	width: 20%;
+	width: 30%;
 	position: relative;
 }
-.address{
-	margin-top: 10px;
-}
-.balance{
-	margin-top: 10px;
-}
-
-.form-opts{
+.main-dashboard-div{
 	display: flex;
+	justify-content: flex-start;
+	margin-top: 25px;
+}
+.div-form-card{
+	width: 18rem;
+	display: flex;
+	position: relative;
+	margin-left: 50%;
+	margin-top: 10%;
+	color: cornsilk;
+}
+.form-card{
+	background-color: darkmagenta;
+	display: flex;
+    justify-content: center;
+    position: relative;
+}
+.list-group{
+	color: blueviolet;
+}
+.margin-space{
+	display: flex;
+	position: relative;
+	margin-bottom: 20px;
+	background-color: darkorchid;
+}
+
+.card-title{
+	display: flex;
+	position: relative;
 	justify-content: center;
-	flex-direction: column-reverse;
-	align-self: center;
-	text-align: center;
+	
+	border :2px whitesmoke dotted;
+	border-radius: 10px;
+}
+.btn-primary, .btn-dark{
+	display: flex;
+	position: relative;
+	background-color: indigo;
+	border: 2px whitesmoke dotted;
+	border-radius: 10px;
 	margin-top: 10px;
 }
-.btn-pay,
-.btn-rec, 
-.btns, 
-{
-	margin: auto;
+.div-meta{
+	display:flex;
+	position:relative;
+	margin-left: 2%;
+	background: padding-box;
+	border: 2px whitesmoke dashed;
+	border-radius: 10px;
+	font-size: 15.5px;
 }
-
-.btn-Send,
-.btn-ok,
-.btn-reject,
-.btn-reset,
-.btn-okx,
-.more-btn 
-{
-	border-style: none;
-	background-color: white				;
-	margin-top: 5px;
-	height: 10%;
+.fa-check-circle{
+	color: green;
+	visibility: hidden;
+	margin-right: 2px ;
+	margin-top: 2px;
 }
-
-.btn-reject,
-.btn-reset, 
-.btn-okx{
+.fa-ban{
 	color: red;
+	visibility:visible;
+	margin-right: 2px;
+	margin-top: 2px;
 }
-
-.btn-Send,
-.btn-ok{
+.connect{
+	visibility: hidden;
+	margin-left: 2px;
 	color: green;
 }
-
-.more-btn{
-	color: indigo;
+.disconnect{
+	visibility: visible;
+	margin-left: 2px;
+	color: red;
 }
-
-.btn-Send{
-	margin-top: 50px;
-}
-
-.send-input,
-.recAdd-input,
-.dropdown-trans, 
-.form-dropdown-control,
-.btn-ok,
-.btn-okx,  
-.class-amount,
-.class-nonce,
-.class-gas,
-.more-btn{
-	visibility: hidden;
-}
-
-.form-send{
-	align-items: center;
-	margin-top: 20px;
-}
-.form-1, 
-.rece{
-	align-content: center;
-	margin-top: 10px;
-}
-
-.changePic{
-	color: indigo;
-	position: absolute;
-	top: 61.5%;
-	left: 56.7%;
-	padding: 2.0px 2.0px;
-	-ms-transform: translate(-50%,-50%);
-	transform: translate(-50%,-50%);
-	background: antiquewhite;
-	cursor: pointer;
-	border-style: none;
-}
-.reverse{
-	color: fuchsia;
-	position: absolute;
-	top: 61.5%;
-	left: 43.5%;
-	padding: 2.0px 2.0px;
-	-ms-transform:translate(-50%,-50%);
-	transform: translate(-50%,-50%);
-	background: antiquewhite;
-	cursor: pointer;
-	border-style: none;
-}
-
-.more{
-	margin-left: 220px;
-	text-align: center;
-}
-.eth-img{
-	width: 3%;
-}
-
-

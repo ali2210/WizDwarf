@@ -1,97 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  
-  <!-- <link rel="shortcut icon" type="image/png" href="/images/favicon.png"> -->
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/dashboard.css">
-  <link rel="stylesheet" type="text/css" href="/css/seed.css">
-  <link rel="stylesheet" type="text/css" href="/css/transact.css">
-  <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
-  <title>WizDwarfs</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<!-- <link rel="shortcut icon" type="image/png" href="/images/favicon.png"> -->
+	<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="/css/transact.css">
+	<link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+	<title>WizDwarfs</title>
+	<script src="https://unpkg.com/@metamask/detect-provider/dist/detect-provider.min.js"></script>
 </head>
+
 <body>
 
-	<div class="main">
-		<div class="static-field">
-			<div class="static-img">
-				<img src="/images/logo.png" alt ="WizDwarfs" class="img-logo"/>
-				<h4 class="text">Payment</h4>
+	<div class='main-dashboard-div'>
+		<nav class="navbar navbar-expand-md navbar-light custom-navbar">
+			<a class="navbar-brand" href="/home">
+				<img src="/images/logo.png" alt="Logo" class="logo">
+			</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavDropdown">
+				<ul class="navbar-nav">
+					<li class="nav-item active pl-3">
+						<a class="nav-link" href="/dashboard">
+							<i class="fa fa-home icon-light change-service-color" aria-hidden="true"></i>
+							Home
+						</a>
+					</li>
+					<li class="nav-item dropdown pl-3">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+							aria-haspopup="true" aria-expanded="false">
+							<i class="fa fa-briefcase change-service-color" aria-hidden="true"></i>
+							Services
+						</a>
+						<div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
+							<a class="dropdown-item" href="/dashbaord/setting/profile"><i
+									class="fa fa-user-circle-o change-service-color" aria-hidden="true"></i> Edit
+								Profile</a>
+							<a class="dropdown-item" href="/dashboard/setting/pay/credit/add"><i
+									class="fa fa-shopping-cart change-service-color" aria-hidden="true"></i>
+								Monetize</a>
+							<a class="dropdown-item" href="/dashbaord/setting/about"><i
+									class="fa fa-book change-service-color" aria-hidden="true"></i> Biography</a>
+						</div>
+					</li>
+				</ul>
 			</div>
-			<div class="static-text">
-				<div class="avatar-pics">
-					<img src="/images/myAvatar.png" alt="avatar" class="myAvatar" 
-					id="change" />
-					<button type="button" class="changePic" id="male" onclick="ChangePic()"><i class="fa fa-plus-square"></i>
-					</button>
-					<button type="button" class="reverse" id="female" 
-					onclick="Reverse()"	disabled="true">
-						<i class="fa fa-minus-square"></i>
-					</button>  
-				</div>
-				<input type="text" name="eth" value="{{.Eth}}" class="address" readonly>
-					<div class="">
-						<h5 class="balance">{{.Balance}}
-							<img src="/images/eth.png" alt="eth" class="eth-img"/>
-						</h5>
+		</nav>
+	</div>
+
+	<div class="div-form-card">
+		<div class="form-card row">
+			<div class="card col-sm-8 margin-space" style="width: 20rem;">
+				<img class="card-img-top" src="images/proteinFold.jpeg" alt="Card image cap">
+				<div class="card-body">
+					<h5 class="card-title">Student</h5>
+					<p class="card-text">
+					<p>
+						<a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button"
+							aria-expanded="false" aria-controls="collapseExample">
+							List of Services
+						</a>
+					</p>
+					<div class="collapse" id="collapseExample">
+						<div class="card card-body">
+							<ul class="list-group">
+								<li class="list-group-item">Cloud storage</li>
+								<li class="list-group-item">DNA secondary structure</li>
+								<li class="list-group-item">RNA secondary structure </li>
+								<li class="list-group-item">Protein secondary structure </li>
+								<li class="list-group-item">
+									<div class="tagprice">
+										<span><i class="fa fa-usd" aria-hidden="true"></i></span> 50 <i
+											class="fa fa-tags" aria-hidden="true"></i>
+									</div>
+								</li>
+							</ul>
+						</div>
 					</div>
+					</p>
+					<a href="#" class="btn btn-primary"> <i class="fa fa-cc-paypal" aria-hidden="true"></i> Paypal-Card
+					</a>
+					<a href="#" class="btn btn-dark"> <i class="fa fa-btc" aria-hidden="true"> Cryptocurrency</i> </a>
+				</div>
+			</div>
+			<div class="card col-sm-8 margin-space" style="width: 18rem;">
+				<img class="card-img-top" src="images/OSC_Microbio_07_04_secondary-1.jpg" alt="Card image cap">
+				<div class="card-body">
+					<h5 class="card-title">Merchant</h5>
+
+					<p>
+						<a class="btn btn-primary" data-toggle="collapse" href="#collapse1" role="button"
+							aria-expanded="false" aria-controls="collapse1">
+							List of Services
+						</a>
+					</p>
+					<div class="collapse" id="collapse1">
+						<div class="card card-body">
+							<ul class="list-group">
+								<li class="list-group-item">Cloud storage</li>
+								<li class="list-group-item">DNA secondary structure</li>
+								<li class="list-group-item">RNA secondary structure </li>
+								<li class="list-group-item">Protein secondary structure </li>
+								<li class="list-group-item">DNA tertiary structure</li>
+								<li class="list-group-item">RNA tertiary structure </li>
+								<li class="list-group-item">Protein tertiary structure </li>
+								<li class="list-group-item">
+									<div class="tagprice">
+										<span><i class="fa fa-usd" aria-hidden="true"></i></span> 100 <i
+											class="fa fa-tags" aria-hidden="true"></i>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					</p>
+					<a href="#" class="btn btn-primary"> <i class="fa fa-cc-paypal" aria-hidden="true"> Paypal-Card</i>
+					</a>
+					<a href="#" class="btn btn-dark"> <i class="fa fa-btc" aria-hidden="true"> Cryptocurrency</i> </a>
+				</div>
+			</div>
+			<div class="card col-sm-8 margin-space" style="width: 18rem;">
+				<img class="card-img-top" src="images/crystal.jpeg" alt="Card image cap">
+				<div class="card-body">
+					<h5 class="card-title">King</h5>
+					<p>
+						<a class="btn btn-primary" data-toggle="collapse" href="#collapse2" role="button"
+							aria-expanded="false" aria-controls="collapse2">
+							List of Services
+						</a>
+					</p>
+					<div class="collapse" id="collapse2">
+						<div class="card card-body">
+							<ul class="list-group">
+								<li class="list-group-item">Cloud storage</li>
+								<li class="list-group-item">DNA secondary structure</li>
+								<li class="list-group-item">RNA secondary structure </li>
+								<li class="list-group-item">Protein secondary structure </li>
+								<li class="list-group-item">DNA secondary structure</li>
+								<li class="list-group-item">RNA secondary structure </li>
+								<li class="list-group-item">Protein secondary structure </li>
+								<li class="list-group-item">Automated molecular structure</li>
+								<li class="list-group-item">
+									<div class="tagprice">
+										<span><i class="fa fa-usd" aria-hidden="true"></i></span> 500 <i
+											class="fa fa-tags" aria-hidden="true"></i>
+									</div>
+								</li>
+							</ul>
+
+						</div>
+					</div>
+					</p>
+					<a href="#" class="btn btn-primary"> <i class="fa fa-cc-paypal" aria-hidden="true"></i> Paypal-Card
+					</a>
+					<a href="#" class="btn btn-dark"> <i class="fa fa-btc" aria-hidden="true"> Cryptocurrency</i></a>
+				</div>
 			</div>
 		</div>
-			<div class="form-opts">
-				<div class="btn-pay">
-					<button type="button" class="btn-Send" onclick="PayByEth()" id="btn">
-						<i class="fa fa-shopping-basket" aria-hidden="true">Pay</i>
-					</button>
-					<a href="/transact/treasure" ><span class="span-link">Treasure</span> <i class="fa fa-diamond" aria-hidden="true"></i></a>
-					<div class="form-send">
-						<form action="/transact/send" method="post" 
-						class="form-1">
-							<div class="txt-send">
-								<input type="text" name="sendAdd" value="0xF205f4d60bBA5c14F9efdeA5b6Fa7ef9F2D12dfa" class="send-input" id="add" readonly>
-							</div>
-							<div class="txt-eth">
-								<input type="text" name="add" class="recAdd-input" placeholder="Your Ethereum Address" id="your" required>
-							</div>
-							<div class="dropdown">
-								<label for="transact" class="dropdown-trans" id="time">Time</label>
-          						<select id="transact" class="form-dropdown-control" name="transact" disabled>
-            					<option selected>Choose...</option>
-            					<option>Normal</option>
-            					<option>Fair</option>
-            					<option>Blink</option>
-            				</select>
-            				<!-- Indiviual -->
-            				<div class="btn-more">
-            					<button type="button" class="more-btn" id="more" onclick="CompleteTransact ()" disabled="true">
-            						<i class="fa fa-chevron-circle-down"></i> 10$/-
-            					</button>
-            					<div class="more col-sm-8">
-            						<input type="number" name="amount" id="amount" class="class-amount" value="4100000" readonly> 
-            					</div>
-            				</div>
-            				</div>
-            					<div class="btns">
-            						<button type="submit" class="btn-ok" id="ok" disabled="true">
-										<i class="fa fa-btc" aria-hidden="true">
-										Pay</i>
-									</button>
-									<button type="button" class="btn-okx" id="cancel" onclick="Cancel()" disabled="true">
-										<i class="fa fa-ban" aria-hidden="true">
-										Cancel</i>
-									</button>
-								</div>
-						</form>
-					</div>
-				</div>
-			</div>
+	</div>
+	<div class="div-meta">
+		<span class="connect"> <i class="fa fa-check-circle" aria-hidden="true"> Your web interface instance connect
+				with metamask</i></span>
+		<span class="disconnect"> <i class="fa fa-ban" aria-hidden="true"></i> Your web interface instance disconnect
+			with metamask </span>
+	</div>
 
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+		crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+		crossorigin="anonymous"></script>
+	<script type="text/javascript" src="/js/transact.js"></script>
+	<script type="text/javascript" src="/js/wallet.js"></script>
 
-		<script type="text/javascript" src="/js/transact.js"></script>
-		<script type="text/javascript" src="/js/wallet.js"></script>
-		<!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
+	<!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
 </body>
+
 </html>

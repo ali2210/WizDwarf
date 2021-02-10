@@ -4,24 +4,24 @@
 
 function ChangePic() {
 	// body...
-	
+
 	var img = document.getElementById('change').src = "/images/Female.png";
 	console.log(img);
 	document.getElementById('female').disabled = false;
-	var female = document.getElementById('female').style.visibility="visible";
-	var male = document.getElementById('male').style.visibility="hidden";
+	var female = document.getElementById('female').style.visibility = "visible";
+	var male = document.getElementById('male').style.visibility = "hidden";
 
 
 }
 
-function Reverse(){
+function Reverse() {
 	var reset = document.getElementById('change').src = "/images/myAvatar.png";
 	console.log(reset);
-	var male = document.getElementById('male').style.visibility="visible";
-	var female = document.getElementById('female').style.visibility="hidden";
+	var male = document.getElementById('male').style.visibility = "visible";
+	var female = document.getElementById('female').style.visibility = "hidden";
 }
 
-function PayByEth(){
+function PayByEth() {
 	document.getElementById('btn').style.visibility = "hidden";
 	document.getElementById('add').style.visibility = "visible";
 	document.getElementById('your').style.visibility = "visible";
@@ -37,7 +37,7 @@ function PayByEth(){
 }
 
 
-function Cancel(){
+function Cancel() {
 	document.getElementById('btn').style.visibility = "visible";
 	document.getElementById('add').style.visibility = "hidden";
 	document.getElementById('your').style.visibility = "hidden";
@@ -52,11 +52,62 @@ function Cancel(){
 	document.getElementById('cancel').style.visibility = "hidden";
 	document.getElementById('cancel').disabled = true;
 	document.getElementById('more').style.visibility = "hidden";
-	document.getElementById('more').disabled = true;		
+	document.getElementById('more').disabled = true;
 }
 
-function CompleteTransact(){
+function CompleteTransact() {
 	document.getElementById('amount').style.visibility = "visible";
 	document.getElementById('amount').disabled = false;
 }
+
+(function () {
+	var divBox = document.getElementsByClassName('div-meta');
+	var network = "";
+	async function connectEthereum() {
+		network = await detectEthereumProvider();
+
+		if (network === window.ethereum && window.ethereum.isMetaMask && window.ethereum.isConnected()) {
+			divBox[0].children[1].children[0].style.visibility = "hidden";
+			divBox[0].children[1].style.visibility = "hidden";
+		}
+		const _chainId = await ethereum.request({
+			method: 'eth_chainId'
+		});
+
+		handleChainID(_chainId);
+		ethereum.on('chainChanged', handleChainID);
+
+		function handleChainID(_chainId) { }
+
+		ethereum
+			.request({ method: 'eth_accounts' })
+			.then(handleAccountsChanged)
+			.catch((err) => {
+				console.error("error got", err);
+			});
+		ethereum.on('accountsChanged', handleAccountsChanged)
+
+		var accPromise = await window.ethereum.request({ method: 'eth_requestAccounts' })
+
+		function handleAccountsChanged(accounts) {
+			var metamaskAcc = null;
+			if (accounts.length == 0 && !window.ethereum.isConnected()) {
+				divBox[0].children[1].children[0].style.visibility = "visible";
+				divBox[0].children[1].style.visibility = "visible";
+				divBox[0].children[1].children[0].style.marginLeft = "50px";
+				divBox[0].children[1].children[0].style.marginTop = "20px";
+			} else {
+				divBox[0].children[0].children[0].style.visibility = "visible";
+				divBox[0].children[0].children[0].style.marginLeft = "50px";
+				divBox[0].children[0].children[0].style.marginTop = "20px";
+				metamaskAcc = accounts[0];
+
+			}
+		}
+
+
+	}
+	window.addEventListener('load', connectEthereum, false);
+})();
+
 
