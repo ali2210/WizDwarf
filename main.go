@@ -30,6 +30,7 @@ import (
 	"github.com/ali2210/wizdwarf/structs/amino"
 	bio "github.com/ali2210/wizdwarf/structs/bioinformatics"
 	info "github.com/ali2210/wizdwarf/structs/bioinformatics/model"
+	Shop "github.com/ali2210/wizdwarf/structs/cart"
 	weather "github.com/ali2210/wizdwarf/structs/openweather"
 	"github.com/ali2210/wizdwarf/structs/paypal/handler"
 	"github.com/ali2210/wizdwarf/structs/users"
@@ -75,6 +76,13 @@ var (
 	accountID           string                    = " "
 	accountKey          string                    = " "
 	accountVisitEmail   string                    = " "
+	checkout            Shop.Shopping             = Shop.Shopping{
+		Price:         "",
+		TypeofService: "",
+		PaymentMethod: "",
+		Description:   "",
+	}
+	cart Shop.Items = Shop.Items{}
 )
 
 // Constants
@@ -153,8 +161,15 @@ func main() {
 	routing.HandleFunc("/terms", terms)
 	routing.HandleFunc("/open", wallet)
 	routing.HandleFunc("/transact", transacts)
-	routing.HandleFunc("/transact/send", send)
-	routing.HandleFunc("/transact/treasure", treasure)
+	routing.HandleFunc("/transact/pay/paypal", kernel)
+	routing.HandleFunc("/transact/pay/paypal", cluster)
+	routing.HandleFunc("/transact/pay/paypal", multicluster)
+	routing.HandleFunc("/transact/pay/crypto", tKernel)
+	routing.HandleFunc("/transact/pay/crypto", tCluster)
+	routing.HandleFunc("/transact/pay/crypto", tMulticluster)
+
+	// routing.HandleFunc("/transact/send", send)
+	// routing.HandleFunc("/transact/treasure", treasure)
 	routing.HandleFunc("/visualize", visualize)
 	routing.HandleFunc("/modal/success", success)
 
@@ -504,6 +519,30 @@ func credit(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func cluster(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func kernel(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func multicluster(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func tCluster(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func tMulticluster(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func tKernel(w http.ResponseWriter, r *http.Request) {
+
+}
+
 func visualize(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("visualize.html"))
 	log.Println("Report percentage", visualizeReport.Percentage)
@@ -531,12 +570,10 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 
 		temp.Execute(w, visualizeReport)
 	}
-	// err := SessionExpire(w,r); if err != nil {
-	// 	return
-	// }
-	// w.WriteHeader(http.StatusOK)
-	// r.Method = "GET"
-	// dashboard(w,r)
+	w.WriteHeader(http.StatusOK)
+	r.Method = "GET"
+	transacts(w, r)
+
 }
 
 func treasure(w http.ResponseWriter, r *http.Request) {
@@ -1231,26 +1268,32 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 func transacts(w http.ResponseWriter, r *http.Request) {
 
 	temp := template.Must(template.ParseFiles("transact.html"))
-	acc := structs.Static{}
+	// acc := structs.Static{}
 	if r.Method == "GET" {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
-
-		acc.Eth = ethAddrressGenerate
-		acc.Balance = GetBalance(&acc)
-		if acc.Balance == nil {
-			log.Fatal("[Fail] Connection Reject ", acc.Balance)
-			response := structs.Response{}
-			temp := server(w, r)
-			_ = response.ClientRequestHandle(true, "Sorry ! Connectivity Issue   ", "/transact", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-			}
+		r.ParseForm()
+		if r.FormValue("method") != " " {
+			cart.PlaceItemsInCart(r.FormValue("price"), r.FormValue("typeClass"), r.FormValue("method"), r.FormValue("describe"))
 		}
-		fmt.Println("Details:", acc)
-		temp.Execute(w, acc)
+		cart.PlaceItemsInCart(r.FormValue("price"), r.FormValue("typeClass"), r.FormValue("method1"), r.FormValue("describe"))
+
+		// acc.Eth = ethAddrressGenerate
+		// acc.Balance = GetBalance(&acc)
+		// if acc.Balance == nil {
+		// 	log.Fatal("[Fail] Connection Reject ", acc.Balance)
+		// 	response := structs.Response{}
+		// 	temp := server(w, r)
+		// 	_ = response.ClientRequestHandle(true, "Sorry ! Connectivity Issue   ", "/transact", w, r)
+		// 	response.ClientLogs()
+		// 	err := response.Run(temp)
+		// 	if err != nil {
+		// 		log.Println("[Error]: checks logs...", err)
+		// 	}
+		// }
+		// fmt.Println("Details:", acc)
+		temp.Execute(w, "Transaction")
+
 	}
 
 }

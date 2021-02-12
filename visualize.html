@@ -40,7 +40,8 @@
       </div>
       <p>
         <a class="btn btn-success" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
-          aria-controls="collapseExample"> <i class="fa fa-check-square" aria-hidden="true"></i>
+          aria-controls="collapseExample" title="Clock Visualization" data-toggle="popover"> <i
+            class="fa fa-check-square" aria-hidden="true"></i>
           <span class="badge badge-light">{{.Process}}</span>
         </a>
       </p>
@@ -62,7 +63,9 @@
     <div class="card-footer text-muted">
       @{{.SeenBy}}
       <div class="col backBtn">
-        <a href="/dashboard" class="btn btn-danger"> Back</a>
+        <a href="/dashboard" class="btn btn-danger" data-toggle="popover" title="Back Button"> <i
+            class="fa fa-chevron-circle-left" aria-hidden="true"> Back
+          </i></a>
       </div>
 
     </div>

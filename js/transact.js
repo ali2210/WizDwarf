@@ -88,19 +88,32 @@ function CompleteTransact() {
 		ethereum.on('accountsChanged', handleAccountsChanged)
 
 		var accPromise = await window.ethereum.request({ method: 'eth_requestAccounts' })
-
+		function handleDivHTml(divBox) {
+			divBox.children[1].children[0].style.visibility = "hidden";
+			divBox.children[0].children[0].style.visibility = "visible";
+			divBox.children[0].children[0].style.marginLeft = "50px";
+			divBox.children[0].children[0].style.marginTop = "20px";
+			setInterval(function () {
+				window.location.reload();
+			}, 7000);
+		}
 		function handleAccountsChanged(accounts) {
 			var metamaskAcc = null;
-			if (accounts.length == 0 && !window.ethereum.isConnected()) {
+			if (accounts.length === 0 && window.ethereum.isConnected()) {
 				divBox[0].children[1].children[0].style.visibility = "visible";
 				divBox[0].children[1].style.visibility = "visible";
 				divBox[0].children[1].children[0].style.marginLeft = "50px";
 				divBox[0].children[1].children[0].style.marginTop = "20px";
+				divBox[0].children[0].children[0].style.visibility = "hidden";
 			} else {
-				divBox[0].children[0].children[0].style.visibility = "visible";
-				divBox[0].children[0].children[0].style.marginLeft = "50px";
-				divBox[0].children[0].children[0].style.marginTop = "20px";
-				metamaskAcc = accounts[0];
+				if (metamaskAcc != accounts[0]) {
+					metamaskAcc = accounts[0];
+					handleDivHTml(divBox[0]);
+				} else {
+					handleDivHTml(divBox[0]);
+				}
+
+
 
 			}
 		}

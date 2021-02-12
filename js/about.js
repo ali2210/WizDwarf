@@ -226,10 +226,10 @@ async function Metamasklogin() {
 function handleAccountsChanged(accounts) {
 
 
-  if (accounts.length === 0) {
+  if (accounts.length === 0 && window.ethereum.isConnected()) {
     message[0].innerHTML = "No account connected with metamask: \t" + (!window.ethereum.isConnected());
   } else {
-    console.log(accounts[0]);
+
     if (accounts[0] !== ethAccs) {
       ethAccs = accounts[0];
     }

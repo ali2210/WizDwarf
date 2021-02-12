@@ -13,7 +13,7 @@ const (
 )
 
 type ProfileinJSON struct {
-	ID            string `json:"Id"`
+	ID            string `json:"ID"`
 	FirstName     string `json:"FirstName"`
 	LastName      string `json:"LastName"`
 	PhoneNo       string `json:"PhoneNo"`
@@ -51,7 +51,7 @@ func (*cloudData) SaveData(visitor *model.Vistors, app *firebase.App) (*model.Vi
 	defer client.Close()
 
 	_, _, err = client.Collection(collection).Add(ctx, map[string]interface{}{
-		"ID":       visitor.Id,
+		"Id":       visitor.Id,
 		"Name":     visitor.Name,
 		"Email":    visitor.Email,
 		"Password": visitor.Password,
@@ -92,7 +92,7 @@ func (*cloudData) FindAllData(app *firebase.App, email, password string) (*model
 		}
 
 		visit = model.Vistors{
-			Id:       doc.Data()["ID"].(string),
+			Id:       doc.Data()["Id"].(string),
 			Name:     doc.Data()["Name"].(string),
 			Email:    doc.Data()["Email"].(string),
 			Password: doc.Data()["Password"].(string),
@@ -135,11 +135,17 @@ func (*cloudData) ToFindByGroupSet(id, email string, app *firebase.App) (*model.
 			continue
 		}
 		visits = model.Vistors{
-			Id:      doc.Data()["ID"].(string),
-			Email:   doc.Data()["Email"].(string),
-			Country: doc.Data()["Country"].(string),
-			Zip:     doc.Data()["Zip"].(string),
-			Eve:     doc.Data()["Eve"].(bool),
+			Id:       doc.Data()["Id"].(string),
+			Name:     "",
+			Email:    doc.Data()["Email"].(string),
+			Password: "",
+			FName:    "",
+			City:     "",
+			Zip:      doc.Data()["Zip"].(string),
+			Address:  "",
+			LAddress: "",
+			Country:  doc.Data()["Country"].(string),
+			Eve:      doc.Data()["Eve"].(bool),
 		}
 		break
 	}
