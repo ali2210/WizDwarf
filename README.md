@@ -29,8 +29,9 @@ This applicationn allow you can upload  genetic material(DNA). Based on your gen
             # Docker Composer
             # golang: v-1.14+
             # traefik
+            # Docker Volume
 
-## Current Five virus pattern:
+## Current pattern:
 1. Covid-19
 2. Zika
 3. Flavi Dengue
@@ -88,7 +89,7 @@ This applicationn allow you can upload  genetic material(DNA). Based on your gen
 
  2. [!Contributor(https://github.com/ali2210/WizDwarf/wiki)]
 
- 3. [!Prototype(https://www.loom.com/share/e5710b59eebf482f86a0ac7be3424914)]
+ 3. [!Prototype(https://www.loom.com/share/a15512fdca024635a2df74e1e64790ed)]
 
  4.  [![ElephantClock](https://upload.wikimedia.org/wikipedia/commons/7/76/Al-jazari_elephant_clock.png)]
 
