@@ -9,6 +9,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"html/template"
 	"io/ioutil"
@@ -17,6 +18,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	templates "text/template"
@@ -104,8 +106,13 @@ func main() {
 	log.Println("[OK] Wiz-Dwarfs starting")
 	host := os.Getenv("HOST")
 	port := os.Getenv("PORT")
-	// var url string = ""
-	//  env host
+	wizDir := os.Getenv("WIZ_VOLUME_DIR")
+
+	if wizDir == "" {
+		log.Fatalln("Make sure volume mount", wizDir)
+		panic(errors.New("Fail to mount"))
+	}
+
 	if host == "" {
 
 		// env port setting
@@ -161,12 +168,12 @@ func main() {
 	routing.HandleFunc("/terms", terms)
 	routing.HandleFunc("/open", wallet)
 	routing.HandleFunc("/transact", transacts)
-	routing.HandleFunc("/transact/pay/paypal", kernel)
-	routing.HandleFunc("/transact/pay/paypal", cluster)
-	routing.HandleFunc("/transact/pay/paypal", multicluster)
-	routing.HandleFunc("/transact/pay/crypto", tKernel)
-	routing.HandleFunc("/transact/pay/crypto", tCluster)
-	routing.HandleFunc("/transact/pay/crypto", tMulticluster)
+	routing.HandleFunc("/transact/pay/paypal/kernel", kernel)
+	routing.HandleFunc("/transact/pay/paypal/cluster", cluster)
+	routing.HandleFunc("/transact/pay/paypal/multicluster", multicluster)
+	routing.HandleFunc("/transact/pay/crypto/kernel", tKernel)
+	routing.HandleFunc("/transact/pay/crypto/cluster", tCluster)
+	routing.HandleFunc("/transact/pay/crypto/multicluster", tMulticluster)
 
 	// routing.HandleFunc("/transact/send", send)
 	// routing.HandleFunc("/transact/treasure", treasure)
@@ -524,7 +531,19 @@ func cluster(w http.ResponseWriter, r *http.Request) {
 }
 
 func kernel(w http.ResponseWriter, r *http.Request) {
+	temp := template.Must(template.ParseFiles("payee.html"))
+	if r.Method == "GET" {
+		log.Println("[Accept] Path :", r.URL.Path)
+		log.Println("Method :", r.Method)
+		temp.Execute(w, "Kernel")
+	} else {
+		log.Println("[Accept] Path :", r.URL.Path)
+		log.Println("Method :", r.Method)
+		order := cart.GetItemsFromCart()
+		log.Println("Order:", order)
+		temp.Execute(w, "Kernel")
 
+	}
 }
 
 func multicluster(w http.ResponseWriter, r *http.Request) {
@@ -570,9 +589,6 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 
 		temp.Execute(w, visualizeReport)
 	}
-	w.WriteHeader(http.StatusOK)
-	r.Method = "GET"
-	transacts(w, r)
 
 }
 
@@ -707,140 +723,133 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Method:" + r.Method)
 
 		// FILE Upload ....
-		file := UploadFiles(w, r)
-		if file != nil {
+		fname, err := UploadFiles(w, r)
 
-			choose := r.FormValue("choose")
-
-			switch choose {
-			case "0":
-				fmt.Fprintf(w, "Please choose any option ...")
-				err := ChoosePattern(w, r, "", choose, file)
-				if err != nil {
-					return
-				}
-			case "1":
-				var name string = "Covid-19"
-				err := ChoosePattern(w, r, name, choose, file)
-				if err != nil {
-					return
-				}
-				visualizeReport.Percentage = algo.Percentage
-				// v :=  infectedUv()
-
-				// openStreet.Country = r.FormValue("country")
-				// openStreet.PostalCode = r.FormValue("postal")
-				// openStreet.City = r.FormValue("city")
-				// openStreet.State = r.FormValue("state")
-				// openStreet.StreetAddress = r.FormValue("street")
-				// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
-				// 	return
-				// }
-
-				// v.UVinfo = uvslice
-
-				w.WriteHeader(http.StatusOK)
-				// LifeCode = genome
-				r.Method = "GET"
-				// Wallet(w,r)
-				visualize(w, r)
-				// fmt.Println("Virus:", capsid)
-
-			case "2":
-				var name string = "FlaviDengue"
-				err := ChoosePattern(w, r, name, choose, file)
-				if err != nil {
-					return
-				}
-				visualizeReport.Percentage = algo.Percentage
-				// v :=  infectedUv()
-				// v.UVinfo = uvslice
-				w.WriteHeader(http.StatusOK)
-
-				r.Method = "GET"
-				visualize(w, r)
-				// Wallet(w,r)
-				// fmt.Println("Virus:", capsid)
-			case "3":
-				var name string = "KenyaEbola"
-				err := ChoosePattern(w, r, name, choose, file)
-				if err != nil {
-					return
-				}
-				visualizeReport.Percentage = algo.Percentage
-				// v :=  infectedUv()
-				// v.UVinfo = uvslice
-
-				w.WriteHeader(http.StatusOK)
-				r.Method = "GET"
-				visualize(w, r)
-
-				// fmt.Println("Virus:", capsid)
-			case "4":
-				var name string = "ZikaVirusBrazil"
-				err := ChoosePattern(w, r, name, choose, file)
-				if err != nil {
-					return
-				}
-				visualizeReport.Percentage = algo.Percentage
-				// v :=  infectedUv()
-				// openStreet.Country = r.FormValue("country")
-				// openStreet.PostalCode = r.FormValue("postal")
-				// openStreet.City = r.FormValue("city")
-				// openStreet.State = r.FormValue("state")
-				// openStreet.StreetAddress = r.FormValue("street")
-				// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
-				// 	return
-				// }
-
-				//v.UVinfo = uvslice
-
-				w.WriteHeader(http.StatusOK)
-				r.Method = "GET"
-				visualize(w, r)
-
-				// fmt.Println("Virus:", capsid)
-			case "5":
-				var name string = "MersSaudiaArabia"
-				err := ChoosePattern(w, r, name, choose, file)
-				if err != nil {
-					return
-				}
-				visualizeReport.Percentage = algo.Percentage
-				// v :=  infectedUv()				//  openStreet.Country = r.FormValue("country")
-				//  openStreet.PostalCode = r.FormValue("postal")
-				// openStreet.City = r.FormValue("city")
-				// openStreet.State = r.FormValue("state")
-				// openStreet.StreetAddress = r.FormValue("street")
-				// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
-				// 	return
-				// }
-				// v.UVinfo = uvslice
-				w.WriteHeader(http.StatusOK)
-
-				r.Method = "GET"
-				visualize(w, r)
-				// fmt.Println("Virus:", capsid)
-
-			default:
-				temFile := template.Must(template.ParseFiles("dashboard.html"))
-				temFile.Execute(w, "dashboard")
-			}
-		} else {
-			log.Fatal("[Fail] Size Limit reached 512MB  ")
-			response := structs.Response{}
-			temp := server(w, r)
-			_ = response.ClientRequestHandle(true, "Sorry Size Limit reached   ", "/transact", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-			}
-
+		if err != nil {
+			log.Fatalln("[File]:", err)
+			return
 		}
+		choose := r.FormValue("choose")
+		data, err := fileGet("seqDir/", fname)
+		if err != nil {
+			log.Fatalln("[No File]:", err)
+			return
+		}
+		log.Println("File Name:", data.Name())
+		switch choose {
+		case "0":
+			fmt.Fprintf(w, "Please choose any option ...")
+			log.Fatalln("Choose your option")
+			panic(err)
+		case "1":
+			var name string = "Covid-19"
+			err := choosePattern(w, r, name, choose, data)
+			if err != nil {
+				return
+			}
 
+			visualizeReport.Percentage = algo.Percentage
+			// v :=  infectedUv()
+
+			// openStreet.Country = r.FormValue("country")
+			// openStreet.PostalCode = r.FormValue("postal")
+			// openStreet.City = r.FormValue("city")
+			// openStreet.State = r.FormValue("state")
+			// openStreet.StreetAddress = r.FormValue("street")
+			// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
+			// 	return
+			// }
+
+			// v.UVinfo = uvslice
+
+			w.WriteHeader(http.StatusOK)
+			// LifeCode = genome
+			r.Method = "GET"
+			// Wallet(w,r)
+			visualize(w, r)
+			// fmt.Println("Virus:", capsid)
+
+		case "2":
+			var name string = "FlaviDengue"
+			err := choosePattern(w, r, name, choose, data)
+			if err != nil {
+				return
+			}
+			visualizeReport.Percentage = algo.Percentage
+			// v :=  infectedUv()
+			// v.UVinfo = uvslice
+			w.WriteHeader(http.StatusOK)
+
+			r.Method = "GET"
+			visualize(w, r)
+			// Wallet(w,r)
+			// fmt.Println("Virus:", capsid)
+		case "3":
+			var name string = "KenyaEbola"
+			err := choosePattern(w, r, name, choose, data)
+			if err != nil {
+				return
+			}
+			visualizeReport.Percentage = algo.Percentage
+			// v :=  infectedUv()
+			// v.UVinfo = uvslice
+
+			w.WriteHeader(http.StatusOK)
+			r.Method = "GET"
+			visualize(w, r)
+
+			// fmt.Println("Virus:", capsid)
+		case "4":
+			var name string = "ZikaVirusBrazil"
+			err := choosePattern(w, r, name, choose, data)
+			if err != nil {
+				return
+			}
+			visualizeReport.Percentage = algo.Percentage
+			// v :=  infectedUv()
+			// openStreet.Country = r.FormValue("country")
+			// openStreet.PostalCode = r.FormValue("postal")
+			// openStreet.City = r.FormValue("city")
+			// openStreet.State = r.FormValue("state")
+			// openStreet.StreetAddress = r.FormValue("street")
+			// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
+			// 	return
+			// }
+
+			//v.UVinfo = uvslice
+
+			w.WriteHeader(http.StatusOK)
+			r.Method = "GET"
+			visualize(w, r)
+
+			// fmt.Println("Virus:", capsid)
+		case "5":
+			var name string = "MersSaudiaArabia"
+			err := choosePattern(w, r, name, choose, data)
+			if err != nil {
+				return
+			}
+			visualizeReport.Percentage = algo.Percentage
+			// v :=  infectedUv()				//  openStreet.Country = r.FormValue("country")
+			//  openStreet.PostalCode = r.FormValue("postal")
+			// openStreet.City = r.FormValue("city")
+			// openStreet.State = r.FormValue("state")
+			// openStreet.StreetAddress = r.FormValue("street")
+			// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
+			// 	return
+			// }
+			// v.UVinfo = uvslice
+			w.WriteHeader(http.StatusOK)
+
+			r.Method = "GET"
+			visualize(w, r)
+			// fmt.Println("Virus:", capsid)
+
+		default:
+			temFile := template.Must(template.ParseFiles("dashboard.html"))
+			temFile.Execute(w, "dashboard")
+		}
 	}
-
 }
 
 func send(w http.ResponseWriter, r *http.Request) {
@@ -2032,9 +2041,11 @@ func MessageToHash(w http.ResponseWriter, r *http.Request, matchE, matchP bool, 
 	return false, &code
 }
 
-func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
+func UploadFiles(w http.ResponseWriter, r *http.Request) (string, error) {
 	// println("request body", r.Body)
 	r.ParseMultipartForm(10 << 50)
+
+	var upldFile *os.File = nil
 	file, handler, err := r.FormFile("fileSeq")
 	if err != nil {
 
@@ -2046,73 +2057,112 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) *os.File {
 		err := response.Run(temp)
 		if err != nil {
 			log.Println("[Error]: checks logs...", err)
-			return nil
+			return "", err
 		}
-
+		return "", err
 	}
 	defer file.Close()
-	if handler.Size <= (500000 * 1024) {
-		fmt.Println("File name:"+handler.Filename, "Size:", handler.Size)
-		if _, err := os.Stat(handler.Filename); os.IsExist(err) {
-			log.Fatal("[Fail] File Access   ", err)
-			response := structs.Response{}
-			temp := server(w, r)
-			_ = response.ClientRequestHandle(true, "Sorry ! Permission Denied  ", "/dashboard", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return nil
-			}
-			return nil
-
-		}
-
-		// upload file by user...
-		upldFile, err := ioutil.TempFile("user_data", handler.Filename+".txt")
-		/*fmt.Println("file:", upldFile.Name())*/
-		openReadFile = upldFile.Name()
-		if err != nil {
-			log.Fatal("[Fail] Temporary File    ", err)
-			response := structs.Response{}
-			temp := server(w, r)
-			_ = response.ClientRequestHandle(true, "Sorry ! Computation Error   ", "/dashboard", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return nil
-			}
-			return nil
-
-		}
-		defer upldFile.Close()
-		// file convert into bytes
-		bytesFile, err := ioutil.ReadAll(file)
-		if err != nil {
-			log.Fatal("[Fail] File Reading Permission   ", err)
-			response := structs.Response{}
-			temp := server(w, r)
-			_ = response.ClientRequestHandle(true, "Sorry ! Computation Error   ", "/dashnaord", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return nil
-			}
-			return nil
-
-		}
-
-		upldFile.Write(bytesFile)
-		fmt.Println("File added on server")
-		return upldFile
+	if handler.Size >= (500000 * 1024) {
+		log.Fatalln((500000 * 1024) - handler.Size)
+		return "", err
 	}
-	return nil
+	fmt.Println("File name:"+handler.Filename, "Size:", handler.Size)
+	if _, err := os.Stat(handler.Filename); os.IsExist(err) {
+		log.Fatal("[Fail] Already have  this file ", err)
+		response := structs.Response{
+			Flag:    false,
+			Message: "",
+			Links:   "",
+		}
+		temp := server(w, r)
+		_ = response.ClientRequestHandle(true, "Sorry ! Two files doesn't have same name  ", "/dashboard", w, r)
+		response.ClientLogs()
+		err := response.Run(temp)
+		if err != nil {
+			log.Println("[Error]: checks logs...", err)
+			return "", err
+		}
+		return "", err
+
+	}
+	// err = os.Mkdir("appdir/", 0755)
+	// if err != nil {
+	// 	log.Fatalln("[Fail] Directory ", err)
+	// 	return upldFile, err
+	// }
+	path, err := os.Stat("seqDir/")
+	if err != nil {
+		log.Fatalln("[Error] In directory", err)
+		return "", err
+	}
+	if !path.IsDir() {
+		log.Fatalln("[Error] Reading File", err)
+		return "", err
+	}
+
+	path, err = os.Stat("seqDir/")
+	if err != nil {
+		log.Fatalln("[Error] In directory", err)
+		return "", err
+	}
+	if !path.IsDir() {
+		log.Fatalln("[Error] Reading File", err)
+		return "", err
+	}
+	// upload file by user...
+	upldFile, err = ioutil.TempFile(filepath.Dir("seqDir/"), "seqFile-"+"*.txt")
+	if err != nil {
+		log.Fatal("[Fail] Temporary File ", err)
+		response := structs.Response{
+			Flag:    false,
+			Message: "",
+			Links:   "",
+		}
+		temp := server(w, r)
+		_ = response.ClientRequestHandle(true, "Sorry ! Computation Error   ", "/dashboard", w, r)
+		response.ClientLogs()
+		err := response.Run(temp)
+		if err != nil {
+			log.Println("[Error]: checks logs...", err)
+			return "", err
+		}
+		return "", err
+
+	}
+	defer upldFile.Close()
+	_, err = upldFile.Stat()
+	if err != nil {
+		log.Fatalln("[Fail] File Stats", err)
+		return "", err
+	}
+
+	openReadFile = upldFile.Name()
+	log.Println(openReadFile)
+
+	// file convert into bytes
+	bytesFile, err := ioutil.ReadAll(file)
+	if err != nil {
+		log.Fatal("[Fail] File Reading Permission   ", err)
+		response := structs.Response{}
+		temp := server(w, r)
+		_ = response.ClientRequestHandle(true, "Sorry ! Computation Error   ", "/dashnaord", w, r)
+		response.ClientLogs()
+		err := response.Run(temp)
+		if err != nil {
+			log.Println("[Error]: checks logs...", err)
+			return "", err
+		}
+	}
+	n, err := upldFile.Write(bytesFile)
+	if err != nil {
+		return "", err
+	}
+	log.Println("[Result] = File added on server", upldFile.Name(), "Size:", n)
+	return openReadFile, nil
+
 }
 
-// []amino.AminoClass, []amino.AminoClass
-func SequenceFile(serverFile *os.File, userFile os.FileInfo) ([]string, []string, error) {
+func sequenceFile(serverFile *os.File, userFile os.FileInfo) ([]string, []string, error) {
 
 	seq, err := ReadSequence(userFile.Name())
 	if err != nil {
@@ -2124,11 +2174,11 @@ func SequenceFile(serverFile *os.File, userFile os.FileInfo) ([]string, []string
 	for _, v := range seq {
 		space := DoAscii(v)
 		if space == "" {
-			fmt.Printf("Gap%v:\t", space)
+			// add space
+			// gen = append(gen, "")
 		}
 		gen = append(gen, space)
 	}
-	fmt.Println("Gen:{", gen, "}")
 
 	// Dna to rna
 
@@ -2153,11 +2203,11 @@ func SequenceFile(serverFile *os.File, userFile os.FileInfo) ([]string, []string
 	for _, v := range pathogen {
 		space := DoAscii(v)
 		if space == "" {
-			fmt.Printf("Gap%v:\t", space)
+			// fmt.Printf("Gap%v:\t", space)
 		}
 		genV = append(genV, space)
 	}
-	fmt.Println("Genes:{", genV, "}")
+	// fmt.Println("Genes:{", genV, "}")
 
 	// Dna to rna
 
@@ -2251,7 +2301,7 @@ func blockSession(id int) *sessions.CookieStore {
 	return sessions.NewCookieStore([]byte(strconv.Itoa(id)))
 }
 
-func ChoosePattern(w http.ResponseWriter, r *http.Request, fname, choose string, file *os.File) error {
+func choosePattern(w http.ResponseWriter, r *http.Request, fname, choose string, file *os.File) error {
 
 	i, err := strconv.Atoi(choose)
 	if err != nil {
@@ -2260,7 +2310,7 @@ func ChoosePattern(w http.ResponseWriter, r *http.Request, fname, choose string,
 	}
 	if (i > 0 && i < 6) && (fname != " ") {
 		svrFile := FileReadFromDisk(w, r, fname)
-		Usr, Virus, err := SequenceFile(file, svrFile)
+		Usr, Virus, err := sequenceFile(file, svrFile)
 		if err != nil {
 			log.Fatalln("[Fail] Sequence DataFile Error", err)
 			return err
@@ -2303,6 +2353,23 @@ func cardNumberValid(s1, s2 string) bool {
 	}
 	return false
 
+}
+
+func fileGet(path, filename string) (*os.File, error) {
+	fileinfo, err := os.Stat(path)
+	if err != nil {
+		return nil, err
+	}
+	if !fileinfo.IsDir() {
+		return nil, err
+	}
+
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+	return file, nil
 }
 
 // func openBrowser(url string) error {

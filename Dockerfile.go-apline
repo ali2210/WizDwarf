@@ -1,0 +1,37 @@
+
+FROM golang:1.15-alpine3.13
+
+ENV CGO_ENABLED=0
+
+ENV PORT=5000
+
+ENV HOST=wizdwarfs
+
+RUN mkdir /app
+
+ADD . /app
+
+WORKDIR /app
+
+ARG WIZ_DIR=/seqDir
+
+RUN mkdir -p ${WIZ_DIR}
+
+ENV WIZ_VOLUME_DIR=/app${WIZ_DIR}/seqFile.txt
+
+COPY go.mod go.sum ./
+
+RUN go mod download
+
+RUN go build -o main && go test -v ./... 
+
+EXPOSE 5000
+
+VOLUME [ ${WIZ_DIR} ]
+
+CMD ["/app/main"]
+
+
+
+
+

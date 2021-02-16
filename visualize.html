@@ -51,6 +51,7 @@
             <span id="result" class="div-span">
               Results ... {{ .Percentage}}
             </span>
+
             <div class="canvas">
               <canvas id="canvasPaper" class="div-canvas"></canvas>
             </div>
@@ -58,7 +59,10 @@
         </div>
       </div>
       </p>
-
+    </div>
+    <div class="pay-btn">
+      <a href="/transact" class="btn btn-success lnkBtn" data-toggle="popover" title="Choose your Payment service">
+        <i class="fa fa-shopping-cart" aria-hidden="true"> Checkout </i></a>
     </div>
     <div class="card-footer text-muted">
       @{{.SeenBy}}

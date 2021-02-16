@@ -77,3 +77,14 @@
     box-shadow: 0 3px 3px -5px #f2709c, 0 2px 5px #f2709c;
     transition: 30s ease;
   }
+.pay-btn{
+    display: flex;
+    position: relative;
+    justify-content:center;
+}
+.lnkBtn{
+    display: flex;
+    position: relative;
+    justify-content: center;
+    margin-bottom: 20px;
+}
