@@ -29,6 +29,10 @@ EXPOSE 5000
 
 VOLUME [ ${WIZ_DIR} ]
 
+RUN apk --no-cache add ca-certificates
+
+LABEL companyRelease="Wisdom-Enigma[2020]"
+
 CMD ["/app/main"]
 
 

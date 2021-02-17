@@ -1,4 +1,4 @@
- Language [GO(1.14/Linux)]
+ Language:- [GO](1.14/Linux)
  
  [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H22YW0G)
 
@@ -89,11 +89,11 @@ This applicationn allow you can upload  genetic material(DNA). Based on your gen
 - Credit card [ok]
 
 ## Links:
- 1. [!Docker(https://hub.docker.com/repository/docker/ali2210/wiz-dwarfs)]
+ 1. [Docker](https://hub.docker.com/repository/docker/ali2210/wiz-dwarfs)
 
- 2. [!Contributor(https://github.com/ali2210/WizDwarf/wiki)]
+ 2. [Contributor](https://github.com/ali2210/WizDwarf/wiki)
 
- 3. [!Prototype(https://www.loom.com/share/e5710b59eebf482f86a0ac7be3424914)]
+ 3. [Milestones](https://github.com/ali2210/WizDwarf/wiki/Achievements-:1st_place_medal:)
 
- 4.  [![ElephantClock](https://upload.wikimedia.org/wikipedia/commons/7/76/Al-jazari_elephant_clock.png)]
+ 4. [ElephantClock](https://upload.wikimedia.org/wikipedia/commons/7/76/Al-jazari_elephant_clock.png)
 
