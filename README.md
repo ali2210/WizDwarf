@@ -89,7 +89,7 @@ This applicationn allow you can upload  genetic material(DNA). Based on your gen
 
  2. [!Contributor(https://github.com/ali2210/WizDwarf/wiki)]
 
- 3. [!Prototype(https://www.loom.com/share/a15512fdca024635a2df74e1e64790ed)]
+ 3.  [Milestones](https://github.com/ali2210/WizDwarf/wiki/Achievements-:1st_place_medal:)
 
  4.  [![ElephantClock](https://upload.wikimedia.org/wikipedia/commons/7/76/Al-jazari_elephant_clock.png)]
 
