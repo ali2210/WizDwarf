@@ -22,7 +22,7 @@ var customer model.Vistors = model.Vistors{
 	Country:  "usa",
 	Eve:      false,
 }
-var client DBFirestore = &cloud_data{}
+var client DBFirestore = &cloudData{}
 
 func profileDBTest(t *testing.T) {
 	RegisterFailHandler(Fail)
@@ -57,11 +57,12 @@ var _ = Describe("Profile Data store interface test..", func() {
 				Zip:          "94300",
 				Male:         true,
 				Email:        "johnDevy@coke.com",
+				Twitter:      "https://twitter.com/john",
 			}
 			Expect(client.UpdateProfiles(&firebase.App{}, &Profile)).Should(BeNil())
 		})
 		It("Data get", func() {
-			Expect(client.GetProfile(&firebase.App{}, customer.Id)).Should(BeNil())
+			Expect(client.GetProfile(&firebase.App{}, customer.Id, customer.Email)).Should(BeNil())
 		})
 	})
 

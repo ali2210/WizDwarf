@@ -82,3 +82,11 @@
 	display: hidden;
 }
 
+.div-sign{
+	background-color: dodgerblue;
+}
+.btn-light{
+	background-color: mediumorchid;
+	color: whitesmoke;
+	border-radius: 10px;	
+}

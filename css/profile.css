@@ -53,7 +53,7 @@
   }
   .submit-button {
     background: #31dc58;
-    margin-top: 10px;
+    margin-top: 30px;
     width: 30%;
     color: white;
     font-weight: bolder;
@@ -104,7 +104,6 @@
     margin-right: 10px;
   }
   .edit-input{
-    
     visibility: visible;
     display: flex;
     justify-content: center;

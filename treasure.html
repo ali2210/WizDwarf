@@ -1,55 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  
-  <!-- <link rel="shortcut icon" type="image/png" href="/images/favicon.png"> -->
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="/css/seed.css">
-  <link rel="stylesheet" type="text/css" href="/css/transact.css">
-  <link rel="stylesheet" type="text/css" href="/css/treasure.css"></link>
-  <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
-  <title>WizDwarfs</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<!-- <link rel="shortcut icon" type="image/png" href="/images/favicon.png"> -->
+	<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="/css/seed.css">
+	<link rel="stylesheet" type="text/css" href="/css/transact.css">
+	<link rel="stylesheet" type="text/css" href="/css/treasure.css">
+	</link>
+	<link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+	<title>WizDwarfs</title>
+
 <body>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    	<a class="navbar-brand" href="#">
-    		<!-- <button class="btn-connect" type="button" onclick="connected()">
+		<a class="navbar-brand" href="#">
+			<!-- <button class="btn-connect" type="button" onclick="connected()">
     			<i class="fa fa-wifi" aria-hidden="true" id="wifi"></i>
     		</button> -->
-    	</a>
+		</a>
 	</nav>
 	<div class="static-field">
-			<div class="static-img">
-				<img src="/images/logo.png" alt ="WizDwarf" class="img-logo"/>
-				<h4 class="text">Billioniare</h4>
+		<div class="static-img">
+			<img src="/images/logo.png" alt="WizDwarf" class="img-logo" />
+			<h4 class="text">Billioniare</h4>
+		</div>
+		<div class="static-text">
+			<input type="text" name="eth" value="{{.Eth}}" class="address" readonly>
+			<div class="">
+				<h5 class="balance">{{.Balance}}
+					<img src="/images/eth.png" alt="eth" class="eth-img" />
+				</h5>
 			</div>
-			<div class="static-text">
-				<input type="text" name="eth" value="{{.Eth}}" class="address" readonly>
-					<div class="">
-						<h5 class="balance">{{.Balance}}
-							<img src="/images/eth.png" alt="eth" class="eth-img"/>
-						</h5>
+			<div class="div-form col-md-4">
+				<form class="div-form-container" method="post" action="/transact/treasure">
+					<div class="div-send-in">
+						<button type="button" class="btn-in" id="in" onclick="Send()"><i class="fa fa-key"
+								aria-hidden="true" id="key"></i></button>
+						<input type="text" name="send" class="in-send" id="send" placeholder="Sender Address">
 					</div>
-					<div class="div-form col-md-4">
-						<form class="div-form-container" method="post" action="/transact/treasure">
-						<div class="div-send-in">
-							<button type="button" class="btn-in" id="in" onclick="Send()"><i class="fa fa-key" aria-hidden="true" id="key"></i></button>
-							<input type="text" name="send" class="in-send" id="send" placeholder="Sender Address">
-						</div>
-						<div class="div-receive-in">
-							<button type="button" class="btn-in-rec" id="btn-rece" onclick="Receive()"><i class="fa fa-key" aria-hidden="true" id="rkey"></i></button>
-							<input type="text" name="rece" class="in-rece" id="rece-txt" placeholder="Receive Address">
-						</div>
-						<button type="submit" class="btn-submt-form"><i class="fa fa-check-square"	aria-hidden="true" id="sub"></i>Submit</button>
-						<button type="button" class="btn-cancel-form" onclick="CancelForm()"><i class="fa fa-ban" aria-hidden="true" id="ban"></i>Cancel</button>
-					</form>
+					<div class="div-receive-in">
+						<button type="button" class="btn-in-rec" id="btn-rece" onclick="Receive()"><i class="fa fa-key"
+								aria-hidden="true" id="rkey"></i></button>
+						<input type="text" name="rece" class="in-rece" id="rece-txt" placeholder="Receive Address">
 					</div>
+					<button type="submit" class="btn-submt-form"><i class="fa fa-check-square" aria-hidden="true"
+							id="sub"></i>Submit</button>
+					<button type="button" class="btn-cancel-form" onclick="CancelForm()"><i class="fa fa-ban"
+							aria-hidden="true" id="ban"></i>Cancel</button>
+				</form>
 			</div>
 		</div>
-		<script type="text/javascript" src="/js/treasure.js"></script>
-		<script type="text/javascript" src="/js/wallet.js"></script>
+	</div>
+	<script type="text/javascript" src="/js/treasure.js"></script>
 </body>
+
 </html>

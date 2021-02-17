@@ -13,7 +13,7 @@ const (
 )
 
 type ProfileinJSON struct {
-	Id            string `json:"Id"`
+	ID            string `json:"ID"`
 	FirstName     string `json:"FirstName"`
 	LastName      string `json:"LastName"`
 	PhoneNo       string `json:"PhoneNo"`
@@ -21,26 +21,27 @@ type ProfileinJSON struct {
 	HouseAddress2 string `json:"HouseAddress2"`
 	Country       string `json:"Country"`
 	Zip           string `json:"Zip"`
+	City          string `json:"City"`
 	Eve           bool   `json:"Eve"`
 	Email         string `json:"Email"`
-	Phone         string `json:"Phone"`
+	Twitter       string `json:"Twitter"`
 }
 
 type DBFirestore interface {
 	SaveData(visitor *model.Vistors, app *firebase.App) (*model.Vistors, error)
 	ToFindByGroupSet(id, email string, app *firebase.App) (*model.Vistors, error)
 	FindAllData(app *firebase.App, email, password string) (*model.Vistors, error)
-	UpdateProfiles(clientId *firebase.App, profile *model.UpdateProfile) (*model.UpdateProfile, error)
-	GetProfile(clientId *firebase.App, Id string) (*ProfileinJSON, error)
+	UpdateProfiles(clientID *firebase.App, profile *model.UpdateProfile) (*model.UpdateProfile, error)
+	GetProfile(clientID *firebase.App, ID, email string) (*ProfileinJSON, error)
 }
 
-type cloud_data struct{}
+type cloudData struct{}
 
 func NewCloudInstance() DBFirestore {
-	return &cloud_data{}
+	return &cloudData{}
 }
 
-func (*cloud_data) SaveData(visitor *model.Vistors, app *firebase.App) (*model.Vistors, error) {
+func (*cloudData) SaveData(visitor *model.Vistors, app *firebase.App) (*model.Vistors, error) {
 	ctx := context.Background()
 	client, err := app.Firestore(ctx)
 	if err != nil {
@@ -70,7 +71,7 @@ func (*cloud_data) SaveData(visitor *model.Vistors, app *firebase.App) (*model.V
 
 }
 
-func (*cloud_data) FindAllData(app *firebase.App, email, password string) (*model.Vistors, error) {
+func (*cloudData) FindAllData(app *firebase.App, email, password string) (*model.Vistors, error) {
 	ctx := context.Background()
 	var visit model.Vistors
 	client, err := app.Firestore(ctx)
@@ -109,7 +110,7 @@ func (*cloud_data) FindAllData(app *firebase.App, email, password string) (*mode
 
 }
 
-func (*cloud_data) ToFindByGroupSet(id, email string, app *firebase.App) (*model.Vistors, error) {
+func (*cloudData) ToFindByGroupSet(id, email string, app *firebase.App) (*model.Vistors, error) {
 
 	ctx := context.Background()
 	client, err := app.Firestore(ctx)
@@ -134,20 +135,26 @@ func (*cloud_data) ToFindByGroupSet(id, email string, app *firebase.App) (*model
 			continue
 		}
 		visits = model.Vistors{
-			Id:      doc.Data()["Id"].(string),
-			Email:   doc.Data()["Email"].(string),
-			Country: doc.Data()["Country"].(string),
-			Zip:     doc.Data()["Zip"].(string),
-			Eve:     doc.Data()["Eve"].(bool),
+			Id:       doc.Data()["Id"].(string),
+			Name:     "",
+			Email:    doc.Data()["Email"].(string),
+			Password: "",
+			FName:    "",
+			City:     "",
+			Zip:      doc.Data()["Zip"].(string),
+			Address:  "",
+			LAddress: "",
+			Country:  doc.Data()["Country"].(string),
+			Eve:      doc.Data()["Eve"].(bool),
 		}
 		break
 	}
 	return &visits, err
 }
 
-func (*cloud_data) UpdateProfiles(clientId *firebase.App, profile *model.UpdateProfile) (*model.UpdateProfile, error) {
+func (*cloudData) UpdateProfiles(clientID *firebase.App, profile *model.UpdateProfile) (*model.UpdateProfile, error) {
 	ctx := context.Background()
-	client, err := clientId.Firestore(ctx)
+	client, err := clientID.Firestore(ctx)
 	if err != nil {
 		log.Fatal("Client Instance Failed to start", err)
 		return nil, err
@@ -155,7 +162,7 @@ func (*cloud_data) UpdateProfiles(clientId *firebase.App, profile *model.UpdateP
 	defer client.Close()
 
 	_, _, err = client.Collection(collection).Add(ctx, map[string]interface{}{
-		"Id":            profile.Id,
+		"ID":            profile.Id,
 		"FirstName":     profile.FirstName,
 		"Email":         profile.Email,
 		"Eve":           profile.Male,
@@ -165,6 +172,8 @@ func (*cloud_data) UpdateProfiles(clientId *firebase.App, profile *model.UpdateP
 		"Country":       profile.Country,
 		"LastName":      profile.LastName,
 		"PhoneNo":       profile.Phone,
+		"Twitter":       profile.Twitter,
+		"City":          profile.City,
 	})
 	if err != nil {
 		// log.Fatal("Failed to retrive Vistor Record:", err)
@@ -173,17 +182,17 @@ func (*cloud_data) UpdateProfiles(clientId *firebase.App, profile *model.UpdateP
 	return profile, nil
 }
 
-func (*cloud_data) GetProfile(clientId *firebase.App, Id string) (*ProfileinJSON, error) {
+func (*cloudData) GetProfile(clientID *firebase.App, ID, email string) (*ProfileinJSON, error) {
 	ctx := context.Background()
 	var visits ProfileinJSON
-	client, err := clientId.Firestore(ctx)
+	client, err := clientID.Firestore(ctx)
 	if err != nil {
 		log.Fatal("Client Instance Failed to start", err)
 		return &visits, err
 	}
 
 	defer client.Close()
-	iterator := client.Collection(collection).Where("Id", "==", Id).Documents(ctx)
+	iterator := client.Collection(collection).Where("Id", "==", ID).Where("Email", "==", email).Documents(ctx)
 
 	defer iterator.Stop()
 	for {
@@ -192,16 +201,18 @@ func (*cloud_data) GetProfile(clientId *firebase.App, Id string) (*ProfileinJSON
 			return &visits, err
 		}
 		visits = ProfileinJSON{
-			Id:            doc.Data()["Id"].(string),
+			ID:            doc.Data()["ID"].(string),
 			FirstName:     doc.Data()["FirstName"].(string),
-			Email:         doc.Data()["Email"].(string),
-			Phone:         doc.Data()["PhoneNo"].(string),
 			LastName:      doc.Data()["LastName"].(string),
-			Country:       doc.Data()["Country"].(string),
-			Zip:           doc.Data()["Zip"].(string),
+			PhoneNo:       doc.Data()["PhoneNo"].(string),
 			HouseAddress1: doc.Data()["HouseAddress1"].(string),
 			HouseAddress2: doc.Data()["Address"].(string),
+			Country:       doc.Data()["Country"].(string),
+			Zip:           doc.Data()["Zip"].(string),
+			City:          doc.Data()["City"].(string),
 			Eve:           doc.Data()["Eve"].(bool),
+			Email:         doc.Data()["Email"].(string),
+			Twitter:       doc.Data()["Twitter"].(string),
 		}
 		break
 	}

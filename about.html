@@ -1,165 +1,245 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+
 <head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>WizDwarfs</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
-    <link rel='stylesheet' type='text/css' media='screen' href='/css/about.css'> 
-    <script src='/js/about.js'></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script> -->
-    <script src="https://unpkg.com/@metamask/detect-provider/dist/detect-provider.min.js"></script>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>WizDwarfs</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap"
+    rel="stylesheet">
+  <link rel='stylesheet' type='text/css' media='screen' href='/css/about.css'>
+  <script src='/js/about.js'></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script> -->
+  <script src="https://unpkg.com/@metamask/detect-provider/dist/detect-provider.min.js"></script>
 </head>
 
 <body style=" display: grid;
 position: relative;margin: 20px;
     overflow: auto; 
      ">
-<div class='main-dashboard-div'>
-  <nav class="navbar navbar-expand-md navbar-light custom-navbar">
-    <a class="navbar-brand" href="#">
-      <img src="/images/logo.png" alt="Logo" class="logo">
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav">
-        <li class="nav-item active pl-3">
-          <a class="nav-link" href="/home">
-            <i class="fa fa-home icon-light change-service-color" aria-hidden="true"></i>
-            Home
-          </a>
-        </li>
-    <li class="nav-item dropdown pl-3">
-      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="fa fa-briefcase change-service-color" aria-hidden="true"></i>
-         Services 
+  <div class='main-dashboard-div'>
+    <nav class="navbar navbar-expand-md navbar-light custom-navbar">
+      <a class="navbar-brand" href="#">
+        <img src="/images/logo.png" alt="Logo" class="logo">
       </a>
-      <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-        <a class="dropdown-item" href="/dashbaord/setting/profile"><i class="fa fa-user-circle-o change-service-color" aria-hidden="true"></i> Edit Profile</a>
-        <a class="dropdown-item" href="/dashboard/setting/pay/credit/add"><i class="fa fa-shopping-cart change-service-color" aria-hidden="true"></i> Monetize</a>
-        <a class="dropdown-item" href="/dashbaord/setting/about"><i class="fa fa-book change-service-color" aria-hidden="true"></i> Biography</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item active pl-3">
+            <a class="nav-link" href="/home">
+              <i class="fa fa-home icon-light change-service-color" aria-hidden="true"></i>
+              Home
+            </a>
+          </li>
+          <li class="nav-item dropdown pl-3">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-briefcase change-service-color" aria-hidden="true"></i>
+              Services
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="/dashbaord/setting/profile"><i
+                  class="fa fa-user-circle-o change-service-color" aria-hidden="true"></i> Edit Profile</a>
+              <a class="dropdown-item" href="/dashboard/setting/pay/credit/add"><i
+                  class="fa fa-shopping-cart change-service-color" aria-hidden="true"></i> Monetize</a>
+              <a class="dropdown-item" href="/dashbaord/setting/about"><i class="fa fa-book change-service-color"
+                  aria-hidden="true"></i> Biography</a>
+            </div>
+          </li>
+        </ul>
       </div>
-    </li>
-   </ul>
   </div>
-</div>  
 
-<div class="server-message">
-  <span class="textmessage"></span>
-</div>
-<div class="policy">
-  <div class="bg-light row"> <span>Warning:</span>
-    <p>
-    <span class="span-fragment"> Don't share your Monetization Details anyone.. We ensure your digital account<br>
-      integrity,confidentially of your data.However this is not possible without your support. </span>
+  <div class="server-message">
+    <span class="textmessage"></span>
+  </div>
+  <div class="policy">
+    <div class="bg-light row"> <span>Warning:</span>
+      <p>
+        <span class="span-fragment"> Don't share your Monetization Details anyone.. We ensure your digital account<br>
+          integrity,confidentially of your data.However this is not possible without your support. </span>
       </p>
+    </div>
   </div>
-</div>
 
-<div class="col-11">
-  <div class="row">
-    <div class="btnMeta">
-      <button class="metabits" type="button" onclick="Metamasklogin()"> <img class="metamask-ext" src="/images/metamask.png" alt="Metamask"> <span class="span-metamask"> @Metamask</span> </button>
-    </div>  
-   </div>
+  <div class="col-11">
+    <div class="row">
+      <div class="btnMeta">
+        <button class="metabits" type="button" onclick="Metamasklogin()"> <img class="metamask-ext"
+            src="/images/metamask.png" alt="Metamask"> <span class="span-metamask"> @Metamask</span> </button>
+      </div>
+    </div>
 
-  <div class="row">
-    <div class="delete-card">
-      <a href="/dashbaord/setting/pay/credit/delete" class="btn btn-danger btn-md active trash-card" role="button" aria-pressed="true"> <i class="fa fa-trash" aria-hidden="true"></i> Delete Credit Card</a>
-    </div>  
-   </div>
-   
-</div>
-
-<div class="videobtn">
-  <video id="video">Video stream not available.</video> 
-  <button id="startbutton"> <i class="fa fa-camera-retro" aria-hidden="true"></i></button>
-  <button id="savePic"> <i class="fa fa-plus" aria-hidden="true"></i></button>
-</div>
-
-<div class="card special" style="width: 19rem;">
-  <!-- <img class="card-img-top" src="" alt="Card image cap"> -->
-  <div class="camera">
-   <canvas id="canvas">
-  </canvas>
-   <div class="output">
-    <img id="photo" >
-   </div>
+    <div class="row">
+      <div class="delete-card">
+        <a href="/dashbaord/setting/pay/credit/delete" class="btn btn-danger btn-md active trash-card" role="button"
+          aria-pressed="true"> <i class="fa fa-trash" aria-hidden="true"></i> Delete Credit Card</a>
+      </div>
+    </div>
   </div>
- 
-  <div class="card-body">
-    <h5 class="card-title heading"> Persona </h5>
-    <p class="card-text"> 
-     <div id="accordion">
-       <div class="card stateColor">
-         <div class="card-header" id="headingZero">
-           <h5 class="mb-0">
-             <button class="btn btn-link alter" data-toggle="collapse" data-target="#collapseZero" aria-expanded="true" aria-controls="collapseZero">
-               <i class="fa fa-user-circle-o alter" aria-hidden="true"></i> My Profile 
-             </button>
-           </h5>
-         </div>
 
-         <div id="collapseZero" class="collapse show" aria-labelledby="headingZero" data-parent="#accordion">
-          <div class="card-body change">
-           Name : {{.Name}} {{.FName}} <br> 
-           Email :{{.Email}} <br> 
-           Address: {{.Address}},{{.LAddress}}, {{.City}}, <br> 
-            {{.Zip}} {{.Country}} <br>
-          </div>
+  <div class="videobtn">
+    <video id="video">Video stream not available.</video>
+    <button id="startbutton"> <i class="fa fa-camera-retro" aria-hidden="true"></i></button>
+    <button id="savePic"> <i class="fa fa-plus" aria-hidden="true"></i></button>
+  </div>
+
+  <div class="card" style="width: 50rem; margin-left: 50px;">
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+      <ol class="carousel-indicators">
+        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+      </ol>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img class="d-block w-100" src="/images/unnamed.jpg" alt="First slide">
+        </div>
+        <div class="carousel-item">
+          <img class="d-block w-100" src="/images/4cffa85808ee219f6b5f4090b62a9c98.jpg" alt="Second slide">
+        </div>
+        <div class="carousel-item">
+          <img class="d-block w-100" src="/images/snowman.jpeg" alt="Third slide">
         </div>
       </div>
-     </p>
-     <ul class="list-group list-group-flush alter">
-      <li class="list-group-item"> <div id="accordion">
-       <div class="card stateColor">
-         <div class="card-header" id="headingOne">
-           <h5 class="mb-0">
-             <button class="btn btn-link alter" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-               <i class="fa fa-credit-card alter" aria-hidden="true"></i> Bank Profile 
-             </button>
-           </h5>
-         </div>
+      <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
 
-         <div id="collapseOne" class="collapse show alter" aria-labelledby="headingOne" data-parent="#accordion">
-          <div class="card-body change">
-            Num : {{.Number}} <br>
-            Valid : {{.ExpireMonth}} / {{.ExpireYear}} <br>
-            Type : {{.Type}}
+  </div>
+
+  <div class="card special" style="width: 19rem; display: flex; margin-left: 75%;">
+    <div class="camera">
+      <canvas id="canvas">
+      </canvas>
+      <div class="output">
+        <img id="photo">
+      </div>
+    </div>
+
+    <div class="carousel">
+      <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img class="d-block w-100" src="/images/5587a5f3cb55b15bcd9f9da3b7a8ee72.jpg" alt="First slide">
+          </div>
+          <div class="carousel-item">
+            <img class="d-block w-100" src="/images/skate.jpg" alt="Second slide">
+          </div>
+          <div class="carousel-item">
+            <img class="d-block w-100" src="/images/Christmas-iPhone-Wallpapers-8.jpg" alt="Third slide">
           </div>
         </div>
-      </div> 
-    </li>
-    <li class="list-group-item">  <div id="accordion">
-      <div class="card stateColor">
-        <div class="card-header" id="headingTwo">
-          <h5 class="mb-0">
-            <button class="btn btn-link alter" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-              <i class="fa fa-key alter" aria-hidden="true"></i> Ledger Bits 
-            </button>
-          </h5>
-        </div>
-        <div id="collapseTwo" class="collapse show alter" aria-labelledby="headingTwo" data-parent="#accordion">
-          <div class="card-body change">
-            Public : {{.Public}} <br>
-            Private: {{.Private}}
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <h5 class="card-title heading"> Persona </h5>
+      <p class="card-text">
+      <div id="accordion">
+        <div class="card stateColor">
+          <div class="card-header" id="headingZero">
+            <h5 class="mb-0">
+              <button class="btn btn-link alter" data-toggle="collapse" data-target="#collapseZero" aria-expanded="true"
+                aria-controls="collapseZero">
+                <i class="fa fa-user-circle-o alter" aria-hidden="true"></i> My Profile
+              </button>
+            </h5>
+          </div>
+
+          <div id="collapseZero" class="collapse show" aria-labelledby="headingZero" data-parent="#accordion">
+            <div class="card-body change">
+              Name : {{.Name}} {{.FName}} <br>
+              Email :{{.Email}} <br>
+              Address: {{.Address}},{{.LAddress}}, {{.City}}, <br>
+              {{.Zip}} {{.Country}} <br>
+              Phone : {{.Phone}} <br>
+              Tweet : {{.Twitter}} <br>
+            </div>
           </div>
         </div>
-      </div> 
-     </li>
-    </ul>
-  </div>
-  </div>
-  
-  
-          <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-          <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        </p>
+        <ul class="list-group list-group-flush alter">
+          <li class="list-group-item">
+            <div id="accordion">
+              <div class="card stateColor">
+                <div class="card-header" id="headingOne">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link alter" data-toggle="collapse" data-target="#collapseOne"
+                      aria-expanded="true" aria-controls="collapseOne">
+                      <i class="fa fa-credit-card alter" aria-hidden="true"></i> Bank Profile
+                    </button>
+                  </h5>
+                </div>
+
+                <div id="collapseOne" class="collapse show alter" aria-labelledby="headingOne" data-parent="#accordion">
+                  <div class="card-body change">
+                    Num : {{.Number}} <br>
+                    Valid : {{.ExpireMonth}} / {{.ExpireYear}} <br>
+                    Type : {{.Type}}
+                  </div>
+                </div>
+              </div>
+          </li>
+          <li class="list-group-item">
+            <div id="accordion">
+              <div class="card stateColor">
+                <div class="card-header" id="headingTwo">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link alter" data-toggle="collapse" data-target="#collapseTwo"
+                      aria-expanded="true" aria-controls="collapseTwo">
+                      <i class="fa fa-key alter" aria-hidden="true"></i> Ledger Bits
+                    </button>
+                  </h5>
+                </div>
+                <div id="collapseTwo" class="collapse show alter" aria-labelledby="headingTwo" data-parent="#accordion">
+                  <div class="card-body change">
+                    Public : {{.Public}} <br>
+                    Private: {{.Private}}
+                  </div>
+                </div>
+              </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"></script>
 </body>
+
 </html>

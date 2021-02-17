@@ -1,7 +1,7 @@
- Language [(1.14/Linux)]
+ Language:- [GO](1.14/Linux)
  
  [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H22YW0G)
- [NewYear2021](:tada:)
+
 
 # Mission
 This applicationn allow you can upload  genetic material(DNA). Based on your genetic material , anyone want to analyses any virus pattern exist. Infuture , platform provide various functions. Users can share their location by using geolocation . These location calclaute atmostersphic impact on your microscopic level of your genetic material .Stimulate your complex genetic enivornment on your virtual instance. Virtual Interface provide HIGH VOLUME DATA COMPRESSION (HVD) for your data. Because genetic data is so huge and replicative , in order to study such data we also provide AGI, and Quantum tools they predict data results automated and help us speed up in analysis data. However, every instance have own lab which only owner of lab (You) have access. For better understanding, we very soon release 3D+ MODELS FOR GENETIC MATERIAL. Every instance connect with cloud. What we belive distributed, automonous , hybrid and decentralize platform. 
@@ -9,10 +9,14 @@ This applicationn allow you can upload  genetic material(DNA). Based on your gen
  # Image
  
       Production
-               ### Docker build image
-                      cmd : $ docker run --hostname=wizdwarfs -p 5000:5000 -v wizlogs:/apps -it ali2210/wiz-dwarfs
-                      
-               ### Docker compose image
+               a .Docker local build image
+                     1. Without detach image
+                        cmd : $ docker run --hostname=wizdwarfs -p 5000:5000 -v app:/app/seqDir -it ali2210/wiz-dwarfs
+                     1 b.Detach image  
+                         cmd : $ docker run -d --hostname=wizdwarfs -p 5000:5000 -v app:/app/seqDir -it ali2210/wiz-dwarfs
+                     2. Browser Testing
+                        Open Browser type localhost:5000/ in your search bar
+               b. Docker compose image
                     1. Download project / fork project / git clone command  
                     2. Extract project / cd project_name
                       cmd : $ cd WizDwarf
@@ -29,9 +33,9 @@ This applicationn allow you can upload  genetic material(DNA). Based on your gen
             # Docker Composer
             # golang: v-1.14+
             # traefik
-            # Docker Volume
+            # docker-volume
 
-## Current pattern:
+## Current patterns:
 1. Covid-19
 2. Zika
 3. Flavi Dengue
@@ -70,7 +74,7 @@ This applicationn allow you can upload  genetic material(DNA). Based on your gen
         ## RefundService
         ## ReciveService
 6. ambient lighting [ok]
-7  notification [ok]
+7.  notification [ok]
 8. geocode  [ok]
 9. retro picture and video streaming [ok]
 10. persona build up [ok]
@@ -85,11 +89,11 @@ This applicationn allow you can upload  genetic material(DNA). Based on your gen
 - Credit card [ok]
 
 ## Links:
- 1. [!Docker(https://hub.docker.com/repository/docker/ali2210/wiz-dwarfs)]
+ 1. [Docker](https://hub.docker.com/repository/docker/ali2210/wiz-dwarfs)
 
- 2. [!Contributor(https://github.com/ali2210/WizDwarf/wiki)]
+ 2. [Contributor](https://github.com/ali2210/WizDwarf/wiki)
 
- 3.  [Milestones](https://github.com/ali2210/WizDwarf/wiki/Achievements-:1st_place_medal:)
+ 3. [Milestones](https://github.com/ali2210/WizDwarf/wiki/Achievements-:1st_place_medal:)
 
- 4.  [![ElephantClock](https://upload.wikimedia.org/wikipedia/commons/7/76/Al-jazari_elephant_clock.png)]
+ 4. [ElephantClock](https://upload.wikimedia.org/wikipedia/commons/7/76/Al-jazari_elephant_clock.png)
 
