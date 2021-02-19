@@ -654,14 +654,219 @@ func kernel(w http.ResponseWriter, r *http.Request) {
 }
 
 func multicluster(w http.ResponseWriter, r *http.Request) {
+	webpage := template.Must(template.ParseFiles(""))
+
+	btx, err := send()
+	if err != nil {
+		return
+	}
+
+	if r.Method == "GET" {
+		log.Println("[Path]:", r.URL.Path)
+		log.Println("[Method]:", r.Method)
+		webpage.Execute(w, btx)
+	} else {
+		log.Println("[Path]:", r.URL.Path)
+		log.Println("[Method]:", r.Method)
+		order := cart.GetItemsFromCart()
+		value, err := strconv.ParseUint(order.Price, 2, 10)
+		if err != nil {
+			return
+		}
+		blockchains.Checkout = value
+		blockchains.Amount = new(big.Int).SetUint64(uint64(blockchains.Checkout))
+		switch order.TypeofService {
+		case "Kernel":
+			n, m := int64(2), int64(60)
+			AutomatedNetworkFees(n, m)
+		case "Cluster":
+			n, m := int64(3), int64(110)
+			AutomatedNetworkFees(n, m)
+		case "Multi-Cluster":
+			n, m := int64(5), int64(550)
+			AutomatedNetworkFees(n, m)
+		default:
+			w.WriteHeader(http.StatusPreconditionFailed)
+			r.Method = "GET"
+			transacts(w, r)
+		}
+	}
+	// Send Transaction
+	blockchains.RecieveBatchID = "0x55057eb78fDbF783C961b4AAd6A5f8BC60cab44B"
+	bitInterface.EthReciptAddress = eth.BTCAddressHex(blockchains.RecieveBatchID)
+
+	// Network ID
+	chainID, err := clientInstance.NetworkID(context.Background())
+	bitInterface.EthTransaction = eth.BTCNewTransactions(blockchains, bitInterface)
+	bitInterface.FingerPrint, err = eth.BTCTransactionSignature(chainID, bitInterface)
+	if err != nil {
+		log.Fatal("[Fail] Signed Transaction", err)
+		return
+	}
+
+	// Send Transaction
+	err = eth.TransferBTC(bitInterface.FingerPrint)
+	if err != nil {
+		log.Fatalln("[Fail] Transaction", err)
+		return
+	}
+	response := structs.Response{
+		Flag:    false,
+		Message: "",
+		Links:   "",
+	}
+	temp := server(w, r)
+	_ = response.ClientRequestHandle(false, "[Operation] Successful , be proceed ", "/login", w, r)
+	response.ClientLogs()
+	err = response.Run(temp)
+	if err != nil {
+		log.Println("[Error]: checks logs...", err)
+		return
+	}
 
 }
 
 func tCluster(w http.ResponseWriter, r *http.Request) {
+	webpage := template.Must(template.ParseFiles(""))
+	btx, err := send()
+	if err != nil {
+		return
+	}
+
+	if r.Method == "GET" {
+		log.Println("[Path]:", r.URL.Path)
+		log.Println("[Method]:", r.Method)
+		webpage.Execute(w, btx)
+	} else {
+		log.Println("[Path]:", r.URL.Path)
+		log.Println("[Method]:", r.Method)
+		order := cart.GetItemsFromCart()
+		value, err := strconv.ParseUint(order.Price, 2, 10)
+		if err != nil {
+			return
+		}
+		blockchains.Checkout = value
+		blockchains.Amount = new(big.Int).SetUint64(uint64(blockchains.Checkout))
+		switch order.TypeofService {
+		case "Kernel":
+			n, m := int64(2), int64(60)
+			AutomatedNetworkFees(n, m)
+		case "Cluster":
+			n, m := int64(3), int64(110)
+			AutomatedNetworkFees(n, m)
+		case "Multi-Cluster":
+			n, m := int64(5), int64(550)
+			AutomatedNetworkFees(n, m)
+		default:
+			w.WriteHeader(http.StatusPreconditionFailed)
+			r.Method = "GET"
+			transacts(w, r)
+		}
+	}
+	// Send Transaction
+	blockchains.RecieveBatchID = "0x55057eb78fDbF783C961b4AAd6A5f8BC60cab44B"
+	bitInterface.EthReciptAddress = eth.BTCAddressHex(blockchains.RecieveBatchID)
+
+	// Network ID
+	chainID, err := clientInstance.NetworkID(context.Background())
+	bitInterface.EthTransaction = eth.BTCNewTransactions(blockchains, bitInterface)
+	bitInterface.FingerPrint, err = eth.BTCTransactionSignature(chainID, bitInterface)
+	if err != nil {
+		log.Fatal("[Fail] Signed Transaction", err)
+		return
+	}
+
+	// Send Transaction
+	err = eth.TransferBTC(bitInterface.FingerPrint)
+	if err != nil {
+		log.Fatalln("[Fail] Transaction", err)
+		return
+	}
+	response := structs.Response{
+		Flag:    false,
+		Message: "",
+		Links:   "",
+	}
+	temp := server(w, r)
+	_ = response.ClientRequestHandle(false, "[Operation] Successful , be proceed ", "/login", w, r)
+	response.ClientLogs()
+	err = response.Run(temp)
+	if err != nil {
+		log.Println("[Error]: checks logs...", err)
+		return
+	}
 
 }
 
 func tMulticluster(w http.ResponseWriter, r *http.Request) {
+	webpage := template.Must(template.ParseFiles(""))
+	btx, err := send()
+	if err != nil {
+		return
+	}
+
+	if r.Method == "GET" {
+		log.Println("[Path]:", r.URL.Path)
+		log.Println("[Method]:", r.Method)
+		webpage.Execute(w, btx)
+	} else {
+		log.Println("[Path]:", r.URL.Path)
+		log.Println("[Method]:", r.Method)
+		order := cart.GetItemsFromCart()
+		value, err := strconv.ParseUint(order.Price, 2, 10)
+		if err != nil {
+			return
+		}
+		blockchains.Checkout = value
+		blockchains.Amount = new(big.Int).SetUint64(uint64(blockchains.Checkout))
+		switch order.TypeofService {
+		case "Kernel":
+			n, m := int64(2), int64(60)
+			AutomatedNetworkFees(n, m)
+		case "Cluster":
+			n, m := int64(3), int64(110)
+			AutomatedNetworkFees(n, m)
+		case "Multi-Cluster":
+			n, m := int64(5), int64(550)
+			AutomatedNetworkFees(n, m)
+		default:
+			w.WriteHeader(http.StatusPreconditionFailed)
+			r.Method = "GET"
+			transacts(w, r)
+		}
+	}
+	// Send Transaction
+	blockchains.RecieveBatchID = "0x55057eb78fDbF783C961b4AAd6A5f8BC60cab44B"
+	bitInterface.EthReciptAddress = eth.BTCAddressHex(blockchains.RecieveBatchID)
+
+	// Network ID
+	chainID, err := clientInstance.NetworkID(context.Background())
+	bitInterface.EthTransaction = eth.BTCNewTransactions(blockchains, bitInterface)
+	bitInterface.FingerPrint, err = eth.BTCTransactionSignature(chainID, bitInterface)
+	if err != nil {
+		log.Fatal("[Fail] Signed Transaction", err)
+		return
+	}
+
+	// Send Transaction
+	err = eth.TransferBTC(bitInterface.FingerPrint)
+	if err != nil {
+		log.Fatalln("[Fail] Transaction", err)
+		return
+	}
+	response := structs.Response{
+		Flag:    false,
+		Message: "",
+		Links:   "",
+	}
+	temp := server(w, r)
+	_ = response.ClientRequestHandle(false, "[Operation] Successful , be proceed ", "/login", w, r)
+	response.ClientLogs()
+	err = response.Run(temp)
+	if err != nil {
+		log.Println("[Error]: checks logs...", err)
+		return
+	}
 
 }
 
