@@ -58,7 +58,7 @@
 	</div>
 
 	<div class="card">
-		<form method="get" action="/transact">
+		<form method="post" action="/transact">
 			<img class="card-image"
 				src="https://builtin.com/sites/default/files/styles/ckeditor_optimize/public/inline-images/blockchain-technology-overview.jpg" />
 			<div class="card-body">
@@ -87,24 +87,26 @@
 		</form>
 	</div>
 	<div class="card">
-		<form method="get" action="/transact">
+		<form method="post" action="/transact">
 			<img class="card-image"
 				src="https://i.pinimg.com/originals/03/a6/cd/03a6cd98e076b9bc22a8d08494851758.png" />
 			<div class="card-body">
-				<h3 class="card-title"> Cluster </h3>
+				<h3 class="card-title" name="typeClass"> Cluster </h3>
 				<p class="card-content">
 				<p>
 				<div class="card" style="width: 18rem;">
 					<div class="card-body">
-						<h5 class="card-title"><i class="fa fa-tags" aria-hidden="true">100$</i></h5>
-						<h6 class="card-subtitle mb-2 text-muted"> 3D Molecular structure analysis</h6>
+						<h5 class="card-title"><i class="fa fa-tags" aria-hidden="true" name="price">100$</i></h5>
+						<h6 class="card-subtitle mb-2 text-muted" name="describe"> 3D Molecular structure analysis</h6>
 						<p class="card-text"> 3D and 2D Molecular Structure of genetic material,
 							manually editting, and have cloud access. </p>
 						<button href="/transact/pay/paypal/cluster" class="btn btn-link" data-toggle="popover"
-							title="Payment via PayPal"><i class="fa fa-paypal" aria-hidden="true" type="submit"> Paypal
+							title="Payment via PayPal"><i class="fa fa-paypal" aria-hidden="true" type="submit"
+								name="method"> Paypal
 							</i></button>
 						<button href="/transact/pay/crypto/cluster" class="btn btn-link" data-toggle="popover"
-							title="Payment via cryptocurrency"><i class="fa fa-btc" aria-hidden="true" type="submit">
+							title="Payment via cryptocurrency"><i class="fa fa-btc" aria-hidden="true" type="submit"
+								name="method1">
 								Crypto-Tokens
 							</i> </button>
 					</div>
@@ -115,16 +117,17 @@
 		</form>
 	</div>
 	<div class="card">
-		<form method="get" action="/transact">
+		<form method="post" action="/transact">
 			<img class="card-image" src="https://tpcvin.com/wp-content/uploads/2020/05/AI-Future.jpg" />
 			<div class="card-body">
-				<h3 class="card-title"> Multi-Cluster </h3>
+				<h3 class="card-title" name="typeClass"> Multi-Cluster </h3>
 				<p class="card-content">
 				<p>
 				<div class="card" style="width: 18rem;">
 					<div class="card-body">
-						<h5 class="card-title"> <i class="fa fa-tags" aria-hidden="true">500$ </i></h5>
-						<h6 class="card-subtitle mb-2 text-muted"> Automated argumented 4D+ Molecular structure
+						<h5 class="card-title"> <i class="fa fa-tags" aria-hidden="true" name="price">500$ </i></h5>
+						<h6 class="card-subtitle mb-2 text-muted" name="describe"> Automated argumented 4D+ Molecular
+							structure
 							analysis.
 						</h6>
 						<p class="card-text"> Customer have cloud storage for his genetic data. Automated & Argumented
@@ -133,11 +136,12 @@
 							your
 							data. </p>
 						<button href="/transact/pay/paypal/multicluste" class="btn btn-link" data-toggle="popover"
-							title="Payment via PayPal" type="submit"> <i class="fa fa-paypal" aria-hidden="true"> Paypal
+							title="Payment via PayPal" type="submit"> <i class="fa fa-paypal" aria-hidden="true"
+								name="method"> Paypal
 							</i></button>
 						<button href="/transact/pay/crypto/multicluster" type="submit" class="btn btn-link"
 							data-toggle="popover" title="Payment via cryptocurrency"><i class="fa fa-btc"
-								aria-hidden="true"> Crypto-Tokens
+								aria-hidden="true" name="method1"> Crypto-Tokens
 							</i> </button>
 					</div>
 				</div>
