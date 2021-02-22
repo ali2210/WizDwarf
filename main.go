@@ -40,7 +40,6 @@ import (
 	"github.com/biogo/biogo/alphabet"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/gorilla/mux"
@@ -54,30 +53,29 @@ import (
 // Variables
 
 var (
-	emailexp            string                    = "([A-Z][a-z]|[0-9])*[@][a-z]*"
-	passexp             string                    = "([A-Z][a-z]*[0-9])*"
-	addressexp          string                    = "(^0x[0-9a-fA-F]{40}$)"
-	appName             *firebase.App             = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
-	cloud               users.DBFirestore         = users.NewCloudInstance()
-	digitalCode         users.CreditCardInfo      = users.NewClient()
-	vault               DBModel.Private           = DBModel.New()
-	ledger              db.PublicLedger           = db.NewCollectionInstance()
-	paypalMini          handler.PaypalClientLevel = handler.PaypalClientGo()
-	userSessions        *sessions.CookieStore     = nil //user level
-	clientInstance      *ethclient.Client         = nil
-	ethAddrressGenerate string                    = ""
-	ledgerPubcKeys      string                    = ""
-	ledgerBits          string                    = ""
-	googleCredentials   string                    = ""
-	openReadFile        string                    = ""
-	publicAddress       string                    = ""
-	edit                bio.LevenTable            = bio.NewMatch()
-	algo                info.Levenshtein          = info.Levenshtein{}
-	visualizeReport     weather.DataVisualization = weather.DataVisualization{}
-	accountID           string                    = " "
-	accountKey          string                    = " "
-	accountVisitEmail   string                    = " "
-	checkout            Shop.Shopping             = Shop.Shopping{
+	emailexp          string                    = "([A-Z][a-z]|[0-9])*[@][a-z]*"
+	passexp           string                    = "([A-Z][a-z]*[0-9])*"
+	addressexp        string                    = "(^0x[0-9a-fA-F]{40}$)"
+	appName           *firebase.App             = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
+	cloud             users.DBFirestore         = users.NewCloudInstance()
+	digitalCode       users.CreditCardInfo      = users.NewClient()
+	vault             DBModel.Private           = DBModel.New()
+	ledger            db.PublicLedger           = db.NewCollectionInstance()
+	paypalMini        handler.PaypalClientLevel = handler.PaypalClientGo()
+	userSessions      *sessions.CookieStore     = nil //user level
+	clientInstance    *ethclient.Client         = nil
+	ledgerPubcKeys    string                    = ""
+	ledgerBits        string                    = ""
+	googleCredentials string                    = ""
+	openReadFile      string                    = ""
+	publicAddress     string                    = ""
+	edit              bio.LevenTable            = bio.NewMatch()
+	algo              info.Levenshtein          = info.Levenshtein{}
+	visualizeReport   weather.DataVisualization = weather.DataVisualization{}
+	accountID         string                    = " "
+	accountKey        string                    = " "
+	accountVisitEmail string                    = " "
+	checkout          Shop.Shopping             = Shop.Shopping{
 		Price:         "",
 		TypeofService: "",
 		PaymentMethod: "",
@@ -199,7 +197,7 @@ func main() {
 	routing.HandleFunc("/transact/pay/crypto/multicluster", tMulticluster)
 
 	// routing.HandleFunc("/transact/send", send)
-	// routing.HandleFunc("/transact/treasure", treasure)
+	// routing.HandleFunc("/transact/userCredit", userCredit)
 	routing.HandleFunc("/visualize", visualize)
 	routing.HandleFunc("/modal/success", success)
 
@@ -609,8 +607,12 @@ func kernel(w http.ResponseWriter, r *http.Request) {
 	}
 	total := check.CalculateTotalBalance(amount, fees)
 	sTotal := fmt.Sprintf("%f", total)
-	blockchains.SenderBatchID = ethAddrressGenerate
-	blockchains.Balance, err = genesis.GetLastTransaction(blockchains)
+	// blockchains.SenderBatchID = ethAddrressGenerate
+	if blockchains.SenderBatchID == " " {
+		log.Fatal("Public Address:", err)
+		return
+	}
+	err = userCredit()
 	if err != nil {
 		fmt.Println("Error:")
 	}
@@ -654,89 +656,16 @@ func kernel(w http.ResponseWriter, r *http.Request) {
 }
 
 func multicluster(w http.ResponseWriter, r *http.Request) {
-	webpage := template.Must(template.ParseFiles(""))
-
-	btx, err := send()
-	if err != nil {
-		return
-	}
-
-	if r.Method == "GET" {
-		log.Println("[Path]:", r.URL.Path)
-		log.Println("[Method]:", r.Method)
-		webpage.Execute(w, btx)
-	} else {
-		log.Println("[Path]:", r.URL.Path)
-		log.Println("[Method]:", r.Method)
-		order := cart.GetItemsFromCart()
-		value, err := strconv.ParseUint(order.Price, 2, 10)
-		if err != nil {
-			return
-		}
-		blockchains.Checkout = value
-		blockchains.Amount = new(big.Int).SetUint64(uint64(blockchains.Checkout))
-		switch order.TypeofService {
-		case "Kernel":
-			n, m := int64(2), int64(60)
-			AutomatedNetworkFees(n, m)
-		case "Cluster":
-			n, m := int64(3), int64(110)
-			AutomatedNetworkFees(n, m)
-		case "Multi-Cluster":
-			n, m := int64(5), int64(550)
-			AutomatedNetworkFees(n, m)
-		default:
-			w.WriteHeader(http.StatusPreconditionFailed)
-			r.Method = "GET"
-			transacts(w, r)
-		}
-	}
-	// Send Transaction
-	blockchains.RecieveBatchID = "0x55057eb78fDbF783C961b4AAd6A5f8BC60cab44B"
-	bitInterface.EthReciptAddress = eth.BTCAddressHex(blockchains.RecieveBatchID)
-
-	// Network ID
-	chainID, err := clientInstance.NetworkID(context.Background())
-	bitInterface.EthTransaction = eth.BTCNewTransactions(blockchains, bitInterface)
-	bitInterface.FingerPrint, err = eth.BTCTransactionSignature(chainID, bitInterface)
-	if err != nil {
-		log.Fatal("[Fail] Signed Transaction", err)
-		return
-	}
-
-	// Send Transaction
-	err = eth.TransferBTC(bitInterface.FingerPrint)
-	if err != nil {
-		log.Fatalln("[Fail] Transaction", err)
-		return
-	}
-	response := structs.Response{
-		Flag:    false,
-		Message: "",
-		Links:   "",
-	}
-	temp := server(w, r)
-	_ = response.ClientRequestHandle(false, "[Operation] Successful , be proceed ", "/login", w, r)
-	response.ClientLogs()
-	err = response.Run(temp)
-	if err != nil {
-		log.Println("[Error]: checks logs...", err)
-		return
-	}
 
 }
 
 func tCluster(w http.ResponseWriter, r *http.Request) {
 	webpage := template.Must(template.ParseFiles(""))
-	btx, err := send()
-	if err != nil {
-		return
-	}
 
 	if r.Method == "GET" {
 		log.Println("[Path]:", r.URL.Path)
 		log.Println("[Method]:", r.Method)
-		webpage.Execute(w, btx)
+		webpage.Execute(w, "Cluster")
 	} else {
 		log.Println("[Path]:", r.URL.Path)
 		log.Println("[Method]:", r.Method)
@@ -750,13 +679,13 @@ func tCluster(w http.ResponseWriter, r *http.Request) {
 		switch order.TypeofService {
 		case "Kernel":
 			n, m := int64(2), int64(60)
-			AutomatedNetworkFees(n, m)
+			automatedNetworkFees(n, m)
 		case "Cluster":
 			n, m := int64(3), int64(110)
-			AutomatedNetworkFees(n, m)
+			automatedNetworkFees(n, m)
 		case "Multi-Cluster":
 			n, m := int64(5), int64(550)
-			AutomatedNetworkFees(n, m)
+			automatedNetworkFees(n, m)
 		default:
 			w.WriteHeader(http.StatusPreconditionFailed)
 			r.Method = "GET"
@@ -822,13 +751,13 @@ func tMulticluster(w http.ResponseWriter, r *http.Request) {
 		switch order.TypeofService {
 		case "Kernel":
 			n, m := int64(2), int64(60)
-			AutomatedNetworkFees(n, m)
+			automatedNetworkFees(n, m)
 		case "Cluster":
 			n, m := int64(3), int64(110)
-			AutomatedNetworkFees(n, m)
+			automatedNetworkFees(n, m)
 		case "Multi-Cluster":
 			n, m := int64(5), int64(550)
-			AutomatedNetworkFees(n, m)
+			automatedNetworkFees(n, m)
 		default:
 			w.WriteHeader(http.StatusPreconditionFailed)
 			r.Method = "GET"
@@ -871,18 +800,100 @@ func tMulticluster(w http.ResponseWriter, r *http.Request) {
 }
 
 func tKernel(w http.ResponseWriter, r *http.Request) {
-	webpage := template.Must(template.ParseFiles("payee.html"))
+	webpage := template.Must(template.ParseFiles(""))
+	var check users.Analysis = users.Analysis{}
+	user, err := cloud.GetProfile(appName, accountID, accountVisitEmail)
+	if err != nil {
+		log.Fatalln("[Fail] Operation..", err)
+		return
+	}
+
+	key, address := vault.GetCryptoDB(publicAddress)
+	credentials := DBModel.CredentialsPrivate{
+		PublicAddress: address,
+		PrvteKey:      key,
+	}
+
+	client, err := paypalMini.NewClient()
+	if err != nil {
+		log.Fatalln("[Fail] Client Operation:", err)
+		return
+	}
+
+	_, err = paypalMini.Token(client)
+	if err != nil {
+		log.Fatalln("[Fail] Token Operation:", err)
+		return
+	}
 
 	btx, err := send()
 	if err != nil {
 		return
 	}
+	log.Println("Block Header:", btx)
+
+	// ret, err := paypalMini.RetrieveCreditCardInfo(digitalCode.GetAuthorizeStoreID(), client)
+	// if err != nil {
+	// 	log.Fatalln("[Fail] Retrieve Card info Operation:", err)
+	// 	return
+	// }
+	blockchains.Nonce = bitInterface.EthNonceAtStatus
+	blockchains.GasLimit = uint64(21000)
+
+	bitInterface.EthGasUnits, err = eth.BTCGasConsumerPrice()
+	if err != nil {
+		return
+	}
+
+	order := cart.GetItemsFromCart()
+	batchID := order.TypeofService + user.ID
+	resp, err := paypalMini.GetPayout(batchID, client)
+	if err != nil {
+		return
+	}
+
+	amountStr, err := check.MarshalJSONAmount(resp)
+	if err != nil {
+		return
+	}
+	feesStr, err := check.MarshalJSONFees(resp)
+	if err != nil {
+		return
+	}
+	amountValue := check.Encode(amountStr)
+	feesValue := check.Encode(feesStr)
+	amount, err := check.CalculateNum(amountValue)
+	if err != nil {
+		return
+	}
+	fees, err := check.CalculateNum(feesValue)
+	if err != nil {
+		return
+	}
+	total := check.CalculateTotalBalance(amount, fees)
+	sTotal := fmt.Sprintf("%f", total)
+	if blockchains.SenderBatchID == "" {
+		log.Fatalln("Public Address", err)
+		return
+	}
+	// blockchains.SenderBatchID = blockchains.SenderBatchID
+	err = userCredit()
+	if err != nil {
+		log.Fatal("[Fail] Block Balance should not be zero  ", blockchains.Balance)
+		return
+	}
+	balance.SetTransactionWiz(user.FirstName, fmt.Sprintf("%v", blockchains.Balance), sTotal, sTotal, credentials.PublicAddress)
 
 	if r.Method == "GET" {
 		log.Println("[Path]:", r.URL.Path)
 		log.Println("[Method]:", r.Method)
-		webpage.Execute(w, btx)
+		webpage.Execute(w, balance.GetTransactionWiz())
 	} else {
+
+		// btx, err := send()
+		// if err != nil {
+		// 	return
+		// }
 		log.Println("[Path]:", r.URL.Path)
 		log.Println("[Method]:", r.Method)
 		order := cart.GetItemsFromCart()
@@ -895,13 +906,13 @@ func tKernel(w http.ResponseWriter, r *http.Request) {
 		switch order.TypeofService {
 		case "Kernel":
 			n, m := int64(2), int64(60)
-			AutomatedNetworkFees(n, m)
+			automatedNetworkFees(n, m)
 		case "Cluster":
 			n, m := int64(3), int64(110)
-			AutomatedNetworkFees(n, m)
+			automatedNetworkFees(n, m)
 		case "Multi-Cluster":
 			n, m := int64(5), int64(550)
-			AutomatedNetworkFees(n, m)
+			automatedNetworkFees(n, m)
 		default:
 			w.WriteHeader(http.StatusPreconditionFailed)
 			r.Method = "GET"
@@ -927,23 +938,10 @@ func tKernel(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln("[Fail] Transaction", err)
 		return
 	}
-	response := structs.Response{
-		Flag:    false,
-		Message: "",
-		Links:   "",
-	}
-	temp := server(w, r)
-	_ = response.ClientRequestHandle(false, "[Operation] Successful , be proceed ", "/login", w, r)
-	response.ClientLogs()
-	err = response.Run(temp)
-	if err != nil {
-		log.Println("[Error]: checks logs...", err)
-		return
-	}
 
 }
 
-func AutomatedNetworkFees(n, m int64) {
+func automatedNetworkFees(n, m int64) {
 	fee := new(big.Int)
 	result := new(big.Int)
 	blockchains.GasPrice = bitInterface.EthGasUnits
@@ -956,7 +954,7 @@ func AutomatedNetworkFees(n, m int64) {
 	} else {
 		k := 0.5
 		k -= float64(n)
-		AutomatedNetworkFees((int64(k)), m)
+		automatedNetworkFees((int64(k)), m)
 	}
 }
 
@@ -994,12 +992,12 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func treasure() (structs.DataBlock, error) {
-	// temp := template.Must(template.ParseFiles("treasure.html"))
+func userCredit() error {
+	// temp := template.Must(template.ParseFiles("userCredit.html"))
 	// acc := structs.Static{}
 	// block := structs.Block{}
 	var err error
-	blockchains.SenderBatchID = ethAddrressGenerate
+	//blockchains.SenderBatchID = id
 	blockchains.Balance, err = genesis.GetLastTransaction(blockchains)
 	if err != nil {
 		fmt.Println("Error:")
@@ -1007,23 +1005,8 @@ func treasure() (structs.DataBlock, error) {
 
 	// block.TxSen = r.FormValue("send")
 	// block.TxRec = r.FormValue("rece")
-	responseBlock := structs.DataBlock{
-		BlockHeaderID:        &types.Block{},
-		BlockSenderID:        &big.Int{},
-		LengthTransaction:    0,
-		BlockHex:             "",
-		BlockHeader:          0,
-		ListTransaction:      []types.Transactions{},
-		From:                 [20]byte{},
-		Status:               0,
-		Addresss:             [32]byte{},
-		CounterTransactions:  0,
-		TransactionsBlock:    &types.Transaction{},
-		TypeTransaction:      [32]byte{},
-		TypeDataTransactions: &types.Transaction{},
-		PendingStatus:        false,
-	}
-	return responseBlock, err
+
+	return err
 }
 
 func dashboard(w http.ResponseWriter, r *http.Request) {
@@ -1182,11 +1165,7 @@ func send() (structs.BitsBlocks, error) {
 	// block.TxRec = r.FormValue("add")
 	// choice := r.FormValue("transact")
 	// amount := r.FormValue("amount")
-	blockchains.Balance, err = genesis.GetLastTransaction(blockchains)
-	if err != nil {
-		log.Fatal("[Fail] Block Balance should not be zero  ", blockchains.Balance)
-		return structs.BitsBlocks{}, err
-	}
+	// blockchains.SenderBatchID = id
 	blockchains.BlockSenderID = structs.HeaderBlock
 	// Block number
 	blockchains.BlockHeaderID, err = clientInstance.BlockByNumber(context.Background(), blockchains.BlockSenderID)
@@ -1218,13 +1197,6 @@ func send() (structs.BitsBlocks, error) {
 		return structs.BitsBlocks{}, err
 	}
 
-	blockchains.Nonce = bitInterface.EthNonceAtStatus
-	blockchains.GasLimit = uint64(21000)
-
-	bitInterface.EthGasUnits, err = eth.BTCGasConsumerPrice()
-	if err != nil {
-		return structs.BitsBlocks{}, err
-	}
 	return bitInterface, err
 	// charge, err := StringToInt(blockchains.Amount)
 	// if err != nil {
@@ -1288,6 +1260,11 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 
 		log.Println("[Accept] Connection accepted", client)
 		clientInstance = client
+
+		// btx, err := send()
+		// if err != nil {
+		// 	return
+		// }
 
 		// private key
 		privateKey, err := crypto.GenerateKey()
@@ -1444,12 +1421,6 @@ func transacts(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
-		r.ParseForm()
-		if r.FormValue("method") != " " {
-			cart.PlaceItemsInCart(r.FormValue("price"), r.FormValue("typeClass"), r.FormValue("method"), r.FormValue("describe"))
-		}
-		cart.PlaceItemsInCart(r.FormValue("price"), r.FormValue("typeClass"), r.FormValue("method1"), r.FormValue("describe"))
-
 		// acc.Eth = ethAddrressGenerate
 		// acc.Balance = GetBalance(&acc)
 		// if acc.Balance == nil {
@@ -1465,7 +1436,16 @@ func transacts(w http.ResponseWriter, r *http.Request) {
 		// }
 		// fmt.Println("Details:", acc)
 		temp.Execute(w, "Transaction")
-
+	} else {
+		fmt.Println("Url:", r.URL.Path)
+		fmt.Println("Method:" + r.Method)
+		r.ParseForm()
+		if r.FormValue("method") != " " {
+			cart.PlaceItemsInCart(r.FormValue("price"), r.FormValue("typeClass"), r.FormValue("method"), r.FormValue("describe"))
+		}
+		cart.PlaceItemsInCart(r.FormValue("price"), r.FormValue("typeClass"), r.FormValue("method1"), r.FormValue("describe"))
+		log.Println("Cart-info:", cart)
+		temp.Execute(w, "Transacts")
 	}
 
 }
@@ -1566,8 +1546,8 @@ func wallet(w http.ResponseWriter, r *http.Request) {
 			vault.SetCryptoDB(acc.EthAddress, ledgerBits)
 
 			// variable address for futher processing
-			ethAddrressGenerate = acc.EthAddress
-			log.Println("Your Wallet:", ethAddrressGenerate)
+			blockchains.SenderBatchID = acc.EthAddress
+			log.Println("Your Wallet:", acc)
 
 			// read file and add swarm
 			// if add.Allowed {
