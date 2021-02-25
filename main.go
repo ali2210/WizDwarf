@@ -19,12 +19,14 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"reflect"
 	"regexp"
 	"strconv"
 	templates "text/template"
 	"time"
 
 	firebase "firebase.google.com/go"
+	"github.com/PuerkitoBio/goquery"
 	"github.com/ali2210/wizdwarf/db"
 	cloudWallet "github.com/ali2210/wizdwarf/db/cloudwalletclass"
 	DBModel "github.com/ali2210/wizdwarf/db/model"
@@ -1417,35 +1419,27 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 func transacts(w http.ResponseWriter, r *http.Request) {
 
 	temp := template.Must(template.ParseFiles("transact.html"))
+	var transactWeb structs.ParserObject = structs.ParserObject{}
+
 	// acc := structs.Static{}
 	if r.Method == "GET" {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
-		// acc.Eth = ethAddrressGenerate
-		// acc.Balance = GetBalance(&acc)
-		// if acc.Balance == nil {
-		// 	log.Fatal("[Fail] Connection Reject ", acc.Balance)
-		// 	response := structs.Response{}
-		// 	temp := server(w, r)
-		// 	_ = response.ClientRequestHandle(true, "Sorry ! Connectivity Issue   ", "/transact", w, r)
-		// 	response.ClientLogs()
-		// 	err := response.Run(temp)
-		// 	if err != nil {
-		// 		log.Println("[Error]: checks logs...", err)
-		// 	}
-		// }
-		// fmt.Println("Details:", acc)
 		temp.Execute(w, "Transaction")
 	} else {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
 		r.ParseForm()
-		if r.FormValue("method") != " " {
-			cart.PlaceItemsInCart(r.FormValue("price"), r.FormValue("typeClass"), r.FormValue("method"), r.FormValue("describe"))
+		doc, err := transactWeb.ReadContent("transact.html")
+		if err != nil {
+			return
 		}
-		cart.PlaceItemsInCart(r.FormValue("price"), r.FormValue("typeClass"), r.FormValue("method1"), r.FormValue("describe"))
-		log.Println("Cart-info:", cart)
-		temp.Execute(w, "Transacts")
+
+		value := getValuesFromStruct(doc.Typeclass, 0)
+		log.Panicln("Doc:", *doc.Typeclass, "Value:", value)
+		//	cart.PlaceItemsInCart(r.FormValue("price"), r.FormValue("typeClass"), r.FormValue("method1"), r.FormValue("describe"))
+		// 	log.Println("Cart-info:", cart)
+		// 	temp.Execute(w, "Transacts")
 	}
 
 }
@@ -2445,3 +2439,8 @@ func fileGet(path, filename string) (*os.File, error) {
 // 	return err
 
 // }
+func getValuesFromStruct(parser *goquery.Selection, index int) reflect.Value {
+	typeOf := reflect.ValueOf(parser).Elem()
+	return typeOf.Field(index)
+
+}
