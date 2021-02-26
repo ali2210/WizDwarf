@@ -26,7 +26,6 @@ import (
 	"time"
 
 	firebase "firebase.google.com/go"
-	"github.com/PuerkitoBio/goquery"
 	"github.com/ali2210/wizdwarf/db"
 	cloudWallet "github.com/ali2210/wizdwarf/db/cloudwalletclass"
 	DBModel "github.com/ali2210/wizdwarf/db/model"
@@ -1421,27 +1420,20 @@ func transacts(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("transact.html"))
 	var transactWeb structs.ParserObject = structs.ParserObject{}
 
-	// acc := structs.Static{}
 	if r.Method == "GET" {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
-		temp.Execute(w, "Transaction")
-	} else {
-		fmt.Println("Url:", r.URL.Path)
-		fmt.Println("Method:" + r.Method)
-		r.ParseForm()
-		doc, err := transactWeb.ReadContent("transact.html")
+		doc, err := transactWeb.ReadContent("https://gist.github.com/ali2210/21431ef39a8b3d048f1f49884f5fd193")
 		if err != nil {
+			fmt.Println("Fail:", err)
 			return
 		}
-
-		value := getValuesFromStruct(doc.Typeclass, 0)
-		log.Panicln("Doc:", *doc.Typeclass, "Value:", value)
-		//	cart.PlaceItemsInCart(r.FormValue("price"), r.FormValue("typeClass"), r.FormValue("method1"), r.FormValue("describe"))
-		// 	log.Println("Cart-info:", cart)
-		// 	temp.Execute(w, "Transacts")
+		log.Println("Document data:", doc)
+		var x interface{} = &doc
+		arrValues := getValuesFromStruct(x)
+		log.Println("Value:", arrValues)
+		temp.Execute(w, "Transact")
 	}
-
 }
 
 func wallet(w http.ResponseWriter, r *http.Request) {
@@ -2439,8 +2431,11 @@ func fileGet(path, filename string) (*os.File, error) {
 // 	return err
 
 // }
-func getValuesFromStruct(parser *goquery.Selection, index int) reflect.Value {
-	typeOf := reflect.ValueOf(parser).Elem()
-	return typeOf.Field(index)
-
+func getValuesFromStruct(parser interface{}) []reflect.Value {
+	y := reflect.ValueOf(parser).Elem()
+	x := make([]reflect.Value, y.NumField())
+	for i := 0; i < y.NumField(); i++ {
+		x[i] = y.Field(i)
+	}
+	return x
 }
