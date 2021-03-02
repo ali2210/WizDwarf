@@ -2,6 +2,8 @@ package structs
 
 import (
 	"fmt"
+	"log"
+	"os"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -24,7 +26,18 @@ type (
 
 func (*ParserObject) ReadContent(pageURL string) (HtmlContent, error) {
 
-	doc, err := goquery.NewDocument(pageURL)
+	file, err := os.Open(pageURL)
+	if err != nil {
+		log.Fatalln("Error", err, file)
+		return HtmlContent{}, err
+	}
+	stats, err := file.Stat()
+	if err != nil {
+		return HtmlContent{}, err
+	}
+	fmt.Println("@param_file:", stats.IsDir(), file.Name())
+
+	doc, err := goquery.NewDocumentFromReader(file)
 	if err != nil {
 		fmt.Println("Error", err)
 		return HtmlContent{}, err
@@ -32,27 +45,10 @@ func (*ParserObject) ReadContent(pageURL string) (HtmlContent, error) {
 
 	transactPage := HtmlContent{}
 
-	doc.Find("typeClass").Each(func(index int, item *goquery.Selection) {
-		transactPage.Description = item.Text()
-	})
-	doc.Find("price").Each(func(index int, item *goquery.Selection) {
-		transactPage.Price = item.Text()
-	})
-	doc.Find("paypal").Each(func(index int, item *goquery.Selection) {
-		transactPage.Paypal = item.Text()
-	})
-	doc.Find("token").Each(func(index int, item *goquery.Selection) {
-		transactPage.Token = item.Text()
-	})
-	doc.Find("describe").Each(func(index int, item *goquery.Selection) {
-		transactPage.Description = item.Text()
-	})
-
-	// transactPage.Typeclass = doc.Find("typeClass").Text()
-	// transactPage.Price = doc.Find("price").Text()
-	// transactPage.Description = doc.Find("describe").Text()
-	// transactPage.Paypal = doc.Find("paypal").Text()
-	// transactPage.Token = doc.Find("token").Text()
+	var cont string = ""
+	cont = doc.Find("h3 ").Text()
+	tag := doc.Find("i").Text()
+	fmt.Println("@param_content:", cont, "@param_tag:", tag)
 
 	return transactPage, nil
 }

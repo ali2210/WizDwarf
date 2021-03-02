@@ -1423,15 +1423,15 @@ func transacts(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
-		doc, err := transactWeb.ReadContent("https://gist.github.com/ali2210/21431ef39a8b3d048f1f49884f5fd193")
+		doc, err := transactWeb.ReadContent("transact.html")
 		if err != nil {
 			fmt.Println("Fail:", err)
 			return
 		}
 		log.Println("Document data:", doc)
-		var x interface{} = &doc
-		arrValues := getValuesFromStruct(x)
-		log.Println("Value:", arrValues)
+		// var x interface{} = &doc
+		// arrValues := getValuesFromStruct(x)
+		// log.Println("Value:", arrValues)
 		temp.Execute(w, "Transact")
 	}
 }
