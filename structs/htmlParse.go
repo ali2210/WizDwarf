@@ -18,37 +18,44 @@ type (
 	}
 
 	HtmlContentInterface interface {
-		ReadContent(pageURL string) (HtmlContent, error)
+		ReadContent(pageURL string) ([]HtmlContent, error)
 	}
 
 	ParserObject struct{}
 )
 
-func (*ParserObject) ReadContent(pageURL string) (HtmlContent, error) {
+func (*ParserObject) ReadContent(pageURL string) ([]HtmlContent, error) {
 
 	file, err := os.Open(pageURL)
 	if err != nil {
 		log.Fatalln("Error", err, file)
-		return HtmlContent{}, err
+		return []HtmlContent{}, err
 	}
 	stats, err := file.Stat()
 	if err != nil {
-		return HtmlContent{}, err
+		return []HtmlContent{}, err
 	}
 	fmt.Println("@param_file:", stats.IsDir(), file.Name())
 
 	doc, err := goquery.NewDocumentFromReader(file)
 	if err != nil {
 		fmt.Println("Error", err)
-		return HtmlContent{}, err
+		return []HtmlContent{}, err
 	}
 
-	transactPage := HtmlContent{}
+	transactPage := make([]HtmlContent, 0)
+	parse := [4]HtmlContent{}
+	for i := range parse {
+		parse[i].Typeclass = doc.Find("h3").Text()
+		parse[i].Price = doc.Find("i").Text()
+		parse[i].Description = doc.Find("h6").Text()
+		parse[i].Paypal = doc.Find("i").Text()
+		parse[i].Token = doc.Find("i").Text()
+		fmt.Println("@Param:", parse[i])
+		transactPage = append(transactPage, parse[i])
+	}
 
-	var cont string = ""
-	cont = doc.Find("h3 ").Text()
-	tag := doc.Find("i").Text()
-	fmt.Println("@param_content:", cont, "@param_tag:", tag)
+	fmt.Println("@Param:", transactPage)
 
 	return transactPage, nil
 }
