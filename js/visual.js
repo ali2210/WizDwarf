@@ -34,7 +34,7 @@ function meter() {
 
   ctx.fillStyle = 'green';
   ctx.save();
-  ctx.rotate((Math.PI / 50) * valueRes);
+  ctx.rotate((Math.PI * valueRes) / (Math.PI));
   ctx.lineWidth = 15;
   ctx.beginPath();
   ctx.moveTo(-20, 0);
