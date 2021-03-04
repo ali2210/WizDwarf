@@ -102,13 +102,29 @@ function draw() {
 
 function run() {
   window.requestAnimationFrame(run);
-  draw();
+  x = draw();
+
+  const process = document.querySelector('.btn-success');
+  const div = document.querySelector('.canvasdiv');
+  const transactBtn = document.querySelector('.lnkBtn');
+  setInterval(() => {
+    if (x == 0.0017950000000000043) {
+      process.style.visibility = "visible";
+      div.style.visibility = "visible";
+      transactBtn.style.visibility = "visible";
+    }
+  }, 500);
+
+
+
+
 }
 run();
 
 const progress = document.querySelector('.progress-done');
-
 setTimeout(() => {
   progress.style.opacity = 1;
   progress.style.width = progress.getAttribute('data-done') + '%';
-}, 500)
+}, 200);
+
+

@@ -32,6 +32,7 @@
     margin-top: 20px;
 	margin-right: 14px;
 	margin-left: 30px;
+    visibility: hidden;
 }
 
 .div-span{
@@ -77,6 +78,13 @@
     box-shadow: 0 3px 3px -5px #f2709c, 0 2px 5px #f2709c;
     transition: 30s ease;
   }
+  .btn-success{
+      visibility: hidden;
+        display: inline;
+        position: relative;
+        justify-content: center;
+        left: 50px;
+  }
 .pay-btn{
     display: flex;
     position: relative;
@@ -87,4 +95,6 @@
     position: relative;
     justify-content: center;
     margin-bottom: 20px;
+    visibility: hidden;
+    left: 50px;
 }
