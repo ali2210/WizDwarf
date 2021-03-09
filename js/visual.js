@@ -16,9 +16,9 @@ function meter() {
   ctx.lineCap = 'round';
 
   ctx.save();
-  for (var i = 0; i < 100; i++) {
+  for (var i = 0.0; i < 100.0; i++) {
     ctx.beginPath();
-    ctx.rotate(Math.PI / 50);
+    ctx.rotate((Math.PI * valueRes) / (Math.PI));
     ctx.moveTo(100, 0);
     ctx.lineTo(120, 0);
     ctx.stroke();
@@ -30,7 +30,7 @@ function meter() {
   var res = document.getElementById('result').textContent;;
   var valueRes = parseFloat(res);
 
-  // console.log(valueRes);
+  console.log("value:", valueRes);
 
   ctx.fillStyle = 'green';
   ctx.save();
@@ -39,27 +39,27 @@ function meter() {
   ctx.beginPath();
   ctx.moveTo(-20, 0);
   ctx.lineTo(80, 0);
-  ctx.strokeStyle = 'red';
-  ctx.arc(0, 0, 10, 0, 2 * Math.PI, true);
+  ctx.strokeStyle = 'blue';
+  ctx.arc(0, 0, 10, 0, ((Math.PI * valueRes) / Math.PI), true);
   ctx.lineTo(100, 0);
   ctx.stroke();
-  //ctx.restore();
+  ctx.restore();
 
-  //second hand
-  // ctx.save();
-  // ctx.rotate((Math.PI/ 360) * valueRes);
-  // ctx.lineWidth = 10;
-  // ctx.beginPath();
-  // ctx.moveTo(-28,0);
-  // ctx.lineTo(112,0);
-  // ctx.stroke();
-  // ctx.restore();
+  // second hand
+  ctx.save();
+  ctx.rotate(2 * (Math.PI * valueRes) / Math.PI);
+  ctx.lineWidth = 10;
+  ctx.beginPath();
+  ctx.moveTo(-28, 0);
+  ctx.lineTo(112, 0);
+  ctx.stroke();
+  ctx.restore();
 
 
   ctx.beginPath();
   ctx.lineWidth = 14;
-  ctx.strokeStyle = '#325FA2';
-  ctx.arc(0, 0, 142, 0, 2 * Math.PI, true);
+  ctx.strokeStyle = 'purple';
+  ctx.arc(0, 0, 142, 0, 2 * (Math.PI), true);
   ctx.stroke();
   ctx.restore();
 

@@ -37,7 +37,7 @@ import (
 	"github.com/ali2210/wizdwarf/structs/paypal/handler"
 	wizSdk "github.com/ali2210/wizdwarf/structs/transaction"
 	"github.com/ali2210/wizdwarf/structs/users"
-	"github.com/ali2210/wizdwarf/structs/users/model"
+
 	"github.com/biogo/biogo/alphabet"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -104,8 +104,15 @@ var (
 	genesis      structs.BlockTransactionGateway = structs.BlockTransactionGateway{}
 	eth          structs.EthToken                = structs.EthToken{}
 	bitInterface structs.BitsBlocks              = structs.BitsBlocks{
-		SenderBatchID:    "",
-		SenderPrivateKey: &ecdsa.PrivateKey{},
+		SenderBatchID:            "",
+		SenderPrivateKey:         &ecdsa.PrivateKey{},
+		EthBlockHeader:           "",
+		EthNewPublicKeyGenerator: eth,
+		EthNewPublic:             &ecdsa.PublicKey{},
+		EthAddress:               [20]byte{},
+		EthNonceAtStatus:         0,
+		EthGasUnits:              &big.Int{},
+		EthReciptAddress:         [20]byte{},
 	}
 )
 
@@ -196,7 +203,7 @@ func main() {
 	routing.HandleFunc("/transact/pay/crypto/kernel", tKernel)
 	routing.HandleFunc("/transact/pay/crypto/cluster", tCluster)
 	routing.HandleFunc("/transact/pay/crypto/multicluster", tMulticluster)
-
+	routing.HandleFunc("/liveBookHD/3d", space3D)
 	// routing.HandleFunc("/transact/send", send)
 	// routing.HandleFunc("/transact/userCredit", userCredit)
 	routing.HandleFunc("/visualize", visualize)
@@ -362,7 +369,7 @@ func aboutMe(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		myProfile := model.DigialProfile{
+		myProfile := users.DigialProfile{
 			Public:      access.PublicAddress,
 			Private:     access.PrvteKey,
 			Name:        userProfile.FirstName,
@@ -434,7 +441,7 @@ func profile(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 
 		// save value in db
-		MyProfile := model.UpdateProfile{
+		MyProfile := users.UpdateProfile{
 			Id:           accountID,
 			FirstName:    r.FormValue("uname"),
 			LastName:     r.FormValue("ufname"),
@@ -654,6 +661,10 @@ func kernel(w http.ResponseWriter, r *http.Request) {
 		balance.SetTransactionWiz(user.FirstName, fmt.Sprintf("%v", blockchains.Balance), sTotal, sTotal, credentials.PublicAddress)
 		temp.Execute(w, balance.GetTransactionWiz())
 	}
+}
+
+func space3D(w http.ResponseWriter, r *http.Request) {
+
 }
 
 func multicluster(w http.ResponseWriter, r *http.Request) {
@@ -1145,7 +1156,7 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			// fmt.Println("Virus:", capsid)
 
 		default:
-			RouteWebpage.Execute(w, "dashboard")
+			// RouteWebpage.Execute(w, "dashboard")
 		}
 	}
 
@@ -1578,7 +1589,19 @@ func terms(w http.ResponseWriter, r *http.Request) {
 
 func newUser(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("register.html"))
-	user := model.Create_User{}
+	user := users.Create_User{
+		Name:     configFilename,
+		Fname:    configFilename,
+		Madam:    false,
+		Address:  addressexp,
+		Address2: "",
+		Zip:      "",
+		City:     "",
+		Country:  "",
+		Email:    emailexp,
+		Password: "",
+		Secure:   false,
+	}
 
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
@@ -1657,7 +1680,19 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 
 func existing(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("login.html"))
-	user := model.Create_User{}
+	user := users.Create_User{
+		Name:     "",
+		Fname:    "",
+		Madam:    false,
+		Address:  "",
+		Address2: "",
+		Zip:      "",
+		City:     "",
+		Country:  "",
+		Email:    "",
+		Password: "",
+		Secure:   false,
+	}
 
 	if r.Method == "GET" {
 		fmt.Printf("\nMethod:%v", r.Method)
@@ -1813,9 +1848,9 @@ func logout(w http.ResponseWriter, r *http.Request) {
 
 //  Advance Functions
 
-func SearchDB(w http.ResponseWriter, r *http.Request, email, pass string) (*model.Vistors, error) {
+func SearchDB(w http.ResponseWriter, r *http.Request, email, pass string) (*users.Vistors, error) {
 
-	var data *model.Vistors
+	var data *users.Vistors
 	var err error
 	// w.Header().Set("Content-Type", "application/json")
 	if r.Method == "GET" {
@@ -1856,14 +1891,14 @@ func SearchDB(w http.ResponseWriter, r *http.Request, email, pass string) (*mode
 //
 // }
 
-func addVistor(response http.ResponseWriter, request *http.Request, user *model.Create_User, im string) {
+func addVistor(response http.ResponseWriter, request *http.Request, user *users.Create_User, im string) {
 
 	// var err error
 	//response.Header().Set("Content-Type", "application/json")
 	if request.Method == "GET" {
 		fmt.Println("Method:" + request.Method)
 	} else {
-		var member model.Vistors
+		var member users.Vistors
 		data, err := json.Marshal(member)
 		if err != nil {
 			log.Fatal("[Fail] Poor DATA JSON FORMAT  ", err)
@@ -2152,7 +2187,7 @@ func ReadSequence(filename string) ([]byte, error) {
 	return []byte(body), nil
 }
 
-func MessageToHash(w http.ResponseWriter, r *http.Request, matchE, matchP bool, user model.Create_User) (bool, *structs.SignedKey) {
+func MessageToHash(w http.ResponseWriter, r *http.Request, matchE, matchP bool, user users.Create_User) (bool, *structs.SignedKey) {
 	code := structs.SignedKey{}
 	if matchE && matchP {
 		h := sha256.New()

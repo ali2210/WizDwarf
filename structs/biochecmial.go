@@ -8,6 +8,7 @@ import (
 type (
 	MolecularBio struct {
 		AtomLevel  *pdb.Atom
+		HetAtom    *pdb.Atom
 		AlphaHelix *pdb.Helix
 		BetaSheets *pdb.Strand
 		LinkBy     []*pdb.Connection
@@ -20,7 +21,8 @@ type (
 func SequenceStructure(st2 string) MolecularBio {
 
 	molecule := MolecularBio{
-		AtomLevel: &pdb.Atom{
+		AtomLevel: &pdb.Atom{Serial: 0, Name: "", AltLoc: "", ResName: "", ChainID: "", ResSeq: 0, ICode: "", X: 0, Y: 0, Z: 0, Occupancy: 0, TempFactor: 0, Element: "", Charge: ""},
+		HetAtom: &pdb.Atom{
 			Serial:     0,
 			Name:       "",
 			AltLoc:     "",
@@ -36,58 +38,12 @@ func SequenceStructure(st2 string) MolecularBio {
 			Element:    "",
 			Charge:     "",
 		},
-		AlphaHelix: &pdb.Helix{
-			Serial:      0,
-			HelixID:     "",
-			InitResName: "",
-			InitChainID: "",
-			InitSeqNum:  0,
-			InitICode:   "",
-			EndResName:  "",
-			EndChainID:  "",
-			EndSeqNum:   0,
-			EndICode:    "",
-			HelixClass:  0,
-			Length:      0,
-		},
-		BetaSheets: &pdb.Strand{
-			Strand:      0,
-			SheetID:     "",
-			NumStrands:  0,
-			InitResName: "",
-			InitChainID: "",
-			InitSeqNum:  0,
-			InitICode:   "",
-			EndResName:  "",
-			EndChainID:  "",
-			EndSeqNum:   0,
-			EndICode:    "",
-			Sense:       0,
-			CurAtom:     "",
-			CurResName:  "",
-			CurChainId:  "",
-			CurResSeq:   0,
-			CurICode:    "",
-			PrevAtom:    "",
-			PrevResName: "",
-			PrevChainId: "",
-			PrevResSeq:  0,
-			PrevICode:   "",
-		},
-		LinkBy: []*pdb.Connection{},
-		Chains: &pdb.Chain{
-			ChainID:  "",
-			Residues: []*pdb.Residue{},
-		},
-		BioChem: &pdb.Matrix{},
-		Resuide: &pdb.Residue{
-			ResName:     "",
-			ChainID:     "",
-			ResSeq:      0,
-			Atoms:       []*pdb.Atom{},
-			AtomsByName: map[string]*pdb.Atom{},
-			Type:        0,
-		},
+		AlphaHelix: &pdb.Helix{Serial: 0, HelixID: "", InitResName: "", InitChainID: "", InitSeqNum: 0, InitICode: "", EndResName: "", EndChainID: "", EndSeqNum: 0, EndICode: "", HelixClass: 0, Length: 0},
+		BetaSheets: &pdb.Strand{Strand: 0, SheetID: "", NumStrands: 0, InitResName: "", InitChainID: "", InitSeqNum: 0, InitICode: "", EndResName: "", EndChainID: "", EndSeqNum: 0, EndICode: "", Sense: 0, CurAtom: "", CurResName: "", CurChainId: "", CurResSeq: 0, CurICode: "", PrevAtom: "", PrevResName: "", PrevChainId: "", PrevResSeq: 0, PrevICode: ""},
+		LinkBy:     []*pdb.Connection{},
+		Chains:     &pdb.Chain{ChainID: "", Residues: []*pdb.Residue{}},
+		BioChem:    &pdb.Matrix{},
+		Resuide:    &pdb.Residue{ResName: "", ChainID: "", ResSeq: 0, Atoms: []*pdb.Atom{}, AtomsByName: map[string]*pdb.Atom{}, Type: 0},
 	}
 
 	molecule.AlphaHelix = pdb.ParseHelix(st2)
@@ -98,6 +54,7 @@ func SequenceStructure(st2 string) MolecularBio {
 		ChainID:  "",
 		Residues: []*pdb.Residue{},
 	}
+	molecule.HetAtom = molecule.AtomLevel
 
 	molecule.Resuide = &pdb.Residue{
 		ResName:     "",
