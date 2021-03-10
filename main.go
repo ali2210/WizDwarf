@@ -124,9 +124,6 @@ const (
 	mainNet        string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
 	rinkebyClient  string = "https://rinkeby.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
 	geocodeAPI     string = "7efdb33c59a74e09352479b21657aee8"
-	// serviceID0     string = "kernel"
-	// serviceID1     string = "cluster"
-	// serviceID2     string = "multicluster"
 )
 
 func main() {
@@ -220,6 +217,8 @@ func main() {
 	routing.PathPrefix("/css/").Handler(css)
 	js := http.StripPrefix("/js/", http.FileServer(http.Dir("./js")))
 	routing.PathPrefix("/js/").Handler(js)
+	gltf := http.StripPrefix("/models/", http.FileServer(http.Dir("./gltf")))
+	routing.PathPrefix("/models/").Handler(gltf)
 
 	// routing.HandleFunc("/dummy", server)*templates.Template
 

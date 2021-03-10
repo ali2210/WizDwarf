@@ -1,71 +1,3 @@
-window.requestAnimationFrame(meter);
-
-function meter() {
-  // read canvas
-  var canvas = document.getElementById('canvasPaper');
-  var ctx = canvas.getContext('2d');
-  ctx.save();
-
-  ctx.clearRect(0, 0, 150, 150);
-  ctx.translate(75, 75);
-  ctx.scale(0.4, 0.4);
-  ctx.rotate(-Math.PI / 2);
-  ctx.strokeStyle = 'black';
-  ctx.fillStyle = 'white';
-  ctx.lineWidth = 8;
-  ctx.lineCap = 'round';
-
-  ctx.save();
-  for (var i = 0.0; i < 100.0; i++) {
-    ctx.beginPath();
-    ctx.rotate((Math.PI * valueRes) / (Math.PI));
-    ctx.moveTo(100, 0);
-    ctx.lineTo(120, 0);
-    ctx.stroke();
-  }
-  ctx.restore();
-
-
-
-  var res = document.getElementById('result').textContent;;
-  var valueRes = parseFloat(res);
-
-  console.log("value:", valueRes);
-
-  ctx.fillStyle = 'green';
-  ctx.save();
-  ctx.rotate((Math.PI * valueRes) / (Math.PI));
-  ctx.lineWidth = 15;
-  ctx.beginPath();
-  ctx.moveTo(-20, 0);
-  ctx.lineTo(80, 0);
-  ctx.strokeStyle = 'blue';
-  ctx.arc(0, 0, 10, 0, ((Math.PI * valueRes) / Math.PI), true);
-  ctx.lineTo(100, 0);
-  ctx.stroke();
-  ctx.restore();
-
-  // second hand
-  ctx.save();
-  ctx.rotate(2 * (Math.PI * valueRes) / Math.PI);
-  ctx.lineWidth = 10;
-  ctx.beginPath();
-  ctx.moveTo(-28, 0);
-  ctx.lineTo(112, 0);
-  ctx.stroke();
-  ctx.restore();
-
-
-  ctx.beginPath();
-  ctx.lineWidth = 14;
-  ctx.strokeStyle = 'purple';
-  ctx.arc(0, 0, 142, 0, 2 * (Math.PI), true);
-  ctx.stroke();
-  ctx.restore();
-
-  //window.requestAnimationFrame(meter);
-}
-
 var t = 0;
 var c = document.querySelector("canvas");
 var $ = c.getContext('2d');
@@ -115,9 +47,6 @@ function run() {
     }
   }, 500);
 
-
-
-
 }
 run();
 
@@ -127,4 +56,34 @@ setTimeout(() => {
   progress.style.width = progress.getAttribute('data-done') + '%';
 }, 200);
 
+const canvas_2d = document.getElementById('canvasPaper');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(50, 500 / 400, 0.1, 1000);
+
+const renderer = new THREE.WebGLRenderer({ canvas: canvas_2d });
+renderer.setSize(500, 400);
+//canvas_2d.append(renderer.domElement);
+const geometry = new THREE.DodecahedronGeometry(1, 0);
+const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+const cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
+
+camera.position.z = 5;
+var n = 0.0000;
+function animate() {
+  requestAnimationFrame(animate);
+  n += 0.0001;
+  var y = Math.sin(Math.PI / (n * 60));
+  cube.rotation.z += (Math.cos(Math.PI / (n * 60)));
+  cube.rotation.x += y ^ 2;
+  cube.rotation.y += 3 * y ^ (y - 1) / n;
+  setTimeout(() => {
+    cube.position.y = Math.sin((y) - (3 * y ^ (y - 1)) / Math.PI);
+    cube.position.x = Math.cos(-(3 / y ^ (y + 1) + y)) / Math.PI;
+    cube.position.z = y * n;
+  }, 10);
+
+  renderer.render(scene, camera);
+}
+animate();
 
