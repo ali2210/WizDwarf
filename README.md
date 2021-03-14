@@ -18,6 +18,7 @@ This applicationn allow you can upload  genetic material(DNA). Based on your gen
                      2. Browser Testing
                         Open Browser type localhost:5000/ in your search bar
                b. Docker compose image
+                    
                     1. Download project / fork project / git clone command  
                     2. Extract project / cd project_name
                       cmd : $ cd WizDwarf
@@ -35,6 +36,9 @@ This applicationn allow you can upload  genetic material(DNA). Based on your gen
             # golang: v-1.14+
             # traefik
             # docker-volume
+            # coinbase
+            # paypal
+            # metamask
 
 ## Current patterns:
 1. Covid-19
@@ -45,11 +49,11 @@ This applicationn allow you can upload  genetic material(DNA). Based on your gen
        
 ## Status : 
 1. Virus Pattern match [ok]
-2. UV INFO of your geoposition [failed]
+2. UV INFO of your geoposition 
 3. UV impact on your dna [not yet started]
 4. Visualization 
        1. Results visualization [ok]
-5. payment handle
+5. Payment handle
      ## 0. Credit Card
         ##  1. add card [ok]
         ##  2. link card [ok]
@@ -60,7 +64,7 @@ This applicationn allow you can upload  genetic material(DNA). Based on your gen
               ###  2. update [not]
               ###  3. delete [not]
      ## 1. Paypal 
-        ## PayForService
+        ## PayForService [added]
         ## RefundService
      ## 2. stripe
         ## PayForService
@@ -69,27 +73,32 @@ This applicationn allow you can upload  genetic material(DNA). Based on your gen
         ## PayForService
         ## RefundService
         ## ReciveService
-        ## ConnectWebsite
+        ## ConnectWebsite [added]
      ## 4. EthereumWallet
-        ## PayForService
+        ## PayForService [added]
         ## RefundService
         ## ReciveService
-6. ambient lighting [ok]
-7.  notification [ok]
-8. geocode  [ok]
-9. retro picture and video streaming [ok]
-10. persona build up [ok]
+6.  Ambient lighting [ok]
+7.  Notification [ok]
+8.  Geocode   [ok]
+9.  Retro picture and video streaming [ok]
+10. Persona build up [ok]
+11.  
 
 ## Tools :
+
 - Firebase cloud [ok]
 - EthereumWallet [ok]
-- Heroku [ok]
+- Heroku []
 - Docker-image [ok]
 - Bioinformatics tools [ok]
 - Metamask wallet [ok]
 - Credit card [ok]
+- Coinbase [ok]
+- Docker-compose [ok]
 
 ## Links:
+ 
  1. [Docker](https://hub.docker.com/repository/docker/ali2210/wiz-dwarfs)
 
  2. [Contributor](https://github.com/ali2210/WizDwarf/wiki)

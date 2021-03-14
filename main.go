@@ -37,7 +37,7 @@ import (
 	"github.com/ali2210/wizdwarf/structs/paypal/handler"
 	wizSdk "github.com/ali2210/wizdwarf/structs/transaction"
 	"github.com/ali2210/wizdwarf/structs/users"
-
+	coin "github.com/ali2210/wizdwarf/structs/coinbaseApi"
 	"github.com/biogo/biogo/alphabet"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -114,6 +114,10 @@ var (
 		EthGasUnits:              &big.Int{},
 		EthReciptAddress:         [20]byte{},
 	}
+	// js gopher.EmptyDomObject = gopher.EmptyDomObject{}
+	coinbaseClient coin.Permission = coin.Permission{}
+	staticData coin.StaticWallet = coin.StaticWallet{}
+	transactWeb structs.ParserObject = structs.ParserObject{}
 )
 
 // Constants
@@ -217,8 +221,8 @@ func main() {
 	routing.PathPrefix("/css/").Handler(css)
 	js := http.StripPrefix("/js/", http.FileServer(http.Dir("./js")))
 	routing.PathPrefix("/js/").Handler(js)
-	gltf := http.StripPrefix("/models/", http.FileServer(http.Dir("./gltf")))
-	routing.PathPrefix("/models/").Handler(gltf)
+	// gltf := http.StripPrefix("/models/", http.FileServer(http.Dir("./gltf")))
+	// routing.PathPrefix("/models/").Handler(gltf)
 
 	// routing.HandleFunc("/dummy", server)*templates.Template
 
@@ -1428,21 +1432,43 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 func transacts(w http.ResponseWriter, r *http.Request) {
 
 	temp := template.Must(template.ParseFiles("transact.html"))
-	var transactWeb structs.ParserObject = structs.ParserObject{}
 
 	if r.Method == "GET" {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
+		client := coinbaseClient.NewClient()
+		
+		exchange ,err := coinbaseClient.GetEthIndex("eth", "usd", client)
+		if err != nil {
+			return
+		}
+		 staticData.EthPrice = coinbaseClient.GetEthValue(exchange, 50.00)
+		 staticData.EthPrice2 = coinbaseClient.GetEthValue(exchange, 100.00)
+		 staticData.EthPrice3 = coinbaseClient.GetEthValue(exchange, 500.00)
+
+
+		// log.Println("Document data:", doc)
+		temp.Execute(w, staticData)
+	} else {
+		fmt.Println("Url:", r.URL.Path)
+		fmt.Println("Method:" + r.Method)
+		r.ParseForm()
 		doc, err := transactWeb.ReadContent("transact.html")
 		if err != nil {
 			fmt.Println("Fail:", err)
 			return
 		}
-		log.Println("Document data:", doc)
-		// var x interface{} = &doc
-		// arrValues := getValuesFromStruct(x)
-		// log.Println("Value:", arrValues)
-		temp.Execute(w, "Transact")
+		sq := r.FormValue("square")
+		crs := r.FormValue("cross")
+
+		sq1 := r.FormValue("sqr")
+		crss := r.FormValue("crss")
+
+		sq2 := r.FormValue("pos")
+		crss1 := r.FormValue("neg")
+		
+		fmt.Println("@param:", sq, crs, sq1, crss, sq2, crss1, doc)
+
 	}
 }
 
@@ -2388,8 +2414,8 @@ func choosePattern(w http.ResponseWriter, r *http.Request, fname, choose string,
 			log.Fatalln("[Fail] Sequence DataFile Error", err)
 			return err
 		}
-		log.Println("Genome:", len(Usr), "virus:", len(Virus))
-		distance := edit.EditDistanceStrings(Usr, Virus)
+		log.Println("Genome:", len(Virus), "virus:", len(Usr))
+		distance := edit.EditDistanceStrings(Virus, Usr)
 		algo.Probablity = algo.Result(distance)
 		algo.Name = fname
 		algo.Percentage = algo.CalcualtePercentage(algo.Probablity)

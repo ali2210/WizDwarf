@@ -15,6 +15,7 @@
 	<link rel="shortcut icon" type="image/png" href="/images/favicon.png">
 	<title>WizDwarfs</title>
 	<script src="https://unpkg.com/@metamask/detect-provider/dist/detect-provider.min.js"></script>
+
 </head>
 
 <body>
@@ -70,28 +71,41 @@
 							<h5 class="card-title">
 								<i class="fa fa-tags" aria-hidden="true" name="price">50$</i>
 							</h5>
-							<h6 class="card-subtitle mb-2 text-muted" name="describe"> 2D Molecular structure
-								analysis
+							<h6 class="card-subtitle mb-2 text-muted" name="describe" id="describe"> Kernel Space
 							</h6>
-							<p class="card-text">
-								2D Molecular structure of your genetic data (DNA,RNA,Proteins
-								and checmial
-								properties of amino acid). Cloud Access for your data.
+							<div class="span-container">
+								<span> <i class="fa fa-check-square" id="square" name="cross" aria-hidden="true"></i>
+								</span>
+								<span> <i class="fa fa-times" id="cross" name="cross" aria-hidden="true"></i>
+								</span>
+							</div>
+							<p class="card-text service-details">
+								Software image directly run on your Desktop Kernel. Kernels are like application
+								softwares, which allow to calculate behaviour of your genetic material. Usually, Kernels
+								process few megabytes data blocks. Users can transaction through paypal &
+								cryptocurrencies tokens.
 							</p>
 						</div>
 					</div>
-					<button class="btn btn-primary payment slide-right" data-toggle="popover" title="Payment via Paypal"
-						name="paypal" type="button">
-						<i class="fa fa-paypal" aria-hidden="true">
-							Paypal
-						</i>
-					</button>
-					<button class="btn btn-primary token slide-left" name="token" data-toggle="popover"
-						title="Payment via cryptocurrency" type="button">
-						<i class=" fa fa-btc" aria-hidden="true">
-							Crypto-Tokens
-						</i>
-					</button>
+					<form action="/transact" method="post" target="_self">
+						<div class="checkout">
+							<p>Do you want to checkouts with ETH({{.EthPrice}})? <input class="span-input-choice"
+									type="checkbox" id="checkouts" name="checkouts" />
+							</p>
+						</div>
+						<button class="btn btn-primary payment slide-right" data-toggle="popover"
+							title="Payment via Paypal" name="paypal" type="submit" id="paypal">
+							<i class=" fa fa-paypal" aria-hidden="true">
+								Paypal
+							</i>
+						</button>
+						<button class="btn btn-primary token slide-left" name="token" data-toggle="popover"
+							title="Payment via cryptocurrency" type="submit" id="token">
+							<i class=" fa fa-btc" aria-hidden="true">
+								Crypto-Tokens
+							</i>
+						</button>
+					</form>
 					</p>
 					</p>
 				</div>
@@ -108,26 +122,41 @@
 							<h5 class="card-title">
 								<i class="fa fa-tags" aria-hidden="true" name="price">100$</i>
 							</h5>
-							<h6 class="card-subtitle mb-2 text-muted" name="describe">
-								3D Molecular structure analysis
+							<h6 class="card-subtitle mb-2 text-muted" name="data" id="data">
+								Cluster Data-Blocks
 							</h6>
-							<p class="card-text">
-								3D and 2D Molecular Structure of genetic material,
-								manually editting, and have cloud access. </p>
+							<div class="span-container">
+								<span> <i class="fa fa-check-square" id="sqr" name="crss" aria-hidden="true"></i>
+								</span>
+								<span> <i class="fa fa-times" id="crss" name="crss" aria-hidden="true"></i>
+								</span>
+							</div>
+							<p class="card-text service-details">
+								Software image directly run on your virtual cloud cluster. These clusters are 2x faster
+								than kernel. Automated Mutant Protein Detection based on provided data. NFT tokens
+								available for transactions. </p>
 						</div>
 					</div>
-					<button class="btn btn-primary payment slide-right" data-toggle="popover" title="Payment via PayPal"
-						type="button">
-						<i class="fa fa-paypal" aria-hidden="true" name="paypal">
-							Paypal
-						</i>
-					</button>
-					<button class="btn btn-primary token slide-left" data-toggle=" popover"
-						title="Payment via cryptocurrency" type="button">
-						<i class="fa fa-btc" aria-hidden="true" name="token">
-							Crypto-Tokens
-						</i>
-					</button>
+					<form action="/transact" method="post" target="_self">
+						<div class="checkout">
+							<p>Do you want to checkouts with ETH({{.EthPrice2}})?
+								<input class="span-input-choice" type="checkbox" id="cloudInstance"
+									name="cloudInstance" />
+							</p>
+						</div>
+						<button class=" btn btn-primary payment slide-right" data-toggle="popover"
+							title="Payment via PayPal" type="submit" name="paypal" id="paypal">
+							<i class="fa fa-paypal" aria-hidden="true">
+								Paypal
+							</i>
+						</button>
+						<button class="btn btn-primary token slide-left" data-toggle=" popover"
+							title="Payment via cryptocurrency" type="submit" name="token" id="token">
+							<i class="fa fa-btc" aria-hidden="true">
+								Crypto-Tokens
+							</i>
+						</button>
+					</form>
 					</p>
 					</p>
 				</div>
@@ -143,37 +172,44 @@
 							<h5 class="card-title">
 								<i class="fa fa-tags" aria-hidden="true" name="price">500$ </i>
 							</h5>
-							<h6 class="card-subtitle mb-2 text-muted" name="describe">
-								Automated argumented 4D+
-								Molecular
-								structure
-								analysis.
+							<h6 class="card-subtitle mb-2 text-muted" name="multivm" id="multivm">
+								Virtual Galaxy
 							</h6>
-							<p class="card-text">
-								Customer have cloud storage for his genetic data. Automated &
-								Argumented
-								data transform
-								in +4D-MODEL, automated editing, and discover patterns or molecular structures that
-								exist in
-								your
-								data.
+							<div class="span-container">
+								<span> <i class="fa fa-check-square" id="pos" name="pos" aria-hidden="true"></i>
+								</span>
+								<span> <i class="fa fa-times" id="neg" name="neg" aria-hidden="true"></i>
+								</span>
+							</div>
+							<p class="card-text service-details">
+								Customers such as coperate and organization that want to study genetic material in
+								realtime and virtually. Multi-Cluster option not only process such a HIGH VOLUME at high
+								speed. Automated tools, argumented vision, huge blocks and multi-clusters allow you to
+								create mini virtual lab. These Labs are 10x faster, efficent and provide a vast array of
+								tools that can change the way you work at your workplace.
 							</p>
 						</div>
 					</div>
-					<button class="btn btn-primary payment slide-right" data-toggle="popover" title="Payment via PayPal"
-						type="button">
-						<i class="fa fa-paypal" aria-hidden="true" name="paypal"> Paypal</i>
-					</button>
-					<button class="btn btn-primary token slide-left" data-toggle="popover" type="button"
-						title="Payment via cryptocurrency">
-						<i class="fa fa-btc" aria-hidden="true" name="token">
-							Crypto-Tokens
-						</i>
-					</button>
+					<form action="/transact" method="post" target="_self">
+						<div class="checkout">
+							<p>Do you want to checkouts with ETH({{.EthPrice3}})?
+								<input class="span-input-choice" type="checkbox" name="vm" id="vm" />
+							</p>
+						</div>
+						<button class="btn btn-primary payment slide-right" data-toggle="popover"
+							title="Payment via PayPal" type="submit" name="paypal" id="paypal">
+							<i class="fa fa-paypal" aria-hidden="true"> Paypal</i>
+						</button>
+						<button class="btn btn-primary token slide-left" data-toggle="popover" type="submit"
+							title="Payment via cryptocurrency" name="token" id="token">
+							<i class="fa fa-btc" aria-hidden="true">
+								Crypto-Tokens
+							</i>
+						</button>
+					</form>
 					</p>
 					</p>
 				</div>
-				</form>
 			</div>
 		</section>
 	</main>
@@ -211,7 +247,7 @@
 		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
 		crossorigin="anonymous"></script>
 	<script type="text/javascript" src="/js/transact.js"></script>
-	<script type="text/javascript" src="/js/wallet.js"></script>
+
 
 </body>
 

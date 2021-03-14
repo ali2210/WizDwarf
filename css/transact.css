@@ -189,4 +189,25 @@ body {
 			  transform: translateX(-100px);
 	}
   }
-  
+  .service-details{
+	  display: flex;
+	  position: relative;
+	  justify-content: space-around;
+  }
+  .checkout{
+	  display: inline-flex;
+	  position: relative;
+	  justify-content: center;
+	  left: 10px;
+	  color: darkviolet;
+  }
+  .fa-check-square{
+	  position: inherit;
+	  color: green;
+	  visibility: hidden;
+  }
+  .fa-times{
+	  position: inherit;
+	  color: red;
+	  visibility: hidden;
+  }
