@@ -33,11 +33,11 @@ import (
 	bio "github.com/ali2210/wizdwarf/structs/bioinformatics"
 	info "github.com/ali2210/wizdwarf/structs/bioinformatics/model"
 	Shop "github.com/ali2210/wizdwarf/structs/cart"
+	coin "github.com/ali2210/wizdwarf/structs/coinbaseApi"
 	weather "github.com/ali2210/wizdwarf/structs/openweather"
 	"github.com/ali2210/wizdwarf/structs/paypal/handler"
 	wizSdk "github.com/ali2210/wizdwarf/structs/transaction"
 	"github.com/ali2210/wizdwarf/structs/users"
-	coin "github.com/ali2210/wizdwarf/structs/coinbaseApi"
 	"github.com/biogo/biogo/alphabet"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -115,9 +115,9 @@ var (
 		EthReciptAddress:         [20]byte{},
 	}
 	// js gopher.EmptyDomObject = gopher.EmptyDomObject{}
-	coinbaseClient coin.Permission = coin.Permission{}
-	staticData coin.StaticWallet = coin.StaticWallet{}
-	transactWeb structs.ParserObject = structs.ParserObject{}
+	coinbaseClient coin.Permission      = coin.Permission{}
+	staticData     coin.StaticWallet    = coin.StaticWallet{}
+	transactWeb    structs.ParserObject = structs.ParserObject{}
 )
 
 // Constants
@@ -1437,17 +1437,16 @@ func transacts(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
 		client := coinbaseClient.NewClient()
-		
-		exchange ,err := coinbaseClient.GetEthIndex("eth", "usd", client)
+		exchange, err := coinbaseClient.GetEthIndex("usd", "btc", &client)
 		if err != nil {
+			log.Fatalln("Error:", err)
 			return
 		}
-		 staticData.EthPrice = coinbaseClient.GetEthValue(exchange, 50.00)
-		 staticData.EthPrice2 = coinbaseClient.GetEthValue(exchange, 100.00)
-		 staticData.EthPrice3 = coinbaseClient.GetEthValue(exchange, 500.00)
+		//  staticData.EthPrice = coinbaseClient.GetEthValue(exchange, 50.00)
+		//  staticData.EthPrice2 = coinbaseClient.GetEthValue(exchange, 100.00)
+		//  staticData.EthPrice3 = coinbaseClient.GetEthValue(exchange, 500.00)
 
-
-		// log.Println("Document data:", doc)
+		log.Println("@param?", exchange)
 		temp.Execute(w, staticData)
 	} else {
 		fmt.Println("Url:", r.URL.Path)
@@ -1466,7 +1465,7 @@ func transacts(w http.ResponseWriter, r *http.Request) {
 
 		sq2 := r.FormValue("pos")
 		crss1 := r.FormValue("neg")
-		
+
 		fmt.Println("@param:", sq, crs, sq1, crss, sq2, crss1, doc)
 
 	}
