@@ -1,4 +1,7 @@
- Language:- [GO](1.14/Linux)
+ Language :- [GO](1.14/Linux)
+ Docker :- [Docker](20.10.3/linux/amd64, 1.41)
+ Ubuntu :- [Linux](20.04-LTE)
+ Docker-Compose :- [Compose](Docker-Compose linux)
  
  
  [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H22YW0G)
