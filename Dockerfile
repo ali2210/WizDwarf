@@ -7,6 +7,10 @@ ENV PORT=5000
 
 ENV HOST=wizdwarfs
 
+# ENV CoinbaseKey=uGJWOhYrm7X2njjC
+
+# ENV CoinbaseSecret=U3D0pf9uwDGMAniaFyV17t2cd2ODHwVc
+
 RUN mkdir /app
 
 ADD . /app
@@ -31,7 +35,7 @@ VOLUME [ ${WIZ_DIR} ]
 
 RUN apk --no-cache add ca-certificates
 
-LABEL companyRelease="Wisdom-Enigma[2020]"
+LABEL companyRelease="Wisdom-Enigma"
 
 CMD ["/app/main"]
 

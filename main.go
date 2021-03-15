@@ -137,7 +137,6 @@ func main() {
 	host := os.Getenv("HOST")
 	port := os.Getenv("PORT")
 	wizDir := os.Getenv("WIZ_VOLUME_DIR")
-
 	if wizDir == "" {
 		log.Fatalln("Make sure volume mount", wizDir)
 		panic(errors.New("Fail to mount"))
@@ -1432,22 +1431,24 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 func transacts(w http.ResponseWriter, r *http.Request) {
 
 	temp := template.Must(template.ParseFiles("transact.html"))
-
+	// key := os.Getenv("CoinbaseKey")
+	// secret := os.Getenv("CoinbaseSecret")
 	if r.Method == "GET" {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
-		client := coinbaseClient.NewClient()
-		exchange, err := coinbaseClient.GetEthIndex("usd", "btc", &client)
-		if err != nil {
-			log.Fatalln("Error:", err)
-			return
-		}
+		//client := coinbaseClient.NewClient(key, secret)
+		//log.Println("@param_client", client)
+		//exchange, err := coinbaseClient.GetEthIndex("usd", "btc", client)
+		//if err != nil {
+		//	log.Fatalln("Error:", err)
+		//	return
+		// }
 		//  staticData.EthPrice = coinbaseClient.GetEthValue(exchange, 50.00)
 		//  staticData.EthPrice2 = coinbaseClient.GetEthValue(exchange, 100.00)
 		//  staticData.EthPrice3 = coinbaseClient.GetEthValue(exchange, 500.00)
 
-		log.Println("@param?", exchange)
-		temp.Execute(w, staticData)
+		//log.Println("@param?", exchange)
+		temp.Execute(w, "Transacts")
 	} else {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
@@ -1457,17 +1458,21 @@ func transacts(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("Fail:", err)
 			return
 		}
-		sq := r.FormValue("square")
-		crs := r.FormValue("cross")
+		fmt.Print("@oaram:", &doc)
 
-		sq1 := r.FormValue("sqr")
-		crss := r.FormValue("crss")
+		if err != nil {
+			log.Fatal("[Fail] Connection Reject ", err)
+			response := structs.Response{}
+			temp := server(w, r)
+			_ = response.ClientRequestHandle(true, " ! feature is lock yet  ", "/transact", w, r)
+			response.ClientLogs()
+			err := response.Run(temp)
+			if err != nil {
+				log.Println("[Error]: checks logs...", err)
+				return
+			}
 
-		sq2 := r.FormValue("pos")
-		crss1 := r.FormValue("neg")
-
-		fmt.Println("@param:", sq, crs, sq1, crss, sq2, crss1, doc)
-
+		}
 	}
 }
 

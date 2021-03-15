@@ -4,15 +4,15 @@ import (
 	coin "github.com/fabioberger/coinbase-go"
 )
 
-const (
-	APICoinbase string = "uGJWOhYrm7X2njjC"
-	CoinbaseKey string = "U3D0pf9uwDGMAniaFyV17t2cd2ODHwVc"
-)
+// const (
+// 	CoinbaseKey    string = "uGJWOhYrm7X2njjC"
+// 	CoinbaseSecret string = "U3D0pf9uwDGMAniaFyV17t2cd2ODHwVc"
+// )
 
 type (
 	CoinbaseThirdPartyAccess interface {
-		NewClient() coin.Client
-		GetEthIndex(from, to string, client *coin.Client) (float64, error)
+		NewClient(key, secret string) coin.Client
+		GetEthIndex(from, to string, client coin.Client) (float64, error)
 		GetEthValue(f, value float64) float64
 	}
 
@@ -25,11 +25,17 @@ type (
 	Permission struct{}
 )
 
-func (*Permission) NewClient() coin.Client {
-	return coin.ApiKeyClient(APICoinbase, CoinbaseKey)
+func (*Permission) NewClient(key, secret string) coin.Client {
+
+	if key == "" && secret == "" {
+		key = "uGJWOhYrm7X2njjC"
+		secret = "U3D0pf9uwDGMAniaFyV17t2cd2ODHwVc"
+	}
+	return coin.ApiKeyClient(key, secret)
+
 }
 
-func (*Permission) GetEthIndex(from, to string, client *coin.Client) (float64, error) {
+func (*Permission) GetEthIndex(from, to string, client coin.Client) (float64, error) {
 	return client.GetExchangeRate(from, to)
 }
 

@@ -23,7 +23,7 @@ services:
     image: golang:1.15-apline3.13
     working_dir: /app
     volumes: 
-      - .:/var/lib/docker/volumes/wizlogs/_data
+      - .:/var/lib/docker/volumes/app/_data
   dns:
     hostname:  'wizdwarfs' 
     image: golang:1.15-apline3.13
@@ -44,3 +44,7 @@ services:
 networks:
   traefik_public:
     external: true
+
+
+
+
