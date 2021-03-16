@@ -10,45 +10,69 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap"
+    rel="stylesheet">
   <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
-
+  <link rel="stylesheet" type="text/css" href="/css/login.css">
   <title>WizDwarfs</title>
 </head>
 
-<body style="background-color: white;">
+<body>
 
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
-  </script>
+    </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
     integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
-  </script>
+    </script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
-  </script>
+    </script>
+
+  <div class="container-alert">
+    {{if .Flag}}
+    <div class="alert alert-danger" role="alert">
+      <p class="span-message">{{ .Message}}</p> <a href="/{{ .Links}}"> Something went wrong!!</a>
+      <button class="btn btn-danger" type="button" id="danger">Close
+      </button>
+    </div>
+    {{ else }}
+    <div class="alert alert-success" role="alert">
+      <p class="content span-message"">{{ .Message}}</p>
+    <!-- <a href=" /{{ .Links}}" class="links">Operation Successfully
+        completed</a> -->
+        <button class="btn btn-danger" type="button" id="danger">Close
+        </button>
+    </div>
+    {{end}}
+  </div>
 
   <div class="container"
     style="border: 1px solid gray; width: 50%; display: flex; flex-direction: column; justify-content: center; margin-top: 40px;">
     <!-- <img
       src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRlwL7JvKC7dSHWT3ZElyZPotKGU5e75qsNetR5tUxZy8RMUt12&usqp=CAU"
       alt="virus" style="align-self: center; width: 35%; height:  50%; margin-top: 20px; margin-bottom: 20px;" /> -->
-      <img src="/images/logo.png" alt="WizDwarfs" style="width: 35%; align-self: center;height: 50%; margin-top: 20px; margin-bottom: 20px; align-self: center;"/>
+    <img src="/images/logo.png" alt="WizDwarfs"
+      style="width: 35%; align-self: center;height: 50%; margin-top: 20px; margin-bottom: 20px; align-self: center;" />
     <h4 style="text-align: center; font-family: 'Roboto Mono', monospace; color: #424242;">Login</h4>
     <form action="/login" method="post" style="margin-top: 20px; font-family: 'Lato', sans-serif;">
       <div class="form-row align-items-center"
         style="text-rendering: geometricPrecision; display: flex; justify-content: center;">
         <div class="form-group has-search" style="width: 80%;">
-          <span class="fa fa-snowflake-o form-control-feedback" style="position: absolute; z-index: 2; display: block; width: 2.375rem;
+          <span class="fa fa-snowflake-o form-control-feedback"
+            style="position: absolute; z-index: 2; display: block; width: 2.375rem;
           height: 2.375rem; line-height: 2.375rem; text-align: center; pointer-events: none; color: black; background: #ced4da;"></span>
-          <input type="email" class="form-control" id="inlineFormInput" placeholder="Email" name="email" style="padding-left: 55px;">
+          <input type="email" class="form-control" id="inlineFormInput" placeholder="Email" name="email"
+            style="padding-left: 55px;">
         </div>
         <div class="form-group has-search" style="width: 80%;">
-          <span class="fa fa-lock form-control-feedback" style="position: absolute; z-index: 2; display: block; width: 2.375rem;
+          <span class="fa fa-lock form-control-feedback"
+            style="position: absolute; z-index: 2; display: block; width: 2.375rem;
           height: 2.375rem; line-height: 2.375rem; text-align: center; pointer-events: none; color: black; background: #ced4da;"></span>
-          <input type="password" class="form-control" id="inlineFormInput" placeholder="Password" name="password" style="padding-left: 55px;">
+          <input type="password" class="form-control" id="inlineFormInput" placeholder="Password" name="password"
+            style="padding-left: 55px;">
         </div>
         <div class="mt-3 mb-3" style="width: 80%;">
           <div class="form-check mb-2">
@@ -59,11 +83,13 @@
           </div>
         </div>
         <div class="col-auto" style=" width: 80%; display: flex; justify-content: center; margin-bottom: 25px;">
-          <button type="submit" class="btn btn-success mb-2" style="width: 45%; background-color: #31dc58;">Submit</button>
+          <button type="submit" class="btn btn-success mb-2"
+            style="width: 45%; background-color: #31dc58;">Submit</button>
         </div>
       </div>
     </form>
   </div>
+  <script src="/js/register.js"></script>
 </body>
 
 </html>

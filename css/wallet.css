@@ -16,7 +16,7 @@
 	justify-content: center;
 	background: padding-box;
 	margin-left: 10px;
-	background-color: blueviolet;
+	background-color: black;
 	border-radius: 10px;
 }
 
@@ -54,3 +54,27 @@
 	text-align: center;
 }
 
+.container-alert{
+	margin: 50px;
+	position: relative;
+	width: 80%;
+   left: 40px;
+ }
+ .alert-danger{
+	 border-radius: 20px;
+	 color:red;
+ }
+ .alert-success{
+	 border-radius: 20px;
+	 color: green;
+ }
+ .span-message{
+	 position: inherit;
+	 display: inherit;
+	 margin-top: 30px ;
+ }
+ #danger{
+	 margin-left: 90%;
+	  border-radius: 10px; 
+	  margin-bottom: 50px;
+ }

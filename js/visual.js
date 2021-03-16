@@ -62,7 +62,6 @@ const camera = new THREE.PerspectiveCamera(50, 500 / 400, 0.1, 1000);
 
 const renderer = new THREE.WebGLRenderer({ canvas: canvas_2d });
 renderer.setSize(500, 400);
-//canvas_2d.append(renderer.domElement);
 const geometry = new THREE.DodecahedronGeometry(1, 0);
 const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 const cube = new THREE.Mesh(geometry, material);
@@ -86,4 +85,22 @@ function animate() {
   renderer.render(scene, camera);
 }
 animate();
+
+const bodyAlertSys = document.getElementsByClassName("container-alert")[0];
+const childLeft = bodyAlertSys.children[0];
+const childRight = bodyAlertSys.children[1];
+const closeFailBtn = childLeft.children[2];
+const closeSuccessBtn = childRight.children[1];
+
+function onrequestaction() {
+  childLeft.style.visibility = "hidden";
+}
+
+closeFailBtn.addEventListener('click', onrequestaction, false);
+
+function onrequestsuccess() {
+  childRight.style.visibility = "hidden";
+}
+
+closeSuccessBtn.addEventListener('click', onrequestsuccess, false);
 

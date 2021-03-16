@@ -1,4 +1,6 @@
 
+
+
 function EditEvent() {
     var submit = document.getElementById('submBtn');
     console.log(submit);
@@ -69,7 +71,6 @@ function CountryEditEvent() {
 }
 
 
-
 function ZipEditEvent() {
     var zip_in = document.getElementById('inputZip');
     var duplicate = document.getElementById('dzip');
@@ -98,3 +99,20 @@ function CityEditEvent() {
     button.style.marginTop = '37px';
     EditEvent();
 }
+
+const bodyAlertSys = document.getElementsByClassName("container-alert")[0];
+const childLeft = bodyAlertSys.children[0];
+const childRight = bodyAlertSys.children[1];
+const closeFailBtn = childLeft.children[2];
+const closeSuccessBtn = childRight.children[1];
+function onrequestaction() {
+    childLeft.style.visibility = "hidden";
+}
+
+closeFailBtn.addEventListener('click', onrequestaction, false);
+
+function onrequestsuccess() {
+    childRight.style.visibility = "hidden";
+}
+
+closeSuccessBtn.addEventListener('click', onrequestsuccess, false);

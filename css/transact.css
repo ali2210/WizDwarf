@@ -211,3 +211,29 @@ body {
 	  color: red;
 	  visibility: hidden;
   }
+  .container-alert{
+	 margin: 50px;
+	 position: relative;
+	 width: 80%;
+	left: 40px;
+  }
+  .alert-danger{
+	  border-radius: 20px;
+	  color:red;
+	  visibility: visible;
+  }
+  .alert-success{
+	  border-radius: 20px;
+	  color: green;
+	  visibility: visible;
+  }
+  .span-message{
+	  position: inherit;
+	  display: inherit;
+	  margin-top: 30px ;
+  }
+  #danger{
+	  margin-left: 90%;
+	   border-radius: 10px; 
+	   margin-bottom: 50px;
+  }

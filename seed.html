@@ -16,6 +16,25 @@
 </head>
 
 <body>
+	<div class="container-alert">
+		{{if .Flag}}
+		<div class="alert alert-danger" role="alert">
+			<p class="span-message">{{ .Message}}</p> <a href="/{{ .Links}}"> Something went wrong!!</a>
+			<button class="btn btn-danger" type="button" id="danger">Close
+			</button>
+		</div>
+		{{ else }}
+		<div class="alert alert-success" role="alert">
+			<p class="content span-message"">
+				{{ .Message}}
+			</p>
+			<!-- <a href=" /{{ .Links}}" class="links">
+				completed</a> -->
+				<button class="btn btn-danger" type="button" id="danger">Close
+				</button>
+		</div>
+		{{end}}
+	</div>
 	<div class="div-form">
 		<img src="/images/logo.png" alt="WizDwarfs" class="img-logo" />
 		<h4>Ethereum Account</h4>
