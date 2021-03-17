@@ -1,56 +1,77 @@
 package handler
 
-
 import (
-	paypalSdk "github.com/logpacker/PayPal-Go-SDK"
+	paypal "github.com/logpacker/PayPal-Go-SDK"
+	// paypalSdk "github.com/logpacker/PayPal-Go-SDK"
 )
 
-const(
-	
+const (
+
 	// PAYPAL SANDBOX
 	PaypalClientKey string = "AS3poQQQOrbsHIyYYpz3M_XzHhG9xlgLSj6uARAmL4CH7_BzyQYoceurrSKImPww7hq0vLJSrQ4hDesw"
 	PaypalSecretKey string = "EKtlmcsXpn0_9UtwTuWDHu_jfeyfiXFoJY1l4RY71VON_mXFlxkPnm53cJd8OIPc0VpouPyXV38RNBab"
-	
 )
+
 // Read html tag and convert into golang client
 
-
-type PaypalClientLevel interface{
-	NewClient()(*paypalSdk.Client, error)
-	Token(client *paypalSdk.Client)(*paypalSdk.TokenResponse, error)
-	RetrieveCreditCardInfo(id string, client *paypalSdk.Client)(*paypalSdk.CreditCard, error)
-	StoreCreditCardInfo(c paypalSdk.CreditCard, client *paypalSdk.Client)(*paypalSdk.CreditCard, error)
-	RemoveCard(id string, client *paypalSdk.Client) error
+type PaypalClientLevel interface {
+	NewClient() (*paypal.Client, error)
+	Token(client *paypal.Client) (*paypal.TokenResponse, error)
+	RetrieveCreditCardInfo(id string, client *paypal.Client) (*paypal.CreditCard, error)
+	StoreCreditCardInfo(c paypal.CreditCard, client *paypal.Client) (*paypal.CreditCard, error)
+	RemoveCard(id string, client *paypal.Client) error
+	PaypalPayout(id, serviceID, email, value string, client *paypal.Client) (*paypal.PayoutResponse, error)
+	GetPayout(id string, client *paypal.Client) (*paypal.PayoutResponse, error)
 }
 
 type PaypalMiniVersion struct{}
 
-func PaypalClientGo() PaypalClientLevel  {
+func PaypalClientGo() PaypalClientLevel {
 	return &PaypalMiniVersion{}
 }
 
-func (p *PaypalMiniVersion) NewClient()(*paypalSdk.Client, error)  {
-	client , err := paypalSdk.NewClient(PaypalClientKey, PaypalSecretKey,paypalSdk.APIBaseSandBox)
-	return client, err
+func (p *PaypalMiniVersion) NewClient() (*paypal.Client, error) {
+	return paypal.NewClient(PaypalClientKey, PaypalSecretKey, paypal.APIBaseSandBox)
 }
 
-func (p *PaypalMiniVersion) Token(client *paypalSdk.Client) (*paypalSdk.TokenResponse, error) {
-	
-		token , err := client.GetAccessToken()
-		return token, err
+func (p *PaypalMiniVersion) Token(client *paypal.Client) (*paypal.TokenResponse, error) {
+
+	return client.GetAccessToken()
 }
 
-func (p *PaypalMiniVersion) RemoveCard(id string, client *paypalSdk.Client,) error  {
+func (p *PaypalMiniVersion) RemoveCard(id string, client *paypal.Client) error {
 	return client.DeleteCreditCard(id)
 }
 
-func (p *PaypalMiniVersion) RetrieveCreditCardInfo(id string, client *paypalSdk.Client)(*paypalSdk.CreditCard, error)  {
-		
-	c, err := client.GetCreditCard(id)
-	return c, err
+func (p *PaypalMiniVersion) RetrieveCreditCardInfo(id string, client *paypal.Client) (*paypal.CreditCard, error) {
+
+	return client.GetCreditCard(id)
 }
 
-func (p *PaypalMiniVersion) StoreCreditCardInfo(c paypalSdk.CreditCard, client *paypalSdk.Client)(*paypalSdk.CreditCard, error)  {
-	cc , err := client.StoreCreditCard(c)
-	return cc, err
+func (p *PaypalMiniVersion) StoreCreditCardInfo(c paypal.CreditCard, client *paypal.Client) (*paypal.CreditCard, error) {
+
+	return client.StoreCreditCard(c)
+}
+
+func (p *PaypalMiniVersion) PaypalPayout(id, serviceID, email, value string, client *paypal.Client) (*paypal.PayoutResponse, error) {
+
+	payout := paypal.Payout{
+		SenderBatchHeader: &paypal.SenderBatchHeader{
+			EmailSubject:  "You recceive Service Confirm notification on the behave of WIZ-DWARFS",
+			SenderBatchID: id},
+		Items: []paypal.PayoutItem{{
+			RecipientType: "Email",
+			Receiver:      email,
+			SenderItemID:  serviceID,
+			Note:          "Thank you for service" + id,
+			Amount:        &paypal.AmountPayout{Value: value, Currency: "USD"},
+		}},
+	}
+
+	return client.CreateSinglePayout(payout)
+
+}
+
+func (p *PaypalMiniVersion) GetPayout(id string, client *paypal.Client) (*paypal.PayoutResponse, error) {
+	return client.GetPayout(id)
 }

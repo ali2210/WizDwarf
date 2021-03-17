@@ -4,12 +4,12 @@ import (
 	"testing"
 
 	firebase "firebase.google.com/go"
-	"github.com/ali2210/wizdwarf/structs/users/model"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
 
-var customer model.Vistors = model.Vistors{
+var customer Vistors = Vistors{
 	Id:       "ab324k",
 	Name:     "john",
 	Email:    "john@gmail.com",
@@ -46,7 +46,7 @@ var _ = Describe("Profile Data store interface test..", func() {
 			Expect(client.ToFindByGroupSet(customer.Id, customer.Email, &firebase.App{})).Should(BeNil())
 		})
 		It("Data update", func() {
-			Profile := model.UpdateProfile{
+			Profile := UpdateProfile{
 				Id:           "ab324k",
 				FirstName:    "john",
 				LastName:     "Dvy",

@@ -12,26 +12,29 @@
 
   <link rel="stylesheet" type="text/css" href="/css/visualize.css">
   <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
-  <!-- <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r126/three.js"
+    integrity="sha512-aPhrlLlp7Mr8g+MVw6/wMD8PjqqzRNhSM8pHDyyJPmUTJMzKxMmxrjauzQforOaAegN3CIKUTKXJyLwFD57RtA=="
+    crossorigin="anonymous"></script>
   <title>WizDwarfs</title>
 </head>
 
 <body>
-
   <div class="static-field">
     <div class="static-img">
       <img src="/images/logo.png" alt="WizDwarfs" class="img-logo" />
     </div>
   </div>
 
+
+
   <canvas></canvas>
 
   <div class="card text-center">
     <div class="card-header">
-      Calculation Completed within seconds
+      Calculation Completed within seconds...
     </div>
     <div class="card-body">
-      <h5 class="card-title"> Sequel </h5>
+      <h5 class="card-title"> Genetica Sequel's </h5>
       <p class="card-text">
       <div class="progress">
         <div class="progress-done" data-done="100">
@@ -40,21 +43,20 @@
       </div>
       <p>
         <a class="btn btn-success" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
-          aria-controls="collapseExample" title="Clock Visualization" data-toggle="popover"> <i
-            class="fa fa-check-square" aria-hidden="true"></i>
+          aria-controls="collapseExample" title="Dodecahedron Moving Fractals." data-toggle="popover"> <i
+            class=" fa fa-check-square" aria-hidden="true"></i>
           <span class="badge badge-light">{{.Process}}</span>
         </a>
       </p>
       <div class="collapse" id="collapseExample">
         <div class="card card-body">
           <div class="canvasdiv">
-            <span id="result" class="div-span">
-              Results ... {{ .Percentage}}
-            </span>
-
             <div class="canvas">
               <canvas id="canvasPaper" class="div-canvas"></canvas>
             </div>
+            <span id="result" class="div-span">
+              {{ .Percentage}}%
+            </span>
           </div>
         </div>
       </div>
@@ -65,7 +67,7 @@
         <i class="fa fa-shopping-cart" aria-hidden="true"> Checkout </i></a>
     </div>
     <div class="card-footer text-muted">
-      @{{.SeenBy}}
+      ! @{{.SeenBy}}
       <div class="col backBtn">
         <a href="/dashboard" class="btn btn-danger" data-toggle="popover" title="Back Button"> <i
             class="fa fa-chevron-circle-left" aria-hidden="true"> Back
@@ -74,10 +76,6 @@
 
     </div>
   </div>
-
-
-
-
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
     crossorigin="anonymous"></script>

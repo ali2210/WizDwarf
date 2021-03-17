@@ -56,7 +56,28 @@
     </div>
 
     <h5 class="check">Checkout </h5>
-    <form method="post" action="/transact/pay/paypal" class="form">
+
+    <div class="div-data">
+        <div class="card">
+
+            <span class="balance"> <i class="fa fa-usd" aria-hidden="true"> {{.Total}} </i></span>
+            <div class="user">
+                <span> <i class="fa fa-user-o" aria-hidden="true"> {{.Name}} </i></span>
+                <div class="card">
+                    <span> <i class="fa fa-users" aria-hidden="true"> {{.Public}} </i></span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="div-card">
+                    <span><i class="fa fa-btc" aria-hidden="true"> {{.Btc}}</i></span>
+                </div>
+                <div class="div-card">
+                    <span><i class="fa fa-credit-card" aria-hidden="true"> {{.Credit-Card}}</i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form method="post" action="/transact/pay/paypal/kernel" class="form">
         <div class="price">
         </div>
         <div class="cont">
@@ -74,7 +95,7 @@
                 </span>
                 <button id="btn" type="submit" class="cart" data-toggle="popover"
                     title="Click if you want to confirm ?"><i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                    You Order Place
+                    Your cart on the way...
                 </button>
             </div>
         </div>
@@ -86,9 +107,6 @@
             <i class="fa fa-chevron-circle-left" aria-hidden="true"> Back
             </i></a>
     </div>
-
-
-
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

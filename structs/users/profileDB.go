@@ -5,43 +5,43 @@ import (
 	"log"
 
 	firebase "firebase.google.com/go"
-	"github.com/ali2210/wizdwarf/structs/users/model"
+	// "github.com/ali2210/wizdwarf/structs/users/ "
 )
 
 const (
 	collection string = "ProfileVistors"
 )
 
-type ProfileinJSON struct {
-	ID            string `json:"ID"`
-	FirstName     string `json:"FirstName"`
-	LastName      string `json:"LastName"`
-	PhoneNo       string `json:"PhoneNo"`
-	HouseAddress1 string `json:"HouseAddress1"`
-	HouseAddress2 string `json:"HouseAddress2"`
-	Country       string `json:"Country"`
-	Zip           string `json:"Zip"`
-	City          string `json:"City"`
-	Eve           bool   `json:"Eve"`
-	Email         string `json:"Email"`
-	Twitter       string `json:"Twitter"`
-}
-
-type DBFirestore interface {
-	SaveData(visitor *model.Vistors, app *firebase.App) (*model.Vistors, error)
-	ToFindByGroupSet(id, email string, app *firebase.App) (*model.Vistors, error)
-	FindAllData(app *firebase.App, email, password string) (*model.Vistors, error)
-	UpdateProfiles(clientID *firebase.App, profile *model.UpdateProfile) (*model.UpdateProfile, error)
-	GetProfile(clientID *firebase.App, ID, email string) (*ProfileinJSON, error)
-}
-
-type cloudData struct{}
+type (
+	ProfileinJSON struct {
+		ID            string `json:"ID"`
+		FirstName     string `json:"FirstName"`
+		LastName      string `json:"LastName"`
+		PhoneNo       string `json:"PhoneNo"`
+		HouseAddress1 string `json:"HouseAddress1"`
+		HouseAddress2 string `json:"HouseAddress2"`
+		Country       string `json:"Country"`
+		Zip           string `json:"Zip"`
+		City          string `json:"City"`
+		Eve           bool   `json:"Eve"`
+		Email         string `json:"Email"`
+		Twitter       string `json:"Twitter"`
+	}
+	DBFirestore interface {
+		SaveData(visitor *Vistors, app *firebase.App) (*Vistors, error)
+		ToFindByGroupSet(id, email string, app *firebase.App) (*Vistors, error)
+		FindAllData(app *firebase.App, email, password string) (*Vistors, error)
+		UpdateProfiles(clientID *firebase.App, profile *UpdateProfile) (*UpdateProfile, error)
+		GetProfile(clientID *firebase.App, ID, email string) (*ProfileinJSON, error)
+	}
+	cloudData struct{}
+)
 
 func NewCloudInstance() DBFirestore {
 	return &cloudData{}
 }
 
-func (*cloudData) SaveData(visitor *model.Vistors, app *firebase.App) (*model.Vistors, error) {
+func (*cloudData) SaveData(visitor *Vistors, app *firebase.App) (*Vistors, error) {
 	ctx := context.Background()
 	client, err := app.Firestore(ctx)
 	if err != nil {
@@ -71,9 +71,9 @@ func (*cloudData) SaveData(visitor *model.Vistors, app *firebase.App) (*model.Vi
 
 }
 
-func (*cloudData) FindAllData(app *firebase.App, email, password string) (*model.Vistors, error) {
+func (*cloudData) FindAllData(app *firebase.App, email, password string) (*Vistors, error) {
 	ctx := context.Background()
-	var visit model.Vistors
+	var visit Vistors
 	client, err := app.Firestore(ctx)
 	if err != nil {
 		log.Fatal("Client Instance Failed to start", err)
@@ -91,7 +91,7 @@ func (*cloudData) FindAllData(app *firebase.App, email, password string) (*model
 			return &visit, err
 		}
 
-		visit = model.Vistors{
+		visit = Vistors{
 			Id:       doc.Data()["Id"].(string),
 			Name:     doc.Data()["Name"].(string),
 			Email:    doc.Data()["Email"].(string),
@@ -110,7 +110,7 @@ func (*cloudData) FindAllData(app *firebase.App, email, password string) (*model
 
 }
 
-func (*cloudData) ToFindByGroupSet(id, email string, app *firebase.App) (*model.Vistors, error) {
+func (*cloudData) ToFindByGroupSet(id, email string, app *firebase.App) (*Vistors, error) {
 
 	ctx := context.Background()
 	client, err := app.Firestore(ctx)
@@ -120,7 +120,7 @@ func (*cloudData) ToFindByGroupSet(id, email string, app *firebase.App) (*model.
 	}
 	defer client.Close()
 
-	var visits model.Vistors
+	var visits Vistors
 	it := client.Collection(collection).Where("Email", "==", email).Where("Id", "==", id).Documents(ctx)
 
 	defer it.Stop()
@@ -134,7 +134,7 @@ func (*cloudData) ToFindByGroupSet(id, email string, app *firebase.App) (*model.
 			log.Fatal("Iterator Failed on Vistor: ", err, doc.Data())
 			continue
 		}
-		visits = model.Vistors{
+		visits = Vistors{
 			Id:       doc.Data()["Id"].(string),
 			Name:     "",
 			Email:    doc.Data()["Email"].(string),
@@ -152,7 +152,7 @@ func (*cloudData) ToFindByGroupSet(id, email string, app *firebase.App) (*model.
 	return &visits, err
 }
 
-func (*cloudData) UpdateProfiles(clientID *firebase.App, profile *model.UpdateProfile) (*model.UpdateProfile, error) {
+func (*cloudData) UpdateProfiles(clientID *firebase.App, profile *UpdateProfile) (*UpdateProfile, error) {
 	ctx := context.Background()
 	client, err := clientID.Firestore(ctx)
 	if err != nil {

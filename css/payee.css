@@ -129,3 +129,47 @@ body {
     margin: 10%;
 }
 
+.div-data{
+    display: flex;
+    position: relative;
+    justify-content: center;
+    color: darkmagenta;
+    font-style: oblique;
+    font-family: fantasy;
+}
+.user{
+    display: inline-block;
+    position: relative;
+    justify-content: center;
+    text-align: center;
+}
+.div-card{
+    display: inline-flex;
+    position: relative;
+    justify-content: center;
+   padding: 2rem;
+}
+.fa-btc, .fa-credit-card{
+    display: flex;
+    position: relative;
+    margin-left: 5px;
+}
+.fa-shopping-cart{
+    animation: hello 5s infinite;
+}
+@keyframes hello{
+    0%{
+        left: 0%;
+        position: relative;
+    }
+    50%{
+        left: 50%;
+        position: relative;
+    }
+    100%{
+        left: 100%;
+        position: relative;
+    }
+}
+
+
