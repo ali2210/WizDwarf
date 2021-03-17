@@ -330,16 +330,16 @@ func aboutMe(w http.ResponseWriter, r *http.Request) {
 		userProfile, err := cloud.GetProfile(appName, accountID, accountVisitEmail)
 		if err != nil && userProfile != nil {
 			log.Fatal("[Fail] No info  ", err)
-			response := structs.Response{}
-			temp := server(w, r, "about")
-			_ = response.ClientRequestHandle(true, "Sorry ! No Information ", "/login", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
-
+			// response := structs.Response{}
+			// temp := server(w, r, "about")
+			// _ = response.ClientRequestHandle(true, "Sorry ! No Information ", "/login", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// 	return
+			// }
+			return
 		}
 		// log.Println("User profile:", userProfile)
 
@@ -411,15 +411,6 @@ func profile(w http.ResponseWriter, r *http.Request) {
 
 	if accountID == "" {
 		log.Fatal("[Error ] Please login  ")
-		response := structs.Response{}
-		temp := server(w, r, "profile")
-		_ = response.ClientRequestHandle(true, "Sorry Session expire   ", "/login", w, r)
-		response.ClientLogs()
-		err := response.Run(temp)
-		if err != nil {
-			log.Println("[Error]: checks logs...", err)
-			return
-		}
 		return
 	}
 	detailsAcc, err := cloud.GetProfile(appName, accountID, accountVisitEmail)
@@ -457,15 +448,7 @@ func profile(w http.ResponseWriter, r *http.Request) {
 
 		if accountID == "" {
 			log.Fatal("[Error ] Please login  ")
-			response := structs.Response{}
-			temp := server(w, r, "profile")
-			_ = response.ClientRequestHandle(true, "Sorry Session expire   ", "/login", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
+			return
 		}
 		MyProfile.Id = accountID
 
@@ -723,14 +706,14 @@ func tCluster(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln("[Fail] Transaction", err)
 		return
 	}
-	response := structs.Response{
-		Flag:    false,
-		Message: "",
-		Links:   "",
-	}
-	_ = server(w, r, "")
-	_ = response.ClientRequestHandle(false, "[Operation] Successful , be proceed ", "/login", w, r)
-	response.ClientLogs()
+	// response := structs.Response{
+	// 	Flag:    false,
+	// 	Message: "",
+	// 	Links:   "",
+	// }
+	// _ = server(w, r, "")
+	// _ = response.ClientRequestHandle(false, "[Operation] Successful , be proceed ", "/login", w, r)
+	// response.ClientLogs()
 	// err = response.Run(temp)
 	// if err != nil {
 	// 	log.Println("[Error]: checks logs...", err)
@@ -795,14 +778,14 @@ func tMulticluster(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln("[Fail] Transaction", err)
 		return
 	}
-	response := structs.Response{
-		Flag:    false,
-		Message: "",
-		Links:   "",
-	}
-	_ = server(w, r, "")
-	_ = response.ClientRequestHandle(false, "[Operation] Successful , be proceed ", "/login", w, r)
-	response.ClientLogs()
+	// response := structs.Response{
+	// 	Flag:    false,
+	// 	Message: "",
+	// 	Links:   "",
+	// }
+	// _ = server(w, r, "")
+	// _ = response.ClientRequestHandle(false, "[Operation] Successful , be proceed ", "/login", w, r)
+	// response.ClientLogs()
 	// err = response.Run(temp)
 	// if err != nil {
 	// 	log.Println("[Error]: checks logs...", err)
@@ -977,19 +960,20 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 	userProfile, err := cloud.FindAllData(appName, accountVisitEmail, accountKey)
 	if err != nil && userProfile != nil {
 		log.Fatal("[Fail] No info  ", err)
-		response := structs.Response{
-			Flag:    false,
-			Message: "",
-			Links:   "",
-		}
-		temp := server(w, r, "visualize")
-		_ = response.ClientRequestHandle(true, "Sorry ! No Information ", "/login", w, r)
-		response.ClientLogs()
-		err := response.Run(temp)
-		if err != nil {
-			log.Println("[Error]: checks logs...", err)
-			return
-		}
+		// response := structs.Response{
+		// 	Flag:    false,
+		// 	Message: "",
+		// 	Links:   "",
+		// }
+		// temp := server(w, r, "visualize")
+		// _ = response.ClientRequestHandle(true, "Sorry ! No Information ", "/login", w, r)
+		// response.ClientLogs()
+		// err := response.Run(temp)
+		// if err != nil {
+		// 	log.Println("[Error]: checks logs...", err)
+		// 	return
+		// }
+		return
 
 	}
 	algo.SetProbParameter(visualizeReport.Percentage)
@@ -1254,14 +1238,14 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 		client, err := ethclient.Dial(mainNet)
 		if err != nil {
 			log.Fatal("[Fail] Request Failed  ", err)
-			response := structs.Response{}
-			temp := server(w, r, "seed")
-			_ = response.ClientRequestHandle(true, "Sorry ! Connectivity Issue   ", "/dashboard", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-			}
+			// response := structs.Response{}
+			// temp := server(w, r, "seed")
+			// _ = response.ClientRequestHandle(true, "Sorry ! Connectivity Issue   ", "/dashboard", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// }
 			return
 		}
 
@@ -1276,15 +1260,15 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 		// private key
 		privateKey, err := crypto.GenerateKey()
 		if err != nil {
-			log.Fatal("[Fail] Public Key generate  ", err)
-			response := structs.Response{}
-			temp := server(w, r, "seed")
-			_ = response.ClientRequestHandle(true, "Sorry ! Compuatation Error   ", "/dashboard", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-			}
+			// log.Fatal("[Fail] Public Key generate  ", err)
+			// response := structs.Response{}
+			// temp := server(w, r, "seed")
+			// _ = response.ClientRequestHandle(true, "Sorry ! Compuatation Error   ", "/dashboard", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// }
 			return
 		}
 
@@ -1298,15 +1282,15 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 		pbcKey, ok := pblicKey.(*ecdsa.PublicKey)
 		if !ok {
 			log.Fatal("[Fail] Public Key from Private Key  ", err)
-			response := structs.Response{}
-			temp := server(w, r, "seed")
-			_ = response.ClientRequestHandle(true, "Sorry ! Compuatation Error   ", "/dashboard", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
+			// response := structs.Response{}
+			// temp := server(w, r, "seed")
+			// _ = response.ClientRequestHandle(true, "Sorry ! Compuatation Error   ", "/dashboard", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// 	return
+			// }
 			return
 		}
 
@@ -1331,15 +1315,16 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 
 			// smart contract address
 			log.Println("[Feature] Smart Address", valid)
-			response := structs.Response{}
-			temp := server(w, r, "seed")
-			_ = response.ClientRequestHandle(true, "Sorry ! Smart Contract Address added in future release ", "/dashboard", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
+			// response := structs.Response{}
+			// temp := server(w, r, "seed")
+			// _ = response.ClientRequestHandle(true, "Sorry ! Smart Contract Address added in future release ", "/dashboard", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// 	return
+			// }
+			return
 
 		}
 
@@ -1347,46 +1332,48 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 
 		signWallet, err := json.Marshal(myWallet)
 		if err != nil {
-			log.Fatal("[Fail] Data JSON FORMAT ERROR ", err)
-			response := structs.Response{}
-			temp := server(w, r, "seed")
-			_ = response.ClientRequestHandle(true, "Sorry ! POOR DATA FORMAT   ", "/createWallet", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
+			// log.Fatal("[Fail] Data JSON FORMAT ERROR ", err)
+			// response := structs.Response{}
+			// temp := server(w, r, "seed")
+			// _ = response.ClientRequestHandle(true, "Sorry ! POOR DATA FORMAT   ", "/createWallet", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// 	return
+			// }
+			return
 
 		}
 
 		err = json.Unmarshal(signWallet, &myWallet)
 		if err != nil {
 			log.Fatal("[Fail] Data JSON FORMAT ERROR ", err)
-			response := structs.Response{}
-			temp := server(w, r, "seed")
-			_ = response.ClientRequestHandle(true, "Sorry ! POOR DATA FORMAT   ", "/createWallet", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
-
+			// response := structs.Response{}
+			// temp := server(w, r, "seed")
+			// _ = response.ClientRequestHandle(true, "Sorry ! POOR DATA FORMAT   ", "/createWallet", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// 	return
+			// }
+			return
 		}
 
 		//dataabse -- FindAddress
 		ok, ethAdd := FindAddress(&acc)
 		if ok && ethAdd != nil {
 			log.Fatal("[Replicate] Already Data exist  ", err)
-			response := structs.Response{}
-			temp := server(w, r, "seed")
-			_ = response.ClientRequestHandle(true, "Sorry !  Replicate not allowed  ", "/createWallet", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-			}
+			// response := structs.Response{}
+			// temp := server(w, r, "seed")
+			// _ = response.ClientRequestHandle(true, "Sorry !  Replicate not allowed  ", "/createWallet", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// }
+			return
 
 		}
 
@@ -1400,15 +1387,16 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 		merchant, err := ledger.CreatePublicAddress(&myWallet, appName)
 		if err != nil {
 			log.Fatal("[Fail] Wallet Don't have Public Accessibity  ", err)
-			response := structs.Response{}
-			temp := server(w, r, "seed")
-			_ = response.ClientRequestHandle(true, "Sorry ! Conenctivity issue   ", "/createWallet", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
+			// response := structs.Response{}
+			// temp := server(w, r, "seed")
+			// _ = response.ClientRequestHandle(true, "Sorry ! Conenctivity issue   ", "/createWallet", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// 	return
+			// }
+			return
 
 		}
 
@@ -1455,16 +1443,16 @@ func transacts(w http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 			log.Fatal("[Fail] Connection Reject ", err)
-			response := structs.Response{}
-			temp := server(w, r, "transact")
-			_ = response.ClientRequestHandle(true, " ! feature is lock yet  ", "/transact", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
-
+			// response := structs.Response{}
+			// temp := server(w, r, "transact")
+			// _ = response.ClientRequestHandle(true, " ! feature is lock yet  ", "/transact", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// 	return
+			// }
+			return
 		}
 	}
 }
@@ -1490,15 +1478,16 @@ func wallet(w http.ResponseWriter, r *http.Request) {
 		client, err := ethclient.Dial(mainNet)
 		if err != nil {
 			log.Fatal("[Fail] Connection Reject ", err)
-			response := structs.Response{}
-			temp := server(w, r, "wallet")
-			_ = response.ClientRequestHandle(true, "Sorry ! Connectivity Issue   ", "/open", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
+			// response := structs.Response{}
+			// temp := server(w, r, "wallet")
+			// _ = response.ClientRequestHandle(true, "Sorry ! Connectivity Issue   ", "/open", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// 	return
+			// }
+			return
 
 		}
 
@@ -1513,45 +1502,48 @@ func wallet(w http.ResponseWriter, r *http.Request) {
 		signWallet, err := json.Marshal(myWallet)
 		if err != nil {
 			log.Fatal("[Fail] Data JSON FORMAT ERROR ", err)
-			response := structs.Response{}
-			temp := server(w, r, "wallet")
-			_ = response.ClientRequestHandle(true, "Sorry ! POOR DATA FORMAT   ", "/open", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
+			// response := structs.Response{}
+			// temp := server(w, r, "wallet")
+			// _ = response.ClientRequestHandle(true, "Sorry ! POOR DATA FORMAT   ", "/open", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// 	return
+			// }
+			return
 
 		}
 
 		err = json.Unmarshal(signWallet, &myWallet)
 		if err != nil {
 			log.Fatal("[Fail] JSON DATA RETURN ERROR", err)
-			response := structs.Response{}
-			temp := server(w, r, "wallet")
-			_ = response.ClientRequestHandle(true, "Sorry ! Poor Data Format   ", "/open", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
+			// response := structs.Response{}
+			// temp := server(w, r, "wallet")
+			// _ = response.ClientRequestHandle(true, "Sorry ! Poor Data Format   ", "/open", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// 	return
+			// }
+			return
 
 		}
 		addr, ok := MyEthAddress(&acc)
 		if !ok {
 
 			log.Fatal("[Fail] No Ethereum Account ", !ok)
-			response := structs.Response{}
-			temp := server(w, r, "wallet")
-			_ = response.ClientRequestHandle(true, "Sorry ! NO Ethereum Account   ", "/open", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
+			// response := structs.Response{}
+			// temp := server(w, r, "wallet")
+			// _ = response.ClientRequestHandle(true, "Sorry ! NO Ethereum Account   ", "/open", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// 	return
+			// }
+			return
 
 		}
 		if addr != nil {
@@ -1579,15 +1571,16 @@ func wallet(w http.ResponseWriter, r *http.Request) {
 			secureWallet, ok := FindEthWallet(&acc)
 			if !ok && secureWallet != nil {
 				log.Fatal("[Fail] No crypto wallet found against your account ", !ok)
-				response := structs.Response{}
-				temp := server(w, r, "wallet")
-				_ = response.ClientRequestHandle(true, "Sorry ! NO CRYPTO WALLET   ", "/createWallet", w, r)
-				response.ClientLogs()
-				err := response.Run(temp)
-				if err != nil {
-					log.Println("[Error]: checks logs...", err)
-					return
-				}
+				// response := structs.Response{}
+				// temp := server(w, r, "wallet")
+				// _ = response.ClientRequestHandle(true, "Sorry ! NO CRYPTO WALLET   ", "/createWallet", w, r)
+				// response.ClientLogs()
+				// err := response.Run(temp)
+				// if err != nil {
+				// 	log.Println("[Error]: checks logs...", err)
+				// 	return
+				// }
+				return
 
 			}
 			log.Println("[Accept] Your Ethereum Wallet Info:", secureWallet)
@@ -1650,30 +1643,32 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 		matchE, err := regexp.MatchString(emailexp, user.Email)
 		if err != nil {
 			log.Fatal("[Fail] Auto email pattern  ", err)
-			response := structs.Response{}
-			temp := server(w, r, "register")
-			_ = response.ClientRequestHandle(true, "Sorry ! Email is not in format  ", "/signup", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
+			// response := structs.Response{}
+			// temp := server(w, r, "register")
+			// _ = response.ClientRequestHandle(true, "Sorry ! Email is not in format  ", "/signup", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// 	return
+			// }
+			return
 
 		}
 		// println("regexp_email:", matchE)
 		matchP, err := regexp.MatchString(passexp, user.Password)
 		if err != nil {
 			log.Fatal("[Fail] Password is very week ", err)
-			response := structs.Response{}
-			temp := server(w, r, "register")
-			_ = response.ClientRequestHandle(true, "Sorry ! Password is too short   ", "/signup", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
+			// response := structs.Response{}
+			// temp := server(w, r, "register")
+			// _ = response.ClientRequestHandle(true, "Sorry ! Password is too short   ", "/signup", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// 	return
+			// }
+			return
 
 		}
 		// println("regexp_pass:", matchP)
@@ -1682,15 +1677,16 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 		hashRet, encrypted := MessageToHash(w, r, matchE, matchP, user)
 		if !hashRet {
 			log.Fatal("[Fail] Week encryption", hashRet)
-			response := structs.Response{}
-			temp := server(w, r, "register")
-			_ = response.ClientRequestHandle(true, "Sorry ! Data discard because of your data in not our standard.   ", "/signup", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
+			// response := structs.Response{}
+			// temp := server(w, r, "register")
+			// _ = response.ClientRequestHandle(true, "Sorry ! Data discard because of your data in not our standard.   ", "/signup", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// 	return
+			// }
+			return
 
 		}
 		log.Println("[Accept] Review your logs.. ")
@@ -1737,14 +1733,15 @@ func existing(w http.ResponseWriter, r *http.Request) {
 		ok := exp.MatchString(user.Email)
 		if !ok {
 			log.Fatal("[Fail] Mismatch ", ok)
-			response := structs.Response{}
-			temp := server(w, r, "login")
-			_ = response.ClientRequestHandle(true, "Sorry ! Mismatch   ", "/login", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-			}
+			// response := structs.Response{}
+			// temp := server(w, r, "login")
+			// _ = response.ClientRequestHandle(true, "Sorry ! Mismatch   ", "/login", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// }
+			return
 
 		}
 
@@ -1752,15 +1749,16 @@ func existing(w http.ResponseWriter, r *http.Request) {
 		okx := reg.MatchString(user.Password)
 		if !okx {
 			log.Fatal("[Fail] Mismatch password", !okx)
-			response := structs.Response{}
-			temp := server(w, r, "login")
-			_ = response.ClientRequestHandle(true, "Sorry ! Mismatch password ", "/login", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
+			// response := structs.Response{}
+			// temp := server(w, r, "login")
+			// _ = response.ClientRequestHandle(true, "Sorry ! Mismatch password ", "/login", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// 	return
+			// }
+			return
 
 			// r.Method = "GET"
 			// existing(w,r)
@@ -1771,15 +1769,16 @@ func existing(w http.ResponseWriter, r *http.Request) {
 		data, err := SearchDB(w, r, user.Email, user.Password)
 		if err != nil {
 			log.Fatal("[Result]: No Match Found  ", err)
-			response := structs.Response{}
-			temp := server(w, r, "login")
-			_ = response.ClientRequestHandle(true, "Sorry ! No information Retry ", "/login", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
+			// response := structs.Response{}
+			// temp := server(w, r, "login")
+			// _ = response.ClientRequestHandle(true, "Sorry ! No information Retry ", "/login", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// 	return
+			// }
+			return
 
 		}
 		if data != nil {
@@ -1797,18 +1796,19 @@ func existing(w http.ResponseWriter, r *http.Request) {
 				err := act.NewToken()
 				if err != nil {
 					log.Fatal("[FAIL] No Token generate .. Review logs", err)
-					response := structs.Response{}
-					temp := server(w, r, "login")
-					_ = response.ClientRequestHandle(true, "Sorry ! Access Denied, ", "/login", w, r)
-					response.ClientLogs()
-					err := response.Run(temp)
-					if err != nil {
-						log.Println("[Error]: checks logs...", err)
-						return
-					}
+					// response := structs.Response{}
+					// temp := server(w, r, "login")
+					// _ = response.ClientRequestHandle(true, "Sorry ! Access Denied, ", "/login", w, r)
+					// response.ClientLogs()
+					// err := response.Run(temp)
+					// if err != nil {
+					// 	log.Println("[Error]: checks logs...", err)
+					// 	return
+					// }
+					return
 
 				}
-				println("Id :", data.Id, "user:", userSessions)
+				println("Id :", &data.Id, "user:", &userSessions)
 			}
 
 			// Login page
@@ -1816,16 +1816,16 @@ func existing(w http.ResponseWriter, r *http.Request) {
 			r.Method = "GET"
 			dashboard(w, r)
 		} else {
-			response := structs.Response{}
-			temp := server(w, r, "login")
-			_ = response.ClientRequestHandle(true, "Sorry ! Access Denied, Plesse Register ", "/signup", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
-
+			// response := structs.Response{}
+			// temp := server(w, r, "login")
+			// _ = response.ClientRequestHandle(true, "Sorry ! Access Denied, Plesse Register ", "/signup", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// 	return
+			// }
+			return
 		}
 
 	}
@@ -1849,15 +1849,16 @@ func logout(w http.ResponseWriter, r *http.Request) {
 		err := act.ExpireToken()
 		if err != nil {
 			log.Fatal("[Fail] No Token Expire  ", err)
-			response := structs.Response{}
-			temp := server(w, r, "dashboard")
-			_ = response.ClientRequestHandle(true, "Sorry ! Token Expire   ", "/transact", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
+			// response := structs.Response{}
+			// temp := server(w, r, "dashboard")
+			// _ = response.ClientRequestHandle(true, "Sorry ! Token Expire   ", "/transact", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// 	return
+			// }
+			return
 
 		}
 		existing(w, r)
@@ -1878,18 +1879,18 @@ func SearchDB(w http.ResponseWriter, r *http.Request, email, pass string) (*user
 		data, err = cloud.FindAllData(appName, email, pass)
 		if err != nil && data != nil {
 			log.Fatal("[Fail] No info  ", err)
-			response := structs.Response{}
-			temp := server(w, r, "login")
-			_ = response.ClientRequestHandle(true, "Sorry ! No Information ", "/login", w, r)
-			response.ClientLogs()
-			err := response.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return nil, err
-			}
+			// response := structs.Response{}
+			// temp := server(w, r, "login")
+			// _ = response.ClientRequestHandle(true, "Sorry ! No Information ", "/login", w, r)
+			// response.ClientLogs()
+			// err := response.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// 	return nil, err
+			// }
+			return nil, err
 
 		}
-		log.Println("[Accept] Your Request results :")
 	}
 	return data, nil
 }
@@ -1920,29 +1921,31 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *users.
 		data, err := json.Marshal(member)
 		if err != nil {
 			log.Fatal("[Fail] Poor DATA JSON FORMAT  ", err)
-			r := structs.Response{}
-			temp := server(response, request, "register")
-			_ = r.ClientRequestHandle(true, "Sorry ! Data in poor format", "/signup", response, request)
-			r.ClientLogs()
-			err := r.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
+			// r := structs.Response{}
+			// temp := server(response, request, "register")
+			// _ = r.ClientRequestHandle(true, "Sorry ! Data in poor format", "/signup", response, request)
+			// r.ClientLogs()
+			// err := r.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// 	return
+			// }
+			return
 
 		}
 		err = json.Unmarshal(data, &member)
 		if err != nil {
 			log.Fatal("[Fail] Poor Format  ", err)
-			r := structs.Response{}
-			temp := server(response, request, "register")
-			_ = r.ClientRequestHandle(true, "Sorry ! Data in poor format ", "/signup", response, request)
-			r.ClientLogs()
-			err := r.Run(temp)
-			if err != nil {
-				log.Println("[Error]: checks logs...", err)
-				return
-			}
+			// r := structs.Response{}
+			// temp := server(response, request, "register")
+			// _ = r.ClientRequestHandle(true, "Sorry ! Data in poor format ", "/signup", response, request)
+			// r.ClientLogs()
+			// err := r.Run(temp)
+			// if err != nil {
+			// 	log.Println("[Error]: checks logs...", err)
+			// 	return
+			// }
+			return
 
 		}
 		candidate, err := SearchDB(response, request, user.Email, user.Password)
@@ -1966,15 +1969,16 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *users.
 			record, err := cloud.SaveData(&member, appName)
 			if err != nil {
 				log.Fatal("[Fail] Data has not saved", err)
-				r := structs.Response{}
-				temp := server(response, request, "register")
-				_ = r.ClientRequestHandle(true, "Sorry ! Internal issue   ", "/signup", response, request)
-				r.ClientLogs()
-				err := r.Run(temp)
-				if err != nil {
-					log.Println("[Error]: checks logs...", err)
-					return
-				}
+				// r := structs.Response{}
+				// temp := server(response, request, "register")
+				// _ = r.ClientRequestHandle(true, "Sorry ! Internal issue   ", "/signup", response, request)
+				// r.ClientLogs()
+				// err := r.Run(temp)
+				// if err != nil {
+				// 	log.Println("[Error]: checks logs...", err)
+				// 	return
+				// }
+				return
 
 			}
 
@@ -1986,15 +1990,16 @@ func addVistor(response http.ResponseWriter, request *http.Request, user *users.
 		}
 
 		log.Fatal("[Fail] Already HAVE  ")
-		r := structs.Response{}
-		temp := server(response, request, "register")
-		_ = r.ClientRequestHandle(true, "Sorry ! This information already in system   ", "/signup", response, request)
-		r.ClientLogs()
-		err = r.Run(temp)
-		if err != nil {
-			log.Println("[Error]: checks logs...", err)
-			return
-		}
+		// r := structs.Response{}
+		// temp := server(response, request, "register")
+		// _ = r.ClientRequestHandle(true, "Sorry ! This information already in system   ", "/signup", response, request)
+		// r.ClientLogs()
+		// err = r.Run(temp)
+		// if err != nil {
+		// 	log.Println("[Error]: checks logs...", err)
+		// 	return
+		// }
+		return
 
 	}
 
@@ -2125,30 +2130,31 @@ func FileReadFromDisk(w http.ResponseWriter, r *http.Request, filename string) o
 	f, err := os.OpenFile(filename+".txt", os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
 		log.Fatal("[Fail] No File Exist  ", err)
-		response := structs.Response{}
-		temp := server(w, r, "dashboard")
-		_ = response.ClientRequestHandle(true, "Sorry ! No Information    ", "/dashboard", w, r)
-		response.ClientLogs()
-		err := response.Run(temp)
-		if err != nil {
-			log.Println("[Error]: checks logs...", err)
-			return nil
-		}
+		// response := structs.Response{}
+		// temp := server(w, r, "dashboard")
+		// _ = response.ClientRequestHandle(true, "Sorry ! No Information    ", "/dashboard", w, r)
+		// response.ClientLogs()
+		// err := response.Run(temp)
+		// if err != nil {
+		// 	log.Println("[Error]: checks logs...", err)
+		// 	return nil
+		// }
 		return nil
 	}
 
 	finfo, err := f.Stat()
 	if err != nil {
 		log.Fatal("[Fail] Application Access   ", err)
-		response := structs.Response{}
-		temp := server(w, r, "dashboard")
-		_ = response.ClientRequestHandle(true, "Sorry ! Permission Denied   ", "/dashboard", w, r)
-		response.ClientLogs()
-		err := response.Run(temp)
-		if err != nil {
-			log.Println("[Error]: checks logs...", err)
-			return nil
-		}
+		// response := structs.Response{}
+		// temp := server(w, r, "dashboard")
+		// _ = response.ClientRequestHandle(true, "Sorry ! Permission Denied   ", "/dashboard", w, r)
+		// response.ClientLogs()
+		// err := response.Run(temp)
+		// if err != nil {
+		// 	log.Println("[Error]: checks logs...", err)
+		// 	return nil
+		// }
+		return nil
 
 	}
 	return finfo
@@ -2180,15 +2186,16 @@ func Key(w http.ResponseWriter, r *http.Request, h1, h2 string) (string, string,
 	if err != nil {
 
 		log.Fatal("[Fail] Key signed   ", err)
-		response := structs.Response{}
-		temp := server(w, r, "register")
-		_ = response.ClientRequestHandle(true, "Sorry ! Computation Error   ", "/signup", w, r)
-		response.ClientLogs()
-		err := response.Run(temp)
-		if err != nil {
-			log.Println("[Error]: checks logs...", err)
-			return "", "", privateKey
-		}
+		// response := structs.Response{}
+		// temp := server(w, r, "register")
+		// _ = response.ClientRequestHandle(true, "Sorry ! Computation Error   ", "/signup", w, r)
+		// response.ClientLogs()
+		// err := response.Run(temp)
+		// if err != nil {
+		// 	log.Println("[Error]: checks logs...", err)
+		// 	return "", "", privateKey
+		// }
+		return "", "", privateKey
 
 	}
 
@@ -2232,15 +2239,15 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) (string, error) {
 	if err != nil {
 
 		log.Fatal("[Fail] Error in upload   ", err)
-		response := structs.Response{}
-		temp := server(w, r, "dashboard")
-		_ = response.ClientRequestHandle(true, "Sorry ! Computation Error {type of file must be MIME}  ", "/dashboard", w, r)
-		response.ClientLogs()
-		err := response.Run(temp)
-		if err != nil {
-			log.Println("[Error]: checks logs...", err)
-			return "", err
-		}
+		// response := structs.Response{}
+		// temp := server(w, r, "dashboard")
+		// _ = response.ClientRequestHandle(true, "Sorry ! Computation Error {type of file must be MIME}  ", "/dashboard", w, r)
+		// response.ClientLogs()
+		// err := response.Run(temp)
+		// if err != nil {
+		// 	log.Println("[Error]: checks logs...", err)
+		// 	return "", err
+		// }
 		return "", err
 	}
 	defer file.Close()
@@ -2251,19 +2258,19 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) (string, error) {
 	fmt.Println("File name:"+handler.Filename, "Size:", handler.Size)
 	if _, err := os.Stat(handler.Filename); os.IsExist(err) {
 		log.Fatal("[Fail] Already have  this file ", err)
-		response := structs.Response{
-			Flag:    false,
-			Message: "",
-			Links:   "",
-		}
-		temp := server(w, r, "dashboard")
-		_ = response.ClientRequestHandle(true, "Sorry ! Two files doesn't have same name  ", "/dashboard", w, r)
-		response.ClientLogs()
-		err := response.Run(temp)
-		if err != nil {
-			log.Println("[Error]: checks logs...", err)
-			return "", err
-		}
+		// response := structs.Response{
+		// 	Flag:    false,
+		// 	Message: "",
+		// 	Links:   "",
+		// }
+		// temp := server(w, r, "dashboard")
+		// _ = response.ClientRequestHandle(true, "Sorry ! Two files doesn't have same name  ", "/dashboard", w, r)
+		// response.ClientLogs()
+		// err := response.Run(temp)
+		// if err != nil {
+		// 	log.Println("[Error]: checks logs...", err)
+		// 	return "", err
+		// }
 		return "", err
 
 	}
@@ -2295,19 +2302,19 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) (string, error) {
 	upldFile, err = ioutil.TempFile(filepath.Dir("seqDir/"), "seqFile-"+"*.txt")
 	if err != nil {
 		log.Fatal("[Fail] Temporary File ", err)
-		response := structs.Response{
-			Flag:    false,
-			Message: "",
-			Links:   "",
-		}
-		temp := server(w, r, "dashboard")
-		_ = response.ClientRequestHandle(true, "Sorry ! Computation Error   ", "/dashboard", w, r)
-		response.ClientLogs()
-		err := response.Run(temp)
-		if err != nil {
-			log.Println("[Error]: checks logs...", err)
-			return "", err
-		}
+		// response := structs.Response{
+		// 	Flag:    false,
+		// 	Message: "",
+		// 	Links:   "",
+		// }
+		// temp := server(w, r, "dashboard")
+		// _ = response.ClientRequestHandle(true, "Sorry ! Computation Error   ", "/dashboard", w, r)
+		// response.ClientLogs()
+		// err := response.Run(temp)
+		// if err != nil {
+		// 	log.Println("[Error]: checks logs...", err)
+		// 	return "", err
+		// }
 		return "", err
 
 	}
@@ -2325,15 +2332,16 @@ func UploadFiles(w http.ResponseWriter, r *http.Request) (string, error) {
 	bytesFile, err := ioutil.ReadAll(file)
 	if err != nil {
 		log.Fatal("[Fail] File Reading Permission   ", err)
-		response := structs.Response{}
-		temp := server(w, r, "register")
-		_ = response.ClientRequestHandle(true, "Sorry ! Computation Error   ", "/dashnaord", w, r)
-		response.ClientLogs()
-		err := response.Run(temp)
-		if err != nil {
-			log.Println("[Error]: checks logs...", err)
-			return "", err
-		}
+		// response := structs.Response{}
+		// temp := server(w, r, "register")
+		// _ = response.ClientRequestHandle(true, "Sorry ! Computation Error   ", "/dashnaord", w, r)
+		// response.ClientLogs()
+		// err := response.Run(temp)
+		// if err != nil {
+		// 	log.Println("[Error]: checks logs...", err)
+		// 	return "", err
+		// }
+		return "", err
 	}
 	n, err := upldFile.Write(bytesFile)
 	if err != nil {

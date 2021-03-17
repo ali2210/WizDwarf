@@ -2,268 +2,219 @@
 <html lang="en">
 
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
-	<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap"
-		rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="/css/transact.css">
-	<link rel="shortcut icon" type="image/png" href="/images/favicon.png">
-	<title>WizDwarfs</title>
-	<script src="https://unpkg.com/@metamask/detect-provider/dist/detect-provider.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/transact.css">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+    <title>WizDwarfs</title>
+    <script src="https://unpkg.com/@metamask/detect-provider/dist/detect-provider.min.js"></script>
 
 </head>
 
 <body>
 
-	<div class='main-dashboard-div'>
-		<nav class="navbar navbar-expand-md navbar-light custom-navbar">
-			<a class="navbar-brand" href="/home">
-				<img src="/images/logo.png" alt="Logo" class="logo">
-			</a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
+    <div class='main-dashboard-div'>
+        <nav class="navbar navbar-expand-md navbar-light custom-navbar">
+            <a class="navbar-brand" href="/home">
+                <img src="/images/logo.png" alt="Logo" class="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-			<div class="collapse navbar-collapse" id="navbarNavDropdown">
-				<ul class="navbar-nav">
-					<li class="nav-item active pl-3">
-						<a class="nav-link" href="/dashboard">
-							<i class="fa fa-home icon-light change-service-color" aria-hidden="true"></i>
-							Home
-						</a>
-					</li>
-					<li class="nav-item dropdown pl-3">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-							aria-haspopup="true" aria-expanded="false">
-							<i class="fa fa-briefcase change-service-color" aria-hidden="true"></i>
-							Services
-						</a>
-						<div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
-							<a class="dropdown-item" href="/dashbaord/setting/profile"><i
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item active pl-3">
+                        <a class="nav-link" href="/dashboard">
+                            <i class="fa fa-home icon-light change-service-color" aria-hidden="true"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown pl-3">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-briefcase change-service-color" aria-hidden="true"></i> Services
+                        </a>
+                        <div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="/dashbaord/setting/profile"><i
 									class="fa fa-user-circle-o change-service-color" aria-hidden="true"></i> Edit
 								Profile</a>
-							<a class="dropdown-item" href="/dashboard/setting/pay/credit/add"><i
+                            <a class="dropdown-item" href="/dashboard/setting/pay/credit/add"><i
 									class="fa fa-shopping-cart change-service-color" aria-hidden="true"></i>
 								Monetize</a>
-							<a class="dropdown-item" href="/dashbaord/setting/about"><i
+                            <a class="dropdown-item" href="/dashbaord/setting/about"><i
 									class="fa fa-book change-service-color" aria-hidden="true"></i> Biography</a>
-						</div>
-					</li>
-				</ul>
-			</div>
-		</nav>
-	</div>
-	<div class="container-alert">
-		{{if .Flag}}
-		<div class="alert alert-danger" role="alert">
-			<p class="span-message">{{ .Message}}</p> <a href="/{{ .Links}}"> Something went wrong!!</a>
-			<button class="btn btn-danger" type="button" id="danger">Close
-			</button>
-		</div>
-		{{ else }}
-		<div class="alert alert-success" role="alert" id="messageBody">
-			<p class="content span-message"">{{ .Message}}</p>
-			<!-- <a href=" /{{ .Links}}" class="links">Operation Successfully
-				completed</a> -->
-				<button class="btn btn-danger" type="button" id="danger">Close
-				</button>
-		</div>
-		{{end}}
-	</div>
-	<main>
-		<section>
-			<div class="card">
-				<img class="card-image"
-					src="https://builtin.com/sites/default/files/styles/ckeditor_optimize/public/inline-images/blockchain-technology-overview.jpg" />
-				<div class="card-body">
-					<h3 class="card-title typeCategory" name="typeClass"> Kernel </h3>
-					<p class="card-content">
-					<p>
-					<div class="card" style="width: 18rem;">
-						<div class="card-body">
-							<h5 class="card-title">
-								<i class="fa fa-tags" aria-hidden="true" name="price">50$</i>
-							</h5>
-							<h6 class="card-subtitle mb-2 text-muted" name="describe" id="describe"> Kernel Space
-							</h6>
-							<div class="span-container">
-								<span> <i class="fa fa-check-square" id="square" name="cross" aria-hidden="true"></i>
-								</span>
-								<span> <i class="fa fa-times" id="cross" name="cross" aria-hidden="true"></i>
-								</span>
-							</div>
-							<p class="card-text service-details">
-								Software image directly run on your Desktop Kernel. Kernels are like application
-								softwares, which allow to calculate behaviour of your genetic material. Usually, Kernels
-								process few megabytes data blocks. Users can transaction through paypal &
-								cryptocurrencies tokens.
-							</p>
-						</div>
-					</div>
-					<form action="/transact" method="post" target="_self">
-						<div class="checkout">
-							<p>Do you want to checkouts with ETH({0.028)? <input class="span-input-choice"
-									type="checkbox" id="checkouts" name="checkouts" />
-							</p>
-						</div>
-						<button class="btn btn-primary payment slide-right" data-toggle="popover"
-							title="Payment via Paypal" name="paypal" type="submit" id="paypal">
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <main>
+        <section>
+            <div class="card">
+                <img class="card-image" src="https://builtin.com/sites/default/files/styles/ckeditor_optimize/public/inline-images/blockchain-technology-overview.jpg" />
+                <div class="card-body">
+                    <h3 class="card-title typeCategory" name="typeClass"> Kernel </h3>
+                    <p class="card-content">
+                        <p>
+                            <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="fa fa-tags" aria-hidden="true" name="price">50$</i>
+                                    </h5>
+                                    <h6 class="card-subtitle mb-2 text-muted" name="describe" id="describe"> Kernel Space
+                                    </h6>
+                                    <div class="container-choice">
+                                        <span>Paypal <i class="fa fa-paypal" aria-hidden="true"></i> <i class="fa fa-heart" aria-hidden="true"></i> </span>
+                                        <span>Crypto choice <i class="fa fa-btc" aria-hidden="true"></i> <i class="fa fa-heartbeat" aria-hidden="true"></i> </span>
+                                    </div>
+                                    <p class="card-text service-details">
+                                        Software image directly run on your Desktop Kernel. Kernels are like application softwares, which allow to calculate behaviour of your genetic material. Usually, Kernels process few megabytes data blocks. Users can transaction through paypal & cryptocurrencies
+                                        tokens.
+                                    </p>
+                                </div>
+                            </div>
+                            <form action="/transact" method="post" target="_self">
+                                <div class="checkout">
+                                    <p>Do you want to checkouts with ETH(0.028)? <input class="span-input-choice" type="checkbox" id="checkouts" name="checkouts" />
+                                    </p>
+                                </div>
+                                <button class="btn btn-primary payment slide-right" data-toggle="popover" title="Payment via Paypal" name="paypal" type="submit" id="paypal">
 							<i class=" fa fa-paypal" aria-hidden="true">
 								Paypal
 							</i>
 						</button>
-						<button class="btn btn-primary token slide-left" name="token" data-toggle="popover"
-							title="Payment via cryptocurrency" type="submit" id="token">
+                                <button class="btn btn-primary token slide-left" name="token" data-toggle="popover" title="Payment via cryptocurrency" type="submit" id="token">
 							<i class=" fa fa-btc" aria-hidden="true">
 								Crypto-Tokens
 							</i>
 						</button>
-					</form>
-					</p>
-					</p>
-				</div>
-			</div>
-			<div class="card">
-				<img class="card-image"
-					src="https://i.pinimg.com/originals/03/a6/cd/03a6cd98e076b9bc22a8d08494851758.png" />
-				<div class="card-body">
-					<h3 class="card-title typeCategory" name="typeClass"> Cluster </h3>
-					<p class="card-content">
-					<p>
-					<div class="card" style="width: 18rem;">
-						<div class="card-body">
-							<h5 class="card-title">
-								<i class="fa fa-tags" aria-hidden="true" name="price">100$</i>
-							</h5>
-							<h6 class="card-subtitle mb-2 text-muted" name="data" id="data">
-								Cluster Data-Blocks
-							</h6>
-							<div class="span-container">
-								<span> <i class="fa fa-check-square" id="sqr" name="crss" aria-hidden="true"></i>
-								</span>
-								<span> <i class="fa fa-times" id="crss" name="crss" aria-hidden="true"></i>
-								</span>
-							</div>
-							<p class="card-text service-details">
-								Software image directly run on your virtual cloud cluster. These clusters are 2x faster
-								than kernel. Automated Mutant Protein Detection based on provided data. NFT tokens
-								available for transactions. </p>
-						</div>
-					</div>
-					<form action="/transact" method="post" target="_self">
-						<div class="checkout">
-							<p>Do you want to checkouts with ETH(0.056)?
-								<input class="span-input-choice" type="checkbox" id="cloudInstance"
-									name="cloudInstance" />
-							</p>
-						</div>
-						<button class=" btn btn-primary payment slide-right" data-toggle="popover"
-							title="Payment via PayPal" type="submit" name="paypal" id="paypal">
+                            </form>
+                        </p>
+                    </p>
+                </div>
+            </div>
+            <div class="card">
+                <img class="card-image" src="https://i.pinimg.com/originals/03/a6/cd/03a6cd98e076b9bc22a8d08494851758.png" />
+                <div class="card-body">
+                    <h3 class="card-title typeCategory" name="typeClass"> Cluster </h3>
+                    <p class="card-content">
+                        <p>
+                            <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="fa fa-tags" aria-hidden="true" name="price">100$</i>
+                                    </h5>
+                                    <h6 class="card-subtitle mb-2 text-muted" name="data" id="data">
+                                        Cluster Data-Blocks
+                                    </h6>
+                                    <div class="container-choice container-cluster">
+                                        <span>Paypal <i class="fa fa-paypal" aria-hidden="true"></i> <i class="fa fa-heart" aria-hidden="true"></i> </span>
+                                        <span>Crypto choice <i class="fa fa-btc" aria-hidden="true"></i> <i class="fa fa-heartbeat" aria-hidden="true"></i> </span>
+                                    </div>
+                                    <p class="card-text service-details">
+                                        Software image directly run on your virtual cloud cluster. These clusters are 2x faster than kernel. Automated Mutant Protein Detection based on provided data. NFT tokens available for transactions. </p>
+                                </div>
+                            </div>
+                            <form action="/transact" method="post" target="_self">
+                                <div class="checkout">
+                                    <p>Do you want to checkouts with ETH(0.056)?
+                                        <input class="span-input-choice paycluster" type="checkbox" id="cloudInstance" name="cloudInstance" />
+                                    </p>
+                                </div>
+                                <button class=" btn btn-primary payment slide-right" data-toggle="popover" title="Payment via PayPal" type="submit" name="paypal" id="paypal">
 							<i class="fa fa-paypal" aria-hidden="true">
 								Paypal
 							</i>
 						</button>
-						<button class="btn btn-primary token slide-left" data-toggle=" popover"
-							title="Payment via cryptocurrency" type="submit" name="token" id="token">
+                                <button class="btn btn-primary token slide-left" data-toggle=" popover" title="Payment via cryptocurrency" type="submit" name="token" id="token">
 							<i class="fa fa-btc" aria-hidden="true">
 								Crypto-Tokens
 							</i>
 						</button>
-					</form>
-					</p>
-					</p>
-				</div>
-			</div>
-			<div class="card">
-				<img class="card-image" src="https://tpcvin.com/wp-content/uploads/2020/05/AI-Future.jpg" />
-				<div class="card-body">
-					<h3 class="card-title typeCategory" name="typeClass"> Multi-Cluster </h3>
-					<p class="card-content">
-					<p>
-					<div class="card" style="width: 18rem;">
-						<div class="card-body">
-							<h5 class="card-title">
-								<i class="fa fa-tags" aria-hidden="true" name="price">500$ </i>
-							</h5>
-							<h6 class="card-subtitle mb-2 text-muted" name="multivm" id="multivm">
-								Virtual Galaxy
-							</h6>
-							<div class="span-container">
-								<span> <i class="fa fa-check-square" id="pos" name="pos" aria-hidden="true"></i>
-								</span>
-								<span> <i class="fa fa-times" id="neg" name="neg" aria-hidden="true"></i>
-								</span>
-							</div>
-							<p class="card-text service-details">
-								Customers such as coperate and organization that want to study genetic material in
-								realtime and virtually. Multi-Cluster option not only process such a HIGH VOLUME at high
-								speed. Automated tools, argumented vision, huge blocks and multi-clusters allow you to
-								create mini virtual lab. These Labs are 10x faster, efficent and provide a vast array of
-								tools that can change the way you work at your workplace.
-							</p>
-						</div>
-					</div>
-					<form action="/transact" method="post" target="_self">
-						<div class="checkout">
-							<p> Do you want to checkouts with ETH(0.28)?
-								<input class="span-input-choice" type="checkbox" name="vm" id="vm" />
-							</p>
-						</div>
-						<button class="btn btn-primary payment slide-right" data-toggle="popover"
-							title="Payment via PayPal" type="submit" name="paypal" id="paypal">
+                            </form>
+                        </p>
+                    </p>
+                </div>
+            </div>
+            <div class="card">
+                <img class="card-image" src="/images/ai-skills-ai-courses-1013x440.jpeg" alt="ai" />
+                <div class="card-body">
+                    <h3 class="card-title typeCategory" name="typeClass"> Multi-Cluster </h3>
+                    <p class="card-content">
+                        <p>
+                            <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="fa fa-tags" aria-hidden="true" name="price">500$ </i>
+                                    </h5>
+                                    <h6 class="card-subtitle mb-2 text-muted" name="multivm" id="multivm">
+                                        Virtual Galaxy
+                                    </h6>
+                                    <div class="container-choice vm-container">
+                                        <span>Paypal <i class="fa fa-paypal" aria-hidden="true"></i> <i class="fa fa-heart" aria-hidden="true"></i> </span>
+                                        <span>Crypto choice <i class="fa fa-btc" aria-hidden="true"></i> <i class="fa fa-heartbeat" aria-hidden="true"></i> </span>
+                                    </div>
+                                    <p class="card-text service-details">
+                                        Customers such as coperate and organization that want to study genetic material in realtime and virtually. Multi-Cluster option not only process such a HIGH VOLUME at high speed. Automated tools, argumented vision, huge blocks and multi-clusters allow
+                                        you to create mini virtual lab. These Labs are 10x faster, efficent and provide a vast array of tools that can change the way you work at your workplace.
+                                    </p>
+                                </div>
+                            </div>
+                            <form action="/transact" method="post" target="_self">
+                                <div class="checkout">
+                                    <p> Do you want to checkouts with ETH(0.28)?
+                                        <input class="span-input-choice vmpay" type="checkbox" name="vm" id="vm" />
+                                    </p>
+                                </div>
+                                <button class="btn btn-primary payment slide-right" data-toggle="popover" title="Payment via PayPal" type="submit" name="paypal" id="paypal">
 							<i class="fa fa-paypal" aria-hidden="true"> Paypal</i>
 						</button>
-						<button class="btn btn-primary token slide-left" data-toggle="popover" type="submit"
-							title="Payment via cryptocurrency" name="token" id="token">
+                                <button class="btn btn-primary token slide-left" data-toggle="popover" type="submit" title="Payment via cryptocurrency" name="token" id="token">
 							<i class="fa fa-btc" aria-hidden="true">
 								Crypto-Tokens
 							</i>
 						</button>
-					</form>
-					</p>
-					</p>
-				</div>
-			</div>
-		</section>
-	</main>
+                            </form>
+                        </p>
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
 
-	<div class="div-meta">
-		<span class="connect">
+    <div class="div-meta">
+        <span class="connect">
 			<i class="fa fa-check-circle" aria-hidden="true"> Your web interface instance
 				connect
 				with metamask</i>
 		</span>
-		<span class="disconnect">
+        <span class="disconnect">
 			<i class="fa fa-ban" aria-hidden="true"></i> Your web interface instance
 			disconnect
 			with metamask
 		</span>
-	</div>
+    </div>
 
-	<div class="col button-back">
-		<a href="/visualize" class="btn btn-danger" data-toggle="popover" title="Back Button">
-			<i class="fa fa-chevron-circle-left" aria-hidden="true">
+    <div class="col button-back">
+        <a href="/visualize" class="btn btn-danger" data-toggle="popover" title="Back Button">
+            <i class="fa fa-chevron-circle-left" aria-hidden="true">
 				Back
 			</i>
-		</a>
-	</div>
+        </a>
+    </div>
 
 
 
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-		crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-		crossorigin="anonymous"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-		crossorigin="anonymous"></script>
-	<script type="text/javascript" src="/js/transact.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/js/transact.js"></script>
+    <script src="/js/advance.js"></script>
+
 </body>
 
 </html>
