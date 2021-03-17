@@ -1440,20 +1440,15 @@ func transacts(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		fmt.Print("@oaram:", &doc)
+		r.ParseForm()
+		input := r.FormValue("checkouts")
+		input2 := r.FormValue("cloudInstance")
+		input3 := r.FormValue("vm")
 
-		if err != nil {
-			log.Fatal("[Fail] Connection Reject ", err)
-			// response := structs.Response{}
-			// temp := server(w, r, "transact")
-			// _ = response.ClientRequestHandle(true, " ! feature is lock yet  ", "/transact", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// 	return
-			// }
-			return
-		}
+		fmt.Println("@param_input:", input)
+		fmt.Println("@param_input:", input2)
+		fmt.Println("@param_input:", input3)
+
 	}
 }
 
