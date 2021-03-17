@@ -29,7 +29,7 @@ jobs:
     steps:
       - checkout
       ### create TEST_RESULTS Directory
-      - run : mkdir -p $TEST_RESULTS
+      - run : sudo mkdir -p $TEST_RESULTS
 
       - restore_cache : #restore application state if there is no changes
           keys :
