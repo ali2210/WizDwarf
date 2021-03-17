@@ -1315,6 +1315,8 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 
 			// smart contract address
 			log.Println("[Feature] Smart Address", valid)
+			w.WriteHeader(http.StatusForbidden)
+			w.Write([]byte("Thank-you for your response! , This feature will added upcoming build... Sorry for inconvenience"))
 			// response := structs.Response{}
 			// temp := server(w, r, "seed")
 			// _ = response.ClientRequestHandle(true, "Sorry ! Smart Contract Address added in future release ", "/dashboard", w, r)
@@ -1440,15 +1442,8 @@ func transacts(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		fmt.Print("@oaram:", &doc)
-		r.ParseForm()
-		input := r.FormValue("checkouts")
-		input2 := r.FormValue("cloudInstance")
-		input3 := r.FormValue("vm")
-
-		fmt.Println("@param_input:", input)
-		fmt.Println("@param_input:", input2)
-		fmt.Println("@param_input:", input3)
-
+		w.WriteHeader(http.StatusForbidden)
+		w.Write([]byte("Thank-you for your response! , This feature will added upcoming build... Sorry for inconvenience"))
 	}
 }
 
@@ -1773,8 +1768,7 @@ func existing(w http.ResponseWriter, r *http.Request) {
 			// 	log.Println("[Error]: checks logs...", err)
 			// 	return
 			// }
-			return
-
+			panic(err)
 		}
 		if data != nil {
 			accountID = data.Id
@@ -1884,7 +1878,6 @@ func SearchDB(w http.ResponseWriter, r *http.Request, email, pass string) (*user
 			// 	return nil, err
 			// }
 			return nil, err
-
 		}
 	}
 	return data, nil

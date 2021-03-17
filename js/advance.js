@@ -1,10 +1,12 @@
 const inputCheckbox = document.getElementsByClassName("span-input-choice")[0];
 const spanBox = document.getElementsByClassName("container-choice")[0];
-
+// const form1 = document.getElementsByClassName("form0")[0];
 
 inputCheckbox.addEventListener('change', function() {
     const pay = spanBox.children[0];
     const token = spanBox.children[1];
+    // const paypalBtn = form1.children[1];
+    // const tokenBtn = form1.children[2];
     if (this.checked) {
         token.style.visibility = "hidden";
         pay.style.visibility = "visible";
@@ -16,6 +18,7 @@ inputCheckbox.addEventListener('change', function() {
         token.children[1].style.visibility = "hidden";
         pay.children[0].classList.add(pay.children[1]);
         pay.children[0].classList.remove(pay.children[1]);
+
     } else {
         token.style.visibility = "visible";
         pay.style.visibility = "hidden";
