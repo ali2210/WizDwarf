@@ -18,7 +18,8 @@ jobs:
         # environment varibles that build itself such as tests
     environment:
         # path where tests results store
-        TEST_RESULTS: /temp/test-results
+        TEST_RESULTS: 
+                /temp/test-results
 
     #### TEMPLATE_NOTE: go expects specific checkout path representing url
     #### expecting it in the form of
@@ -46,20 +47,25 @@ jobs:
 
       # save your cache
       - save-cache:
-          keys: go mod-v4-{{checksum "go.sum"}}
-          paths: "/go/pkg/mod" #path go mod
+          keys: 
+              go mod-v4-{{checksum "go.sum"}}
+          paths: 
+              "/go/pkg/mod" #path go mod
 
         # display artifacts summary
       - store_artifacts:
-          path: /temp/test-results
-          destination: raw-test-output
+          path: 
+            /temp/test-results
+          destination: 
+            raw-test-output
 
         #store test results
       - store_test_results:
-          path: /temp/test-results
+          path: 
+            /temp/test-results
 
     workflows:
       version: 2
       build-workflow:
-        jobs:
-          - build
+            jobs:
+              - build
