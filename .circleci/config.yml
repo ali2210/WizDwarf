@@ -30,13 +30,22 @@ jobs:
       - checkout
       ### create TEST_RESULTS Directory
       - run : sudo mkdir -p $TEST_RESULTS
-
+      - setup_remote_docker:
+          docker_layer_caching: false
+          version: 19.03.13
       - restore_cache : #restore application state if there is no changes
           keys :
             - go mod-v4-{{ checksum "go.sum" }}
-      - run :
+      - run : |
+          echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
           name:  Application started ....
-          # command: dockerize -wait tcp://localhost:5000 -timeout 1m
+      
+      # build wiz-dwarf docker image 
+      - run: docker build -t ali2210/wiz-dwarfs. 
+      
+      # run docker image 
+      - run: docker run -d --hostname=wizdwarfs -p 5000:5000 -v app:/app/seqDir -it ali2210/wiz-dwarfs
+      
 
       # specify any bash command here prefixed with `run: `
       - run: go get -v -t -d ./...
