@@ -36,9 +36,6 @@ jobs:
             - go mod-v4-{{ checksum "go.sum" }}
       - run :
           name:  Application started ....
-          # command: |
-                # docker build -t ali2210/wiz-dwarfs .
-                # docker run -d --hostname=wizdwarfs -p 5000:5000 -v app:/app/seqDir -it ali2210/wiz-dwarfs 
           # command: dockerize -wait tcp://localhost:5000 -timeout 1m
 
       # specify any bash command here prefixed with `run: `
