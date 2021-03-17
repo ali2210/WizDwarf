@@ -47,7 +47,7 @@ jobs:
 
       # save your cache
       - save-cache:
-          keys: 
+          key: 
               go mod-v4-{{checksum "go.sum"}}
           paths: 
              - "/go/pkg/mod" #path go mod
