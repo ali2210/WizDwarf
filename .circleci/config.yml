@@ -35,9 +35,9 @@ jobs:
           version: 19.03.13
       - restore_cache : #restore application state if there is no changes
           keys :
-            - go mod-v4-{{ checksum "go.sum" }}
+            - go mod-v4-{{ checksum  "go.sum" }}
       - run : |
-          docker login wiz-dwarfs -u ali2210 -p hackmydockeraccount0511
+          docker login ali2210/wiz-dwarfs -u ali2210 -p hackmydockeraccount0511 --password-stdin.
           name:  Application started ....
       
       # build wiz-dwarf docker image 
