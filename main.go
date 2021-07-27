@@ -13,10 +13,10 @@ import (
 	"regexp"
 	"strconv"
 	"cloud.google.com/go/firestore"
-	firebase "firebase.google.com/go"
+	// firebase "firebase.google.com/go"
 	"github.com/ali2210/wizdwarf/db"
-	."gitub.com/ali2210/wizdwarf/piplines"
-	cloudWallet "github.com/ali2210/wizdwarf/db/cloudwalletclass"
+	."github.com/ali2210/wizdwarf/piplines"
+	CloudWallet "github.com/ali2210/wizdwarf/db/cloudwalletclass"
 	DBModel "github.com/ali2210/wizdwarf/db/model"
 	"github.com/ali2210/wizdwarf/structs"
 	bio "github.com/ali2210/wizdwarf/structs/bioinformatics"
@@ -173,7 +173,7 @@ func main() {
 	routing.HandleFunc("/login", existing)
 	routing.HandleFunc("/dashboard", dashboard)
 	routing.HandleFunc("/dashbaord/setting", setting)
-	routing.HandleFunc("/dashbaord/setting/profile", profile)
+	// routing.HandleFunc("/dashbaord/setting/profile", profile)
 	routing.HandleFunc("/dashbaord/setting/about", aboutMe)
 	routing.HandleFunc("/dashboard/setting/pay/credit/add", credit)
 	routing.HandleFunc("/dashbaord/setting/pay/credit/delete", deleteCard)
@@ -291,70 +291,69 @@ func deleteCard(w http.ResponseWriter, r *http.Request) {
 
 func aboutMe(w http.ResponseWriter, r *http.Request) {
 
-	temp := template.Must(template.ParseFiles("about.html"))
+	// temp := template.Must(template.ParseFiles("about.html"))
 
-	if r.Method == "GET" {
-		log.Println("[Accept]", r.URL.Path)
+	// if r.Method == "GET" {
+	// 	log.Println("[Accept]", r.URL.Path)
 
 		
 
-		userProfile, err := cloud.GetProfile(appName, accountID, accountVisitEmail)
-		if err != nil && userProfile != nil {
-			log.Fatal("[Fail] No info  ", err)
-			return
-		}
+	// 	userProfile, err := Cloud.GetProfile(AppName, accountID, accountVisitEmail)
+	// 	if err != nil && userProfile != nil {
+	// 		log.Fatal("[Fail] No info  ", err)
+	// 		return
+	// 	}
 		
 
-		key, address := vault.GetCryptoDB(publicAddress)
-		access := DBModel.CredentialsPrivate{
-			PublicAddress: address,
-			PrvteKey:      key,
-		}
+	// 	key, address := vault.GetCryptoDB(publicAddress)
+	// 	access := DBModel.CredentialsPrivate{
+	// 		PublicAddress: address,
+	// 		PrvteKey:      key,
+	// 	}
 
-		log.Println("Ledger Info:", access)
+	// 	log.Println("Ledger Info:", access)
 
-		client, err := paypalMini.NewClient()
-		if err != nil {
-			log.Fatalln("[Fail] Client Operation:", err)
-			return
-		}
+	// 	client, err := paypalMini.NewClient()
+	// 	if err != nil {
+	// 		log.Fatalln("[Fail] Client Operation:", err)
+	// 		return
+	// 	}
 
-		_, err = paypalMini.Token(client)
-		if err != nil {
-			log.Fatalln("[Fail] Token Operation:", err)
-			return
-		}
+	// 	_, err = paypalMini.Token(client)
+	// 	if err != nil {
+	// 		log.Fatalln("[Fail] Token Operation:", err)
+	// 		return
+	// 	}
 
-		ret, err := paypalMini.RetrieveCreditCardInfo(digitalCode.GetAuthorizeStoreID(), client)
-		if err != nil {
-			log.Fatalln("[Fail] Retrieve Card info Operation:", err)
-			return
-		}
+	// 	ret, err := paypalMini.RetrieveCreditCardInfo(digitalCode.GetAuthorizeStoreID(), client)
+	// 	if err != nil {
+	// 		log.Fatalln("[Fail] Retrieve Card info Operation:", err)
+	// 		return
+	// 	}
 
-		myProfile := users.DigialProfile{
-			Public:      access.PublicAddress,
-			Private:     access.PrvteKey,
-			Name:        userProfile.FirstName,
-			FName:       userProfile.LastName,
-			Email:       userProfile.Email,
-			Address:     userProfile.HouseAddress1,
-			LAddress:    userProfile.HouseAddress2,
-			City:        userProfile.City,
-			Zip:         userProfile.Zip,
-			Country:     userProfile.Country,
-			Phone:       userProfile.PhoneNo,
-			Twitter:     userProfile.Twitter,
-			Number:      ret.Number,
-			ExpireMonth: ret.ExpireMonth,
-			ExpireYear:  ret.ExpireYear,
-			Type:        ret.Type,
-		}
+	// 	myProfile := users.DigialProfile{
+	// 		Public:      access.PublicAddress,
+	// 		Private:     access.PrvteKey,
+	// 		Name:        userProfile.FirstName,
+	// 		FName:       userProfile.LastName,
+	// 		Email:       userProfile.Email,
+	// 		Address:     userProfile.HouseAddress1,
+	// 		LAddress:    userProfile.HouseAddress2,
+	// 		City:        userProfile.City,
+	// 		Zip:         userProfile.Zip,
+	// 		Country:     userProfile.Country,
+	// 		Phone:       userProfile.PhoneNo,
+	// 		Twitter:     userProfile.Twitter,
+	// 		Number:      ret.Number,
+	// 		ExpireMonth: ret.ExpireMonth,
+	// 		ExpireYear:  ret.ExpireYear,
+	// 		Type:        ret.Type,
+	// 	}
 
-		log.Println("[Accept] Profile", myProfile)
-		temp.Execute(w, myProfile)
+	// 	log.Println("[Accept] Profile", myProfile)
+	// 	temp.Execute(w, myProfile)
 
 	}
-}
 
 func setting(w http.ResponseWriter, r *http.Request) {
 
@@ -365,73 +364,73 @@ func setting(w http.ResponseWriter, r *http.Request) {
 		temp.Execute(w, "setting")
 	}
 
-}
+// }
 
-func profile(w http.ResponseWriter, r *http.Request) {
+// func profile(w http.ResponseWriter, r *http.Request) {
 
-	temp := template.Must(template.ParseFiles("profile.html"))
+// 	temp := template.Must(template.ParseFiles("profile.html"))
 
-	if accountID == "" {
-		log.Fatal("[Error ] Please login  ")
-		return
-	}
-	detailsAcc, err := cloud.GetProfile(appName, accountID, accountVisitEmail)
-	if err != nil {
-		log.Fatalln("[Fail] Operation..", err)
-		return
-	}
+// 	if accountID == "" {
+// 		log.Fatal("[Error ] Please login  ")
+// 		return
+// 	}
+// 	detailsAcc, err := Cloud.GetProfile(AppName, accountID, accountVisitEmail)
+// 	if err != nil {
+// 		log.Fatalln("[Fail] Operation..", err)
+// 		return
+// 	}
 
-	if r.Method == "GET" {
-		log.Println("[Accept] Method:", r.Method)
-		log.Println("[Accept]", r.URL.Path)
+// 	if r.Method == "GET" {
+// 		log.Println("[Accept] Method:", r.Method)
+// 		log.Println("[Accept]", r.URL.Path)
 
-		log.Println("Details:", detailsAcc)
-		temp.Execute(w, detailsAcc)
-	} else {
-		log.Println("[Accept] Method:", r.Method)
-		log.Println("[Accept] Path:", r.URL.Path)
+// 		log.Println("Details:", detailsAcc)
+// 		temp.Execute(w, detailsAcc)
+// 	} else {
+// 		log.Println("[Accept] Method:", r.Method)
+// 		log.Println("[Accept] Path:", r.URL.Path)
 
-		r.ParseForm()
+// 		r.ParseForm()
 
-		// save value in db
-		MyProfile := users.UpdateProfile{
-			Id:           accountID,
-			FirstName:    r.FormValue("uname"),
-			LastName:     r.FormValue("ufname"),
-			Phone:        r.FormValue("phone"),
-			HouseAddress: r.FormValue("address"),
-			SubAddress:   r.FormValue("inputAddress2"),
-			Country:      r.FormValue("country"),
-			Zip:          r.FormValue("inputZip"),
-			Email:        r.FormValue("email"),
-			Twitter:      r.FormValue("tweet"),
-			City:         r.FormValue("city"),
-		}
+// 		// save value in db
+// 		MyProfile := users.Visitors{
+// 			Id:           accountID,
+// 			Name:    	  r.FormValue("uname"),
+// 			LastName:     r.FormValue("ufname"),
+// 			PhoneNo:      r.FormValue("phone"),
+// 			Address: 	  r.FormValue("address"),
+// 			Apparment:    r.FormValue("inputAddress2"),
+// 			Country:      r.FormValue("country"),
+// 			Zip:          r.FormValue("inputZip"),
+// 			Email:        r.FormValue("email"),
+// 			Twitter:      r.FormValue("tweet"),
+// 			City:         r.FormValue("city"),
+// 		}
 
-		if accountID == "" {
-			log.Fatal("[Error ] Please login  ")
-			return
-		}
-		MyProfile.Id = accountID
+// 		if accountID == "" {
+// 			log.Fatal("[Error ] Please login  ")
+// 			return
+// 		}
+// 		MyProfile.Id = accountID
 
-		male := r.FormValue("gender")
-		if male == "on" {
-			MyProfile.Male = true
-		}
-		MyProfile.Male = false
+// 		male := r.FormValue("gender")
+// 		if male == "on" {
+// 			MyProfile.Male = true
+// 		}
+// 		MyProfile.Male = false
 
-		profile, err := cloud.UpdateProfiles(appName, &MyProfile)
-		if err != nil {
-			log.Fatalln("[Fail] Operation..", err)
-			return
-		}
+// 		profile, err := Cloud.UpdateProfiles(AppName, &MyProfile)
+// 		if err != nil {
+// 			log.Fatalln("[Fail] Operation..", err)
+// 			return
+// 		}
 
-		log.Println("[Accept] Profile updated... ", profile)
-		w.WriteHeader(http.StatusOK)
-		r.Method = "GET"
-		success(w, r)
+// 		log.Println("[Accept] Profile updated... ", profile)
+// 		w.WriteHeader(http.StatusOK)
+// 		r.Method = "GET"
+// 		success(w, r)
 
-	}
+// 	}
 }
 
 func credit(w http.ResponseWriter, r *http.Request) {
@@ -501,111 +500,111 @@ func cluster(w http.ResponseWriter, r *http.Request) {
 
 func kernel(w http.ResponseWriter, r *http.Request) {
 
-	temp := template.Must(template.ParseFiles("payee.html"))
-	var check users.Analysis = users.Analysis{}
-	user, err := cloud.GetProfile(appName, accountID, accountVisitEmail)
-	if err != nil {
-		log.Fatalln("[Fail] Operation..", err)
-		return
-	}
+	// temp := template.Must(template.ParseFiles("payee.html"))
+	// var check users.Analysis = users.Analysis{}
+	// user, err := Cloud.GetProfile(AppName, accountID, accountVisitEmail)
+	// if err != nil {
+	// 	log.Fatalln("[Fail] Operation..", err)
+	// 	return
+	// }
 
-	key, address := vault.GetCryptoDB(publicAddress)
-	credentials := DBModel.CredentialsPrivate{
-		PublicAddress: address,
-		PrvteKey:      key,
-	}
+	// key, address := vault.GetCryptoDB(publicAddress)
+	// credentials := DBModel.CredentialsPrivate{
+	// 	PublicAddress: address,
+	// 	PrvteKey:      key,
+	// }
 
-	client, err := paypalMini.NewClient()
-	if err != nil {
-		log.Fatalln("[Fail] Client Operation:", err)
-		return
-	}
+	// client, err := paypalMini.NewClient()
+	// if err != nil {
+	// 	log.Fatalln("[Fail] Client Operation:", err)
+	// 	return
+	// }
 
-	_, err = paypalMini.Token(client)
-	if err != nil {
-		log.Fatalln("[Fail] Token Operation:", err)
-		return
-	}
+	// _, err = paypalMini.Token(client)
+	// if err != nil {
+	// 	log.Fatalln("[Fail] Token Operation:", err)
+	// 	return
+	// }
 
-	ret, err := paypalMini.RetrieveCreditCardInfo(digitalCode.GetAuthorizeStoreID(), client)
-	if err != nil {
-		log.Fatalln("[Fail] Retrieve Card info Operation:", err)
-		return
-	}
+	// ret, err := paypalMini.RetrieveCreditCardInfo(digitalCode.GetAuthorizeStoreID(), client)
+	// if err != nil {
+	// 	log.Fatalln("[Fail] Retrieve Card info Operation:", err)
+	// 	return
+	// }
 
-	order := cart.GetItemsFromCart()
-	batchID := order.TypeofService + user.ID
-	resp, err := paypalMini.GetPayout(batchID, client)
-	if err != nil {
-		return
-	}
+	// order := cart.GetItemsFromCart()
+	// batchID := order.TypeofService + user.ID
+	// resp, err := paypalMini.GetPayout(batchID, client)
+	// if err != nil {
+	// 	return
+	// }
 
-	amountStr, err := check.MarshalJSONAmount(resp)
-	if err != nil {
-		return
-	}
-	feesStr, err := check.MarshalJSONFees(resp)
-	if err != nil {
-		return
-	}
-	amountValue := check.Encode(amountStr)
-	feesValue := check.Encode(feesStr)
-	amount, err := check.CalculateNum(amountValue)
-	if err != nil {
-		return
-	}
-	fees, err := check.CalculateNum(feesValue)
-	if err != nil {
-		return
-	}
-	total := check.CalculateTotalBalance(amount, fees)
-	sTotal := fmt.Sprintf("%f", total)
-	// blockchains.SenderBatchID = ethAddrressGenerate
-	if blockchains.SenderBatchID == " " {
-		log.Fatal("Public Address:", err)
-		return
-	}
-	err = userCredit()
-	if err != nil {
-		fmt.Println("Error:")
-	}
-	balance.SetTransactionWiz(user.FirstName, fmt.Sprintf("%v", blockchains.Balance), sTotal, sTotal, credentials.PublicAddress)
+	// amountStr, err := check.MarshalJSONAmount(resp)
+	// if err != nil {
+	// 	return
+	// }
+	// feesStr, err := check.MarshalJSONFees(resp)
+	// if err != nil {
+	// 	return
+	// }
+	// amountValue := check.Encode(amountStr)
+	// feesValue := check.Encode(feesStr)
+	// amount, err := check.CalculateNum(amountValue)
+	// if err != nil {
+	// 	return
+	// }
+	// fees, err := check.CalculateNum(feesValue)
+	// if err != nil {
+	// 	return
+	// }
+	// total := check.CalculateTotalBalance(amount, fees)
+	// sTotal := fmt.Sprintf("%f", total)
+	// // blockchains.SenderBatchID = ethAddrressGenerate
+	// if blockchains.SenderBatchID == " " {
+	// 	log.Fatal("Public Address:", err)
+	// 	return
+	// }
+	// err = userCredit()
+	// if err != nil {
+	// 	fmt.Println("Error:")
+	// }
+	// balance.SetTransactionWiz(user.FirstName, fmt.Sprintf("%v", blockchains.Balance), sTotal, sTotal, credentials.PublicAddress)
 
-	if r.Method == "GET" {
-		log.Println("[Accept] Path :", r.URL.Path)
-		log.Println("Method :", r.Method)
-		temp.Execute(w, balance.GetTransactionWiz())
-	} else {
-		log.Println("[Accept] Path :", r.URL.Path)
-		log.Println("Method :", r.Method)
-		res, err := paypalMini.PaypalPayout(ret.ID, batchID, accountVisitEmail, order.Price, client)
-		if err != nil {
-			return
-		}
+	// if r.Method == "GET" {
+	// 	log.Println("[Accept] Path :", r.URL.Path)
+	// 	log.Println("Method :", r.Method)
+	// 	temp.Execute(w, balance.GetTransactionWiz())
+	// } else {
+	// 	log.Println("[Accept] Path :", r.URL.Path)
+	// 	log.Println("Method :", r.Method)
+	// 	res, err := paypalMini.PaypalPayout(ret.ID, batchID, accountVisitEmail, order.Price, client)
+	// 	if err != nil {
+	// 		return
+	// 	}
 
-		amountStr, err := check.MarshalJSONAmount(res)
-		if err != nil {
-			return
-		}
-		feesStr, err := check.MarshalJSONFees(res)
-		if err != nil {
-			return
-		}
-		amountValue := check.Encode(amountStr)
-		feesValue := check.Encode(feesStr)
-		amount, err := check.CalculateNum(amountValue)
-		if err != nil {
-			return
-		}
-		fees, err := check.CalculateNum(feesValue)
-		if err != nil {
-			return
-		}
-		total := check.CalculateTotalBalance(amount, fees)
-		sTotal := fmt.Sprintf("%f", total)
-		balance.SetTransactionWiz(user.FirstName, fmt.Sprintf("%v", blockchains.Balance), sTotal, sTotal, credentials.PublicAddress)
-		temp.Execute(w, balance.GetTransactionWiz())
-	}
+	// 	amountStr, err := check.MarshalJSONAmount(res)
+	// 	if err != nil {
+	// 		return
+	// 	}
+	// 	feesStr, err := check.MarshalJSONFees(res)
+	// 	if err != nil {
+	// 		return
+	// 	}
+	// 	amountValue := check.Encode(amountStr)
+	// 	feesValue := check.Encode(feesStr)
+	// 	amount, err := check.CalculateNum(amountValue)
+	// 	if err != nil {
+	// 		return
+	// 	}
+	// 	fees, err := check.CalculateNum(feesValue)
+	// 	if err != nil {
+	// 		return
+	// 	}
+	// 	total := check.CalculateTotalBalance(amount, fees)
+	// 	sTotal := fmt.Sprintf("%f", total)
+	// 	balance.SetTransactionWiz(user.FirstName, fmt.Sprintf("%v", blockchains.Balance), sTotal, sTotal, credentials.PublicAddress)
+	// 	temp.Execute(w, balance.GetTransactionWiz())
+	// }
 }
 
 func space3D(w http.ResponseWriter, r *http.Request) {
@@ -733,136 +732,137 @@ func tMulticluster(w http.ResponseWriter, r *http.Request) {
 }
 
 func tKernel(w http.ResponseWriter, r *http.Request) {
-	webpage := template.Must(template.ParseFiles(""))
-	var check users.Analysis = users.Analysis{}
-	user, err := cloud.GetProfile(appName, accountID, accountVisitEmail)
-	if err != nil {
-		log.Fatalln("[Fail] Operation..", err)
-		return
-	}
+	// webpage := template.Must(template.ParseFiles(""))
+	// var check users.Analysis = users.Analysis{}
+	// user, err := Cloud.GetProfile(AppName, accountID, accountVisitEmail)
+	// if err != nil {
+	// 	log.Fatalln("[Fail] Operation..", err)
+	// 	return
+	// }
 
-	key, address := vault.GetCryptoDB(publicAddress)
-	credentials := DBModel.CredentialsPrivate{
-		PublicAddress: address,
-		PrvteKey:      key,
-	}
+	// key, address := vault.GetCryptoDB(publicAddress)
+	// credentials := DBModel.CredentialsPrivate{
+	// 	PublicAddress: address,
+	// 	PrvteKey:      key,
+	// }
 
-	client, err := paypalMini.NewClient()
-	if err != nil {
-		log.Fatalln("[Fail] Client Operation:", err)
-		return
-	}
+	// client, err := paypalMini.NewClient()
+	// if err != nil {
+	// 	log.Fatalln("[Fail] Client Operation:", err)
+	// 	return
+	// }
 
-	_, err = paypalMini.Token(client)
-	if err != nil {
-		log.Fatalln("[Fail] Token Operation:", err)
-		return
-	}
+	// _, err = paypalMini.Token(client)
+	// if err != nil {
+	// 	log.Fatalln("[Fail] Token Operation:", err)
+	// 	return
+	// }
 
-	btx, err := send()
-	if err != nil {
-		return
-	}
-	log.Println("Block Header:", btx)
+	// btx, err := send()
+	// if err != nil {
+	// 	return
+	// }
+	// log.Println("Block Header:", btx)
 
 	
-	blockchains.Nonce = bitInterface.EthNonceAtStatus
-	blockchains.GasLimit = uint64(21000)
+	// blockchains.Nonce = bitInterface.EthNonceAtStatus
+	// blockchains.GasLimit = uint64(21000)
 
-	bitInterface.EthGasUnits, err = eth.BTCGasConsumerPrice()
-	if err != nil {
-		return
-	}
+	// bitInterface.EthGasUnits, err = eth.BTCGasConsumerPrice()
+	// if err != nil {
+	// 	return
+	// }
 
-	order := cart.GetItemsFromCart()
-	batchID := order.TypeofService + user.ID
-	resp, err := paypalMini.GetPayout(batchID, client)
-	if err != nil {
-		return
-	}
+	// order := cart.GetItemsFromCart()
+	// batchID := order.TypeofService + user.ID
+	// resp, err := paypalMini.GetPayout(batchID, client)
+	// if err != nil {
+	// 	return
+	// }
 
-	amountStr, err := check.MarshalJSONAmount(resp)
-	if err != nil {
-		return
-	}
-	feesStr, err := check.MarshalJSONFees(resp)
-	if err != nil {
-		return
-	}
-	amountValue := check.Encode(amountStr)
-	feesValue := check.Encode(feesStr)
-	amount, err := check.CalculateNum(amountValue)
-	if err != nil {
-		return
-	}
-	fees, err := check.CalculateNum(feesValue)
-	if err != nil {
-		return
-	}
-	total := check.CalculateTotalBalance(amount, fees)
-	sTotal := fmt.Sprintf("%f", total)
-	if blockchains.SenderBatchID == "" {
-		log.Fatalln("Public Address", err)
-		return
-	}
-	// blockchains.SenderBatchID = blockchains.SenderBatchID
-	err = userCredit()
-	if err != nil {
-		log.Fatal("[Fail] Block Balance should not be zero  ", blockchains.Balance)
-		return
-	}
-	balance.SetTransactionWiz(user.FirstName, fmt.Sprintf("%v", blockchains.Balance), sTotal, sTotal, credentials.PublicAddress)
+	// amountStr, err := check.MarshalJSONAmount(resp)
+	// if err != nil {
+	// 	return
+	// }
+	// feesStr, err := check.MarshalJSONFees(resp)
+	// if err != nil {
+	// 	return
+	// }
+	// amountValue := check.Encode(amountStr)
+	// feesValue := check.Encode(feesStr)
+	// amount, err := check.CalculateNum(amountValue)
+	// if err != nil {
+	// 	return
+	// }
+	// fees, err := check.CalculateNum(feesValue)
+	// if err != nil {
+	// 	return
+	// }
+	// total := check.CalculateTotalBalance(amount, fees)
+	// sTotal := fmt.Sprintf("%f", total)
+	// if blockchains.SenderBatchID == "" {
+	// 	log.Fatalln("Public Address", err)
+	// 	return
+	// }
+	// // blockchains.SenderBatchID = blockchains.SenderBatchID
+	// err = userCredit()
+	// if err != nil {
+	// 	log.Fatal("[Fail] Block Balance should not be zero  ", blockchains.Balance)
+	// 	return
+	// }
+	
+	// balance.SetTransactionWiz(user.FirstName, fmt.Sprintf("%v", blockchains.Balance), sTotal, sTotal, credentials.PublicAddress)
 
-	if r.Method == "GET" {
-		log.Println("[Path]:", r.URL.Path)
-		log.Println("[Method]:", r.Method)
-		webpage.Execute(w, balance.GetTransactionWiz())
-	} else {
+	// if r.Method == "GET" {
+	// 	log.Println("[Path]:", r.URL.Path)
+	// 	log.Println("[Method]:", r.Method)
+	// 	webpage.Execute(w, balance.GetTransactionWiz())
+	// } else {
 
-		log.Println("[Path]:", r.URL.Path)
-		log.Println("[Method]:", r.Method)
-		order := cart.GetItemsFromCart()
-		value, err := strconv.ParseUint(order.Price, 2, 10)
-		if err != nil {
-			return
-		}
-		blockchains.Checkout = value
-		blockchains.Amount = new(big.Int).SetUint64(uint64(blockchains.Checkout))
-		switch order.TypeofService {
-		case "Kernel":
-			n, m := int64(2), int64(60)
-			automatedNetworkFees(n, m)
-		case "Cluster":
-			n, m := int64(3), int64(110)
-			automatedNetworkFees(n, m)
-		case "Multi-Cluster":
-			n, m := int64(5), int64(550)
-			automatedNetworkFees(n, m)
-		default:
-			w.WriteHeader(http.StatusPreconditionFailed)
-			r.Method = "GET"
-			transacts(w, r)
-		}
-	}
-	// Send Transaction
-	blockchains.RecieveBatchID = "0x55057eb78fDbF783C961b4AAd6A5f8BC60cab44B"
-	bitInterface.EthReciptAddress = eth.BTCAddressHex(blockchains.RecieveBatchID)
+	// 	log.Println("[Path]:", r.URL.Path)
+	// 	log.Println("[Method]:", r.Method)
+	// 	order := cart.GetItemsFromCart()
+	// 	value, err := strconv.ParseUint(order.Price, 2, 10)
+	// 	if err != nil {
+	// 		return
+	// 	}
+	// 	blockchains.Checkout = value
+	// 	blockchains.Amount = new(big.Int).SetUint64(uint64(blockchains.Checkout))
+	// 	switch order.TypeofService {
+	// 	case "Kernel":
+	// 		n, m := int64(2), int64(60)
+	// 		automatedNetworkFees(n, m)
+	// 	case "Cluster":
+	// 		n, m := int64(3), int64(110)
+	// 		automatedNetworkFees(n, m)
+	// 	case "Multi-Cluster":
+	// 		n, m := int64(5), int64(550)
+	// 		automatedNetworkFees(n, m)
+	// 	default:
+	// 		w.WriteHeader(http.StatusPreconditionFailed)
+	// 		r.Method = "GET"
+	// 		transacts(w, r)
+	// 	}
+	// }
+	// // Send Transaction
+	// blockchains.RecieveBatchID = "0x55057eb78fDbF783C961b4AAd6A5f8BC60cab44B"
+	// bitInterface.EthReciptAddress = eth.BTCAddressHex(blockchains.RecieveBatchID)
 
-	// Network ID
-	chainID, err := clientInstance.NetworkID(context.Background())
-	bitInterface.EthTransaction = eth.BTCNewTransactions(blockchains, bitInterface)
-	bitInterface.FingerPrint, err = eth.BTCTransactionSignature(chainID, bitInterface)
-	if err != nil {
-		log.Fatal("[Fail] Signed Transaction", err)
-		return
-	}
+	// // Network ID
+	// chainID, err := clientInstance.NetworkID(context.Background())
+	// bitInterface.EthTransaction = eth.BTCNewTransactions(blockchains, bitInterface)
+	// bitInterface.FingerPrint, err = eth.BTCTransactionSignature(chainID, bitInterface)
+	// if err != nil {
+	// 	log.Fatal("[Fail] Signed Transaction", err)
+	// 	return
+	// }
 
-	// Send Transaction
-	err = eth.TransferBTC(bitInterface.FingerPrint)
-	if err != nil {
-		log.Fatalln("[Fail] Transaction", err)
-		return
-	}
+	// // Send Transaction
+	// err = eth.TransferBTC(bitInterface.FingerPrint)
+	// if err != nil {
+	// 	log.Fatalln("[Fail] Transaction", err)
+	// 	return
+	// }
 
 }
 
@@ -884,24 +884,24 @@ func automatedNetworkFees(n, m int64) {
 }
 
 func visualize(w http.ResponseWriter, r *http.Request) {
-	temp := template.Must(template.ParseFiles("visualize.html"))
-	log.Println("Report percentage", visualizeReport.Percentage)
-	log.Println("Report uv ", visualizeReport.UVinfo)
-	userProfile, err := cloud.GetDocumentById(appName, accountVisitEmail, accountKey)
-	if err != nil && userProfile != nil {
-		log.Fatal("[Fail] No info  ", err)
-		return
+	// temp := template.Must(template.ParseFiles("visualize.html"))
+	// log.Println("Report percentage", visualizeReport.Percentage)
+	// log.Println("Report uv ", visualizeReport.UVinfo)
+	// userProfile, err := Cloud.GetDocumentById(AppName, accountVisitEmail, accountKey)
+	// if err != nil && userProfile != nil {
+	// 	log.Fatal("[Fail] No info  ", err)
+	// 	return
 
-	}
-	algo.SetProbParameter(visualizeReport.Percentage)
-	if r.Method == "GET" && algo.GetProbParameter() != -1.0 {
-		fmt.Println("Url:", r.URL.Path)
-		fmt.Println("Method:" + r.Method)
-		visualizeReport.Process = 1
-		visualizeReport.SeenBy = userProfile.Name
+	// }
+	// algo.SetProbParameter(visualizeReport.Percentage)
+	// if r.Method == "GET" && algo.GetProbParameter() != -1.0 {
+	// 	fmt.Println("Url:", r.URL.Path)
+	// 	fmt.Println("Method:" + r.Method)
+	// 	visualizeReport.Process = 1
+	// 	visualizeReport.SeenBy = userProfile.Name
 
-		temp.Execute(w, visualizeReport)
-	}
+	// 	temp.Execute(w, visualizeReport)
+	// }
 
 }
 
@@ -929,101 +929,101 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Method:" + r.Method)
 
 		// FILE Upload ....
-		fname, err := Mounted(w, r)
+		fname, err := Mounted(w, r, openReadFile)
 
 		if err != nil {
 			log.Fatalln("[File]:", err)
 			return
 		}
-		choose := r.FormValue("choose")
+		// choose := r.FormValue("choose")
 		data, err := Open_SFiles("seqDir/", fname)
 		if err != nil {
 			log.Fatalln("[No File]:", err)
 			return
 		}
 		log.Println("File Name:", data.Name())
-		switch choose {
-		case "0":
-			fmt.Fprintf(w, "Please choose any option ...")
-			log.Fatalln("Choose your option")
-			panic(err)
-		case "1":
-			var name string = "Covid-19"
-			err := Data_Predicition(w, r, name, choose, data)
-			if err != nil {
-				return
-			}
+		// switch choose {
+		// case "0":
+		// 	fmt.Fprintf(w, "Please choose any option ...")
+		// 	log.Fatalln("Choose your option")
+		// 	panic(err)
+		// case "1":
+		// 	var name string = "Covid-19"
+		// 	err := Data_Predicition(w, r, name, choose, data)
+		// 	if err != nil {
+		// 		return
+		// 	}
 
-			visualizeReport.Percentage = algo.Percentage
+		// 	visualizeReport.Percentage = algo.Percentage
 			
-			w.WriteHeader(http.StatusOK)
-			// LifeCode = genome
-			r.Method = "GET"
-			// Wallet(w,r)
-			visualize(w, r)
-			// fmt.Println("Virus:", capsid)
+		// 	w.WriteHeader(http.StatusOK)
+		// 	// LifeCode = genome
+		// 	r.Method = "GET"
+		// 	// Wallet(w,r)
+		// 	visualize(w, r)
+		// 	// fmt.Println("Virus:", capsid)
 
-		case "2":
-			var name string = "FlaviDengue"
-			err := Data_Predicition(w, r, name, choose, data)
-			if err != nil {
-				return
-			}
-			visualizeReport.Percentage = algo.Percentage
-			// v :=  infectedUv()
-			// v.UVinfo = uvslice
-			w.WriteHeader(http.StatusOK)
+		// case "2":
+		// 	var name string = "FlaviDengue"
+		// 	err := Data_Predicition(w, r, name, choose, data)
+		// 	if err != nil {
+		// 		return
+		// 	}
+		// 	visualizeReport.Percentage = algo.Percentage
+		// 	// v :=  infectedUv()
+		// 	// v.UVinfo = uvslice
+		// 	w.WriteHeader(http.StatusOK)
 
-			r.Method = "GET"
-			visualize(w, r)
-			// Wallet(w,r)
-			// fmt.Println("Virus:", capsid)
-		case "3":
-			var name string = "KenyaEbola"
-			err := Data_Predicition(w, r, name, choose, data)
-			if err != nil {
-				return
-			}
-			visualizeReport.Percentage = algo.Percentage
-			// v :=  infectedUv()
-			// v.UVinfo = uvslice
+		// 	r.Method = "GET"
+		// 	visualize(w, r)
+		// 	// Wallet(w,r)
+		// 	// fmt.Println("Virus:", capsid)
+		// case "3":
+		// 	var name string = "KenyaEbola"
+		// 	err := Data_Predicition(w, r, name, choose, data)
+		// 	if err != nil {
+		// 		return
+		// 	}
+		// 	visualizeReport.Percentage = algo.Percentage
+		// 	// v :=  infectedUv()
+		// 	// v.UVinfo = uvslice
 
-			w.WriteHeader(http.StatusOK)
-			r.Method = "GET"
-			visualize(w, r)
+		// 	w.WriteHeader(http.StatusOK)
+		// 	r.Method = "GET"
+		// 	visualize(w, r)
 
-			// fmt.Println("Virus:", capsid)
-		case "4":
-			var name string = "ZikaVirusBrazil"
-			err := Data_Predicition(w, r, name, choose, data)
-			if err != nil {
-				return
-			}
-			visualizeReport.Percentage = algo.Percentage
-			// v :=  infectedUv()
-			// openStreet.Country = r.FormValue("country")
-			// openStreet.PostalCode = r.FormValue("postal")
-			// openStreet.City = r.FormValue("city")
-			// openStreet.State = r.FormValue("state")
-			// openStreet.StreetAddress = r.FormValue("street")
-			// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
-			// 	return
-			// }
+		// 	// fmt.Println("Virus:", capsid)
+		// case "4":
+		// 	var name string = "ZikaVirusBrazil"
+		// 	err := Data_Predicition(w, r, name, choose, data)
+		// 	if err != nil {
+		// 		return
+		// 	}
+		// 	visualizeReport.Percentage = algo.Percentage
+		// 	// v :=  infectedUv()
+		// 	// openStreet.Country = r.FormValue("country")
+		// 	// openStreet.PostalCode = r.FormValue("postal")
+		// 	// openStreet.City = r.FormValue("city")
+		// 	// openStreet.State = r.FormValue("state")
+		// 	// openStreet.StreetAddress = r.FormValue("street")
+		// 	// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
+		// 	// 	return
+		// 	// }
 
-			//v.UVinfo = uvslice
+		// 	//v.UVinfo = uvslice
 
-			w.WriteHeader(http.StatusOK)
-			r.Method = "GET"
-			visualize(w, r)
+		// 	w.WriteHeader(http.StatusOK)
+		// 	r.Method = "GET"
+		// 	visualize(w, r)
 
-			// fmt.Println("Virus:", capsid)
-		case "5":
-			var name string = "MersSaudiaArabia"
-			err := Data_Predicition(w, r, name, choose, data)
-			if err != nil {
-				return
-			}
-			visualizeReport.Percentage = algo.Percentage
+		// 	// fmt.Println("Virus:", capsid)
+		// case "5":
+		// 	var name string = "MersSaudiaArabia"
+		// 	err := Data_Predicition(w, r, name, choose, data)
+		// 	if err != nil {
+		// 		return
+		// 	}
+		// 	visualizeReport.Percentage = algo.Percentage
 			// v :=  infectedUv()				//  openStreet.Country = r.FormValue("country")
 			//  openStreet.PostalCode = r.FormValue("postal")
 			// openStreet.City = r.FormValue("city")
@@ -1033,15 +1033,15 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			// 	return
 			// }
 			// v.UVinfo = uvslice
-			w.WriteHeader(http.StatusOK)
+		// 	w.WriteHeader(http.StatusOK)
 
-			r.Method = "GET"
-			visualize(w, r)
-			// fmt.Println("Virus:", capsid)
+		// 	r.Method = "GET"
+		// 	visualize(w, r)
+		// 	// fmt.Println("Virus:", capsid)
 
-		default:
-			// RouteWebpage.Execute(w, "dashboard")
-		}
+		// default:
+		// 	// RouteWebpage.Execute(w, "dashboard")
+		// }
 	}
 
 }
@@ -1166,18 +1166,18 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 		acc.EthAddress = ethereum[:8]
 
 		// valid address
-		valid := IsEvm(acc.EthAddress)
-		if valid {
+		// valid := IsEvm(acc.EthAddress)
+		// if valid {
 
-			// smart contract address
-			log.Println("[Feature] Smart Address", valid)
-			w.WriteHeader(http.StatusForbidden)
-			w.Write([]byte("Thank-you for your response! , This feature will added upcoming build... Sorry for inconvenience"))
-			return
+		// 	// smart contract address
+		// 	log.Println("[Feature] Smart Address", valid)
+		// 	w.WriteHeader(http.StatusForbidden)
+		// 	w.Write([]byte("Thank-you for your response! , This feature will added upcoming build... Sorry for inconvenience"))
+		// 	return
 
-		}
+		// }
 
-		myWallet := cloudWallet.EthereumWalletAcc{}
+		myWallet := CloudWallet.EthereumWalletAcc{}
 
 		signWallet, err := json.Marshal(myWallet)
 		if err != nil {
@@ -1192,12 +1192,12 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 		}
 
 		
-		ok, ethAdd := Retrieve_Crypto(&acc, ledger)
-		if ok && ethAdd != nil {
-			log.Fatal("[Replicate] Already Data exist  ", err)
-			return
+		// ok, ethAdd := Retrieve_Crypto(&acc, ledger)
+		// if ok && ethAdd != nil {
+		// 	log.Fatal("[Replicate] Already Data exist  ", err)
+		// 	return
 
-		}
+		// }
 
 		myWallet.Email = acc.Email
 		myWallet.Password = acc.Password
@@ -1206,16 +1206,16 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 		myWallet.Allowed = acc.Allowed
 		myWallet.PrvteKey = acc.PrvteKey
 
-		merchant, err := ledger.CreatePublicAddress(&myWallet, appName)
-		if err != nil {
-			log.Fatal("[Fail] Wallet Don't have Public Accessibity  ", err)
-			return
+		// merchant, err := ledger.CreatePublicAddress(&myWallet, AppName)
+		// if err != nil {
+		// 	log.Fatal("[Fail] Wallet Don't have Public Accessibity  ", err)
+		// 	return
 
-		}
+		// }
 
 		clientInstance = nil
 
-		log.Println("[Accept] Welcome ! Your Account Has been created", &merchant)
+		// log.Println("[Accept] Welcome ! Your Account Has been created", &merchant)
 		w.WriteHeader(http.StatusOK)
 		r.Method = "GET"
 		existing(w, r)
@@ -1275,7 +1275,7 @@ func wallet(w http.ResponseWriter, r *http.Request) {
 
 		log.Println("[Accept] Your Account Details:", acc, "Client api Reference: ", clientInstance)
 
-		myWallet := cloudWallet.EthereumWalletAcc{}
+		myWallet := CloudWallet.EthereumWalletAcc{}
 
 		signWallet, err := json.Marshal(myWallet)
 		if err != nil {
@@ -1290,42 +1290,42 @@ func wallet(w http.ResponseWriter, r *http.Request) {
 			return
 
 		}
-		addr, ok := MyEthAddress(&acc)
-		if !ok {
+		// addr, ok := MyEthAddress(&acc)
+		// if !ok {
 
-			log.Fatal("[Fail] No Ethereum Account ", !ok)
-			return
+		// 	log.Fatal("[Fail] No Ethereum Account ", !ok)
+		// 	return
 
-		}
-		if addr != nil {
+		// }
+		// if addr != nil {
 
-			acc.EthAddress = addr.EthAddress
-			publicAddress = acc.EthAddress
+		// 	acc.EthAddress = addr.EthAddress
+		// 	publicAddress = acc.EthAddress
 
-			// Secure Key
-			ledgerBits = addr.PrvteKey
-			vault.SetCryptoDB(acc.EthAddress, ledgerBits)
+		// 	// Secure Key
+		// 	ledgerBits = addr.PrvteKey
+		// 	vault.SetCryptoDB(acc.EthAddress, ledgerBits)
 
 			
-			blockchains.SenderBatchID = acc.EthAddress
-			log.Println("Your Wallet:", acc)
+		// 	blockchains.SenderBatchID = acc.EthAddress
+		// 	log.Println("Your Wallet:", acc)
 
 
-			//dataabse -- Retrieve_Crypto
-			secureWallet, ok := FindEthWallet(&acc)
-			if !ok && secureWallet != nil {
-				log.Fatal("[Fail] No crypto wallet found against your account ", !ok)
-				return
+		// 	//dataabse -- Retrieve_Crypto
+		// 	secureWallet, ok := FindEthWallet(&acc)
+		// 	if !ok && secureWallet != nil {
+		// 		log.Fatal("[Fail] No crypto wallet found against your account ", !ok)
+		// 		return
 
-			}
-			log.Println("[Accept] Your Ethereum Wallet Info:", secureWallet)
+		// 	}
+		// 	log.Println("[Accept] Your Ethereum Wallet Info:", secureWallet)
 
 			w.WriteHeader(http.StatusOK)
 			r.Method = "GET"
 			dashboard(w, r)
 		}
 	}
-}
+//}
 
 func terms(w http.ResponseWriter, r *http.Request) {
 
@@ -1339,18 +1339,20 @@ func terms(w http.ResponseWriter, r *http.Request) {
 
 func newUser(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("register.html"))
-	user := users.Vistors{
+	user := users.Visitors{
 		Name:     "",
-		Fname:    "",
-		Madam:    false,
+		LastName:    "",
+		Eve:    false,
 		Address:  "",
-		Address2: "",
+		Apparment: "",
 		Zip:      "",
 		City:     "",
 		Country:  "",
 		Email:    "",
 		Password: "",
-		Secure:   false,
+		PhoneNo: "",
+		Twitter : "",
+		// Secure:   false,
 	}
 
 	if r.Method == "GET" {
@@ -1379,19 +1381,27 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatal("[Fail] Auto email pattern  ", err)
 			return
-
 		}
+
+		fmt.Println("Regex:", regex_Email)
+
 		regex_Pass, err := regexp.MatchString(passexp, user.Password)
 		if err != nil {
 			log.Fatal("[Fail] Password is very week ", err)
 			return
 		}
-		hashRet, encrypted := Presence(w, r, regex_Email, regex_Pass, user)
-		if !hashRet {
-			log.Fatal("[Fail] Week encryption", hashRet)
+		
+		fmt.Println("Regex:", regex_Pass)
+		
+		hash, encrypted := Presence(w, r, regex_Email, regex_Pass, user)
+		if !hash {
+			log.Fatal("[Fail] Week encryption", hash)
 			return
 
 		}
+
+		fmt.Println("Hash:", hash, "encrypted:", encrypted)
+		fmt.Println("Profile:", user)
 		AddNewProfile(w, r, user, encrypted.Reader)
 	}
 
@@ -1399,7 +1409,7 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 
 func existing(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("login.html"))
-	user := users.Visitor{
+	user := users.Visitors{
 		Name:     "",
 		LastName:    "",
 		Eve:    false,
@@ -1415,6 +1425,10 @@ func existing(w http.ResponseWriter, r *http.Request) {
 		Twitter : "",
 		// Remember:  false,
 	}
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		temp.Execute(w, "Login")
+	} else {
 		// Parse Form
 		r.ParseForm()
 		fmt.Println("Method:\n", r.Method)
@@ -1456,7 +1470,7 @@ func existing(w http.ResponseWriter, r *http.Request) {
 			fmt.Printf("Search Data:%v", data.Id)
 			accountVisitEmail = data.Email
 			accountKey = data.Password
-			profiler = data
+			// profiler = data
 			act := structs.RouteParameter{}
 			
 			if userSessions == nil {
@@ -1474,7 +1488,7 @@ func existing(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusOK)
 			r.Method = "GET"
 			dashboard(w, r)
-		
+	}
 }
 
 

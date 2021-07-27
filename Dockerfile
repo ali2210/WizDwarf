@@ -27,8 +27,9 @@ COPY go.mod go.sum ./
 
 RUN go mod download
 
-RUN go build -o main && go test -v ./... 
+RUN go build -o main 
 
+# && go test -v ./... 
 EXPOSE 5000
 
 VOLUME [ ${WIZ_DIR} ]

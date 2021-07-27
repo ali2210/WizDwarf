@@ -45,17 +45,21 @@ func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member users.Vi
 			log.Fatal("[Fail] No info ", err)
 			return &users.Visitors{}, err
 	}
+
+	fmt.Println("Member:", data)
 	
 	query , err := json.Marshal(data); if err != nil{
-		log.Fatal("Alien Format", err)
+		log.Fatal("Alien Format:", err.Error())
 			return &users.Visitors{}, err
 	}
+	
 	var profile users.Visitors
 	err = json.Unmarshal(query, &profile)
 	if err != nil{
 		log.Fatal("Bash processing error:  ", err)
 			return &users.Visitors{}, err
 	}
+	fmt.Println("Profile:", profile)
 	return &profile, nil
 }
 
@@ -79,17 +83,22 @@ func AddNewProfile(response http.ResponseWriter, request *http.Request, user use
 		var member users.Visitors
 		var replicate *firestore.DocumentRef
 
+		fmt.Println("Member:", member, "exuser:", user)
+
 		data, err := json.Marshal(member)
 		if err != nil {
 			log.Fatal("[Fail] Poor DATA JSON FORMAT  ", err)
 			return &firestore.DocumentRef{}, err
 		}
 		
+		fmt.Println("json_data:", string(data))
+		
 		err = json.Unmarshal(data, &member)
 		if err != nil {
 			log.Fatal("[Fail] Poor Formating  ", err)
 			return &firestore.DocumentRef{}, err
 		}
+
 		candidate, err := Firebase_Gatekeeper(response, request, user)
 		
 		if err != nil {
@@ -97,7 +106,8 @@ func AddNewProfile(response http.ResponseWriter, request *http.Request, user use
 			return &firestore.DocumentRef{}, err
 		}
 		
-		if candidate == nil {
+		fmt.Println("Candiate :", candidate, )
+		if reflect.DeepEqual(candidate, &member){
 
 			member.Id = im
 			member.Name = user.Name
@@ -114,11 +124,14 @@ func AddNewProfile(response http.ResponseWriter, request *http.Request, user use
 			member.City = user.City
 			member.Zip = user.Zip
 			member.Country = user.Country
+			
 			document,_, err := Cloud.AddUser(GetDBClientRef(), member)
 			if err != nil {
 				log.Fatal(" Bash Processing Error ", err.Error())
 				return &firestore.DocumentRef{}, err
 			}
+			
+			fmt.Println("Document:", document)
 			replicate = document
 			return document, nil
 		}
