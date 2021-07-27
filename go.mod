@@ -5,7 +5,7 @@ go 1.14
 require (
 	4d63.com/gochecknoglobals v0.0.0-20201008074935-acfc0b28355a // indirect
 	4d63.com/gochecknoinits v0.0.0-20200108094044-eb73b47b9fc4 // indirect
-	cloud.google.com/go/firestore v1.3.0 // indirect
+	cloud.google.com/go/firestore v1.3.0
 	firebase.google.com/go v3.13.0+incompatible
 	github.com/PuerkitoBio/goquery v1.6.1
 	github.com/agnivade/levenshtein v1.1.0
