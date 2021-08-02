@@ -104,7 +104,7 @@ var (
 	coinbaseClient coin.Permission      = coin.Permission{}
 	staticData     coin.StaticWallet    = coin.StaticWallet{}
 	transactWeb    structs.ParserObject = structs.ParserObject{}
-	profiler 	   users.Visitors = users.Visitors{}
+	profiler 	   *users.Visitors = &users.Visitors{}
 )
 
 // Constants
@@ -122,11 +122,11 @@ func main() {
 	log.Println("[OK] Wiz-Dwarfs starting")
 	host := os.Getenv("HOST")
 	port := os.Getenv("PORT")
-	// wizDir := os.Getenv("WIZ_VOLUME_DIR")
-	// if wizDir == "" {
-	// 	log.Fatalln("Make sure volume mount", wizDir)
-	// 	panic(errors.New("Fail to mount"))
-	// }
+	wizDir := os.Getenv("WIZ_VOLUME_DIR")
+	if wizDir == "" {
+		log.Fatalln("Make sure volume mount", wizDir)
+		return
+	}
 
 	if host == "" {
 
@@ -884,24 +884,34 @@ func automatedNetworkFees(n, m int64) {
 }
 
 func visualize(w http.ResponseWriter, r *http.Request) {
-	// temp := template.Must(template.ParseFiles("visualize.html"))
-	// log.Println("Report percentage", visualizeReport.Percentage)
-	// log.Println("Report uv ", visualizeReport.UVinfo)
-	// userProfile, err := Cloud.GetDocumentById(AppName, accountVisitEmail, accountKey)
-	// if err != nil && userProfile != nil {
-	// 	log.Fatal("[Fail] No info  ", err)
-	// 	return
+	temp := template.Must(template.ParseFiles("visualize.html"))
+	log.Println("Report percentage", visualizeReport.Percentage)
+	log.Println("Report uv ", visualizeReport.UVinfo)
+	fmt.Println("Profile:", profiler)
+	userProfile, err := Cloud.GetDocumentById(AppName, *profiler)
+	if err != nil && userProfile != nil {
+		log.Fatal("[Fail] No info  ", err)
+		return
+	}
 
-	// }
-	// algo.SetProbParameter(visualizeReport.Percentage)
-	// if r.Method == "GET" && algo.GetProbParameter() != -1.0 {
-	// 	fmt.Println("Url:", r.URL.Path)
-	// 	fmt.Println("Method:" + r.Method)
-	// 	visualizeReport.Process = 1
-	// 	visualizeReport.SeenBy = userProfile.Name
+	query_json, err := json.Marshal(userProfile); if err != nil{
+		log.Fatal("query return un handle data  ", err.Error())
+		return		
+	} 
+	err = json.Unmarshal(query_json, &profiler); if err != nil{
+		log.Fatal("query return un structure data", err.Error())
+		return
+	}
 
-	// 	temp.Execute(w, visualizeReport)
-	// }
+	algo.SetProbParameter(visualizeReport.Percentage)
+	if r.Method == "GET" && algo.GetProbParameter() != -1.0 {
+		fmt.Println("Url:", r.URL.Path)
+		fmt.Println("Method:" + r.Method)
+		visualizeReport.Process = 1
+		visualizeReport.SeenBy = profiler.Name
+
+		temp.Execute(w, visualizeReport)
+	}
 
 }
 
@@ -935,71 +945,73 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			log.Fatalln("[File]:", err)
 			return
 		}
-		// choose := r.FormValue("choose")
-		data, err := Open_SFiles("seqDir/", fname)
+		choose := r.FormValue("choose")
+		data, err := Open_SFiles("app_data/", fname)
 		if err != nil {
 			log.Fatalln("[No File]:", err)
 			return
 		}
 		log.Println("File Name:", data.Name())
-		// switch choose {
-		// case "0":
-		// 	fmt.Fprintf(w, "Please choose any option ...")
-		// 	log.Fatalln("Choose your option")
-		// 	panic(err)
-		// case "1":
-		// 	var name string = "Covid-19"
-		// 	err := Data_Predicition(w, r, name, choose, data)
-		// 	if err != nil {
-		// 		return
-		// 	}
-
-		// 	visualizeReport.Percentage = algo.Percentage
+		switch choose {
+		case "0":
+		 	fmt.Fprintf(w, "Please choose any option ...")
+		 	log.Fatalln("Choose your option")
+			return
+		 case "1":
+		 	var name string = "Covid-19"
+		 	err := Data_Predicition(w, r, name, choose, data,algo)
+		 	if err != nil {
+		 		return
+		 	}
+			pattern_analysis := GetBioAlgoParameters()
+	 		visualizeReport.Percentage = pattern_analysis.Percentage
 			
-		// 	w.WriteHeader(http.StatusOK)
+		 	w.WriteHeader(http.StatusOK)
 		// 	// LifeCode = genome
-		// 	r.Method = "GET"
-		// 	// Wallet(w,r)
-		// 	visualize(w, r)
+			r.Method = "GET"
+		 	visualize(w, r)
 		// 	// fmt.Println("Virus:", capsid)
 
-		// case "2":
-		// 	var name string = "FlaviDengue"
-		// 	err := Data_Predicition(w, r, name, choose, data)
-		// 	if err != nil {
-		// 		return
-		// 	}
-		// 	visualizeReport.Percentage = algo.Percentage
+		 case "2":
+		 	var name string = "FlaviDengue"
+		 	err := Data_Predicition(w, r, name, choose, data, algo)
+		 	if err != nil {
+		 		return
+		 	}
+			pattern_analysis := GetBioAlgoParameters()
+		 	visualizeReport.Percentage = pattern_analysis.Percentage
 		// 	// v :=  infectedUv()
 		// 	// v.UVinfo = uvslice
-		// 	w.WriteHeader(http.StatusOK)
+		 	w.WriteHeader(http.StatusOK)
 
-		// 	r.Method = "GET"
-		// 	visualize(w, r)
+		 	r.Method = "GET"
+		 	visualize(w, r)
 		// 	// Wallet(w,r)
 		// 	// fmt.Println("Virus:", capsid)
-		// case "3":
-		// 	var name string = "KenyaEbola"
-		// 	err := Data_Predicition(w, r, name, choose, data)
-		// 	if err != nil {
-		// 		return
-		// 	}
-		// 	visualizeReport.Percentage = algo.Percentage
+		 case "3":
+		 	var name string = "KenyaEbola"
+		 	err := Data_Predicition(w, r, name, choose, data,algo)
+		 	if err != nil {
+		 		return
+		 	}
+		 	pattern_analysis := GetBioAlgoParameters()
+		 	visualizeReport.Percentage = pattern_analysis.Percentage
 		// 	// v :=  infectedUv()
 		// 	// v.UVinfo = uvslice
 
-		// 	w.WriteHeader(http.StatusOK)
-		// 	r.Method = "GET"
-		// 	visualize(w, r)
+		 	w.WriteHeader(http.StatusOK)
+		 	r.Method = "GET"
+		 	visualize(w, r)
 
 		// 	// fmt.Println("Virus:", capsid)
-		// case "4":
-		// 	var name string = "ZikaVirusBrazil"
-		// 	err := Data_Predicition(w, r, name, choose, data)
-		// 	if err != nil {
-		// 		return
-		// 	}
-		// 	visualizeReport.Percentage = algo.Percentage
+		 case "4":
+		 	var name string = "ZikaVirusBrazil"
+		 	err := Data_Predicition(w, r, name, choose, data, algo)
+		 	if err != nil {
+		 		return
+		 	}
+		 	pattern_analysis := GetBioAlgoParameters()
+		 	visualizeReport.Percentage = pattern_analysis.Percentage
 		// 	// v :=  infectedUv()
 		// 	// openStreet.Country = r.FormValue("country")
 		// 	// openStreet.PostalCode = r.FormValue("postal")
@@ -1012,18 +1024,19 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 
 		// 	//v.UVinfo = uvslice
 
-		// 	w.WriteHeader(http.StatusOK)
-		// 	r.Method = "GET"
-		// 	visualize(w, r)
+		 	w.WriteHeader(http.StatusOK)
+		 	r.Method = "GET"
+		 	visualize(w, r)
 
 		// 	// fmt.Println("Virus:", capsid)
-		// case "5":
-		// 	var name string = "MersSaudiaArabia"
-		// 	err := Data_Predicition(w, r, name, choose, data)
-		// 	if err != nil {
-		// 		return
-		// 	}
-		// 	visualizeReport.Percentage = algo.Percentage
+		 case "5":
+		 	var name string = "MersSaudiaArabia"
+		 	err := Data_Predicition(w, r, name, choose, data,algo)
+		 	if err != nil {
+		 		return
+		 	}
+		 	pattern_analysis := GetBioAlgoParameters()
+		 	visualizeReport.Percentage = pattern_analysis.Percentage
 			// v :=  infectedUv()				//  openStreet.Country = r.FormValue("country")
 			//  openStreet.PostalCode = r.FormValue("postal")
 			// openStreet.City = r.FormValue("city")
@@ -1033,15 +1046,15 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			// 	return
 			// }
 			// v.UVinfo = uvslice
-		// 	w.WriteHeader(http.StatusOK)
+		 	w.WriteHeader(http.StatusOK)
 
-		// 	r.Method = "GET"
-		// 	visualize(w, r)
+		 	r.Method = "GET"
+		 	visualize(w, r)
 		// 	// fmt.Println("Virus:", capsid)
 
-		// default:
-		// 	// RouteWebpage.Execute(w, "dashboard")
-		// }
+		 default:
+		 	 RouteWebpage.Execute(w, "dashboard")
+		 }
 	}
 
 }
@@ -1470,7 +1483,8 @@ func existing(w http.ResponseWriter, r *http.Request) {
 			fmt.Printf("Search Data:%v", data.Id)
 			accountVisitEmail = data.Email
 			accountKey = data.Password
-			// profiler = data
+			profiler = data
+			fmt.Println("Profile:", profiler)
 			act := structs.RouteParameter{}
 			
 			if userSessions == nil {

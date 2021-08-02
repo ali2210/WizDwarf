@@ -41,7 +41,14 @@
           100%
         </div>
       </div>
-      <p>
+
+      <button type="button" class="btn btn-primary" title="Number of bash jobs" disabled>
+        <i class="fa fa-tasks" aria-hidden="true">
+          <span class="badge badge-primary">{{.Process}}</span>
+        </i>
+      </button>
+
+      <!-- <p>
         <a class="btn btn-success" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
           aria-controls="collapseExample" title="Dodecahedron Moving Fractals." data-toggle="popover"> <i
             class=" fa fa-check-square" aria-hidden="true"></i>
@@ -59,12 +66,17 @@
             </span>
           </div>
         </div>
-      </div>
+      </div> -->
       </p>
     </div>
     <div class="pay-btn">
-      <a href="/transact" class="btn btn-success lnkBtn" data-toggle="popover" title="Choose your Payment service">
+      <a href="/transact" class="btn btn-success lnkBtn" data-toggle="popover" title="My cart">
         <i class="fa fa-shopping-cart" aria-hidden="true"> Checkout </i></a>
+    </div>
+    <div class="free-service">
+      <a href="" class="btn-btn-primary" title="Free to claim">
+        <i class="fa fa-clock-o" aria-hidden="true"> One-Time Service</i>
+      </a>
     </div>
     <div class="card-footer text-muted">
       ! @{{.SeenBy}}
@@ -73,7 +85,6 @@
             class="fa fa-chevron-circle-left" aria-hidden="true"> Back
           </i></a>
       </div>
-
     </div>
   </div>
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

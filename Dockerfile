@@ -7,21 +7,17 @@ ENV PORT=5000
 
 ENV HOST=wizdwarfs
 
-# ENV CoinbaseKey=uGJWOhYrm7X2njjC
-
-# ENV CoinbaseSecret=U3D0pf9uwDGMAniaFyV17t2cd2ODHwVc
-
 RUN mkdir /app
 
 ADD . /app
 
 WORKDIR /app
 
-ARG WIZ_DIR=/seqDir
+ARG WIZ_DIR=/app_data
 
 RUN mkdir -p ${WIZ_DIR}
 
-ENV WIZ_VOLUME_DIR=/app${WIZ_DIR}/seqFile.txt
+ENV WIZ_VOLUME_DIR=/app${WIZ_DIR}/apps.txt
 
 COPY go.mod go.sum ./
 

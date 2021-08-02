@@ -328,33 +328,36 @@ func Mounted(w http.ResponseWriter, r *http.Request, openReadFile string) (strin
 	var upldFile *os.File = nil
 	file, handler, err := r.FormFile("fileSeq")
 	if err != nil {
-
 		log.Fatal("[Fail] Error in upload   ", err)
 		return "", err
 	}
 	defer file.Close()
+
 	if handler.Size >= (500000 * 1024) {
 		log.Fatalln((500000 * 1024) - handler.Size)
 		return "", err
 	}
+	
 	fmt.Println("File name:"+handler.Filename, "Size:", handler.Size)
+	
 	if _, err := os.Stat(handler.Filename); os.IsExist(err) {
-		log.Fatal("[Fail] Already have  this file ", err)
-		
+		log.Fatal("[Fail] Already have  this file ", err)	
 		return "", err
 
 	}
-	path, err := os.Stat("seqDir/")
+	
+	path, err := os.Stat("app_data/")
 	if err != nil {
 		log.Fatalln("[Error] In directory", err)
 		return "", err
 	}
+	
 	if !path.IsDir() {
 		log.Fatalln("[Error] Reading File", err)
 		return "", err
 	}
 
-	path, err = os.Stat("seqDir/")
+	path, err = os.Stat("app_data/")
 	if err != nil {
 		log.Fatalln("[Error] In directory", err)
 		return "", err
@@ -364,7 +367,7 @@ func Mounted(w http.ResponseWriter, r *http.Request, openReadFile string) (strin
 		return "", err
 	}
 	// upload file by user...
-	upldFile, err = ioutil.TempFile(filepath.Dir("seqDir/"), "seqFile-"+"*.txt")
+	upldFile, err = ioutil.TempFile(filepath.Dir("app_data/"), "apps-"+"*.txt")
 	if err != nil {
 		log.Fatal("[Fail] Temporary File ", err)
 		return "", err
@@ -461,6 +464,7 @@ func Data_Predicition(w http.ResponseWriter, r *http.Request, fname, choose stri
 		log.Println("Genome:", len(Virus), "virus:", len(Usr))
 		distance := GetEditParameters().EditDistanceStrings(Virus, Usr)
 		SetBioAlgoParameters(algo.Result(distance), fname, algo.CalcualtePercentage(algo.Probablity)) 
+		fmt.Println("ARGUMENTS:", GetBioAlgoParameters())
 		return err
 	} else if i == 0 {
 		temFile := template.Must(template.ParseFiles("dashboard.html"))

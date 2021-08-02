@@ -34,6 +34,9 @@
 	margin-left: 30px;
     visibility: hidden;
 }
+.card-body{
+    height: 150px;
+}
 
 .div-span{
 	display: flex;    
@@ -93,11 +96,10 @@
 }
 .lnkBtn{
     display: flex;
-    position: relative;
-    justify-content: center;
-    margin-bottom: 20px;
     visibility: hidden;
-    left: 50px;
+    position: relative;
+    left: 57px;
+    top: -8px;
 }
 .container-alert{
     margin: 50px;
@@ -122,4 +124,15 @@
      margin-left: 90%;
       border-radius: 10px; 
       margin-bottom: 50px;
+ }
+ .btn-primary{
+     position: absolute;
+     top: 150px;
+     height: 11%;
+ }
+ .free-service{
+    position: relative;
+    left: 195px;
+    visibility: visible;
+    top: -32px;
  }
