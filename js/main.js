@@ -15,32 +15,6 @@ var loc = document.getElementsByClassName("checkbox-geo");
 var notify = document.getElementById("wizNotify");
 var screenLight = document.getElementById("wizLight");
 
-// functions
-function GeolocationPermission(){
-
-    // Geolocation permission
-        navigator.permissions.query({name: 'geolocation'}).then(function(permissionStatus){
-            console.log(' status :' +  permissionStatus.state);
-            loc[0].checked = false;
-        if (!(permissionStatus.state == "granted")){
-            permissionStatus.onchange = function() {
-                console.log('geolocation permission state has changed to ', this.state);
-               
-              };
-               
-            navigator.geolocation.getCurrentPosition((position, error,option) =>{
-                alert('Current Geolocation:'+ `${position.coords.latitude} ` + `${position.coords.longitude}`);
-                loc[0].checked = true;
-            });
-                
-                  
-        }
-
-    })
-}
-function error(err){
-    console.warn(`ERROR(${err.code}): ${err.message}`);
-}
 
 function NotificationPermission(){
     

@@ -111,3 +111,21 @@
     border-radius: 10px; 
     margin-bottom: 50px;
  }
+ .location-div{
+   position: absolute;
+   left: 9px;
+   display: flex;
+   top: 86px;
+
+ }
+ .fa-map-marker{
+   color: green;
+ }
+ .small-div{
+   visibility: hidden;
+   border-radius: 10px;
+   position: absolute;
+   top: 6px;
+   left: 45px;
+   /* border: 2px white none; */
+ }

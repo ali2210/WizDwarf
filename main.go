@@ -188,7 +188,7 @@ func main() {
 	routing.HandleFunc("/transact/pay/crypto/kernel", tKernel)
 	routing.HandleFunc("/transact/pay/crypto/cluster", tCluster)
 	routing.HandleFunc("/transact/pay/crypto/multicluster", tMulticluster)
-	routing.HandleFunc("/liveBookHD/3d", space3D)
+	routing.HandleFunc("/results", results)
 	// routing.HandleFunc("/transact/send", send)
 	// routing.HandleFunc("/transact/userCredit", userCredit)
 	routing.HandleFunc("/visualize", visualize)
@@ -607,7 +607,7 @@ func kernel(w http.ResponseWriter, r *http.Request) {
 	// }
 }
 
-func space3D(w http.ResponseWriter, r *http.Request) {
+func results(w http.ResponseWriter, r *http.Request) {
 
 }
 
@@ -934,9 +934,13 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Url:", r.URL.Path)
 		RouteWebpage.Execute(w, "Dashboard")
 	} else {
+		
 		r.ParseForm()
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
+		
+		coordinates := r.FormValue("geo-marker")
+		fmt.Println("Geo:", coordinates)
 
 		// FILE Upload ....
 		fname, err := Mounted(w, r, openReadFile)
@@ -945,13 +949,17 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			log.Fatalln("[File]:", err)
 			return
 		}
+		
 		choose := r.FormValue("choose")
+		
 		data, err := Open_SFiles("app_data/", fname)
 		if err != nil {
 			log.Fatalln("[No File]:", err)
 			return
 		}
+		
 		log.Println("File Name:", data.Name())
+		
 		switch choose {
 		case "0":
 		 	fmt.Fprintf(w, "Please choose any option ...")

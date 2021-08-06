@@ -1,58 +1,48 @@
-.div-form{
-	display: flex;
-	justify-content: center;
-	margin: auto;
-	width: 50%;
-	flex-direction: column;
-}
-.div-form-container{
-	margin-top: 30px;
-	margin-left: 5px;
-	margin-bottom: 30px;
-}
-
-.div-send-in, 
-.div-receive-in{
-	margin-top: 10px;
-}
-
-.btn-in,
-.btn-in-rec,
-.in-rece{
-	margin-left: 5px;
-}
-
-.in-send{
-	margin-left: 25px;
-}
-
-.btn-submt-form,
-.btn-cancel-form,
-.btn-in-rec,
-.btn-in{
-	border-style: none;
-	background-color: snow;
+.main-dashboard-div {
+	background-color:#f9f9f9;
+	font-family: 'Lato', sans-serif;
+	height: 100vh;
+  }
+  .icon-light {
 	color: black;
-	margin-top: 5px;
-	border: 1px solid grey;
-	cursor: pointer;
-}
-
-.in-send, 
-.in-rece{
-	visibility: hidden;
-}
-
-.btn-in{
-	visibility: visible;
-}
-.in-rece{
-	margin-left: 20px;
-}
-
-.btn-submt-form,
-.btn-cancel-form{
-	margin-top: 15px;
-	margin-left: 50px;
-	margin-right: -50px;
-}
+	margin-right: 5px;
+  }
+  .dropdown-menu {
+	left: 30px;
+  }
+  .h4 {
+	margin: 20px 0px;
+	font-family: 'Roboto Mono', monospace;
+	font-size: 20px;
+  }
+  .main-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+  }
+  .infection-field, .file-upload-field  {
+	margin-top: 45px;
+	width: 50%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+  }
+  .logo {
+	height: 60px;
+  }
+  .custom-navbar {
+	background-color: #ededed;
+	position: absolute;
+	top: 3px;
+	width: 100%;
+  }
+  .div-file{
+	  position: absolute;
+	  top: 333px;
+	  left: 100px;
+  }
+  .fileinp{
+	border-radius: 8px;
+	border: 2px;  
+	width: 520px;
+  }

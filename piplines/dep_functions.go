@@ -11,6 +11,7 @@ import(
 	"cloud.google.com/go/firestore"
 	// "github.com/ali2210/wizdwarf/db"
 	// "errors"
+	// ."github.com/ali2210/wizdwarf/redia"
 	"path/filepath"
 	"io/ioutil"
 	"reflect"
@@ -464,7 +465,7 @@ func Data_Predicition(w http.ResponseWriter, r *http.Request, fname, choose stri
 		log.Println("Genome:", len(Virus), "virus:", len(Usr))
 		distance := GetEditParameters().EditDistanceStrings(Virus, Usr)
 		SetBioAlgoParameters(algo.Result(distance), fname, algo.CalcualtePercentage(algo.Probablity)) 
-		fmt.Println("ARGUMENTS:", GetBioAlgoParameters())
+		
 		return err
 	} else if i == 0 {
 		temFile := template.Must(template.ParseFiles("dashboard.html"))

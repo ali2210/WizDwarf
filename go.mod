@@ -13,10 +13,12 @@ require (
 	github.com/alexkohler/nakedret v1.0.0 // indirect
 	github.com/biogo/biogo v1.0.2
 	github.com/briandowns/openweathermap v0.16.0
+	github.com/dgraph-io/dgo/v2 v2.2.0 // indirect
 	github.com/ethereum/go-ethereum v1.9.19
 	github.com/fabioberger/coinbase-go v0.0.0-20160522011833-8328539b18ab
 	github.com/fogleman/ribbon v0.0.0-20191101191537-568057efb726
 	github.com/go-echarts/go-echarts v1.0.0
+	github.com/go-redis/redis v6.15.9+incompatible // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20200217142428-fce0ec30dd00
 	github.com/gordonklaus/ineffassign v0.0.0-20200809085317-e36bfde3bb78 // indirect
 	github.com/gorilla/mux v1.7.4
@@ -39,6 +41,7 @@ require (
 	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a
 	golang.org/x/net v0.0.0-20200822124328-c89045814202
 	google.golang.org/api v0.30.0
+	google.golang.org/grpc v1.39.0 // indirect
 	honnef.co/go/js/dom v0.0.0-20200509013220-d4405f7ab4d8
 	mvdan.cc/interfacer v0.0.0-20180901003855-c20040233aed // indirect
 	mvdan.cc/lint v0.0.0-20170908181259-adc824a0674b // indirect

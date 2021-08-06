@@ -28,6 +28,8 @@ RUN go build -o main
 # && go test -v ./... 
 EXPOSE 5000
 
+EXPOSE 6379
+
 VOLUME [ ${WIZ_DIR} ]
 
 RUN apk --no-cache add ca-certificates
