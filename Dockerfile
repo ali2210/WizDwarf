@@ -1,4 +1,3 @@
-
 FROM golang:1.15-alpine3.13
 
 ENV CGO_ENABLED=0
@@ -27,8 +26,6 @@ RUN go build -o main
 
 # && go test -v ./... 
 EXPOSE 5000
-
-EXPOSE 6379
 
 VOLUME [ ${WIZ_DIR} ]
 

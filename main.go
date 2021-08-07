@@ -938,9 +938,6 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
-		
-		coordinates := r.FormValue("geo-marker")
-		fmt.Println("Geo:", coordinates)
 
 		// FILE Upload ....
 		fname, err := Mounted(w, r, openReadFile)
@@ -951,6 +948,46 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		}
 		
 		choose := r.FormValue("choose")
+		coordinates := r.FormValue("geo-marker")
+		
+		longitude_parse , err := strconv.ParseFloat(coordinates[:5],0)
+		if err != nil {
+			log.Fatalln("parse longituide value :", err.Error())
+			return 
+		}
+
+		latitude_parse , err := strconv.ParseFloat(coordinates[11:20],0)
+		if err != nil {
+			log.Fatalln("parse latitude value :", err.Error())
+			return 
+		}
+
+		clientapi := weather.NewWeatherClient()
+		
+		weatherapi ,err := clientapi.OpenWeather(geocodeAPI); if err != nil {
+			log.Fatalln("weather api-key :", err.Error())
+			return 
+		}
+
+		marker_location := clientapi.GetCoordinates(&weather.MyCoordinates{
+			Longitude : longitude_parse,
+			Latitude : latitude_parse,
+		})
+
+		fmt.Println("@marker:", marker_location)
+
+		err = clientapi.UVCoodinates(marker_location,weatherapi); if err != nil {
+			log.Fatalln("city weather coordinates:", err.Error())
+			return 
+		}
+
+		uvinfo, err := clientapi.UVCompleteInfo(weatherapi); if err != nil {
+			log.Fatalln("city uv tracks:", err.Error())
+			return 
+		}
+
+		fmt.Println("@uv:", uvinfo)
+		visualizeReport.UVinfo = uvinfo
 		
 		data, err := Open_SFiles("app_data/", fname)
 		if err != nil {
@@ -967,13 +1004,16 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			return
 		 case "1":
 		 	var name string = "Covid-19"
-		 	err := Data_Predicition(w, r, name, choose, data,algo)
+		 	
+			 err := Data_Predicition(w, r, name, choose, data,algo)
 		 	if err != nil {
 		 		return
 		 	}
-			pattern_analysis := GetBioAlgoParameters()
-	 		visualizeReport.Percentage = pattern_analysis.Percentage
 			
+			 pattern_analysis := GetBioAlgoParameters()
+	 		
+			visualizeReport.Percentage = pattern_analysis.Percentage
+
 		 	w.WriteHeader(http.StatusOK)
 		// 	// LifeCode = genome
 			r.Method = "GET"
