@@ -1,21 +1,39 @@
-.static-field{
-	margin-top: 20px;
+.main-dashboard-div {
+    background-color:#f9f9f9;
+    font-family: 'Lato', sans-serif;
+    height: 100vh;
+  }
+  .icon-light {
+    color: black;
+    margin-right: 5px;
+  }
+  .dropdown-menu {
+    left: 30px;
+  }
+  .h4 {
+    margin: 20px 0px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 20px;
+  }
+  .main-container {
     display: flex;
-    position: inherit;
-    border: 2px white double;
-}
-.static-img{
-	display: flex;
-    margin-top: 10px;
-    max-width: 100%;
- }
- .img-logo{
-	width: 30%;
-    margin-bottom: 10px;
+    flex-direction: column;
+    align-items: center;
+  }
+  .infection-field, .file-upload-field  {
+    margin-top: 45px;
+    width: 50%;
     display: flex;
-    justify-content: flex-start;
-    margin-block-start: inherit;
- }
+    flex-direction: column;
+    align-items: center;
+  }
+  .logo {
+    height: 60px;
+  }
+  .custom-navbar {
+    background-color: #ededed;
+  }
+  
 
 .heading-text{
 	margin-top: 70px;
@@ -136,3 +154,19 @@
     visibility: visible;
     top: -32px;
  }
+ .uv-div{
+     position: relative;
+     display: flex;
+     justify-content: flex-start;
+     top: 5px;
+ }
+.line{
+  width: 100%;
+  height: 10px;
+  background: black;
+}
+
+.risk-div{
+  position: relative;
+  top: 9px;
+}

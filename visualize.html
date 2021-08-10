@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap"
     rel="stylesheet">
-
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
   <link rel="stylesheet" type="text/css" href="/css/visualize.css">
   <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r126/three.js"
@@ -19,14 +19,84 @@
 </head>
 
 <body>
-  <div class="static-field">
-    <div class="static-img">
-      <img src="/images/logo.png" alt="WizDwarfs" class="img-logo" />
+  <div class='main-dashboard-div'>
+    <nav class="navbar navbar-expand-md navbar-light custom-navbar">
+      <a class="navbar-brand" href="#">
+        <img src="/images/logo.png" alt="Logo" class="logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item active pl-3">
+            <a class="nav-link" href="/home">
+              <i class="fa fa-home icon-light" aria-hidden="true"></i>
+              Home
+            </a>
+          </li>
+          <li class="nav-item dropdown pl-3">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-briefcase" aria-hidden="true"></i>
+              Merchant
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item active" href="/open"><i class="fa fa-handshake-o " aria-hidden="true"></i> Premium </a>
+              <a class="dropdown-item" href="/"> <i class="fa fa-briefcase" aria-hidden="true"> Service </i>
+              </a>
+              <a class="dropdown-item" href="/"> <i class="fa fa-money" aria-hidden="true"> Transactions </i>
+              </a>
+              <!-- <a class="dropdown-item" href="/open/setting"><i class="fa fa-cogs" aria-hidden="true"></i> Settings</a> -->
+              <div class="card" style="width: 25rem; height:27rem;">
+                <img
+                  src="https://nakedsecurity.sophos.com/wp-content/uploads/sites/2/2020/01/shutterstock_1027402033.jpg?w=640"
+                  class="card-img-top" alt="digital Fingerprints">
+                <div class="card-body">
+                  <h5 class="card-title"> Browser Fingerprint Experience!</h5>
+                  <p class="card-text"> Now a days internet is an basic necessity of life. Everyone stay connected with their love ones. With Browser Fingerprint, only authorize
+                    user access it's data. We ensure your data remain in your hand, particularly your actions or choices that make during session.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="nav-item dropdown pl-3">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-user icon-light" aria-hidden="true"></i>
+              Profile
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="/dashbaord/setting"><i class="fa fa-sliders" aria-hidden="true"></i>
+                Setting</a>
+              <a class="dropdown-item" href="/logout"><i class="fa fa-sign-out icon icon-light"
+                  aria-hidden="true"></i>Logout</a>
+              <div class="card" style="width: 25rem; height: 25rem;">
+                <img
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOaJY0dC2FWMzFME5auGOpwMHAgoVJfWiDyw&usqp=CAU"
+                  alt="Biomolecular Computing">
+                <div class="card-body">
+                  <h5 class="card-title"> Decentralize-Genetica  </h5>
+                  <p class="card-text"> With Decentralize-Genetica platform, user can detects alien-code, uv generated sequence code, anomalies & predict the cause reason behind these anomalies. </p>
+                </div>
+              </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="uv-div">
+      <button class="btn btn-light" title="With city uv-index level, you will know how much radiations level in your city">
+        <i class="far fa-sun">
+        </i>
+        <small class="uvindex"> {{.UVinfo}}
+        </small>
+      </button>
     </div>
-  </div>
-
-
-
+    <div class="risk-div">
+      <div class="line"></div>
+    </div>
   <canvas></canvas>
 
   <div class="card text-center">

@@ -949,19 +949,58 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		
 		choose := r.FormValue("choose")
 		coordinates := r.FormValue("geo-marker")
+		var longitude_parse float64 = 0.0
+		var latitude_parse float64 = 0.0
+		fmt.Println("@length:", len(coordinates))
+		if (len(coordinates) > 0 && len(coordinates) <= 15){
+			longitude_parse , err = strconv.ParseFloat(coordinates[:5],10)
+			if err != nil {
+				log.Fatalln("parse longituide value #0 :", err.Error())
+				return 
+			}
 		
-		longitude_parse , err := strconv.ParseFloat(coordinates[:5],0)
-		if err != nil {
-			log.Fatalln("parse longituide value :", err.Error())
-			return 
-		}
+			fmt.Println("@longitude # 0:", longitude_parse)
+			latitude_parse , err = strconv.ParseFloat(coordinates[9:],10)
+			if err != nil {
+				log.Fatalln("parse latitude value # 0 :", err.Error())
+				return 
+			}
 
-		latitude_parse , err := strconv.ParseFloat(coordinates[11:20],0)
-		if err != nil {
-			log.Fatalln("parse latitude value :", err.Error())
-			return 
-		}
+			fmt.Println("@latitude:", latitude_parse)
+		}else if (len(coordinates) > 15 && len(coordinates) <= 25) {
+			longitude_parse , err := strconv.ParseFloat(coordinates[:8],10)
+			if err != nil {
+				log.Fatalln("parse longituide value # 1 :", err.Error())
+				return 
+			}
+		
+			fmt.Println("@longitude # 1:", longitude_parse)
+			latitude_parse , err = strconv.ParseFloat(coordinates[12:],10)
+			if err != nil {
+				log.Fatalln("parse latitude value # 1 :", err.Error())
+				return 
+			}
 
+			fmt.Println("@latitude # 1:", latitude_parse)
+		}else if(len(coordinates) > 25 && len(coordinates) < 40){
+			longitude_parse , err := strconv.ParseFloat(coordinates[:18],10)
+			if err != nil {
+				log.Fatalln("parse longituide value :", err.Error())
+				return 
+			}
+		
+			fmt.Println("@longitude # 2:", longitude_parse)
+			latitude_parse , err := strconv.ParseFloat(coordinates[21:],10)
+			if err != nil {
+				log.Fatalln("parse latitude value # 2 :", err.Error())
+				return 
+			}
+
+			fmt.Println("@latitude: # 2", latitude_parse)
+		}else {
+			log.Fatalln("Empty Field value :", err.Error())
+		}
+		
 		clientapi := weather.NewWeatherClient()
 		
 		weatherapi ,err := clientapi.OpenWeather(geocodeAPI); if err != nil {
@@ -987,6 +1026,7 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		}
 
 		fmt.Println("@uv:", uvinfo)
+		
 		visualizeReport.UVinfo = uvinfo
 		
 		data, err := Open_SFiles("app_data/", fname)

@@ -21,10 +21,10 @@ marker_location.children[0].addEventListener("click", function(){
       
       navigator.geolocation.getCurrentPosition((position, error, option)=>{
         marker_location.children[0].children[0].style.color="darkgreen";
-        marker_location.children[1].style.color= "darkgreen";
-        var lati = `${position.coords.latitude} `;
-        var logi = `${position.coords.longitude}`
-        marker_location.children[1].value = lati +`,`+ logi; 
+        marker_location.children[1].style.color= "purple";
+        var lati = `${position.coords.latitude}`;
+        var logi = `${position.coords.longitude}`;
+        marker_location.children[1].value = lati +` , `+ logi; 
       });
     }
   })
