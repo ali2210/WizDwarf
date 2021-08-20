@@ -7,6 +7,7 @@ require (
 	4d63.com/gochecknoinits v0.0.0-20200108094044-eb73b47b9fc4 // indirect
 	cloud.google.com/go/firestore v1.3.0
 	firebase.google.com/go v3.13.0+incompatible
+	github.com/99designs/gqlgen v0.13.0 // indirect
 	github.com/PuerkitoBio/goquery v1.6.1
 	github.com/agnivade/levenshtein v1.1.0
 	github.com/alecthomas/gocyclo v0.0.0-20150208221726-aa8f8b160214 // indirect
@@ -30,18 +31,21 @@ require (
 	github.com/mdempsky/maligned v0.0.0-20180708014732-6e39bd26a8c8 // indirect
 	github.com/mdempsky/unconvert v0.0.0-20200228143138-95ecdbfc0b5f // indirect
 	github.com/mibk/dupl v1.0.0 // indirect
-	github.com/onsi/ginkgo v1.14.1
-	github.com/onsi/gomega v1.10.2
+	github.com/neo4j/neo4j-go-driver/v4 v4.3.3 // indirect
+	github.com/onsi/ginkgo v1.16.4
+	github.com/onsi/gomega v1.14.0
 	github.com/opennota/check v0.0.0-20180911053232-0c771f5545ff // indirect
 	github.com/securego/gosec v0.0.0-20200401082031-e946c8c39989 // indirect
 	github.com/siongui/godom v0.0.0-20200920152407-31a6de96fdf6
 	github.com/stripe/safesql v0.2.0 // indirect
 	github.com/tsenart/deadcode v0.0.0-20160724212837-210d2dc333e9 // indirect
+	github.com/vektah/gqlparser/v2 v2.1.0 // indirect
 	github.com/walle/lll v1.0.1 // indirect
 	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a
-	golang.org/x/net v0.0.0-20200822124328-c89045814202
+	golang.org/x/net v0.0.0-20210813160813-60bc85c4be6d
 	google.golang.org/api v0.30.0
 	google.golang.org/grpc v1.39.0 // indirect
+	google.golang.org/protobuf v1.26.0
 	honnef.co/go/js/dom v0.0.0-20200509013220-d4405f7ab4d8
 	mvdan.cc/interfacer v0.0.0-20180901003855-c20040233aed // indirect
 	mvdan.cc/lint v0.0.0-20170908181259-adc824a0674b // indirect

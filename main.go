@@ -105,6 +105,7 @@ var (
 	staticData     coin.StaticWallet    = coin.StaticWallet{}
 	transactWeb    structs.ParserObject = structs.ParserObject{}
 	profiler 	   *users.Visitors = &users.Visitors{}
+	Https_port	   string = os.Getenv("Http_Port")
 )
 
 // Constants
@@ -132,8 +133,8 @@ func main() {
 
 		// env port setting
 
-		if port == " " {
-			log.Fatalln("[Fail] No Application port allocated", port)
+		if port == " " && Https_port == ""{
+			log.Fatalln("[Fail] No Application port allocated", port,"http port not provided:", Https_port)
 		} else {
 			if port != "5000" && host == "wizdwarfs" {
 				// any Listening PORT {heroku}
@@ -146,7 +147,6 @@ func main() {
 				host = "wizdwarfs"
 				log.Println("[New] Application Default port", port)
 				log.Println("[Host] Explicit Host ", host)
-				
 			}
 
 		}
@@ -997,6 +997,21 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			}
 
 			fmt.Println("@latitude: # 2", latitude_parse)
+		}else if len(coordinates) > 15 && len(coordinates) == 23 {
+			longitude_parse , err := strconv.ParseFloat(coordinates[:8],10)
+			if err != nil {
+				log.Fatalln("parse longituide value # 1 :", err.Error())
+				return 
+			}
+		
+			fmt.Println("@longitude # 3:", longitude_parse)
+			latitude_parse , err := strconv.ParseFloat(coordinates[13:],10)
+			if err != nil {
+				log.Fatalln("parse latitude value # 1 :", err.Error())
+				return 
+			}
+
+			fmt.Println("@latitude # 3:", latitude_parse)
 		}else {
 			log.Fatalln("Empty Field value :", err.Error())
 		}

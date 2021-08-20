@@ -4,6 +4,7 @@ ENV CGO_ENABLED=0
 
 ENV PORT=5000
 
+
 ENV HOST=wizdwarfs
 
 RUN mkdir /app
@@ -27,6 +28,8 @@ RUN go build -o main
 # && go test -v ./... 
 EXPOSE 5000
 
+EXPOSE 9080
+
 VOLUME [ ${WIZ_DIR} ]
 
 RUN apk --no-cache add ca-certificates
@@ -34,8 +37,4 @@ RUN apk --no-cache add ca-certificates
 LABEL companyRelease="Wisdom-Enigma"
 
 CMD ["/app/main"]
-
-
-
-
 

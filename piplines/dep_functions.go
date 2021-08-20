@@ -11,7 +11,7 @@ import(
 	"cloud.google.com/go/firestore"
 	// "github.com/ali2210/wizdwarf/db"
 	// "errors"
-	// ."github.com/ali2210/wizdwarf/redia"
+	// ."github.com/ali2210/wizdwarf/genetics/graph"
 	"path/filepath"
 	"io/ioutil"
 	"reflect"
@@ -36,7 +36,13 @@ import(
 	// cloudWallet "github.com/ali2210/wizdwarf/db/cloudwalletclass"
 )
 
+var(
+	
+)
 
+const(
+	
+)
 
 func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member users.Visitors) (*users.Visitors, error) {
 
@@ -459,7 +465,7 @@ func Data_Predicition(w http.ResponseWriter, r *http.Request, fname, choose stri
 		svrFile := MountDisk(w, r, fname)
 		Usr, Virus, err := ReadAllow(file, svrFile)
 		if err != nil {
-			log.Fatalln("[Fail] Sequence DataFile Error", err)
+			log.Fatalln("Sequence data file error", err)
 			return err
 		}
 		log.Println("Genome:", len(Virus), "virus:", len(Usr))
