@@ -36,13 +36,215 @@
 	top: 3px;
 	width: 100%;
   }
-  .div-file{
+  .genetic-circle{
+	background:radial-gradient(purple, transparent);
+	width: 100px;
+	height: 100px;
+	position: absolute;
+	top: 127px;
+	left: 414px;
+	border-radius: 54px;
+	border: dotted mintcream;
+	animation: bounce 3.5s infinite alternate-reverse;
+  }
+
+  @keyframes bounce {
+	  0%{
+		  
+		transform: translate(414px,0px);
+
+	  }
+
+	  25%{
+		
+		transform: translate(300px,0px);
+
+	  }
+	  40%{
+		
+		transform: translate(200px,0px);
+
+	  }
+	  65%{
+		
+		transform: translate(100px,0px);
+
+	  }
+	  95%{
+		
+		transform: translate(50px,0px);
+		
+	  }
+	  100%{
+		
+		transform: translate(10px,0px);
+		
+	  }
+  }
+  
+  .proteins-box-0{
+	  background: plum;
+	  height: 50px;
+	  width: 50px;
 	  position: absolute;
-	  top: 333px;
-	  left: 100px;
+	  left: 63px;
+	  top: 286px;
   }
-  .fileinp{
-	border-radius: 8px;
-	border: 2px;  
-	width: 520px;
-  }
+  .proteins-box-1{
+	background:antiquewhite;
+	height: 50px;
+	width: 50px;
+	position: absolute;
+	left: 113px;
+	top: 286px;
+ }
+ .proteins-box-2{
+	background:hotpink;
+	height: 50px;
+	width: 50px;
+	position: absolute;
+	left: 63px;
+	top: 336px;
+}
+.proteins-box-3{
+  background:orange;
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  left: 113px;
+  top: 336px;
+}
+
+.proteins-box-4{
+	background:crimson;
+	height: 50px;
+	width: 50px;
+	position: absolute;
+	left: 163px;
+	top: 336px;
+}
+.proteins-box-5{
+  background:blue;
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  left: 213px;
+  top: 336px;
+}
+
+.proteins-box-6{
+	background:skyblue;
+	height: 50px;
+	width: 50px;
+	position: absolute;
+	left: 263px;
+	top: 336px;
+}
+.proteins-box-7{
+  background:olive;
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  left: 313px;
+  top: 336px;
+}
+.proteins-box-8{
+	background:blueviolet;
+	height: 50px;
+	width: 50px;
+	position: absolute;
+	left: 363px;
+	top: 336px;
+}
+.proteins-box-9{
+  background:green;
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  left: 413px;
+  top: 336px;
+}
+.proteins-box-10{
+	background:red;
+	height: 50px;
+	width: 50px;
+	position: absolute;
+	left: 776px;
+	top: 336px;
+}
+.proteins-box-11{
+  background:yellow;
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  left: 826px;
+  top: 336px;
+}
+.proteins-box-12{
+	background:chartreuse;
+	height: 50px;
+	width: 50px;
+	position: absolute;
+	left: 876px;
+	top: 336px;
+}
+.proteins-box-13{
+  background:cornflowerblue;
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  left: 926px;
+  top: 336px;
+}
+.proteins-box-14{
+	background:cadetblue;
+	height: 50px;
+	width: 50px;
+	position: absolute;
+	left: 976px;
+	top: 336px;
+}
+.proteins-box-15{
+  background:cyan;
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  left: 1026px;
+  top: 336px;
+}
+
+.proteins-box-16{
+	background:tomato;
+	height: 50px;
+	width: 50px;
+	position: absolute;
+	left: 1076px;
+	top: 336px;
+}
+.proteins-box-17{
+  background:sienna;
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  left: 1126px;
+  top: 336px;
+}
+.proteins-box-18{
+	background:gold;
+	height: 50px;
+	width: 50px;
+	position: absolute;
+	left: 1076px;
+	top: 286px;
+}
+.proteins-box-19{
+  background:blueviolet;
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  left: 1126px;
+  top: 286px;
+}
+
+
+  
