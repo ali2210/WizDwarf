@@ -1,8 +1,13 @@
   
 <img alt="open collective badge" src="https://opencollective.com/wizdwarfs/tiers/love-and-support/badge.svg?label=Love%26Support&color=brightgreen" />
  
+<<<<<<< HEAD
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/T6T25CVYQ)
+=======
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/T6T25CVYQ)
+[![Gitter](https://badges.gitter.im/wizdwarfs/futuristic-tech-dev.svg)](https://gitter.im/wizdwarfs/futuristic-tech-dev?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+>>>>>>> 93ae0ff54319133c57487e772c8e0f1045690945
 
 
  # About Project
@@ -50,7 +55,11 @@
 
       4. [ElephantClock](https://upload.wikimedia.org/wikipedia/commons/7/76/Al-jazari_elephant_clock.png)
 
-## Support
+## Support and Contribute
 
    Sow your seed in spring , so that in autumn and winter you will get sweet fruit.
    3QoArpt3e6xcYQ2xqDTanrUyHyrZ8Uzruu
+   
+   <object type="image/svg+xml" data="https://opencollective.com/wizdwarfs/tiers/love-and-support.svg?avatarHeight=36&width=600"></object>
+   
+   <a href='https://ko-fi.com/T6T25CVYQ' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi4.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
