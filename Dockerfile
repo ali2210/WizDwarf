@@ -22,7 +22,7 @@ COPY go.mod go.sum ./
 
 RUN go mod download
 
-RUN go build -o main 
+RUN go build -o main && go test -v ./... 
 
 # && go test -v ./... 
 EXPOSE 5000

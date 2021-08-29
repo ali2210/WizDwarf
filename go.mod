@@ -35,7 +35,7 @@ require (
 	github.com/mibk/dupl v1.0.0 // indirect
 	github.com/neo4j/neo4j-go-driver/v4 v4.3.3 // indirect
 	github.com/onsi/ginkgo v1.16.4
-	github.com/onsi/gomega v1.14.0
+	github.com/onsi/gomega v1.16.0
 	github.com/opennota/check v0.0.0-20180911053232-0c771f5545ff // indirect
 	github.com/pborman/uuid v0.0.0-20170112150404-1b00554d8222 // indirect
 	github.com/rs/xhandler v0.0.0-20160618193221-ed27b6fd6521 // indirect

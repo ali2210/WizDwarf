@@ -245,6 +245,21 @@
   left: 1126px;
   top: 286px;
 }
+.result{
+	position: absolute;
+	left: 34px;
+	color: seashell;
+	top: 33px;
+}
+.btn-link:hover{
+	color: white;
+}
+.btn-link{
+	color: white;
+	position: absolute;
+	left: 7px;
+	top: 8px;
+}
 
 
   

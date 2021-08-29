@@ -155,7 +155,7 @@ func (gate *BlockTransactionGateway) GetBlockID(node Block) (*DataBlock, bool, e
 
 	for _, t := range node.ListTransaction[0] {
 
-		message, err := t.AsMessage(types.NewEIP155Signer(chainID))
+		message, err := t.AsMessage(types.NewEIP155Signer(chainID), new(big.Int))
 
 		if err != nil {
 			return &node.DataBlock, false, err

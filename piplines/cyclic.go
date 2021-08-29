@@ -23,6 +23,7 @@ const(
 	ConfigFilename string = "htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
 	ProjectID      string = "htickets-cb4d0"
 )
+
 func SetDBClientRef() *firestore.Client {
 	AppName = Firestore_Reference()
 	return AppName

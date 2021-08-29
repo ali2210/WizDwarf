@@ -105,7 +105,7 @@ var (
 	staticData     coin.StaticWallet    = coin.StaticWallet{}
 	transactWeb    structs.ParserObject = structs.ParserObject{}
 	profiler 	   *users.Visitors = &users.Visitors{}
-	Https_port	   string = os.Getenv("Http_Port")
+	// Https_port	   string = os.Getenv("Http_Port")
 )
 
 // Constants
@@ -133,8 +133,8 @@ func main() {
 
 		// env port setting
 
-		if port == " " && Https_port == ""{
-			log.Fatalln("[Fail] No Application port allocated", port,"http port not provided:", Https_port)
+		if port == " "{
+			log.Fatalln("[Fail] No Application port allocated", port)
 		} else {
 			if port != "5000" && host == "wizdwarfs" {
 				// any Listening PORT {heroku}
@@ -168,6 +168,7 @@ func main() {
 		}
 
 	})
+	
 	routing.HandleFunc("/home", home)
 	routing.HandleFunc("/signup", newUser)
 	routing.HandleFunc("/login", existing)
@@ -182,13 +183,33 @@ func main() {
 	routing.HandleFunc("/terms", terms)
 	routing.HandleFunc("/open", wallet)
 	routing.HandleFunc("/transact", transacts)
+	routing.HandleFunc("/treasure", treasure)
+	routing.HandleFunc("/phenylalanine", phenylalanine)
+	routing.HandleFunc("/leucine", leucine)
+	routing.HandleFunc("/isoleucine", isoleucine)
+	routing.HandleFunc("/methionine", methionine)
+	routing.HandleFunc("/valine", valine)
+	routing.HandleFunc("/serine", serine)
+	routing.HandleFunc("/proline",proline)
+	routing.HandleFunc("/threonine", threonine)
+	routing.HandleFunc("/alanine", alanine)
+	routing.HandleFunc("/tyrosine", tyrosine)
+	routing.HandleFunc("/histidine", histidine)
+	routing.HandleFunc("/glutamine", glutamine)
+	routing.HandleFunc("/asparagine", asparagine)
+	routing.HandleFunc("/lysine", lysine)
+	routing.HandleFunc("/aspartic", aspartic)
+	routing.HandleFunc("/glutamic", glutamic)
+	routing.HandleFunc("/cysteine", cysteine)
+	routing.HandleFunc("/tryptophan", tryptophan)
+	routing.HandleFunc("/arginine", arginine)
+	routing.HandleFunc("/glycine", glycine)
 	routing.HandleFunc("/transact/pay/paypal/kernel", kernel)
 	routing.HandleFunc("/transact/pay/paypal/cluster", cluster)
 	routing.HandleFunc("/transact/pay/paypal/multicluster", multicluster)
 	routing.HandleFunc("/transact/pay/crypto/kernel", tKernel)
 	routing.HandleFunc("/transact/pay/crypto/cluster", tCluster)
 	routing.HandleFunc("/transact/pay/crypto/multicluster", tMulticluster)
-	routing.HandleFunc("/results", results)
 	// routing.HandleFunc("/transact/send", send)
 	// routing.HandleFunc("/transact/userCredit", userCredit)
 	routing.HandleFunc("/visualize", visualize)
@@ -607,8 +628,32 @@ func kernel(w http.ResponseWriter, r *http.Request) {
 	// }
 }
 
-func results(w http.ResponseWriter, r *http.Request) {
+func treasure(w http.ResponseWriter, r *http.Request) {
+	webpage := template.Must(template.ParseFiles("treasure.html"))
+	// userProfile, err := Cloud.GetDocumentById(AppName, *profiler)
+	// if err != nil && userProfile != nil {
+	// 	log.Fatal("[Fail] No info  ", err)
+	// 	return
+	// }
 
+	// query_json, err := json.Marshal(userProfile); if err != nil{
+	// 	log.Fatal("query return un handle data  ", err.Error())
+	// 	return		
+	// } 
+	// err = json.Unmarshal(query_json, &profiler); if err != nil{
+	// 	log.Fatal("query return un structure data", err.Error())
+	// 	return
+	// }
+	log.Println("[Path]:", r.URL.Path)
+		log.Println("[Method]:", r.Method)
+	fmt.Println("@Percentage:", visualizeReport.Percentage)
+	fmt.Println("@prob parameter:", algo.GetProbParameter())
+	algo.SetProbParameter(visualizeReport.Percentage)
+	if r.Method == "GET" && algo.GetProbParameter() != -1.0{
+		log.Println("[Path]:", r.URL.Path)
+		log.Println("[Method]:", r.Method)
+		webpage.Execute(w, visualizeReport)
+	}
 }
 
 func multicluster(w http.ResponseWriter, r *http.Request) {
@@ -903,8 +948,8 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	algo.SetProbParameter(visualizeReport.Percentage)
-	if r.Method == "GET" && algo.GetProbParameter() != -1.0 {
+	// algo.SetProbParameter(visualizeReport.Percentage)
+	if r.Method == "GET" {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
 		visualizeReport.Process = 1
@@ -1619,15 +1664,188 @@ func logout(w http.ResponseWriter, r *http.Request) {
 		act.SetContextSession(userSessions, w, r)
 		err := act.ExpireToken()
 		if err != nil {
-			log.Fatal("[Fail] No Token Expire  ", err)
-			
+			log.Fatal("[Fail] No Token Expire  ", err)			
 			return
-
 		}
 		existing(w, r)
 	}
 }
 
+func phenylalanine(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("Phenylalanine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "phenylalanine")
+	}	
+}
 
+func leucine(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("leucine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "leucine")
+	}	
+}
 
+func isoleucine(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("isoleucine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "isoleucine")
+	}
+}
 
+func methionine(w http.ResponseWriter,r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("methionine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "methionine")
+	}
+}
+
+func valine(w http.ResponseWriter, r *http.Request) {
+	webpge := template.Must(template.ParseFiles("valine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "valine")
+	}
+}
+
+func serine(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("serine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "serine")
+	}
+}
+
+func proline(w http.ResponseWriter, r *http.Request){
+	webpge := template.Must(template.ParseFiles("proline.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "proline")
+	}
+}
+
+func threonine(w http.ResponseWriter, r *http.Request){
+	webpge := template.Must(template.ParseFiles("threonine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "threonine")
+	}
+}
+
+func alanine(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("alanine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "alanine")
+	}
+}
+
+func tyrosine(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("tyrosine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "tyrosine")
+	}
+}
+
+func histidine(w http.ResponseWriter, r * http.Request)  {
+	webpge := template.Must(template.ParseFiles("histidine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "histidine")
+	}
+}
+func glutamine(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("glutamine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "glutamine")
+	}
+}
+
+func asparagine(w http.ResponseWriter, r *http.Request){
+	webpge := template.Must(template.ParseFiles("asparagine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "asparagine")
+	}
+}
+
+func lysine(w http.ResponseWriter, r * http.Request)  {
+	webpge := template.Must(template.ParseFiles("lysine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "lysine")
+	}
+}
+
+func aspartic(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("aspartic.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "aspartic")
+	}
+}
+
+func glutamic(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("glutamic.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "glutamic")
+	}
+}
+
+func cysteine(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("cysteine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "cysteine")
+	}
+}
+
+func tryptophan(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("tryptophan.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "tryptophan")
+	}
+}
+
+func arginine(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("arginine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "arginine")
+	}
+}
+
+func glycine(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("glycine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "glycine")
+	}
+}

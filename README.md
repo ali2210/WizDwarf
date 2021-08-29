@@ -1,8 +1,8 @@
   
 <img alt="open collective badge" src="https://opencollective.com/wizdwarfs/tiers/love-and-support/badge.svg?label=Love%26Support&color=brightgreen" />
+ 
 
-<object type="image/svg+xml" data="https://opencollective.com/wizdwarfs/tiers/love-and-support.svg?avatarHeight=36&width=600"></object> 
-[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H22YW0G)
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/T6T25CVYQ)
 
 
  # About Project
