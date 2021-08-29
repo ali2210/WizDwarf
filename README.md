@@ -2,6 +2,8 @@
  <a href='https://opencollective.com/wizdwarfs/contribute/love-and-support-29623' target='blank'>
   <img alt="open collective badge" src="https://opencollective.com/wizdwarfs/tiers/love-and-support/badge.svg?label=Love%26Support&color=brightgreen" />
 </a>
+
+https://app.slack.com/client/T02AQ62EHHR/C02ALUWQ4LV/help
  
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/T6T25CVYQ)
 [![Gitter](https://badges.gitter.im/wizdwarfs/futuristic-tech-dev.svg)](https://gitter.im/wizdwarfs/futuristic-tech-dev?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
