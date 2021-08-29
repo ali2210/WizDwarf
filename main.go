@@ -1,33 +1,22 @@
 package main
 
 import (
-	"bytes"
-	contxt "context"
 	"crypto/ecdsa"
-	"crypto/elliptic"
-	"crypto/rand"
-	"crypto/sha256"
-	"encoding/hex"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"math/big"
 	"net"
 	"net/http"
 	"os"
-	"path/filepath"
-	"reflect"
 	"regexp"
 	"strconv"
-	templates "text/template"
-	"time"
-
-	firebase "firebase.google.com/go"
+	"cloud.google.com/go/firestore"
+	// firebase "firebase.google.com/go"
 	"github.com/ali2210/wizdwarf/db"
-	cloudWallet "github.com/ali2210/wizdwarf/db/cloudwalletclass"
+	."github.com/ali2210/wizdwarf/piplines"
+	CloudWallet "github.com/ali2210/wizdwarf/db/cloudwalletclass"
 	DBModel "github.com/ali2210/wizdwarf/db/model"
 	"github.com/ali2210/wizdwarf/structs"
 	bio "github.com/ali2210/wizdwarf/structs/bioinformatics"
@@ -38,8 +27,6 @@ import (
 	"github.com/ali2210/wizdwarf/structs/paypal/handler"
 	wizSdk "github.com/ali2210/wizdwarf/structs/transaction"
 	"github.com/ali2210/wizdwarf/structs/users"
-	"github.com/biogo/biogo/alphabet"
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -48,7 +35,6 @@ import (
 	pay "github.com/logpacker/PayPal-Go-SDK"
 	"golang.org/x/crypto/sha3"
 	"golang.org/x/net/context"
-	"google.golang.org/api/option"
 )
 
 // Variables
@@ -57,8 +43,8 @@ var (
 	emailexp          string                    = "([A-Z][a-z]|[0-9])*[@][a-z]*"
 	passexp           string                    = "([A-Z][a-z]*[0-9])*"
 	addressexp        string                    = "(^0x[0-9a-fA-F]{40}$)"
-	appName           *firebase.App             = SetFirestoreCredentials() // Google_Cloud [Firestore_Reference]
-	cloud             users.DBFirestore         = users.NewCloudInstance()
+	AppName           *firestore.Client         = SetDBClientRef() 
+	Cloud             users.DBFirestore         = SetDBCollect()
 	digitalCode       users.CreditCardInfo      = users.NewClient()
 	vault             DBModel.Private           = DBModel.New()
 	ledger            db.PublicLedger           = db.NewCollectionInstance()
@@ -67,11 +53,11 @@ var (
 	clientInstance    *ethclient.Client         = nil
 	ledgerPubcKeys    string                    = ""
 	ledgerBits        string                    = ""
-	googleCredentials string                    = ""
+	Firestore_Rf      string                    = ""
 	openReadFile      string                    = ""
 	publicAddress     string                    = ""
-	edit              bio.LevenTable            = bio.NewMatch()
-	algo              info.Levenshtein          = info.Levenshtein{}
+	edit              bio.LevenTable            = SetEditParameters()
+	algo              info.Levenshtein
 	visualizeReport   weather.DataVisualization = weather.DataVisualization{}
 	accountID         string                    = " "
 	accountKey        string                    = " "
@@ -118,13 +104,14 @@ var (
 	coinbaseClient coin.Permission      = coin.Permission{}
 	staticData     coin.StaticWallet    = coin.StaticWallet{}
 	transactWeb    structs.ParserObject = structs.ParserObject{}
+	profiler 	   *users.Visitors = &users.Visitors{}
+	// Https_port	   string = os.Getenv("Http_Port")
 )
 
 // Constants
 
 const (
-	projectID      string = "htickets-cb4d0"
-	configFilename string = "htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
+	//ProjectID      string = "htickets-cb4d0"
 	mainNet        string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
 	rinkebyClient  string = "https://rinkeby.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
 	geocodeAPI     string = "7efdb33c59a74e09352479b21657aee8"
@@ -139,28 +126,27 @@ func main() {
 	wizDir := os.Getenv("WIZ_VOLUME_DIR")
 	if wizDir == "" {
 		log.Fatalln("Make sure volume mount", wizDir)
-		panic(errors.New("Fail to mount"))
+		return
 	}
 
 	if host == "" {
 
 		// env port setting
 
-		if port == " " {
+		if port == " "{
 			log.Fatalln("[Fail] No Application port allocated", port)
 		} else {
 			if port != "5000" && host == "wizdwarfs" {
 				// any Listening PORT {heroku}
 				log.Println("[Open] Application Port", port)
 				log.Println("[Open] Application host", host)
-				// url = "https://" + "127.0.0.1:" + port + "/"
+				
 			} else {
 				// specfic port allocated {docker}
 				port = "5000"
 				host = "wizdwarfs"
 				log.Println("[New] Application Default port", port)
 				log.Println("[Host] Explicit Host ", host)
-				// url = "https://" + host + ".io" + "/"
 			}
 
 		}
@@ -180,15 +166,15 @@ func main() {
 			log.Println("[OK] URL :", arg2.URL.Path)
 			temp.Execute(arg1, "MainPage")
 		}
-		_ = ProcessWaiit()
 
 	})
+	
 	routing.HandleFunc("/home", home)
 	routing.HandleFunc("/signup", newUser)
 	routing.HandleFunc("/login", existing)
 	routing.HandleFunc("/dashboard", dashboard)
 	routing.HandleFunc("/dashbaord/setting", setting)
-	routing.HandleFunc("/dashbaord/setting/profile", profile)
+	// routing.HandleFunc("/dashbaord/setting/profile", profile)
 	routing.HandleFunc("/dashbaord/setting/about", aboutMe)
 	routing.HandleFunc("/dashboard/setting/pay/credit/add", credit)
 	routing.HandleFunc("/dashbaord/setting/pay/credit/delete", deleteCard)
@@ -197,23 +183,40 @@ func main() {
 	routing.HandleFunc("/terms", terms)
 	routing.HandleFunc("/open", wallet)
 	routing.HandleFunc("/transact", transacts)
+	routing.HandleFunc("/treasure", treasure)
+	routing.HandleFunc("/phenylalanine", phenylalanine)
+	routing.HandleFunc("/leucine", leucine)
+	routing.HandleFunc("/isoleucine", isoleucine)
+	routing.HandleFunc("/methionine", methionine)
+	routing.HandleFunc("/valine", valine)
+	routing.HandleFunc("/serine", serine)
+	routing.HandleFunc("/proline",proline)
+	routing.HandleFunc("/threonine", threonine)
+	routing.HandleFunc("/alanine", alanine)
+	routing.HandleFunc("/tyrosine", tyrosine)
+	routing.HandleFunc("/histidine", histidine)
+	routing.HandleFunc("/glutamine", glutamine)
+	routing.HandleFunc("/asparagine", asparagine)
+	routing.HandleFunc("/lysine", lysine)
+	routing.HandleFunc("/aspartic", aspartic)
+	routing.HandleFunc("/glutamic", glutamic)
+	routing.HandleFunc("/cysteine", cysteine)
+	routing.HandleFunc("/tryptophan", tryptophan)
+	routing.HandleFunc("/arginine", arginine)
+	routing.HandleFunc("/glycine", glycine)
 	routing.HandleFunc("/transact/pay/paypal/kernel", kernel)
 	routing.HandleFunc("/transact/pay/paypal/cluster", cluster)
 	routing.HandleFunc("/transact/pay/paypal/multicluster", multicluster)
 	routing.HandleFunc("/transact/pay/crypto/kernel", tKernel)
 	routing.HandleFunc("/transact/pay/crypto/cluster", tCluster)
 	routing.HandleFunc("/transact/pay/crypto/multicluster", tMulticluster)
-	routing.HandleFunc("/liveBookHD/3d", space3D)
 	// routing.HandleFunc("/transact/send", send)
 	// routing.HandleFunc("/transact/userCredit", userCredit)
 	routing.HandleFunc("/visualize", visualize)
 	routing.HandleFunc("/modal/success", success)
 
-	/*routing.HandleFunc("/transact/advance-fileoption", Blocks)*/
 
 	// Static Files
-	// routing.HandleFunc("/{title}/action", addVistor)
-	// routing.HandleFunc("/{title}/data", getVistorData)
 	images := http.StripPrefix("/images/", http.FileServer(http.Dir("./images")))
 	routing.PathPrefix("/images/").Handler(images)
 	css := http.StripPrefix("/css/", http.FileServer(http.Dir("./css")))
@@ -221,13 +224,6 @@ func main() {
 	js := http.StripPrefix("/js/", http.FileServer(http.Dir("./js")))
 	routing.PathPrefix("/js/").Handler(js)
 
-	// routing.HandleFunc("/dummy", server)*templates.Template
-
-	// open browser
-	// err := openBrowser(url)
-	// if err != nil {
-	// 	panic(err)
-	// }
 
 	// tcp connection
 	err := http.ListenAndServe(net.JoinHostPort(host, port), routing)
@@ -272,12 +268,8 @@ func deleteCard(w http.ResponseWriter, r *http.Request) {
 
 		r.ParseForm()
 
-		//ccv := r.FormValue("prefixInside")
 		accountNum := r.FormValue("account")
-		//cardInfoID :=  digitalCode.GetAuthorizeStoreID()
-
-		//log.Println("card info:", cardInfoID)
-		// hashcode := AutoKeyGenerate(ccv)
+		
 
 		client, err := paypalMini.NewClient()
 		if err != nil {
@@ -297,7 +289,7 @@ func deleteCard(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if accountNum != "" && cardNumberValid(accountNum, ret.Number) {
+		if accountNum != "" && Card_Verification(accountNum, ret.Number) {
 			err := paypalMini.RemoveCard(ret.ID, client)
 			if err != nil {
 				log.Fatalln("[Fail] Remove card operation", err)
@@ -320,79 +312,69 @@ func deleteCard(w http.ResponseWriter, r *http.Request) {
 
 func aboutMe(w http.ResponseWriter, r *http.Request) {
 
-	temp := template.Must(template.ParseFiles("about.html"))
+	// temp := template.Must(template.ParseFiles("about.html"))
 
-	if r.Method == "GET" {
-		log.Println("[Accept]", r.URL.Path)
+	// if r.Method == "GET" {
+	// 	log.Println("[Accept]", r.URL.Path)
 
-		// cardInfoID :=  digitalCode.GetAuthorizeStoreID()
+		
 
-		userProfile, err := cloud.GetProfile(appName, accountID, accountVisitEmail)
-		if err != nil && userProfile != nil {
-			log.Fatal("[Fail] No info  ", err)
-			// response := structs.Response{}
-			// temp := server(w, r, "about")
-			// _ = response.ClientRequestHandle(true, "Sorry ! No Information ", "/login", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// 	return
-			// }
-			return
-		}
-		// log.Println("User profile:", userProfile)
+	// 	userProfile, err := Cloud.GetProfile(AppName, accountID, accountVisitEmail)
+	// 	if err != nil && userProfile != nil {
+	// 		log.Fatal("[Fail] No info  ", err)
+	// 		return
+	// 	}
+		
 
-		key, address := vault.GetCryptoDB(publicAddress)
-		access := DBModel.CredentialsPrivate{
-			PublicAddress: address,
-			PrvteKey:      key,
-		}
+	// 	key, address := vault.GetCryptoDB(publicAddress)
+	// 	access := DBModel.CredentialsPrivate{
+	// 		PublicAddress: address,
+	// 		PrvteKey:      key,
+	// 	}
 
-		log.Println("Ledger Info:", access)
+	// 	log.Println("Ledger Info:", access)
 
-		client, err := paypalMini.NewClient()
-		if err != nil {
-			log.Fatalln("[Fail] Client Operation:", err)
-			return
-		}
+	// 	client, err := paypalMini.NewClient()
+	// 	if err != nil {
+	// 		log.Fatalln("[Fail] Client Operation:", err)
+	// 		return
+	// 	}
 
-		_, err = paypalMini.Token(client)
-		if err != nil {
-			log.Fatalln("[Fail] Token Operation:", err)
-			return
-		}
+	// 	_, err = paypalMini.Token(client)
+	// 	if err != nil {
+	// 		log.Fatalln("[Fail] Token Operation:", err)
+	// 		return
+	// 	}
 
-		ret, err := paypalMini.RetrieveCreditCardInfo(digitalCode.GetAuthorizeStoreID(), client)
-		if err != nil {
-			log.Fatalln("[Fail] Retrieve Card info Operation:", err)
-			return
-		}
+	// 	ret, err := paypalMini.RetrieveCreditCardInfo(digitalCode.GetAuthorizeStoreID(), client)
+	// 	if err != nil {
+	// 		log.Fatalln("[Fail] Retrieve Card info Operation:", err)
+	// 		return
+	// 	}
 
-		myProfile := users.DigialProfile{
-			Public:      access.PublicAddress,
-			Private:     access.PrvteKey,
-			Name:        userProfile.FirstName,
-			FName:       userProfile.LastName,
-			Email:       userProfile.Email,
-			Address:     userProfile.HouseAddress1,
-			LAddress:    userProfile.HouseAddress2,
-			City:        userProfile.City,
-			Zip:         userProfile.Zip,
-			Country:     userProfile.Country,
-			Phone:       userProfile.PhoneNo,
-			Twitter:     userProfile.Twitter,
-			Number:      ret.Number,
-			ExpireMonth: ret.ExpireMonth,
-			ExpireYear:  ret.ExpireYear,
-			Type:        ret.Type,
-		}
+	// 	myProfile := users.DigialProfile{
+	// 		Public:      access.PublicAddress,
+	// 		Private:     access.PrvteKey,
+	// 		Name:        userProfile.FirstName,
+	// 		FName:       userProfile.LastName,
+	// 		Email:       userProfile.Email,
+	// 		Address:     userProfile.HouseAddress1,
+	// 		LAddress:    userProfile.HouseAddress2,
+	// 		City:        userProfile.City,
+	// 		Zip:         userProfile.Zip,
+	// 		Country:     userProfile.Country,
+	// 		Phone:       userProfile.PhoneNo,
+	// 		Twitter:     userProfile.Twitter,
+	// 		Number:      ret.Number,
+	// 		ExpireMonth: ret.ExpireMonth,
+	// 		ExpireYear:  ret.ExpireYear,
+	// 		Type:        ret.Type,
+	// 	}
 
-		log.Println("[Accept] Profile", myProfile)
-		temp.Execute(w, myProfile)
+	// 	log.Println("[Accept] Profile", myProfile)
+	// 	temp.Execute(w, myProfile)
 
 	}
-}
 
 func setting(w http.ResponseWriter, r *http.Request) {
 
@@ -403,73 +385,73 @@ func setting(w http.ResponseWriter, r *http.Request) {
 		temp.Execute(w, "setting")
 	}
 
-}
+// }
 
-func profile(w http.ResponseWriter, r *http.Request) {
+// func profile(w http.ResponseWriter, r *http.Request) {
 
-	temp := template.Must(template.ParseFiles("profile.html"))
+// 	temp := template.Must(template.ParseFiles("profile.html"))
 
-	if accountID == "" {
-		log.Fatal("[Error ] Please login  ")
-		return
-	}
-	detailsAcc, err := cloud.GetProfile(appName, accountID, accountVisitEmail)
-	if err != nil {
-		log.Fatalln("[Fail] Operation..", err)
-		return
-	}
+// 	if accountID == "" {
+// 		log.Fatal("[Error ] Please login  ")
+// 		return
+// 	}
+// 	detailsAcc, err := Cloud.GetProfile(AppName, accountID, accountVisitEmail)
+// 	if err != nil {
+// 		log.Fatalln("[Fail] Operation..", err)
+// 		return
+// 	}
 
-	if r.Method == "GET" {
-		log.Println("[Accept] Method:", r.Method)
-		log.Println("[Accept]", r.URL.Path)
+// 	if r.Method == "GET" {
+// 		log.Println("[Accept] Method:", r.Method)
+// 		log.Println("[Accept]", r.URL.Path)
 
-		log.Println("Details:", detailsAcc)
-		temp.Execute(w, detailsAcc)
-	} else {
-		log.Println("[Accept] Method:", r.Method)
-		log.Println("[Accept] Path:", r.URL.Path)
+// 		log.Println("Details:", detailsAcc)
+// 		temp.Execute(w, detailsAcc)
+// 	} else {
+// 		log.Println("[Accept] Method:", r.Method)
+// 		log.Println("[Accept] Path:", r.URL.Path)
 
-		r.ParseForm()
+// 		r.ParseForm()
 
-		// save value in db
-		MyProfile := users.UpdateProfile{
-			Id:           accountID,
-			FirstName:    r.FormValue("uname"),
-			LastName:     r.FormValue("ufname"),
-			Phone:        r.FormValue("phone"),
-			HouseAddress: r.FormValue("address"),
-			SubAddress:   r.FormValue("inputAddress2"),
-			Country:      r.FormValue("country"),
-			Zip:          r.FormValue("inputZip"),
-			Email:        r.FormValue("email"),
-			Twitter:      r.FormValue("tweet"),
-			City:         r.FormValue("city"),
-		}
+// 		// save value in db
+// 		MyProfile := users.Visitors{
+// 			Id:           accountID,
+// 			Name:    	  r.FormValue("uname"),
+// 			LastName:     r.FormValue("ufname"),
+// 			PhoneNo:      r.FormValue("phone"),
+// 			Address: 	  r.FormValue("address"),
+// 			Apparment:    r.FormValue("inputAddress2"),
+// 			Country:      r.FormValue("country"),
+// 			Zip:          r.FormValue("inputZip"),
+// 			Email:        r.FormValue("email"),
+// 			Twitter:      r.FormValue("tweet"),
+// 			City:         r.FormValue("city"),
+// 		}
 
-		if accountID == "" {
-			log.Fatal("[Error ] Please login  ")
-			return
-		}
-		MyProfile.Id = accountID
+// 		if accountID == "" {
+// 			log.Fatal("[Error ] Please login  ")
+// 			return
+// 		}
+// 		MyProfile.Id = accountID
 
-		male := r.FormValue("gender")
-		if male == "on" {
-			MyProfile.Male = true
-		}
-		MyProfile.Male = false
+// 		male := r.FormValue("gender")
+// 		if male == "on" {
+// 			MyProfile.Male = true
+// 		}
+// 		MyProfile.Male = false
 
-		profile, err := cloud.UpdateProfiles(appName, &MyProfile)
-		if err != nil {
-			log.Fatalln("[Fail] Operation..", err)
-			return
-		}
+// 		profile, err := Cloud.UpdateProfiles(AppName, &MyProfile)
+// 		if err != nil {
+// 			log.Fatalln("[Fail] Operation..", err)
+// 			return
+// 		}
 
-		log.Println("[Accept] Profile updated... ", profile)
-		w.WriteHeader(http.StatusOK)
-		r.Method = "GET"
-		success(w, r)
+// 		log.Println("[Accept] Profile updated... ", profile)
+// 		w.WriteHeader(http.StatusOK)
+// 		r.Method = "GET"
+// 		success(w, r)
 
-	}
+// 	}
 }
 
 func credit(w http.ResponseWriter, r *http.Request) {
@@ -539,115 +521,139 @@ func cluster(w http.ResponseWriter, r *http.Request) {
 
 func kernel(w http.ResponseWriter, r *http.Request) {
 
-	temp := template.Must(template.ParseFiles("payee.html"))
-	var check users.Analysis = users.Analysis{}
-	user, err := cloud.GetProfile(appName, accountID, accountVisitEmail)
-	if err != nil {
-		log.Fatalln("[Fail] Operation..", err)
-		return
-	}
+	// temp := template.Must(template.ParseFiles("payee.html"))
+	// var check users.Analysis = users.Analysis{}
+	// user, err := Cloud.GetProfile(AppName, accountID, accountVisitEmail)
+	// if err != nil {
+	// 	log.Fatalln("[Fail] Operation..", err)
+	// 	return
+	// }
 
-	key, address := vault.GetCryptoDB(publicAddress)
-	credentials := DBModel.CredentialsPrivate{
-		PublicAddress: address,
-		PrvteKey:      key,
-	}
+	// key, address := vault.GetCryptoDB(publicAddress)
+	// credentials := DBModel.CredentialsPrivate{
+	// 	PublicAddress: address,
+	// 	PrvteKey:      key,
+	// }
 
-	client, err := paypalMini.NewClient()
-	if err != nil {
-		log.Fatalln("[Fail] Client Operation:", err)
-		return
-	}
+	// client, err := paypalMini.NewClient()
+	// if err != nil {
+	// 	log.Fatalln("[Fail] Client Operation:", err)
+	// 	return
+	// }
 
-	_, err = paypalMini.Token(client)
-	if err != nil {
-		log.Fatalln("[Fail] Token Operation:", err)
-		return
-	}
+	// _, err = paypalMini.Token(client)
+	// if err != nil {
+	// 	log.Fatalln("[Fail] Token Operation:", err)
+	// 	return
+	// }
 
-	ret, err := paypalMini.RetrieveCreditCardInfo(digitalCode.GetAuthorizeStoreID(), client)
-	if err != nil {
-		log.Fatalln("[Fail] Retrieve Card info Operation:", err)
-		return
-	}
+	// ret, err := paypalMini.RetrieveCreditCardInfo(digitalCode.GetAuthorizeStoreID(), client)
+	// if err != nil {
+	// 	log.Fatalln("[Fail] Retrieve Card info Operation:", err)
+	// 	return
+	// }
 
-	order := cart.GetItemsFromCart()
-	batchID := order.TypeofService + user.ID
-	resp, err := paypalMini.GetPayout(batchID, client)
-	if err != nil {
-		return
-	}
+	// order := cart.GetItemsFromCart()
+	// batchID := order.TypeofService + user.ID
+	// resp, err := paypalMini.GetPayout(batchID, client)
+	// if err != nil {
+	// 	return
+	// }
 
-	amountStr, err := check.MarshalJSONAmount(resp)
-	if err != nil {
-		return
-	}
-	feesStr, err := check.MarshalJSONFees(resp)
-	if err != nil {
-		return
-	}
-	amountValue := check.Encode(amountStr)
-	feesValue := check.Encode(feesStr)
-	amount, err := check.CalculateNum(amountValue)
-	if err != nil {
-		return
-	}
-	fees, err := check.CalculateNum(feesValue)
-	if err != nil {
-		return
-	}
-	total := check.CalculateTotalBalance(amount, fees)
-	sTotal := fmt.Sprintf("%f", total)
-	// blockchains.SenderBatchID = ethAddrressGenerate
-	if blockchains.SenderBatchID == " " {
-		log.Fatal("Public Address:", err)
-		return
-	}
-	err = userCredit()
-	if err != nil {
-		fmt.Println("Error:")
-	}
-	balance.SetTransactionWiz(user.FirstName, fmt.Sprintf("%v", blockchains.Balance), sTotal, sTotal, credentials.PublicAddress)
+	// amountStr, err := check.MarshalJSONAmount(resp)
+	// if err != nil {
+	// 	return
+	// }
+	// feesStr, err := check.MarshalJSONFees(resp)
+	// if err != nil {
+	// 	return
+	// }
+	// amountValue := check.Encode(amountStr)
+	// feesValue := check.Encode(feesStr)
+	// amount, err := check.CalculateNum(amountValue)
+	// if err != nil {
+	// 	return
+	// }
+	// fees, err := check.CalculateNum(feesValue)
+	// if err != nil {
+	// 	return
+	// }
+	// total := check.CalculateTotalBalance(amount, fees)
+	// sTotal := fmt.Sprintf("%f", total)
+	// // blockchains.SenderBatchID = ethAddrressGenerate
+	// if blockchains.SenderBatchID == " " {
+	// 	log.Fatal("Public Address:", err)
+	// 	return
+	// }
+	// err = userCredit()
+	// if err != nil {
+	// 	fmt.Println("Error:")
+	// }
+	// balance.SetTransactionWiz(user.FirstName, fmt.Sprintf("%v", blockchains.Balance), sTotal, sTotal, credentials.PublicAddress)
 
-	if r.Method == "GET" {
-		log.Println("[Accept] Path :", r.URL.Path)
-		log.Println("Method :", r.Method)
-		temp.Execute(w, balance.GetTransactionWiz())
-	} else {
-		log.Println("[Accept] Path :", r.URL.Path)
-		log.Println("Method :", r.Method)
-		res, err := paypalMini.PaypalPayout(ret.ID, batchID, accountVisitEmail, order.Price, client)
-		if err != nil {
-			return
-		}
+	// if r.Method == "GET" {
+	// 	log.Println("[Accept] Path :", r.URL.Path)
+	// 	log.Println("Method :", r.Method)
+	// 	temp.Execute(w, balance.GetTransactionWiz())
+	// } else {
+	// 	log.Println("[Accept] Path :", r.URL.Path)
+	// 	log.Println("Method :", r.Method)
+	// 	res, err := paypalMini.PaypalPayout(ret.ID, batchID, accountVisitEmail, order.Price, client)
+	// 	if err != nil {
+	// 		return
+	// 	}
 
-		amountStr, err := check.MarshalJSONAmount(res)
-		if err != nil {
-			return
-		}
-		feesStr, err := check.MarshalJSONFees(res)
-		if err != nil {
-			return
-		}
-		amountValue := check.Encode(amountStr)
-		feesValue := check.Encode(feesStr)
-		amount, err := check.CalculateNum(amountValue)
-		if err != nil {
-			return
-		}
-		fees, err := check.CalculateNum(feesValue)
-		if err != nil {
-			return
-		}
-		total := check.CalculateTotalBalance(amount, fees)
-		sTotal := fmt.Sprintf("%f", total)
-		balance.SetTransactionWiz(user.FirstName, fmt.Sprintf("%v", blockchains.Balance), sTotal, sTotal, credentials.PublicAddress)
-		temp.Execute(w, balance.GetTransactionWiz())
-	}
+	// 	amountStr, err := check.MarshalJSONAmount(res)
+	// 	if err != nil {
+	// 		return
+	// 	}
+	// 	feesStr, err := check.MarshalJSONFees(res)
+	// 	if err != nil {
+	// 		return
+	// 	}
+	// 	amountValue := check.Encode(amountStr)
+	// 	feesValue := check.Encode(feesStr)
+	// 	amount, err := check.CalculateNum(amountValue)
+	// 	if err != nil {
+	// 		return
+	// 	}
+	// 	fees, err := check.CalculateNum(feesValue)
+	// 	if err != nil {
+	// 		return
+	// 	}
+	// 	total := check.CalculateTotalBalance(amount, fees)
+	// 	sTotal := fmt.Sprintf("%f", total)
+	// 	balance.SetTransactionWiz(user.FirstName, fmt.Sprintf("%v", blockchains.Balance), sTotal, sTotal, credentials.PublicAddress)
+	// 	temp.Execute(w, balance.GetTransactionWiz())
+	// }
 }
 
-func space3D(w http.ResponseWriter, r *http.Request) {
+func treasure(w http.ResponseWriter, r *http.Request) {
+	webpage := template.Must(template.ParseFiles("treasure.html"))
+	// userProfile, err := Cloud.GetDocumentById(AppName, *profiler)
+	// if err != nil && userProfile != nil {
+	// 	log.Fatal("[Fail] No info  ", err)
+	// 	return
+	// }
 
+	// query_json, err := json.Marshal(userProfile); if err != nil{
+	// 	log.Fatal("query return un handle data  ", err.Error())
+	// 	return		
+	// } 
+	// err = json.Unmarshal(query_json, &profiler); if err != nil{
+	// 	log.Fatal("query return un structure data", err.Error())
+	// 	return
+	// }
+	log.Println("[Path]:", r.URL.Path)
+		log.Println("[Method]:", r.Method)
+	fmt.Println("@Percentage:", visualizeReport.Percentage)
+	fmt.Println("@prob parameter:", algo.GetProbParameter())
+	algo.SetProbParameter(visualizeReport.Percentage)
+	if r.Method == "GET" && algo.GetProbParameter() != -1.0{
+		log.Println("[Path]:", r.URL.Path)
+		log.Println("[Method]:", r.Method)
+		webpage.Execute(w, visualizeReport)
+	}
 }
 
 func multicluster(w http.ResponseWriter, r *http.Request) {
@@ -706,19 +712,7 @@ func tCluster(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln("[Fail] Transaction", err)
 		return
 	}
-	// response := structs.Response{
-	// 	Flag:    false,
-	// 	Message: "",
-	// 	Links:   "",
-	// }
-	// _ = server(w, r, "")
-	// _ = response.ClientRequestHandle(false, "[Operation] Successful , be proceed ", "/login", w, r)
-	// response.ClientLogs()
-	// err = response.Run(temp)
-	// if err != nil {
-	// 	log.Println("[Error]: checks logs...", err)
-	// 	return
-	// }
+	
 
 }
 
@@ -778,161 +772,142 @@ func tMulticluster(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln("[Fail] Transaction", err)
 		return
 	}
-	// response := structs.Response{
-	// 	Flag:    false,
-	// 	Message: "",
-	// 	Links:   "",
-	// }
-	// _ = server(w, r, "")
-	// _ = response.ClientRequestHandle(false, "[Operation] Successful , be proceed ", "/login", w, r)
-	// response.ClientLogs()
-	// err = response.Run(temp)
-	// if err != nil {
-	// 	log.Println("[Error]: checks logs...", err)
-	// 	return
-	// }
+	
 
 }
 
 func tKernel(w http.ResponseWriter, r *http.Request) {
-	webpage := template.Must(template.ParseFiles(""))
-	var check users.Analysis = users.Analysis{}
-	user, err := cloud.GetProfile(appName, accountID, accountVisitEmail)
-	if err != nil {
-		log.Fatalln("[Fail] Operation..", err)
-		return
-	}
-
-	key, address := vault.GetCryptoDB(publicAddress)
-	credentials := DBModel.CredentialsPrivate{
-		PublicAddress: address,
-		PrvteKey:      key,
-	}
-
-	client, err := paypalMini.NewClient()
-	if err != nil {
-		log.Fatalln("[Fail] Client Operation:", err)
-		return
-	}
-
-	_, err = paypalMini.Token(client)
-	if err != nil {
-		log.Fatalln("[Fail] Token Operation:", err)
-		return
-	}
-
-	btx, err := send()
-	if err != nil {
-		return
-	}
-	log.Println("Block Header:", btx)
-
-	// ret, err := paypalMini.RetrieveCreditCardInfo(digitalCode.GetAuthorizeStoreID(), client)
+	// webpage := template.Must(template.ParseFiles(""))
+	// var check users.Analysis = users.Analysis{}
+	// user, err := Cloud.GetProfile(AppName, accountID, accountVisitEmail)
 	// if err != nil {
-	// 	log.Fatalln("[Fail] Retrieve Card info Operation:", err)
+	// 	log.Fatalln("[Fail] Operation..", err)
 	// 	return
 	// }
-	blockchains.Nonce = bitInterface.EthNonceAtStatus
-	blockchains.GasLimit = uint64(21000)
 
-	bitInterface.EthGasUnits, err = eth.BTCGasConsumerPrice()
-	if err != nil {
-		return
-	}
+	// key, address := vault.GetCryptoDB(publicAddress)
+	// credentials := DBModel.CredentialsPrivate{
+	// 	PublicAddress: address,
+	// 	PrvteKey:      key,
+	// }
 
-	order := cart.GetItemsFromCart()
-	batchID := order.TypeofService + user.ID
-	resp, err := paypalMini.GetPayout(batchID, client)
-	if err != nil {
-		return
-	}
+	// client, err := paypalMini.NewClient()
+	// if err != nil {
+	// 	log.Fatalln("[Fail] Client Operation:", err)
+	// 	return
+	// }
 
-	amountStr, err := check.MarshalJSONAmount(resp)
-	if err != nil {
-		return
-	}
-	feesStr, err := check.MarshalJSONFees(resp)
-	if err != nil {
-		return
-	}
-	amountValue := check.Encode(amountStr)
-	feesValue := check.Encode(feesStr)
-	amount, err := check.CalculateNum(amountValue)
-	if err != nil {
-		return
-	}
-	fees, err := check.CalculateNum(feesValue)
-	if err != nil {
-		return
-	}
-	total := check.CalculateTotalBalance(amount, fees)
-	sTotal := fmt.Sprintf("%f", total)
-	if blockchains.SenderBatchID == "" {
-		log.Fatalln("Public Address", err)
-		return
-	}
-	// blockchains.SenderBatchID = blockchains.SenderBatchID
-	err = userCredit()
-	if err != nil {
-		log.Fatal("[Fail] Block Balance should not be zero  ", blockchains.Balance)
-		return
-	}
-	balance.SetTransactionWiz(user.FirstName, fmt.Sprintf("%v", blockchains.Balance), sTotal, sTotal, credentials.PublicAddress)
+	// _, err = paypalMini.Token(client)
+	// if err != nil {
+	// 	log.Fatalln("[Fail] Token Operation:", err)
+	// 	return
+	// }
 
-	if r.Method == "GET" {
-		log.Println("[Path]:", r.URL.Path)
-		log.Println("[Method]:", r.Method)
-		webpage.Execute(w, balance.GetTransactionWiz())
-	} else {
+	// btx, err := send()
+	// if err != nil {
+	// 	return
+	// }
+	// log.Println("Block Header:", btx)
 
-		// btx, err := send()
-		// if err != nil {
-		// 	return
-		// }
-		log.Println("[Path]:", r.URL.Path)
-		log.Println("[Method]:", r.Method)
-		order := cart.GetItemsFromCart()
-		value, err := strconv.ParseUint(order.Price, 2, 10)
-		if err != nil {
-			return
-		}
-		blockchains.Checkout = value
-		blockchains.Amount = new(big.Int).SetUint64(uint64(blockchains.Checkout))
-		switch order.TypeofService {
-		case "Kernel":
-			n, m := int64(2), int64(60)
-			automatedNetworkFees(n, m)
-		case "Cluster":
-			n, m := int64(3), int64(110)
-			automatedNetworkFees(n, m)
-		case "Multi-Cluster":
-			n, m := int64(5), int64(550)
-			automatedNetworkFees(n, m)
-		default:
-			w.WriteHeader(http.StatusPreconditionFailed)
-			r.Method = "GET"
-			transacts(w, r)
-		}
-	}
-	// Send Transaction
-	blockchains.RecieveBatchID = "0x55057eb78fDbF783C961b4AAd6A5f8BC60cab44B"
-	bitInterface.EthReciptAddress = eth.BTCAddressHex(blockchains.RecieveBatchID)
+	
+	// blockchains.Nonce = bitInterface.EthNonceAtStatus
+	// blockchains.GasLimit = uint64(21000)
 
-	// Network ID
-	chainID, err := clientInstance.NetworkID(context.Background())
-	bitInterface.EthTransaction = eth.BTCNewTransactions(blockchains, bitInterface)
-	bitInterface.FingerPrint, err = eth.BTCTransactionSignature(chainID, bitInterface)
-	if err != nil {
-		log.Fatal("[Fail] Signed Transaction", err)
-		return
-	}
+	// bitInterface.EthGasUnits, err = eth.BTCGasConsumerPrice()
+	// if err != nil {
+	// 	return
+	// }
 
-	// Send Transaction
-	err = eth.TransferBTC(bitInterface.FingerPrint)
-	if err != nil {
-		log.Fatalln("[Fail] Transaction", err)
-		return
-	}
+	// order := cart.GetItemsFromCart()
+	// batchID := order.TypeofService + user.ID
+	// resp, err := paypalMini.GetPayout(batchID, client)
+	// if err != nil {
+	// 	return
+	// }
+
+	// amountStr, err := check.MarshalJSONAmount(resp)
+	// if err != nil {
+	// 	return
+	// }
+	// feesStr, err := check.MarshalJSONFees(resp)
+	// if err != nil {
+	// 	return
+	// }
+	// amountValue := check.Encode(amountStr)
+	// feesValue := check.Encode(feesStr)
+	// amount, err := check.CalculateNum(amountValue)
+	// if err != nil {
+	// 	return
+	// }
+	// fees, err := check.CalculateNum(feesValue)
+	// if err != nil {
+	// 	return
+	// }
+	// total := check.CalculateTotalBalance(amount, fees)
+	// sTotal := fmt.Sprintf("%f", total)
+	// if blockchains.SenderBatchID == "" {
+	// 	log.Fatalln("Public Address", err)
+	// 	return
+	// }
+	// // blockchains.SenderBatchID = blockchains.SenderBatchID
+	// err = userCredit()
+	// if err != nil {
+	// 	log.Fatal("[Fail] Block Balance should not be zero  ", blockchains.Balance)
+	// 	return
+	// }
+	
+	// balance.SetTransactionWiz(user.FirstName, fmt.Sprintf("%v", blockchains.Balance), sTotal, sTotal, credentials.PublicAddress)
+
+	// if r.Method == "GET" {
+	// 	log.Println("[Path]:", r.URL.Path)
+	// 	log.Println("[Method]:", r.Method)
+	// 	webpage.Execute(w, balance.GetTransactionWiz())
+	// } else {
+
+	// 	log.Println("[Path]:", r.URL.Path)
+	// 	log.Println("[Method]:", r.Method)
+	// 	order := cart.GetItemsFromCart()
+	// 	value, err := strconv.ParseUint(order.Price, 2, 10)
+	// 	if err != nil {
+	// 		return
+	// 	}
+	// 	blockchains.Checkout = value
+	// 	blockchains.Amount = new(big.Int).SetUint64(uint64(blockchains.Checkout))
+	// 	switch order.TypeofService {
+	// 	case "Kernel":
+	// 		n, m := int64(2), int64(60)
+	// 		automatedNetworkFees(n, m)
+	// 	case "Cluster":
+	// 		n, m := int64(3), int64(110)
+	// 		automatedNetworkFees(n, m)
+	// 	case "Multi-Cluster":
+	// 		n, m := int64(5), int64(550)
+	// 		automatedNetworkFees(n, m)
+	// 	default:
+	// 		w.WriteHeader(http.StatusPreconditionFailed)
+	// 		r.Method = "GET"
+	// 		transacts(w, r)
+	// 	}
+	// }
+	// // Send Transaction
+	// blockchains.RecieveBatchID = "0x55057eb78fDbF783C961b4AAd6A5f8BC60cab44B"
+	// bitInterface.EthReciptAddress = eth.BTCAddressHex(blockchains.RecieveBatchID)
+
+	// // Network ID
+	// chainID, err := clientInstance.NetworkID(context.Background())
+	// bitInterface.EthTransaction = eth.BTCNewTransactions(blockchains, bitInterface)
+	// bitInterface.FingerPrint, err = eth.BTCTransactionSignature(chainID, bitInterface)
+	// if err != nil {
+	// 	log.Fatal("[Fail] Signed Transaction", err)
+	// 	return
+	// }
+
+	// // Send Transaction
+	// err = eth.TransferBTC(bitInterface.FingerPrint)
+	// if err != nil {
+	// 	log.Fatalln("[Fail] Transaction", err)
+	// 	return
+	// }
 
 }
 
@@ -957,31 +932,28 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("visualize.html"))
 	log.Println("Report percentage", visualizeReport.Percentage)
 	log.Println("Report uv ", visualizeReport.UVinfo)
-	userProfile, err := cloud.FindAllData(appName, accountVisitEmail, accountKey)
+	fmt.Println("Profile:", profiler)
+	userProfile, err := Cloud.GetDocumentById(AppName, *profiler)
 	if err != nil && userProfile != nil {
 		log.Fatal("[Fail] No info  ", err)
-		// response := structs.Response{
-		// 	Flag:    false,
-		// 	Message: "",
-		// 	Links:   "",
-		// }
-		// temp := server(w, r, "visualize")
-		// _ = response.ClientRequestHandle(true, "Sorry ! No Information ", "/login", w, r)
-		// response.ClientLogs()
-		// err := response.Run(temp)
-		// if err != nil {
-		// 	log.Println("[Error]: checks logs...", err)
-		// 	return
-		// }
 		return
-
 	}
-	algo.SetProbParameter(visualizeReport.Percentage)
-	if r.Method == "GET" && algo.GetProbParameter() != -1.0 {
+
+	query_json, err := json.Marshal(userProfile); if err != nil{
+		log.Fatal("query return un handle data  ", err.Error())
+		return		
+	} 
+	err = json.Unmarshal(query_json, &profiler); if err != nil{
+		log.Fatal("query return un structure data", err.Error())
+		return
+	}
+
+	// algo.SetProbParameter(visualizeReport.Percentage)
+	if r.Method == "GET" {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
 		visualizeReport.Process = 1
-		visualizeReport.SeenBy = userProfile.Name
+		visualizeReport.SeenBy = profiler.Name
 
 		temp.Execute(w, visualizeReport)
 	}
@@ -1007,118 +979,212 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Url:", r.URL.Path)
 		RouteWebpage.Execute(w, "Dashboard")
 	} else {
+		
 		r.ParseForm()
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
 
 		// FILE Upload ....
-		fname, err := UploadFiles(w, r)
+		fname, err := Mounted(w, r, openReadFile)
 
 		if err != nil {
 			log.Fatalln("[File]:", err)
 			return
 		}
+		
 		choose := r.FormValue("choose")
-		data, err := fileGet("seqDir/", fname)
+		coordinates := r.FormValue("geo-marker")
+		var longitude_parse float64 = 0.0
+		var latitude_parse float64 = 0.0
+		fmt.Println("@length:", len(coordinates))
+		if (len(coordinates) > 0 && len(coordinates) <= 15){
+			longitude_parse , err = strconv.ParseFloat(coordinates[:5],10)
+			if err != nil {
+				log.Fatalln("parse longituide value #0 :", err.Error())
+				return 
+			}
+		
+			fmt.Println("@longitude # 0:", longitude_parse)
+			latitude_parse , err = strconv.ParseFloat(coordinates[9:],10)
+			if err != nil {
+				log.Fatalln("parse latitude value # 0 :", err.Error())
+				return 
+			}
+
+			fmt.Println("@latitude:", latitude_parse)
+		}else if (len(coordinates) > 15 && len(coordinates) <= 25) {
+			longitude_parse , err := strconv.ParseFloat(coordinates[:8],10)
+			if err != nil {
+				log.Fatalln("parse longituide value # 1 :", err.Error())
+				return 
+			}
+		
+			fmt.Println("@longitude # 1:", longitude_parse)
+			latitude_parse , err = strconv.ParseFloat(coordinates[12:],10)
+			if err != nil {
+				log.Fatalln("parse latitude value # 1 :", err.Error())
+				return 
+			}
+
+			fmt.Println("@latitude # 1:", latitude_parse)
+		}else if(len(coordinates) > 25 && len(coordinates) < 40){
+			longitude_parse , err := strconv.ParseFloat(coordinates[:18],10)
+			if err != nil {
+				log.Fatalln("parse longituide value :", err.Error())
+				return 
+			}
+		
+			fmt.Println("@longitude # 2:", longitude_parse)
+			latitude_parse , err := strconv.ParseFloat(coordinates[21:],10)
+			if err != nil {
+				log.Fatalln("parse latitude value # 2 :", err.Error())
+				return 
+			}
+
+			fmt.Println("@latitude: # 2", latitude_parse)
+		}else if len(coordinates) > 15 && len(coordinates) == 23 {
+			longitude_parse , err := strconv.ParseFloat(coordinates[:8],10)
+			if err != nil {
+				log.Fatalln("parse longituide value # 1 :", err.Error())
+				return 
+			}
+		
+			fmt.Println("@longitude # 3:", longitude_parse)
+			latitude_parse , err := strconv.ParseFloat(coordinates[13:],10)
+			if err != nil {
+				log.Fatalln("parse latitude value # 1 :", err.Error())
+				return 
+			}
+
+			fmt.Println("@latitude # 3:", latitude_parse)
+		}else {
+			log.Fatalln("Empty Field value :", err.Error())
+		}
+		
+		clientapi := weather.NewWeatherClient()
+		
+		weatherapi ,err := clientapi.OpenWeather(geocodeAPI); if err != nil {
+			log.Fatalln("weather api-key :", err.Error())
+			return 
+		}
+
+		marker_location := clientapi.GetCoordinates(&weather.MyCoordinates{
+			Longitude : longitude_parse,
+			Latitude : latitude_parse,
+		})
+
+		fmt.Println("@marker:", marker_location)
+
+		err = clientapi.UVCoodinates(marker_location,weatherapi); if err != nil {
+			log.Fatalln("city weather coordinates:", err.Error())
+			return 
+		}
+
+		uvinfo, err := clientapi.UVCompleteInfo(weatherapi); if err != nil {
+			log.Fatalln("city uv tracks:", err.Error())
+			return 
+		}
+
+		fmt.Println("@uv:", uvinfo)
+		
+		visualizeReport.UVinfo = uvinfo
+		
+		data, err := Open_SFiles("app_data/", fname)
 		if err != nil {
 			log.Fatalln("[No File]:", err)
 			return
 		}
+		
 		log.Println("File Name:", data.Name())
+		
 		switch choose {
 		case "0":
-			fmt.Fprintf(w, "Please choose any option ...")
-			log.Fatalln("Choose your option")
-			panic(err)
-		case "1":
-			var name string = "Covid-19"
-			err := choosePattern(w, r, name, choose, data)
-			if err != nil {
-				return
-			}
+		 	fmt.Fprintf(w, "Please choose any option ...")
+		 	log.Fatalln("Choose your option")
+			return
+		 case "1":
+		 	var name string = "Covid-19"
+		 	
+			 err := Data_Predicition(w, r, name, choose, data,algo)
+		 	if err != nil {
+		 		return
+		 	}
+			
+			 pattern_analysis := GetBioAlgoParameters()
+	 		
+			visualizeReport.Percentage = pattern_analysis.Percentage
 
-			visualizeReport.Percentage = algo.Percentage
-			// v :=  infectedUv()
-
-			// openStreet.Country = r.FormValue("country")
-			// openStreet.PostalCode = r.FormValue("postal")
-			// openStreet.City = r.FormValue("city")
-			// openStreet.State = r.FormValue("state")
-			// openStreet.StreetAddress = r.FormValue("street")
-			// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
-			// 	return
-			// }
-
-			// v.UVinfo = uvslice
-
-			w.WriteHeader(http.StatusOK)
-			// LifeCode = genome
+		 	w.WriteHeader(http.StatusOK)
+		// 	// LifeCode = genome
 			r.Method = "GET"
-			// Wallet(w,r)
-			visualize(w, r)
-			// fmt.Println("Virus:", capsid)
+		 	visualize(w, r)
+		// 	// fmt.Println("Virus:", capsid)
 
-		case "2":
-			var name string = "FlaviDengue"
-			err := choosePattern(w, r, name, choose, data)
-			if err != nil {
-				return
-			}
-			visualizeReport.Percentage = algo.Percentage
-			// v :=  infectedUv()
-			// v.UVinfo = uvslice
-			w.WriteHeader(http.StatusOK)
+		 case "2":
+		 	var name string = "FlaviDengue"
+		 	err := Data_Predicition(w, r, name, choose, data, algo)
+		 	if err != nil {
+		 		return
+		 	}
+			pattern_analysis := GetBioAlgoParameters()
+		 	visualizeReport.Percentage = pattern_analysis.Percentage
+		// 	// v :=  infectedUv()
+		// 	// v.UVinfo = uvslice
+		 	w.WriteHeader(http.StatusOK)
 
-			r.Method = "GET"
-			visualize(w, r)
-			// Wallet(w,r)
-			// fmt.Println("Virus:", capsid)
-		case "3":
-			var name string = "KenyaEbola"
-			err := choosePattern(w, r, name, choose, data)
-			if err != nil {
-				return
-			}
-			visualizeReport.Percentage = algo.Percentage
-			// v :=  infectedUv()
-			// v.UVinfo = uvslice
+		 	r.Method = "GET"
+		 	visualize(w, r)
+		// 	// Wallet(w,r)
+		// 	// fmt.Println("Virus:", capsid)
+		 case "3":
+		 	var name string = "KenyaEbola"
+		 	err := Data_Predicition(w, r, name, choose, data,algo)
+		 	if err != nil {
+		 		return
+		 	}
+		 	pattern_analysis := GetBioAlgoParameters()
+		 	visualizeReport.Percentage = pattern_analysis.Percentage
+		// 	// v :=  infectedUv()
+		// 	// v.UVinfo = uvslice
 
-			w.WriteHeader(http.StatusOK)
-			r.Method = "GET"
-			visualize(w, r)
+		 	w.WriteHeader(http.StatusOK)
+		 	r.Method = "GET"
+		 	visualize(w, r)
 
-			// fmt.Println("Virus:", capsid)
-		case "4":
-			var name string = "ZikaVirusBrazil"
-			err := choosePattern(w, r, name, choose, data)
-			if err != nil {
-				return
-			}
-			visualizeReport.Percentage = algo.Percentage
-			// v :=  infectedUv()
-			// openStreet.Country = r.FormValue("country")
-			// openStreet.PostalCode = r.FormValue("postal")
-			// openStreet.City = r.FormValue("city")
-			// openStreet.State = r.FormValue("state")
-			// openStreet.StreetAddress = r.FormValue("street")
-			// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
-			// 	return
-			// }
+		// 	// fmt.Println("Virus:", capsid)
+		 case "4":
+		 	var name string = "ZikaVirusBrazil"
+		 	err := Data_Predicition(w, r, name, choose, data, algo)
+		 	if err != nil {
+		 		return
+		 	}
+		 	pattern_analysis := GetBioAlgoParameters()
+		 	visualizeReport.Percentage = pattern_analysis.Percentage
+		// 	// v :=  infectedUv()
+		// 	// openStreet.Country = r.FormValue("country")
+		// 	// openStreet.PostalCode = r.FormValue("postal")
+		// 	// openStreet.City = r.FormValue("city")
+		// 	// openStreet.State = r.FormValue("state")
+		// 	// openStreet.StreetAddress = r.FormValue("street")
+		// 	// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
+		// 	// 	return
+		// 	// }
 
-			//v.UVinfo = uvslice
+		// 	//v.UVinfo = uvslice
 
-			w.WriteHeader(http.StatusOK)
-			r.Method = "GET"
-			visualize(w, r)
+		 	w.WriteHeader(http.StatusOK)
+		 	r.Method = "GET"
+		 	visualize(w, r)
 
-			// fmt.Println("Virus:", capsid)
-		case "5":
-			var name string = "MersSaudiaArabia"
-			err := choosePattern(w, r, name, choose, data)
-			if err != nil {
-				return
-			}
-			visualizeReport.Percentage = algo.Percentage
+		// 	// fmt.Println("Virus:", capsid)
+		 case "5":
+		 	var name string = "MersSaudiaArabia"
+		 	err := Data_Predicition(w, r, name, choose, data,algo)
+		 	if err != nil {
+		 		return
+		 	}
+		 	pattern_analysis := GetBioAlgoParameters()
+		 	visualizeReport.Percentage = pattern_analysis.Percentage
 			// v :=  infectedUv()				//  openStreet.Country = r.FormValue("country")
 			//  openStreet.PostalCode = r.FormValue("postal")
 			// openStreet.City = r.FormValue("city")
@@ -1128,35 +1194,24 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			// 	return
 			// }
 			// v.UVinfo = uvslice
-			w.WriteHeader(http.StatusOK)
+		 	w.WriteHeader(http.StatusOK)
 
-			r.Method = "GET"
-			visualize(w, r)
-			// fmt.Println("Virus:", capsid)
+		 	r.Method = "GET"
+		 	visualize(w, r)
+		// 	// fmt.Println("Virus:", capsid)
 
-		default:
-			// RouteWebpage.Execute(w, "dashboard")
-		}
+		 default:
+		 	 RouteWebpage.Execute(w, "dashboard")
+		 }
 	}
 
 }
 
 func send() (structs.BitsBlocks, error) {
 
-	// temp := template.Must(template.ParseFiles("server.html"))
 
 	var err error
 
-	// if r.Method == "POST" {
-
-	// 	fmt.Println("Url:", r.URL.Path)
-	// 	fmt.Println("Method:" + r.Method)
-	// 	r.ParseForm()
-	// block.TxSen = r.FormValue("sendAdd")
-	// block.TxRec = r.FormValue("add")
-	// choice := r.FormValue("transact")
-	// amount := r.FormValue("amount")
-	// blockchains.SenderBatchID = id
 	blockchains.BlockSenderID = structs.HeaderBlock
 	// Block number
 	blockchains.BlockHeaderID, err = clientInstance.BlockByNumber(context.Background(), blockchains.BlockSenderID)
@@ -1189,20 +1244,7 @@ func send() (structs.BitsBlocks, error) {
 	}
 
 	return bitInterface, err
-	// charge, err := StringToInt(blockchains.Amount)
-	// if err != nil {
-	// 	log.Fatal("[Fail] charge must be String  ", err)
-	// 	response := structs.Response{}
-	// 	temp := server(w, r)
-	// 	_ = response.ClientRequestHandle(true, "Sorry ! Compuatation Error   ", "/transact", w, r)
-	// 	response.ClientLogs()
-	// 	err := response.Run(temp)
-	// 	if err != nil {
-	// 		log.Println("[Error]: checks logs...", err)
-	// 		return
-	// 	}
-
-	// }
+	
 
 }
 
@@ -1238,14 +1280,7 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 		client, err := ethclient.Dial(mainNet)
 		if err != nil {
 			log.Fatal("[Fail] Request Failed  ", err)
-			// response := structs.Response{}
-			// temp := server(w, r, "seed")
-			// _ = response.ClientRequestHandle(true, "Sorry ! Connectivity Issue   ", "/dashboard", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// }
+			
 			return
 		}
 
@@ -1260,15 +1295,6 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 		// private key
 		privateKey, err := crypto.GenerateKey()
 		if err != nil {
-			// log.Fatal("[Fail] Public Key generate  ", err)
-			// response := structs.Response{}
-			// temp := server(w, r, "seed")
-			// _ = response.ClientRequestHandle(true, "Sorry ! Compuatation Error   ", "/dashboard", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// }
 			return
 		}
 
@@ -1282,20 +1308,11 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 		pbcKey, ok := pblicKey.(*ecdsa.PublicKey)
 		if !ok {
 			log.Fatal("[Fail] Public Key from Private Key  ", err)
-			// response := structs.Response{}
-			// temp := server(w, r, "seed")
-			// _ = response.ClientRequestHandle(true, "Sorry ! Compuatation Error   ", "/dashboard", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// 	return
-			// }
 			return
 		}
 
 		publicBytes := crypto.FromECDSAPub(pbcKey)
-		// fmt.Println("Public_Hash :", hexutil.Encode(publicBytes)[4:])
+		
 
 		PublicKey := crypto.PubkeyToAddress(*pbcKey).Hex()
 
@@ -1310,40 +1327,21 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 		acc.EthAddress = ethereum[:8]
 
 		// valid address
-		valid := isYourPublcAdresValid(acc.EthAddress)
-		if valid {
+		// valid := IsEvm(acc.EthAddress)
+		// if valid {
 
-			// smart contract address
-			log.Println("[Feature] Smart Address", valid)
-			w.WriteHeader(http.StatusForbidden)
-			w.Write([]byte("Thank-you for your response! , This feature will added upcoming build... Sorry for inconvenience"))
-			// response := structs.Response{}
-			// temp := server(w, r, "seed")
-			// _ = response.ClientRequestHandle(true, "Sorry ! Smart Contract Address added in future release ", "/dashboard", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// 	return
-			// }
-			return
+		// 	// smart contract address
+		// 	log.Println("[Feature] Smart Address", valid)
+		// 	w.WriteHeader(http.StatusForbidden)
+		// 	w.Write([]byte("Thank-you for your response! , This feature will added upcoming build... Sorry for inconvenience"))
+		// 	return
 
-		}
+		// }
 
-		myWallet := cloudWallet.EthereumWalletAcc{}
+		myWallet := CloudWallet.EthereumWalletAcc{}
 
 		signWallet, err := json.Marshal(myWallet)
 		if err != nil {
-			// log.Fatal("[Fail] Data JSON FORMAT ERROR ", err)
-			// response := structs.Response{}
-			// temp := server(w, r, "seed")
-			// _ = response.ClientRequestHandle(true, "Sorry ! POOR DATA FORMAT   ", "/createWallet", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// 	return
-			// }
 			return
 
 		}
@@ -1351,33 +1349,16 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 		err = json.Unmarshal(signWallet, &myWallet)
 		if err != nil {
 			log.Fatal("[Fail] Data JSON FORMAT ERROR ", err)
-			// response := structs.Response{}
-			// temp := server(w, r, "seed")
-			// _ = response.ClientRequestHandle(true, "Sorry ! POOR DATA FORMAT   ", "/createWallet", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// 	return
-			// }
 			return
 		}
 
-		//dataabse -- FindAddress
-		ok, ethAdd := FindAddress(&acc)
-		if ok && ethAdd != nil {
-			log.Fatal("[Replicate] Already Data exist  ", err)
-			// response := structs.Response{}
-			// temp := server(w, r, "seed")
-			// _ = response.ClientRequestHandle(true, "Sorry !  Replicate not allowed  ", "/createWallet", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// }
-			return
+		
+		// ok, ethAdd := Retrieve_Crypto(&acc, ledger)
+		// if ok && ethAdd != nil {
+		// 	log.Fatal("[Replicate] Already Data exist  ", err)
+		// 	return
 
-		}
+		// }
 
 		myWallet.Email = acc.Email
 		myWallet.Password = acc.Password
@@ -1386,25 +1367,16 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 		myWallet.Allowed = acc.Allowed
 		myWallet.PrvteKey = acc.PrvteKey
 
-		merchant, err := ledger.CreatePublicAddress(&myWallet, appName)
-		if err != nil {
-			log.Fatal("[Fail] Wallet Don't have Public Accessibity  ", err)
-			// response := structs.Response{}
-			// temp := server(w, r, "seed")
-			// _ = response.ClientRequestHandle(true, "Sorry ! Conenctivity issue   ", "/createWallet", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// 	return
-			// }
-			return
+		// merchant, err := ledger.CreatePublicAddress(&myWallet, AppName)
+		// if err != nil {
+		// 	log.Fatal("[Fail] Wallet Don't have Public Accessibity  ", err)
+		// 	return
 
-		}
+		// }
 
 		clientInstance = nil
 
-		log.Println("[Accept] Welcome ! Your Account Has been created", &merchant)
+		// log.Println("[Accept] Welcome ! Your Account Has been created", &merchant)
 		w.WriteHeader(http.StatusOK)
 		r.Method = "GET"
 		existing(w, r)
@@ -1414,23 +1386,9 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 func transacts(w http.ResponseWriter, r *http.Request) {
 
 	temp := template.Must(template.ParseFiles("transact.html"))
-	// key := os.Getenv("CoinbaseKey")
-	// secret := os.Getenv("CoinbaseSecret")
 	if r.Method == "GET" {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
-		//client := coinbaseClient.NewClient(key, secret)
-		//log.Println("@param_client", client)
-		//exchange, err := coinbaseClient.GetEthIndex("usd", "btc", client)
-		//if err != nil {
-		//	log.Fatalln("Error:", err)
-		//	return
-		// }
-		//  staticData.EthPrice = coinbaseClient.GetEthValue(exchange, 50.00)
-		//  staticData.EthPrice2 = coinbaseClient.GetEthValue(exchange, 100.00)
-		//  staticData.EthPrice3 = coinbaseClient.GetEthValue(exchange, 500.00)
-
-		//log.Println("@param?", exchange)
 		temp.Execute(w, "Transacts")
 	} else {
 		fmt.Println("Url:", r.URL.Path)
@@ -1468,15 +1426,6 @@ func wallet(w http.ResponseWriter, r *http.Request) {
 		client, err := ethclient.Dial(mainNet)
 		if err != nil {
 			log.Fatal("[Fail] Connection Reject ", err)
-			// response := structs.Response{}
-			// temp := server(w, r, "wallet")
-			// _ = response.ClientRequestHandle(true, "Sorry ! Connectivity Issue   ", "/open", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// 	return
-			// }
 			return
 
 		}
@@ -1487,20 +1436,11 @@ func wallet(w http.ResponseWriter, r *http.Request) {
 
 		log.Println("[Accept] Your Account Details:", acc, "Client api Reference: ", clientInstance)
 
-		myWallet := cloudWallet.EthereumWalletAcc{}
+		myWallet := CloudWallet.EthereumWalletAcc{}
 
 		signWallet, err := json.Marshal(myWallet)
 		if err != nil {
 			log.Fatal("[Fail] Data JSON FORMAT ERROR ", err)
-			// response := structs.Response{}
-			// temp := server(w, r, "wallet")
-			// _ = response.ClientRequestHandle(true, "Sorry ! POOR DATA FORMAT   ", "/open", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// 	return
-			// }
 			return
 
 		}
@@ -1508,79 +1448,45 @@ func wallet(w http.ResponseWriter, r *http.Request) {
 		err = json.Unmarshal(signWallet, &myWallet)
 		if err != nil {
 			log.Fatal("[Fail] JSON DATA RETURN ERROR", err)
-			// response := structs.Response{}
-			// temp := server(w, r, "wallet")
-			// _ = response.ClientRequestHandle(true, "Sorry ! Poor Data Format   ", "/open", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// 	return
-			// }
 			return
 
 		}
-		addr, ok := MyEthAddress(&acc)
-		if !ok {
+		// addr, ok := MyEthAddress(&acc)
+		// if !ok {
 
-			log.Fatal("[Fail] No Ethereum Account ", !ok)
-			// response := structs.Response{}
-			// temp := server(w, r, "wallet")
-			// _ = response.ClientRequestHandle(true, "Sorry ! NO Ethereum Account   ", "/open", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// 	return
-			// }
-			return
+		// 	log.Fatal("[Fail] No Ethereum Account ", !ok)
+		// 	return
 
-		}
-		if addr != nil {
+		// }
+		// if addr != nil {
 
-			acc.EthAddress = addr.EthAddress
-			publicAddress = acc.EthAddress
+		// 	acc.EthAddress = addr.EthAddress
+		// 	publicAddress = acc.EthAddress
 
-			// Secure Key
-			ledgerBits = addr.PrvteKey
-			fmt.Println("Wallet key:", ledgerBits)
-			vault.SetCryptoDB(acc.EthAddress, ledgerBits)
+		// 	// Secure Key
+		// 	ledgerBits = addr.PrvteKey
+		// 	vault.SetCryptoDB(acc.EthAddress, ledgerBits)
 
-			// variable address for futher processing
-			blockchains.SenderBatchID = acc.EthAddress
-			log.Println("Your Wallet:", acc)
+			
+		// 	blockchains.SenderBatchID = acc.EthAddress
+		// 	log.Println("Your Wallet:", acc)
 
-			// read file and add swarm
-			// if add.Allowed {
-			//
-			// 	AddFilesEthereumSwarm()
-			// }
-			// add this address in html page as static.
 
-			//dataabse -- FindAddress
-			secureWallet, ok := FindEthWallet(&acc)
-			if !ok && secureWallet != nil {
-				log.Fatal("[Fail] No crypto wallet found against your account ", !ok)
-				// response := structs.Response{}
-				// temp := server(w, r, "wallet")
-				// _ = response.ClientRequestHandle(true, "Sorry ! NO CRYPTO WALLET   ", "/createWallet", w, r)
-				// response.ClientLogs()
-				// err := response.Run(temp)
-				// if err != nil {
-				// 	log.Println("[Error]: checks logs...", err)
-				// 	return
-				// }
-				return
+		// 	//dataabse -- Retrieve_Crypto
+		// 	secureWallet, ok := FindEthWallet(&acc)
+		// 	if !ok && secureWallet != nil {
+		// 		log.Fatal("[Fail] No crypto wallet found against your account ", !ok)
+		// 		return
 
-			}
-			log.Println("[Accept] Your Ethereum Wallet Info:", secureWallet)
+		// 	}
+		// 	log.Println("[Accept] Your Ethereum Wallet Info:", secureWallet)
 
 			w.WriteHeader(http.StatusOK)
 			r.Method = "GET"
 			dashboard(w, r)
 		}
 	}
-}
+//}
 
 func terms(w http.ResponseWriter, r *http.Request) {
 
@@ -1594,18 +1500,20 @@ func terms(w http.ResponseWriter, r *http.Request) {
 
 func newUser(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("register.html"))
-	user := users.Create_User{
-		Name:     configFilename,
-		Fname:    configFilename,
-		Madam:    false,
-		Address:  addressexp,
-		Address2: "",
+	user := users.Visitors{
+		Name:     "",
+		LastName:    "",
+		Eve:    false,
+		Address:  "",
+		Apparment: "",
 		Zip:      "",
 		City:     "",
 		Country:  "",
-		Email:    emailexp,
+		Email:    "",
 		Password: "",
-		Secure:   false,
+		PhoneNo: "",
+		Twitter : "",
+		// Secure:   false,
 	}
 
 	if r.Method == "GET" {
@@ -1616,94 +1524,70 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
 		user.Name = r.FormValue("uname")
-		user.Fname = r.FormValue("ufname")
+		user.LastName = r.FormValue("ufname")
 		user.Address = r.FormValue("address")
-		user.Address2 = r.FormValue("add")
+		user.Apparment = r.FormValue("add")
 		user.City = r.FormValue("inputCity")
 		user.Country = r.FormValue("co")
 		user.Zip = r.FormValue("inputZip")
 		user.Email = r.FormValue("email")
 		user.Password = r.FormValue("password")
 		if r.FormValue("gender") == "on" {
-			user.Madam = true
+			user.Eve = true
 		} else {
-			user.Madam = false
+			user.Eve = false
 		}
 
-		matchE, err := regexp.MatchString(emailexp, user.Email)
+		regex_Email, err := regexp.MatchString(emailexp, user.Email)
 		if err != nil {
 			log.Fatal("[Fail] Auto email pattern  ", err)
-			// response := structs.Response{}
-			// temp := server(w, r, "register")
-			// _ = response.ClientRequestHandle(true, "Sorry ! Email is not in format  ", "/signup", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// 	return
-			// }
 			return
-
 		}
-		// println("regexp_email:", matchE)
-		matchP, err := regexp.MatchString(passexp, user.Password)
+
+		fmt.Println("Regex:", regex_Email)
+
+		regex_Pass, err := regexp.MatchString(passexp, user.Password)
 		if err != nil {
 			log.Fatal("[Fail] Password is very week ", err)
-			// response := structs.Response{}
-			// temp := server(w, r, "register")
-			// _ = response.ClientRequestHandle(true, "Sorry ! Password is too short   ", "/signup", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// 	return
-			// }
+			return
+		}
+		
+		fmt.Println("Regex:", regex_Pass)
+		
+		hash, encrypted := Presence(w, r, regex_Email, regex_Pass, user)
+		if !hash {
+			log.Fatal("[Fail] Week encryption", hash)
 			return
 
 		}
-		// println("regexp_pass:", matchP)
 
-		// security
-		hashRet, encrypted := MessageToHash(w, r, matchE, matchP, user)
-		if !hashRet {
-			log.Fatal("[Fail] Week encryption", hashRet)
-			// response := structs.Response{}
-			// temp := server(w, r, "register")
-			// _ = response.ClientRequestHandle(true, "Sorry ! Data discard because of your data in not our standard.   ", "/signup", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// 	return
-			// }
-			return
-
-		}
-		log.Println("[Accept] Review your logs.. ")
-		// println("phase:", KeyTx)
-		addVistor(w, r, &user, encrypted.Reader)
+		fmt.Println("Hash:", hash, "encrypted:", encrypted)
+		fmt.Println("Profile:", user)
+		AddNewProfile(w, r, user, encrypted.Reader)
 	}
 
 }
 
 func existing(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("login.html"))
-	user := users.Create_User{
+	user := users.Visitors{
 		Name:     "",
-		Fname:    "",
-		Madam:    false,
+		LastName:    "",
+		Eve:    false,
 		Address:  "",
-		Address2: "",
+		Apparment: "",
 		Zip:      "",
 		City:     "",
 		Country:  "",
 		Email:    "",
 		Password: "",
-		Secure:   false,
+		Id : "",
+		PhoneNo : "",
+		Twitter : "",
+		// Remember:  false,
 	}
-
 	if r.Method == "GET" {
-		fmt.Printf("\nMethod:%v", r.Method)
+		fmt.Println("Method:" + r.Method)
 		temp.Execute(w, "Login")
 	} else {
 		// Parse Form
@@ -1711,11 +1595,11 @@ func existing(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Method:\n", r.Method)
 		user.Email = r.FormValue("email")
 		user.Password = r.FormValue("password")
-		if r.FormValue("check") == "on" {
-			user.Secure = true
-		} else {
-			user.Secure = false
-		}
+		// if r.FormValue("check") == "on" {
+		// 	user.Remember = true
+		// } else {
+		// 	user.Remember = false
+		// }
 		log.Println("Login form data[", user, "]")
 
 		// Valid Data for processing
@@ -1723,14 +1607,7 @@ func existing(w http.ResponseWriter, r *http.Request) {
 		ok := exp.MatchString(user.Email)
 		if !ok {
 			log.Fatal("[Fail] Mismatch ", ok)
-			// response := structs.Response{}
-			// temp := server(w, r, "login")
-			// _ = response.ClientRequestHandle(true, "Sorry ! Mismatch   ", "/login", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// }
+			
 			return
 
 		}
@@ -1739,94 +1616,44 @@ func existing(w http.ResponseWriter, r *http.Request) {
 		okx := reg.MatchString(user.Password)
 		if !okx {
 			log.Fatal("[Fail] Mismatch password", !okx)
-			// response := structs.Response{}
-			// temp := server(w, r, "login")
-			// _ = response.ClientRequestHandle(true, "Sorry ! Mismatch password ", "/login", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// 	return
-			// }
 			return
-
-			// r.Method = "GET"
-			// existing(w,r)
 		}
 		println("regexp_pass:", okx)
 
 		// Search Data in DB
-		data, err := SearchDB(w, r, user.Email, user.Password)
-		if err != nil {
+		data, err := Firebase_Gatekeeper(w, r, user)
+		
+		if err != nil && data == nil {
 			log.Fatal("[Result]: No Match Found  ", err)
-			// response := structs.Response{}
-			// temp := server(w, r, "login")
-			// _ = response.ClientRequestHandle(true, "Sorry ! No information Retry ", "/login", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// 	return
-			// }
-			panic(err)
+			return
 		}
-		if data != nil {
 			accountID = data.Id
 			fmt.Printf("Search Data:%v", data.Id)
 			accountVisitEmail = data.Email
 			accountKey = data.Password
+			profiler = data
+			fmt.Println("Profile:", profiler)
 			act := structs.RouteParameter{}
-			//complex.AddByName(data.Name)
-			// User Session
+			
 			if userSessions == nil {
-				userSessions = SessionsInit(data.Id)
+				userSessions = Web_Token(data.Id)
 
 				act.SetContextSession(userSessions, w, r)
 				err := act.NewToken()
 				if err != nil {
 					log.Fatal("[FAIL] No Token generate .. Review logs", err)
-					// response := structs.Response{}
-					// temp := server(w, r, "login")
-					// _ = response.ClientRequestHandle(true, "Sorry ! Access Denied, ", "/login", w, r)
-					// response.ClientLogs()
-					// err := response.Run(temp)
-					// if err != nil {
-					// 	log.Println("[Error]: checks logs...", err)
-					// 	return
-					// }
 					return
 
 				}
-				println("Id :", &data.Id, "user:", &userSessions)
 			}
 
-			// Login page
 			w.WriteHeader(http.StatusOK)
 			r.Method = "GET"
 			dashboard(w, r)
-		} else {
-			// response := structs.Response{}
-			// temp := server(w, r, "login")
-			// _ = response.ClientRequestHandle(true, "Sorry ! Access Denied, Plesse Register ", "/signup", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// 	return
-			// }
-			return
-		}
-
 	}
 }
 
-func server(w http.ResponseWriter, r *http.Request, filename string) *templates.Template {
 
-	myResponse := structs.Response{}
-	temp := myResponse.ClientHTMLRequest(filename)
-	return temp
-
-}
 
 func logout(w http.ResponseWriter, r *http.Request) {
 
@@ -1837,654 +1664,188 @@ func logout(w http.ResponseWriter, r *http.Request) {
 		act.SetContextSession(userSessions, w, r)
 		err := act.ExpireToken()
 		if err != nil {
-			log.Fatal("[Fail] No Token Expire  ", err)
-			// response := structs.Response{}
-			// temp := server(w, r, "dashboard")
-			// _ = response.ClientRequestHandle(true, "Sorry ! Token Expire   ", "/transact", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// 	return
-			// }
+			log.Fatal("[Fail] No Token Expire  ", err)			
 			return
-
 		}
 		existing(w, r)
 	}
 }
 
-//  Advance Functions
-
-func SearchDB(w http.ResponseWriter, r *http.Request, email, pass string) (*users.Vistors, error) {
-
-	var data *users.Vistors
-	var err error
-	// w.Header().Set("Content-Type", "application/json")
+func phenylalanine(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("Phenylalanine.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
-	} else {
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "phenylalanine")
+	}	
+}
+
+func leucine(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("leucine.html"))
+	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
-		data, err = cloud.FindAllData(appName, email, pass)
-		if err != nil && data != nil {
-			log.Fatal("[Fail] No info  ", err)
-			// response := structs.Response{}
-			// temp := server(w, r, "login")
-			// _ = response.ClientRequestHandle(true, "Sorry ! No Information ", "/login", w, r)
-			// response.ClientLogs()
-			// err := response.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// 	return nil, err
-			// }
-			return nil, err
-		}
-	}
-	return data, nil
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "leucine")
+	}	
 }
 
-// func getVistorData(response http.ResponseWriter, request *http.Request) {
-// 	response.Header().Set("Content-Type", "application/json")
-// 	visitor, err := cloud.FindAllData(appName)
-// 	if err != nil {
-// 		response.WriteHeader(http.StatusInternalServerError)
-// 		response.Write([]byte(`{"error" :"Error getting visitor result"}`))
-// 		return
-// 	}
-// 	fmt.Printf("Vistors array%v", visitor)
-//
-// 	// response.WriteHeader(http.StatusOK)
-// 	json.NewEncoder(response).Encode(visitor)
-//
-// }
-
-func addVistor(response http.ResponseWriter, request *http.Request, user *users.Create_User, im string) {
-
-	// var err error
-	//response.Header().Set("Content-Type", "application/json")
-	if request.Method == "GET" {
-		fmt.Println("Method:" + request.Method)
-	} else {
-		var member users.Vistors
-		data, err := json.Marshal(member)
-		if err != nil {
-			log.Fatal("[Fail] Poor DATA JSON FORMAT  ", err)
-			// r := structs.Response{}
-			// temp := server(response, request, "register")
-			// _ = r.ClientRequestHandle(true, "Sorry ! Data in poor format", "/signup", response, request)
-			// r.ClientLogs()
-			// err := r.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// 	return
-			// }
-			return
-
-		}
-		err = json.Unmarshal(data, &member)
-		if err != nil {
-			log.Fatal("[Fail] Poor Format  ", err)
-			// r := structs.Response{}
-			// temp := server(response, request, "register")
-			// _ = r.ClientRequestHandle(true, "Sorry ! Data in poor format ", "/signup", response, request)
-			// r.ClientLogs()
-			// err := r.Run(temp)
-			// if err != nil {
-			// 	log.Println("[Error]: checks logs...", err)
-			// 	return
-			// }
-			return
-
-		}
-		candidate, err := SearchDB(response, request, user.Email, user.Password)
-		if err == nil && candidate == nil {
-
-			member.Id = im
-			member.Name = user.Name
-			member.Email = user.Email
-			member.Password = user.Password
-			member.FName = user.Fname
-			if user.Madam {
-				member.Eve = user.Madam
-			} else {
-				member.Eve = user.Madam
-			}
-			member.Address = user.Address
-			member.LAddress = user.Address2
-			member.City = user.City
-			member.Zip = user.Zip
-			member.Country = user.Country
-			record, err := cloud.SaveData(&member, appName)
-			if err != nil {
-				log.Fatal("[Fail] Data has not saved", err)
-				// r := structs.Response{}
-				// temp := server(response, request, "register")
-				// _ = r.ClientRequestHandle(true, "Sorry ! Internal issue   ", "/signup", response, request)
-				// r.ClientLogs()
-				// err := r.Run(temp)
-				// if err != nil {
-				// 	log.Println("[Error]: checks logs...", err)
-				// 	return
-				// }
-				return
-
-			}
-
-			log.Println("Records:", record)
-			// response.WriteHeader(http.StatusOK)
-			// request.Method = "GET"
-			// createWallet(response, request)
-
-		}
-
-		log.Fatal("[Fail] Already HAVE  ")
-		// r := structs.Response{}
-		// temp := server(response, request, "register")
-		// _ = r.ClientRequestHandle(true, "Sorry ! This information already in system   ", "/signup", response, request)
-		// r.ClientLogs()
-		// err = r.Run(temp)
-		// if err != nil {
-		// 	log.Println("[Error]: checks logs...", err)
-		// 	return
-		// }
-		return
-
+func isoleucine(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("isoleucine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "isoleucine")
 	}
-
 }
 
-// Functions
-
-func SetFirestoreCredentials() *firebase.App {
-
-	_, err := os.Stat("config/" + configFilename)
-	if os.IsExist(err) {
-		fmt.Println("File Doesn't exist...", err)
-		return nil
+func methionine(w http.ResponseWriter,r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("methionine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "methionine")
 	}
-	//fmt.Println("Filename:", file.Name())
-
-	googleCredentials = "config/" + configFilename
-
-	// set credentials
-	conf := &firebase.Config{ProjectID: projectID}
-	if googleCredentials != " " {
-		opt := option.WithCredentialsFile(googleCredentials)
-		app, err := firebase.NewApp(context.Background(), conf, opt)
-		if err != nil {
-			log.Fatal("[Fail] Connection Reject", err)
-			return nil
-		}
-		log.Println("[Accept] Concection build with cloud firestore database")
-		return app
-	}
-	return nil
 }
 
-func StringToInt(s string) (int, error) {
-
-	i, err := strconv.Atoi(s)
-	if err != nil {
-		log.Fatalln("[Fail] Conversion", err)
-		return 0, err
+func valine(w http.ResponseWriter, r *http.Request) {
+	webpge := template.Must(template.ParseFiles("valine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "valine")
 	}
-	return i, nil
-
 }
 
-// func GetBalance(account *structs.Static) *big.Int {
-
-// 	wallet := common.HexToAddress(account.Eth)
-// 	balnce, err := clientInstance.BalanceAt(context.Background(), wallet, nil)
-// 	if err != nil {
-// 		log.Fatalln("[Fail] Balance reading issue/ connectivity issue")
-// 		return nil
-// 	}
-// 	account.Balance = balnce
-// 	return account.Balance
-// }
-
-// func ReadBalanceFromBlock(acc *structs.Block) *big.Int {
-// 	wallet := common.HexToAddress(acc.TxRec)
-// 	balnce, err := clientInstance.BalanceAt(context.Background(), wallet, nil)
-// 	if err != nil {
-// 		log.Fatalln("[Fail] Connectivity issue", err)
-// 		return nil
-// 	}
-// 	acc.Balance = balnce
-// 	return acc.Balance
-
-// }
-
-func FindAddress(w *structs.Acc) (bool, *cloudWallet.EthereumWalletAcc) {
-
-	ethAcc, err := ledger.FindMyPublicAddress(w, appName)
-	if err != nil {
-		log.Fatalln("[Fail] Ledger ahve no Information / internal issue ", err)
-		return false, nil
+func serine(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("serine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "serine")
 	}
-	if ethAcc != nil {
-		return false, nil
-	}
-	return true, ethAcc
-
 }
 
-func MyEthAddress(w *structs.Acc) (*cloudWallet.EthereumWalletAcc, bool) {
-
-	acc, err := ledger.FindMyAddressByEmail(w, appName)
-	if err != nil {
-		log.Fatalln("[Fail] Configuration issue", err)
-		return nil, false
+func proline(w http.ResponseWriter, r *http.Request){
+	webpge := template.Must(template.ParseFiles("proline.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "proline")
 	}
-	if acc == nil {
-		return nil, false
-	}
-	return acc, true
 }
 
-func FindEthWallet(w *structs.Acc) (*cloudWallet.EthereumWalletAcc, bool) {
-
-	acc, err := ledger.FindMyPublicAddress(w, appName)
-	if err != nil {
-		log.Fatalln("[Fail] Configuration issue", err)
-		return nil, false
+func threonine(w http.ResponseWriter, r *http.Request){
+	webpge := template.Must(template.ParseFiles("threonine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "threonine")
 	}
-	return acc, true
 }
 
-func isYourPublcAdresValid(hash string) bool {
-
-	expression := regexp.MustCompile(addressexp)
-	v := expression.MatchString(hash)
-
-	address := common.HexToAddress(hash)
-	bytecode, err := clientInstance.CodeAt(contxt.Background(), address, nil)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return false
+func alanine(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("alanine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "alanine")
 	}
-
-	contract := len(bytecode) > 0
-	log.Println("[Accept] Contract Address: ", contract, "Result:", v)
-	return contract
 }
 
-func SessionsInit(unique string) *sessions.CookieStore {
-	return sessions.NewCookieStore([]byte(unique))
+func tyrosine(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("tyrosine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "tyrosine")
+	}
 }
 
-func FileReadFromDisk(w http.ResponseWriter, r *http.Request, filename string) os.FileInfo {
-	f, err := os.OpenFile(filename+".txt", os.O_RDWR|os.O_CREATE, 0755)
-	if err != nil {
-		log.Fatal("[Fail] No File Exist  ", err)
-		// response := structs.Response{}
-		// temp := server(w, r, "dashboard")
-		// _ = response.ClientRequestHandle(true, "Sorry ! No Information    ", "/dashboard", w, r)
-		// response.ClientLogs()
-		// err := response.Run(temp)
-		// if err != nil {
-		// 	log.Println("[Error]: checks logs...", err)
-		// 	return nil
-		// }
-		return nil
+func histidine(w http.ResponseWriter, r * http.Request)  {
+	webpge := template.Must(template.ParseFiles("histidine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "histidine")
 	}
-
-	finfo, err := f.Stat()
-	if err != nil {
-		log.Fatal("[Fail] Application Access   ", err)
-		// response := structs.Response{}
-		// temp := server(w, r, "dashboard")
-		// _ = response.ClientRequestHandle(true, "Sorry ! Permission Denied   ", "/dashboard", w, r)
-		// response.ClientLogs()
-		// err := response.Run(temp)
-		// if err != nil {
-		// 	log.Println("[Error]: checks logs...", err)
-		// 	return nil
-		// }
-		return nil
-
+}
+func glutamine(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("glutamine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "glutamine")
 	}
-	return finfo
 }
 
-func Key(w http.ResponseWriter, r *http.Request, h1, h2 string) (string, string, *ecdsa.PrivateKey) {
-
-	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
-	if err != nil {
-		log.Fatal("[Fail] Key generate   ", err)
-		response := structs.Response{}
-		temp := server(w, r, "register")
-		_ = response.ClientRequestHandle(true, "Sorry ! Computation Error   ", "/signup", w, r)
-		response.ClientLogs()
-		err := response.Run(temp)
-		if err != nil {
-			log.Println("[Error]: checks logs...", err)
-			return "", "", nil
-		}
-
+func asparagine(w http.ResponseWriter, r *http.Request){
+	webpge := template.Must(template.ParseFiles("asparagine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "asparagine")
 	}
-
-	// 0x40fa6d8c32594a971b692c44c0c56b19c32613deb1c6200c26ea4fe33d34a5fd
-
-	msg := h1 + h2
-	hash := sha256.Sum256([]byte(msg))
-
-	reader, s, err := ecdsa.Sign(rand.Reader, privateKey, hash[:])
-	if err != nil {
-
-		log.Fatal("[Fail] Key signed   ", err)
-		// response := structs.Response{}
-		// temp := server(w, r, "register")
-		// _ = response.ClientRequestHandle(true, "Sorry ! Computation Error   ", "/signup", w, r)
-		// response.ClientLogs()
-		// err := response.Run(temp)
-		// if err != nil {
-		// 	log.Println("[Error]: checks logs...", err)
-		// 	return "", "", privateKey
-		// }
-		return "", "", privateKey
-
-	}
-
-	return fmt.Sprintf("0x%x", reader), fmt.Sprintf("0x%x", s), privateKey
-
 }
 
-func ReadSequence(filename string) ([]byte, error) {
-	body, err := ioutil.ReadFile(filename)
-	if err != nil {
-		log.Fatalln("[Fail] File  Access ", err)
-		return nil, err
+func lysine(w http.ResponseWriter, r * http.Request)  {
+	webpge := template.Must(template.ParseFiles("lysine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "lysine")
 	}
-	return []byte(body), nil
 }
 
-func MessageToHash(w http.ResponseWriter, r *http.Request, matchE, matchP bool, user users.Create_User) (bool, *structs.SignedKey) {
-	code := structs.SignedKey{}
-	if matchE && matchP {
-		h := sha256.New()
-		hashe := h.Sum([]byte(user.Email))
-
-		h1 := sha256.New()
-		// h1.Write([]byte(user.password))
-		hashp := h1.Sum([]byte(user.Password))
-
-		fmt.Println("pass:", hex.EncodeToString(hashp))
-		code.Reader, code.Signed, code.Tx = Key(w, r, hex.EncodeToString(hashe), hex.EncodeToString(hashp))
-		// println("data get :", code.reader, code.signed)
-		return true, &code
+func aspartic(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("aspartic.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "aspartic")
 	}
-	return false, &code
 }
 
-func UploadFiles(w http.ResponseWriter, r *http.Request) (string, error) {
-	// println("request body", r.Body)
-	r.ParseMultipartForm(10 << 50)
-
-	var upldFile *os.File = nil
-	file, handler, err := r.FormFile("fileSeq")
-	if err != nil {
-
-		log.Fatal("[Fail] Error in upload   ", err)
-		// response := structs.Response{}
-		// temp := server(w, r, "dashboard")
-		// _ = response.ClientRequestHandle(true, "Sorry ! Computation Error {type of file must be MIME}  ", "/dashboard", w, r)
-		// response.ClientLogs()
-		// err := response.Run(temp)
-		// if err != nil {
-		// 	log.Println("[Error]: checks logs...", err)
-		// 	return "", err
-		// }
-		return "", err
+func glutamic(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("glutamic.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "glutamic")
 	}
-	defer file.Close()
-	if handler.Size >= (500000 * 1024) {
-		log.Fatalln((500000 * 1024) - handler.Size)
-		return "", err
-	}
-	fmt.Println("File name:"+handler.Filename, "Size:", handler.Size)
-	if _, err := os.Stat(handler.Filename); os.IsExist(err) {
-		log.Fatal("[Fail] Already have  this file ", err)
-		// response := structs.Response{
-		// 	Flag:    false,
-		// 	Message: "",
-		// 	Links:   "",
-		// }
-		// temp := server(w, r, "dashboard")
-		// _ = response.ClientRequestHandle(true, "Sorry ! Two files doesn't have same name  ", "/dashboard", w, r)
-		// response.ClientLogs()
-		// err := response.Run(temp)
-		// if err != nil {
-		// 	log.Println("[Error]: checks logs...", err)
-		// 	return "", err
-		// }
-		return "", err
-
-	}
-	// err = os.Mkdir("appdir/", 0755)
-	// if err != nil {
-	// 	log.Fatalln("[Fail] Directory ", err)
-	// 	return upldFile, err
-	// }
-	path, err := os.Stat("seqDir/")
-	if err != nil {
-		log.Fatalln("[Error] In directory", err)
-		return "", err
-	}
-	if !path.IsDir() {
-		log.Fatalln("[Error] Reading File", err)
-		return "", err
-	}
-
-	path, err = os.Stat("seqDir/")
-	if err != nil {
-		log.Fatalln("[Error] In directory", err)
-		return "", err
-	}
-	if !path.IsDir() {
-		log.Fatalln("[Error] Reading File", err)
-		return "", err
-	}
-	// upload file by user...
-	upldFile, err = ioutil.TempFile(filepath.Dir("seqDir/"), "seqFile-"+"*.txt")
-	if err != nil {
-		log.Fatal("[Fail] Temporary File ", err)
-		// response := structs.Response{
-		// 	Flag:    false,
-		// 	Message: "",
-		// 	Links:   "",
-		// }
-		// temp := server(w, r, "dashboard")
-		// _ = response.ClientRequestHandle(true, "Sorry ! Computation Error   ", "/dashboard", w, r)
-		// response.ClientLogs()
-		// err := response.Run(temp)
-		// if err != nil {
-		// 	log.Println("[Error]: checks logs...", err)
-		// 	return "", err
-		// }
-		return "", err
-
-	}
-	defer upldFile.Close()
-	_, err = upldFile.Stat()
-	if err != nil {
-		log.Fatalln("[Fail] File Stats", err)
-		return "", err
-	}
-
-	openReadFile = upldFile.Name()
-	log.Println(openReadFile)
-
-	// file convert into bytes
-	bytesFile, err := ioutil.ReadAll(file)
-	if err != nil {
-		log.Fatal("[Fail] File Reading Permission   ", err)
-		// response := structs.Response{}
-		// temp := server(w, r, "register")
-		// _ = response.ClientRequestHandle(true, "Sorry ! Computation Error   ", "/dashnaord", w, r)
-		// response.ClientLogs()
-		// err := response.Run(temp)
-		// if err != nil {
-		// 	log.Println("[Error]: checks logs...", err)
-		// 	return "", err
-		// }
-		return "", err
-	}
-	n, err := upldFile.Write(bytesFile)
-	if err != nil {
-		return "", err
-	}
-	log.Println("[Result] = File added on server", upldFile.Name(), "Size:", n)
-	return openReadFile, nil
-
 }
 
-func sequenceFile(serverFile *os.File, userFile os.FileInfo) ([]string, []string, error) {
-
-	seq, err := ReadSequence(userFile.Name())
-	if err != nil {
-		println("Error in read file", err)
-		return nil, nil, err
+func cysteine(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("cysteine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "cysteine")
 	}
-
-	var gen []string
-	for _, v := range seq {
-		space := DoAscii(v)
-		if space == "" {
-			gen = append(gen, "")
-		}
-		gen = append(gen, space)
-	}
-
-	pathogen, err := ReadSequence(serverFile.Name())
-	if err != nil {
-		println("Error in read file", err)
-		return nil, nil, err
-	}
-
-	var genV []string
-	for _, v := range pathogen {
-		space := DoAscii(v)
-		if space == "" {
-			genV = append(genV, "")
-		}
-		genV = append(genV, space)
-	}
-
-	return gen, genV, nil
-
 }
 
-func DoAscii(seq byte) string {
-
-	if seq >= 65 && seq < 91 {
-		return string(alphabet.Letter(seq))
+func tryptophan(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("tryptophan.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "tryptophan")
 	}
-	return string(alphabet.Letter(seq))
 }
 
-func blockSession(id int) *sessions.CookieStore {
-
-	return sessions.NewCookieStore([]byte(strconv.Itoa(id)))
+func arginine(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("arginine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "arginine")
+	}
 }
 
-func choosePattern(w http.ResponseWriter, r *http.Request, fname, choose string, file *os.File) error {
-
-	i, err := strconv.Atoi(choose)
-	if err != nil {
-		log.Fatalln("[Fail] Sorry there is some issue report!", err)
-		return err
+func glycine(w http.ResponseWriter, r *http.Request)  {
+	webpge := template.Must(template.ParseFiles("glycine.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "glycine")
 	}
-	if (i > 0 && i < 6) && (fname != " ") {
-		svrFile := FileReadFromDisk(w, r, fname)
-		Usr, Virus, err := sequenceFile(file, svrFile)
-		if err != nil {
-			log.Fatalln("[Fail] Sequence DataFile Error", err)
-			return err
-		}
-		log.Println("Genome:", len(Virus), "virus:", len(Usr))
-		distance := edit.EditDistanceStrings(Virus, Usr)
-		algo.Probablity = algo.Result(distance)
-		algo.Name = fname
-		algo.Percentage = algo.CalcualtePercentage(algo.Probablity)
-		return err
-	} else if i == 0 {
-		temFile := template.Must(template.ParseFiles("dashboard.html"))
-		temFile.Execute(w, "Dashbaord")
-	}
-	return err
-
-}
-
-func ProcessWaiit() bool {
-	clockHand := time.NewTimer(3 * time.Second)
-	<-clockHand.C
-	stop := clockHand.Stop()
-	return stop
-}
-
-// func AutoKeyGenerate(s1 string) string{
-// 	h0 := sha256.New()
-// 	h1 := h0.Sum([]byte(s1)) // hash of string-1
-// 	e := hex.EncodeToString([]byte(h1))
-// 	h := hex.EncodeToString([]byte(e))[:8]
-// 	return h
-// }
-
-func cardNumberValid(s1, s2 string) bool {
-
-	m, n := []byte(s1), []byte(s2)
-	res := bytes.Compare(m, n)
-	if res == 0 {
-		return true
-	}
-	return false
-
-}
-
-func fileGet(path, filename string) (*os.File, error) {
-	fileinfo, err := os.Stat(path)
-	if err != nil {
-		return nil, err
-	}
-	if !fileinfo.IsDir() {
-		return nil, err
-	}
-
-	file, err := os.Open(filename)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-	return file, nil
-}
-
-// func openBrowser(url string) error {
-// 	var err error
-// 	switch runtime.GOOS {
-// 	case "linux":
-// 		cmd := exec.Command("/usr/bin/sensible-browser", url)
-// 		err = cmd.Start()
-// 		if err != nil {
-// 			log.Fatalln("Error", err)
-// 		}
-// 		err = cmd.Run()
-// 	case "windows":
-// 		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
-// 	case "darwin":
-// 		err = exec.Command("open", url).Start()
-// 	default:
-// 		err = fmt.Errorf("Operation fail")
-// 	}
-// 	return err
-
-// }
-func getValuesFromStruct(parser interface{}) []reflect.Value {
-	y := reflect.ValueOf(parser).Elem()
-	x := make([]reflect.Value, y.NumField())
-	for i := 0; i < y.NumField(); i++ {
-		x[i] = y.Field(i)
-	}
-	return x
 }

@@ -7,57 +7,155 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
-	<!-- <link rel="shortcut icon" type="image/png" href="/images/favicon.png"> -->
 	<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap"
 		rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="/css/seed.css">
-	<link rel="stylesheet" type="text/css" href="/css/transact.css">
 	<link rel="stylesheet" type="text/css" href="/css/treasure.css">
 	</link>
 	<link rel="shortcut icon" type="image/png" href="/images/favicon.png">
 	<title>WizDwarfs</title>
 
 <body>
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		<a class="navbar-brand" href="#">
-			<!-- <button class="btn-connect" type="button" onclick="connected()">
-    			<i class="fa fa-wifi" aria-hidden="true" id="wifi"></i>
-    		</button> -->
-		</a>
-	</nav>
-	<div class="static-field">
-		<div class="static-img">
-			<img src="/images/logo.png" alt="WizDwarf" class="img-logo" />
-			<h4 class="text">Billioniare</h4>
+	<div class='main-dashboard-div'>
+		<nav class="navbar navbar-expand-md navbar-light custom-navbar">
+		  <a class="navbar-brand" href="#">
+			<img src="/images/logo.png" alt="Logo" class="logo">
+		  </a>
+		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
+			<span class="navbar-toggler-icon"></span>
+		  </button>
+		  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+			<ul class="navbar-nav">
+			  <li class="nav-item active pl-3">
+				<a class="nav-link" href="/home">
+				  <i class="fa fa-home icon-light" aria-hidden="true"></i>
+				  Home
+				</a>
+			  </li>
+			  <li class="nav-item dropdown pl-3">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+				  aria-haspopup="true" aria-expanded="false">
+				  <i class="fa fa-btc icon-light" aria-hidden="true"></i>
+				  Merchant
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				  <!-- <a class="dropdown-item active" href="/open"><i class="fa fa-handshake-o " aria-hidden="true"></i> Bit-account </a>
+				  <a class="dropdown-item" href="/"> <i class="fa fa-briefcase" aria-hidden="true"> Service </i>
+				  </a>
+				  <a class="dropdown-item" href="/"> <i class="fa fa-money" aria-hidden="true"> Transactions </i>
+				  </a> -->
+				  <div class="card" style="width: 18rem;">
+					<img
+					  src="https://nakedsecurity.sophos.com/wp-content/uploads/sites/2/2020/01/shutterstock_1027402033.jpg?w=640"
+					  class="card-img-top" alt="digital Fingerprints">
+					<div class="card-body">
+					  <h5 class="card-title"> Browser Fingerprint Experience!</h5>
+					  <p class="card-text"> Customers can exchange your crypto coins or token. With Browser Fingerprints ,
+						it's possible Customers transact their experience in anytime , anywhere. Browser Fingerprints are
+						unique. </p>
+					</div>
+				  </div>
+				</div>
+			  </li>
+			  <li class="nav-item dropdown pl-3">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+				  aria-haspopup="true" aria-expanded="false">
+				  <i class="fa fa-user icon-light" aria-hidden="true"></i>
+				  Profile
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				  <!-- <a class="dropdown-item" href="/dashbaord/setting"><i class="fa fa-sliders" aria-hidden="true"></i>
+					Setting</a> -->
+				  <a class="dropdown-item" href="/logout"><i class="fa fa-sign-out icon icon-light"
+					  aria-hidden="true"></i>Logout</a>
+				  <div class="card" style="width: 18rem;">
+					<img
+					  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOaJY0dC2FWMzFME5auGOpwMHAgoVJfWiDyw&usqp=CAU"
+					  alt="Biomolecular Computing">
+					<div class="card-body">
+					  <h5 class="card-title">Molecular Computing </h5>
+					  <p class="card-text"> Computing is an awesome tool, but it's just beginning. In Molecular Computing,
+						user will save data upto 2 TB. </p>
+					</div>
+				  </div>
+			  </li>
+			</ul>
+		  </div>
+		</nav>
+	</div>
+    <div class="window-class">
+		<div class="genetic-circle">
+			<span class="result"> {{.Percentage}} </span>
 		</div>
-		<div class="static-text">
-			<input type="text" name="eth" value="{{.Eth}}" class="address" readonly>
-			<div class="">
-				<h5 class="balance">{{.Balance}}
-					<img src="/images/eth.png" alt="eth" class="eth-img" />
-				</h5>
-			</div>
-			<div class="div-form col-md-4">
-				<form class="div-form-container" method="post" action="/transact/treasure">
-					<div class="div-send-in">
-						<button type="button" class="btn-in" id="in" onclick="Send()"><i class="fa fa-key"
-								aria-hidden="true" id="key"></i></button>
-						<input type="text" name="send" class="in-send" id="send" placeholder="Sender Address">
-					</div>
-					<div class="div-receive-in">
-						<button type="button" class="btn-in-rec" id="btn-rece" onclick="Receive()"><i class="fa fa-key"
-								aria-hidden="true" id="rkey"></i></button>
-						<input type="text" name="rece" class="in-rece" id="rece-txt" placeholder="Receive Address">
-					</div>
-					<button type="submit" class="btn-submt-form"><i class="fa fa-check-square" aria-hidden="true"
-							id="sub"></i>Submit</button>
-					<button type="button" class="btn-cancel-form" onclick="CancelForm()"><i class="fa fa-ban"
-							aria-hidden="true" id="ban"></i>Cancel</button>
-				</form>
-			</div>
+		<div class="proteins-box-0">
+			<a  class="btn btn-link" href="/phenylalanine"> F </a>
+		</div>
+		<div class="proteins-box-1">
+			<a  class="btn btn-link" href="/leucine"> L </a>
+		</div>
+		<div class="proteins-box-2">
+			<a  class="btn btn-link" href="/isoleucine"> I </a>
+		</div>
+		<div class="proteins-box-3">
+			<a  class="btn btn-link" href="/methionine"> M* </a>
+		</div>
+		<div class="proteins-box-4">
+			<a  class="btn btn-link" href="/valine"> V </a>
+		</div>
+		<div class="proteins-box-5">
+			<a  class="btn btn-link" href="/serine"> S </a>
+		</div>
+		<div class="proteins-box-6">
+			<a  class="btn btn-link" href="/proline"> P </a>
+		</div>
+		<div class="proteins-box-7">
+			<a  class="btn btn-link" href="/threonine"> T </a>
+		</div>
+		<div class="proteins-box-8">
+			<a  class="btn btn-link" href="/alanine"> A </a>
+		</div>
+		<!-- <div class="proteins-box-9">
+			<a  class="btn btn-link" href="/stop-Codon"> $ </a>
+		</div> -->
+		<div class="proteins-box-10">
+			<a  class="btn btn-link" href="/histidine"> H </a>
+		</div>
+		<div class="proteins-box-11">
+			<a  class="btn btn-link" href="/glutamine"> Q </a>
+		</div>
+		<div class="proteins-box-12">
+			<a  class="btn btn-link" href="/asparagine"> N </a>
+		</div>
+		<div class="proteins-box-13">
+			<a  class="btn btn-link" href="/lysine"> K </a>
+		</div>
+		<div class="proteins-box-14">
+			<a  class="btn btn-link" href="/aspartic"> D </a>
+		</div>
+		<div class="proteins-box-15">
+			<a  class="btn btn-link" href="/glutamic"> E </a>
+		</div>
+		<div class="proteins-box-16">
+			<a  class="btn btn-link" href="/cysteine"> C </a>
+		</div>
+		<div class="proteins-box-17">
+			<a  class="btn btn-link" href="/tryptophan"> W </a>
+		</div>
+		<div class="proteins-box-18">
+			<a  class="btn btn-link" href="/arginine"> R </a>
+		</div>
+		<div class="proteins-box-19">
+			<a  class="btn btn-link" href="/glycine"> G </a>
 		</div>
 	</div>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>	
 	<script type="text/javascript" src="/js/treasure.js"></script>
 </body>
 

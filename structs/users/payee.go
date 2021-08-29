@@ -14,19 +14,19 @@ var (
 )
 
 type (
-	Create_User struct {
-		Name     string
-		Fname    string
-		Madam    bool
-		Address  string // World Coodinates
-		Address2 string // local coodinates
-		Zip      string
-		City     string
-		Country  string
-		Email    string
-		Password string
-		Secure   bool
-	}
+	// Create_User struct {
+	// 	Name     string
+	// 	Fname    string
+	// 	Madam    bool
+	// 	Address  string 
+	// 	Address2 string 
+	// 	Zip      string
+	// 	City     string
+	// 	Country  string
+	// 	Email    string
+	// 	Password string
+	// 	Secure   bool
+	// }
 	DigialProfile struct {
 
 		// ledger my data
@@ -52,18 +52,21 @@ type (
 		Type        string
 	}
 
-	Vistors struct {
-		Id       string `json:"Id"`
-		Name     string `json:"Name"`
-		Email    string `json:"Email"`
-		Password string `json:"Password"`
-		FName    string `json:"FName"`
-		City     string `json:"City"`
-		Zip      string `json:"Zip"`
-		Address  string `json:"Address"`
-		LAddress string `json:"LAddress"`
-		Country  string `json:"Country"`
-		Eve      bool   `json:"Eve"`
+	Visitors struct {
+		Id       string `json:"id", omitempty`
+		Name     string `json:"name", omitempty`
+		Email    string `json:"email", omitempty`
+		Password string `json:"password", omitempty`
+		LastName    string `json:"lastname", omitempty`
+		City     string `json:"city",omitempty `
+		Zip      string `json:"zip", omitempty`
+		Address  string `json:"address", omitempty`
+		Apparment string `json:"apparment", omitempty`
+		Country  string `json:"country", omitempty`
+		Eve      bool   `json:"eve",omitempty`
+		PhoneNo  string `json:"phone", omitempty`
+		Twitter string 	`json:"twitter", omitempty`
+		// Remember bool `json:"remember", omitempty`
 	}
 
 	CreditCardInfo interface {
@@ -74,20 +77,20 @@ type (
 
 	DigitalPrint struct{}
 
-	UpdateProfile struct {
-		Id           string
-		FirstName    string
-		LastName     string
-		Phone        string
-		HouseAddress string
-		SubAddress   string
-		Country      string
-		Zip          string
-		Male         bool
-		Email        string
-		Twitter      string
-		City         string
-	}
+	// UpdateProfile struct {
+	// 	Id           string
+	// 	FirstName    string
+	// 	LastName     string
+	// 	Phone        string
+	// 	HouseAddress string
+	// 	SubAddress   string
+	// 	Country      string
+	// 	Zip          string
+	// 	Male         bool
+	// 	Email        string
+	// 	Twitter      string
+	// 	City         string
+	// }
 )
 
 func NewClient() CreditCardInfo {

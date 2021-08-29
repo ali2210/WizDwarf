@@ -23,9 +23,9 @@ type MyCoordinates struct {
 }
 
 type OpenWeatherApi interface {
-	OpenWeatherApiCall(apikey string) (*openmap.UV, error)
-	GetCoordinates(loc *MyCoordinates) openmap.Coordinates
-	UVCoodinates(c openmap.Coordinates, u *openmap.UV) error
+	OpenWeather(apikey string) (*openmap.UV, error)
+	GetCoordinates(loc *MyCoordinates) *openmap.Coordinates
+	UVCoodinates(c *openmap.Coordinates, u *openmap.UV) error
 	UVCompleteInfo(u *openmap.UV) ([]openmap.UVIndexInfo, error)
 	PrintLogs()
 }
@@ -59,4 +59,8 @@ func (*DataVisualization) UVCompleteInfo(u *openmap.UV) ([]openmap.UVIndexInfo, 
 
 func (d *DataVisualization) PrintLogs() {
 	log.Println("[Logs]... ", *d)
+}
+
+func NewWeatherClient() OpenWeatherApi {
+	return &DataVisualization{}
 }
