@@ -2,20 +2,17 @@
  <a href='https://opencollective.com/wizdwarfs/contribute/love-and-support-29623' target='blank'>
   <img alt="open collective badge" src="https://opencollective.com/wizdwarfs/tiers/love-and-support/badge.svg?label=Love%26Support&color=brightgreen" />
 </a>
-
-https://app.slack.com/client/T02AQ62EHHR/C02ALUWQ4LV/help
- 
+ [![CircleCI](https://circleci.com/gh/ali2210/WizDwarf/tree/master.svg?style=svg)](https://circleci.com/gh/ali2210/WizDwarf/tree/master)
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/T6T25CVYQ)
 [![Gitter](https://badges.gitter.im/wizdwarfs/futuristic-tech-dev.svg)](https://gitter.im/wizdwarfs/futuristic-tech-dev?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
->>>>>>> 93ae0ff54319133c57487e772c8e0f1045690945
-[![CircleCI](https://circleci.com/gh/ali2210/WizDwarf/tree/master.svg?style=svg)](https://circleci.com/gh/ali2210/WizDwarf/tree/master)
 
  # About Project
 
          Wizdwarfs build decentrlize platform for genetics. In 24hr, 7 days a weeks billions of aliens-code detected by our cellbody.
          Cellbody of an organsims doing their job very well. But there're some conditions when these alien-code are undetected by cellbody.
          For this reason our project analysis alien-code which hadn't detected in cellbody. Alien-genbank store 1000 of alien-code sequences and proteins structure. Once we have all pathogenic proteins then we save lot of lifes, that is remrkable. 
-## Image
+
+## Image 
  
       Production
                a .Docker local build image
@@ -63,3 +60,8 @@ https://app.slack.com/client/T02AQ62EHHR/C02ALUWQ4LV/help
    <object type="image/svg+xml" data="https://opencollective.com/wizdwarfs/tiers/love-and-support.svg?avatarHeight=36&width=600"></object>
    
    <a href='https://ko-fi.com/T6T25CVYQ' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi4.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+   
+## Discusion
+     
+    https://app.slack.com/client/T02AQ62EHHR/C02ALUWQ4LV/help
+    >>>>>>> 93ae0ff54319133c57487e772c8e0f1045690945
