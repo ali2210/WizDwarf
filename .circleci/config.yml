@@ -25,13 +25,13 @@ jobs:
     #### expecting it in the form of
     ####   /go/src/github.com/circleci/go-tool
     ####   /go/src/bitbucket.org/circleci/go-tool
-    working_directory: github.com/ali2210/wizdwarf
+    working_directory: ~/my-app
     steps:
       - checkout
       ### create TEST_RESULTS Directory
       - run : sudo mkdir -p $TEST_RESULTS
       - setup_remote_docker:
-          docker_layer_caching: true
+          docker_layer_caching: false
           version: 19.03.13
       - restore_cache : #restore application state if there is no changes
           keys :
