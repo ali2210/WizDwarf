@@ -37,13 +37,9 @@ jobs:
           keys :
             - go mod-v4-{{ checksum  "go.sum" }}
             
-      # build wiz-dwarf docker image 
+      # build wizdwarfs docker image 
       - run: docker build -t ali2210/wizdwarfs-masterpiece . 
       
-      # run docker image 
-      - run: docker run --hostname=wizdwarfs -p 5000:5000 -v app:/app/app_data -it ali2210/wizdwarfs-masterpiece
-      
-
       # specify any bash command here prefixed with `run: `
       - run: go get -v -t -d ./...
       - run: go test -v ./...
