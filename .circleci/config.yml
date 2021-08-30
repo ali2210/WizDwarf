@@ -6,7 +6,7 @@ jobs:
   build:
     docker:
       # specify the version
-      - image: circleci/golang:1.9
+      - image: circleci/golang:1.16
         auth:
           username: ali2210
           password: hackmydockeraccount0511
@@ -25,13 +25,13 @@ jobs:
     #### expecting it in the form of
     ####   /go/src/github.com/circleci/go-tool
     ####   /go/src/bitbucket.org/circleci/go-tool
-    working_directory: /go/src/github.com/{{ali2210}}/{{WizDawrf}}
+    working_directory: github.com/ali2210/wizdwarf
     steps:
       - checkout
       ### create TEST_RESULTS Directory
       - run : sudo mkdir -p $TEST_RESULTS
       - setup_remote_docker:
-          docker_layer_caching: false
+          docker_layer_caching: true
           version: 19.03.13
       - restore_cache : #restore application state if there is no changes
           keys :
@@ -41,10 +41,10 @@ jobs:
           name:  Application started ....
       
       # build wiz-dwarf docker image 
-      - run: docker build -t ali2210/wiz-dwarfs. 
+      - run: docker build -t ali2210/wizdwarfs . 
       
       # run docker image 
-      - run: docker run -d --hostname=wizdwarfs -p 5000:5000 -v app:/app/seqDir -it ali2210/wiz-dwarfs
+      - run: docker run --hostname=wizdwarfs -p 5000:5000 -v app:/app/app_data -it ali2210/wizdwarfs
       
 
       # specify any bash command here prefixed with `run: `
