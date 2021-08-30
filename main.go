@@ -53,7 +53,7 @@ var (
 	clientInstance    *ethclient.Client         = nil
 	ledgerPubcKeys    string                    = ""
 	ledgerBits        string                    = ""
-	Firestore_Rf      string                    = ""
+	// Firestore_Rf      string                    = ""
 	openReadFile      string                    = ""
 	publicAddress     string                    = ""
 	edit              bio.LevenTable            = SetEditParameters()

@@ -12,9 +12,9 @@ import(
 )
 
 var(
-	AppName           *firestore.Client
-	Cloud             users.DBFirestore
-	Firestore_Rf      string
+	appName           *firestore.Client
+	cloud             users.DBFirestore
+	//Firestore_Rf      string
 	Edit              bio.LevenTable
 	Algo              info.Levenshtein
 )
@@ -25,24 +25,24 @@ const(
 )
 
 func SetDBClientRef() *firestore.Client {
-	AppName = Firestore_Reference()
-	return AppName
+	appName = Firestore_Reference()
+	return appName
 }
 
 func GetDBClientRef() *firestore.Client{ 
-	if AppName == (&firestore.Client{}) {return (&firestore.Client{})}
-	 return AppName
+	if appName == (&firestore.Client{}) {return (&firestore.Client{})}
+	 return appName
 }
 
 func SetDBCollect() users.DBFirestore {
-	Cloud = users.NewCloudInstance()
-	return Cloud
+	cloud = users.NewCloudInstance()
+	return cloud
 }
 
 func GetDBCollect() users.DBFirestore {
 	var collect users.DBFirestore 
-	if reflect.DeepEqual(Cloud, collect){ return collect }
-	 return Cloud
+	if reflect.DeepEqual(cloud, collect){ return collect }
+	 return cloud
 }
 
 func GetKeyFile() string{ 
