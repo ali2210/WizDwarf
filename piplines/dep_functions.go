@@ -37,7 +37,7 @@ import(
 )
 
 var(
-	
+	Firestore_Rf string
 )
 
 const(
@@ -47,7 +47,7 @@ const(
 func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member users.Visitors) (*users.Visitors, error) {
 
 	
-	data, err := Cloud.SearchUser(GetDBClientRef(), member)
+	data, err := cloud.SearchUser(GetDBClientRef(), member)
 	if err != nil && data != nil {
 			log.Fatal("[Fail] No info ", err)
 			return &users.Visitors{}, err
@@ -132,7 +132,7 @@ func AddNewProfile(response http.ResponseWriter, request *http.Request, user use
 			member.Zip = user.Zip
 			member.Country = user.Country
 			
-			document,_, err := Cloud.AddUser(GetDBClientRef(), member)
+			document,_, err := cloud.AddUser(GetDBClientRef(), member)
 			if err != nil {
 				log.Fatal(" Bash Processing Error ", err.Error())
 				return &firestore.DocumentRef{}, err

@@ -2,7 +2,6 @@ package openweather
 
 import (
 	"testing"
-
 	"github.com/briandowns/openweathermap"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -25,42 +24,42 @@ var apikey = "7efdb33cK"
 
 func OpenWeatherPackageTest(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Open-Weather testing")
+	RunSpecs(t, "Open-Weather")
 }
 
-var _ = Describe("Open weather testcase", func() {
+var _ = Describe("Open weather", func() {
 
-	// Open-weather API VERSION TETST
-	Context("Open weather API-KEY Request", func() {
-		It("Open-weather API-KEY test", func() {
-
-			Expect(data.OpenWeather(apikey)).ShouldNot(BeEmpty())
+	Context("Open-weather ", func ()  {
+		data := DataVisualization{}
+		client, _ := data.OpenWeather(apikey)
+		coordinates := data.GetCoordinates(&MyCoordinates{
+			Longitude: 31.5204,
+			Latitude : 74.3587,
 		})
-	})
-
-	// Open- weather track your geopointt
-
-	Context("Open Weather Geopoint Testcase", func() {
-		It("Open weather Geopoint Results", func() {
-			Expect(data.GetCoordinates(&coordinates)).ShouldNot(BeEmpty())
+		err := data.UVCoodinates(coordinates, client)
+		uvindex , _ := data.UVCompleteInfo(client)
+		It(" Return Open-weather client object ", func ()  {
+			Specify(" open weather client object", func ()  {
+				Expect(client).Should(BeNil())
+			})
 		})
-	})
-
-	// Open -weather uv and coordinates
-	Context("Open weather UV Coordinatees Testcase", func() {
-		It("Open-weather UV Results based on coordinates ", func() {
-			c := data.GetCoordinates(&coordinates)
-			u, _ := data.OpenWeather(apikey)
-			Expect(data.UVCoodinates(c, u)).ShouldNot(BeEmpty())
+		It(" Return city coordinates", func ()  {
+			Specify(" City coordinates status", func(){
+				Expect(coordinates).Should(BeAssignableToTypeOf(struct{
+					Longitude float64 
+					Latitude float64  
+				}{}))
+			})
 		})
-	})
-
-	// Open-weather uv archieve
-
-	Context("Open weather Uv Archeive... ", func() {
-		It("Open-weather Uv history Results", func() {
-			u, _ := data.OpenWeather(apikey)
-			Expect(data.UVCompleteInfo(u)).ShouldNot(BeEmpty())
+		It(" Calculate uv index of your city", func ()  {
+			Specify(" uv predicition ", func ()  {
+				Expect(err).ShouldNot(Panic())
+			})
+		})
+		It(" Uv city index of a day", func ()  {
+			Specify(" uv city index", func ()  {
+				Expect(uvindex).Should(BeZero())
+			})
 		})
 	})
 
