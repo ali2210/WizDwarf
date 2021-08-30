@@ -37,14 +37,13 @@ jobs:
           keys :
             - go mod-v4-{{ checksum  "go.sum" }}
       - run : |
-          docker login ali2210/wiz-dwarfs -u ali2210 -p hackmydockeraccount0511 --password-stdin.
           name:  Application started ....
       
       # build wiz-dwarf docker image 
-      - run: docker build -t ali2210/wizdwarfs . 
+      - run: docker build -t ali2210/wizdwarfs-masterpiece . 
       
       # run docker image 
-      - run: docker run --hostname=wizdwarfs -p 5000:5000 -v app:/app/app_data -it ali2210/wizdwarfs
+      - run: docker run --hostname=wizdwarfs -p 5000:5000 -v app:/app/app_data -it ali2210/wizdwarfs-masterpiece
       
 
       # specify any bash command here prefixed with `run: `
