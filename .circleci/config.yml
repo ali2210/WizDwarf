@@ -45,7 +45,7 @@ jobs:
       - run: go test -v ./...
 
       # pull and build dependencies
-      - run: make
+      # - run: make
 
       # save your cache
       - save-cache:
