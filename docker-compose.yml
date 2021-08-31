@@ -1,0 +1,28 @@
+version: "3.3"
+
+services: 
+    traefik:
+      image: "traefik:v2.0.0"
+      command: 
+        - --entrypoints.web.address=:80
+        - --providers.docker
+        - --api.insecure
+        - --certificatesresolvers.le.acme.email=wizdwarfs@gmail.com
+        - --certificatesresolvers.le.acme.storage=/acme.json
+        - --certificatesresolvers.le.acme.tlschallenge=true
+      ports: 
+        - "80:80"
+        - "8080:8080"
+      volumes: 
+        - "/var/run/docker.sock:/var/run/docker.sock:ro"
+        - "./acme.json:/acme.json"
+    wizdwarfs:
+      image: ali2210/wizdwarfs-v0
+      labels: 
+      - "traefik.http.routers.wizdwarfs.rule=Host(`wizdwarfs.docker.localhost`)"
+      - "traefik.http.services.wizdwarfs.loadbalancer.server.port=5000"
+      - "traefik.http.routers.wizdwarfs.tls.certresolver=le"
+      ports: 
+        - "5000:5000"
+      volumes: 
+        - "./:/app/app_data"
