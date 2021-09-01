@@ -1,118 +1,86 @@
 
 
+/**
+ * declaration variables
+ * userProfileForm specified web form along with avatar option
+ */
+const userProfileForm = document.getElementsByClassName('profile-form')[0];
 
-function EditEvent() {
-    var submit = document.getElementById('submBtn');
-    console.log(submit);
-    submit.style.visibility = "visible";
+/**
+ * Editform input fields
+ */
+const editForm = document.getElementsByClassName('edit')[0];
+const editchoice = document.getElementsByClassName('col')[0];
 
-}
-
-
-function EmailEditEvent() {
-    var email = document.getElementById('email');
-    var duplicate = document.getElementById('demail');
-    email.remove();
-    duplicate.style.visibility = "visible";
-    var button = document.getElementById('button-input-email');
-    button.style.marginTop = '37px';
-    EditEvent();
-}
-
-function NameEditEvent() {
-    var name_in = document.getElementById('name');
-    var duplicate = document.getElementById('duname');
-    name_in.remove();
-    duplicate.style.visibility = "visible";
-    var button = document.getElementById('button-input-name');
-    button.style.marginTop = '37px';
-    EditEvent();
-
-}
-
-function FamilyNameEditEvent() {
-    var fname_in = document.getElementById('fname');
-    var duplicate = document.getElementById('dufname');
-    fname_in.remove();
-    duplicate.style.visibility = "visible";
-    var button = document.getElementById('button-input-fname');
-    button.style.marginTop = '37px';
-    EditEvent();
-}
-
-function ResidenceEditEvent() {
-    var res_in = document.getElementById('inputAddress');
-    var duplicate = document.getElementById('daddr');
-    res_in.remove();
-    duplicate.style.visibility = "visible";
-    var button = document.getElementById('button-input-addr');
-    button.style.marginTop = '37px';
-    EditEvent();
-}
-
-function SubResEditEvent() {
-    var sres_in = document.getElementById('inputAddress2');
-    var duplicate = document.getElementById('dadd');
-    sres_in.remove();
-    duplicate.style.visibility = "visible";
-    var button = document.getElementById('button-input-local');
-    button.style.marginTop = '37px';
-    EditEvent();
-}
-
-function CountryEditEvent() {
-    var coun_in = document.getElementById('country');
-    var duplicate = document.getElementById('dcoun');
-    coun_in.remove();
-    duplicate.style.visibility = "visible";
-    var button = document.getElementById('button-input-country');
-    button.style.marginTop = '37px';
-    EditEvent();
-}
+/**
+ * Avatar Upload or capture via stream
+ */
+userProfileForm.children[0].children[0].children[0].children[0].addEventListener("click", event=>{
+    if(event.target){
+        editForm.style.top = "700px";
+     }
+    
+});
 
 
-function ZipEditEvent() {
-    var zip_in = document.getElementById('inputZip');
-    var duplicate = document.getElementById('dzip');
-    zip_in.remove();
-    duplicate.style.visibility = "visible";
-    var button = document.getElementById('button-input-zip');
-    button.style.marginTop = '37px';
-    EditEvent();
-}
+/**
+ *  Edit-Option  allow user to add information which is not in database
+ *  Edit your Name 
+ */ 
+editchoice.children[0].children[1].addEventListener("click", event =>{
+    console.log(editForm.children[0].firstElementChild.children[0].readOnly);
+    editForm.children[0].firstElementChild.children[0].readOnly = false;
+    editForm.children[0].firstElementChild.children[0].addEventListener("change", function(){
+        console.log(editForm.children[0].firstElementChild.children[0].value.length);
+        if(editForm.children[0].firstElementChild.children[0].value.length>0){
+            editForm.children[0].firstElementChild.children[0].style.color = "green";
+            editForm.children[0].firstElementChild.children[1].style.color = "green";
+        }else if(editForm.children[0].firstElementChild.children[0].value.length == 0){
+            editForm.children[0].firstElementChild.children[0].style.color = "red";
+            editForm.children[0].firstElementChild.children[1].style.color = "red";
+        }
+    });
+});
 
-function TweetEditEvent() {
-    var tweet = document.getElementById('tweet');
-    var duplicate = document.getElementById('dtweet');
-    tweet.remove();
-    duplicate.style.visibility = "visible";
-    var button = document.getElementById('button-twitter');
-    button.style.marginTop = '37px';
-    EditEvent();
-}
-function CityEditEvent() {
-    var city = document.getElementById('city');
-    var duplicate = document.getElementById('dcity');
-    city.remove();
-    duplicate.style.visibility = "visible";
-    var button = document.getElementById('button-input-city');
-    button.style.marginTop = '37px';
-    EditEvent();
-}
+/**
+ * Edit your Lastname
+ */
 
-const bodyAlertSys = document.getElementsByClassName("container-alert")[0];
-const childLeft = bodyAlertSys.children[0];
-const childRight = bodyAlertSys.children[1];
-const closeFailBtn = childLeft.children[2];
-const closeSuccessBtn = childRight.children[1];
-function onrequestaction() {
-    childLeft.style.visibility = "hidden";
-}
+editchoice.children[1].children[1].addEventListener("click", event =>{
+    console.log(editForm.children[0].children[1].firstElementChild.readOnly);
+    editForm.children[0].children[1].firstElementChild.readOnly = false;
+    editForm.children[0].children[1].children[0].addEventListener("change", function(){
+        console.log(editForm.children[0].children[1].firstElementChild.value.length);
+        if(editForm.children[0].children[1].firstElementChild.value.length>0){
+            editForm.children[0].children[1].firstElementChild.style.color = "green";
+            editForm.children[0].children[1].lastElementChild.style.color = "green";
+        }else if(editForm.children[0].children[1].firstElementChild.value.length == 0){
+            editForm.children[0].children[1].firstElementChild.style.color = "red";
+            editForm.children[0].children[1].lastElementChild.style.color = "red";
+        }
+    });
+});
 
-closeFailBtn.addEventListener('click', onrequestaction, false);
+/**
+ * Edit Your Gender For Males
+ */
 
-function onrequestsuccess() {
-    childRight.style.visibility = "hidden";
-}
 
-closeSuccessBtn.addEventListener('click', onrequestsuccess, false);
+editchoice.children[2].children[0].children[0].addEventListener("click", event=>{
+    console.log(editForm.children[0].children[2].children[0].children[0].children[0].style.border);
+    editForm.children[0].children[2].children[0].children[0].style.border = "1px green dotted";
+    editForm.children[0].children[2].children[0].children[0].style.color = "green";
+    editForm.children[0].children[2].children[0].children[0].style.backgroundColor = "white";
+});
+
+/**
+ * Edit Your Gender For Female
+ */
+
+editchoice.children[2].children[1].children[0].addEventListener("click", event=>{
+    console.log("female",editForm.children[0].children[2].children[1].children[0].children[0].style.border);
+    editForm.children[0].children[2].children[1].children[0].style.border = "1px green dotted";
+    editForm.children[0].children[2].children[1].children[0].style.color = "green";
+    editForm.children[0].children[2].children[1].children[0].style.backgroundColor = "white";
+});
+

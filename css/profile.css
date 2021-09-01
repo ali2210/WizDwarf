@@ -1,136 +1,355 @@
-.register-main-div{
-    background-color:#f9f9f9;
-    font-family: 'Lato', sans-serif;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin-left: 150px;
-    align-items: center;
-  }
+.main-dashboard-div {
+  background-color:#f9f9f9;
+  font-family: 'Lato', sans-serif;
+  height: 100vh;
+}
+.icon-light {
+  color: black;
+  margin-right: 5px;
+}
+.dropdown-menu {
+  left: 30px;
+}
+.h4 {
+  margin: 20px 0px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 20px;
+}
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.logo {
+  height: 60px;
+}
+.custom-navbar {
+  background-color: #ededed;
+}
 
 
-  .logo {
-    width: 30%;
-    margin-bottom: 10px;
-  }
-  .register-form {
-    background: white;
-    width: 50%;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    padding: 20px;
-    margin-bottom: 120px;
-    margin-top: 120px;
-    margin-left: 30%;
-     /* box-shadow: 0 2px 34px 0 #ddd4d4; */
-  }
-  .custom-form-row {
-    margin: 20px 15px;
-  }
-  .custom-label {
-    font-weight: bold;
-  }
-  .navbar-brand{
-    display: flex;
-    position: relative;
-    width: auto;
-    margin-bottom: auto;
-  }
-  .duplicate{
-    visibility: hidden;
-  }
-  .form-control[readonly]{
-    background-color: #e9ecef;
-    opacity: 1;
-    color: darkgreen;
-  }
+.heading-text{
+margin-top: 70px;
+  display: flex;
+  justify-content: center;
+position: relative;
+margin-right: 18px;
 
-  .gender-box {
-    margin: 0px;
-    margin-left: 50px;
-    color:darkblue;
-  }
-  .submit-button {
-    background: #31dc58;
-    margin-top: 30px;
-    width: 30%;
-    color: white;
-    font-weight: bolder;
-    visibility: hidden;
-  }
-  .button-input{  
-    background: mediumseagreen;
-    margin-left: 90px;
-  }
-
-  .button-input-long{
-    background:mediumseagreen;
-    margin-left: 300px;
-  }
-
-  .change-service-color{
-    color: black;
-  }
-  .cancel-button{
-    background: #dc313a;
-    margin-top: 10px;
-    width: 30%;
-    color: white;
-    font-weight: bolder;
-  }
-  .submit-form-div, 
-  .image-div, 
-  .cancel-form-div {
-    display: flex;
-    justify-content: center;
-  }
-  .custom-form-group {
-    border: 1px solid #bbbbbb;
-    padding: 30px 15px;
-    margin-right: 20px;
-    box-shadow: 0 2px 34px 0 #e9e9e9;
-    width: 48%;
-  }
-  .full-width {
-    width: 100%;
-  }
-  .third-half-width {
-    width: 31.3%;
-  }
-  .custom-radio {
-    position: relative;
-    top: -5px;
-    margin-right: 10px;
-  }
-  .edit-input{
-    visibility: visible;
-    display: flex;
-    justify-content: center;
-    color: whitesmoke; 
-  }
-
-  .container-alert{
-    margin: 50px;
-    position: relative;
-    width: 80%;
-   left: 40px;
-   }
-   .alert-danger{
-     border-radius: 20px;
-     color:red;
-   }
-   .alert-success{
-     border-radius: 20px;
-     color: green;
-   }
-   .span-message{
-     position: inherit;
-     display: inherit;
-     margin-top: 30px ;
-   }
-   #danger{
-     margin-left: 90%;
-      border-radius: 10px; 
-      margin-bottom: 50px;
-   }
+}
+.avatar{
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background: aliceblue;
+  border-radius: 92px;
+  left: 514px;
+  top: 167px;
+  border: 5px skyblue solid;
+}
+.photo{
+  position: absolute;
+  top: 125px ;
+  left: 50px;
+}
+.card-body{
+ position: absolute;
+ width: 500px;
+ left: -218px;
+ border: 1px purple solid;
+ height: 256px; 
+ border-radius: 22px;
+}
+.camera{
+  width: 214px;
+  height: 197px;
+  border: 1px silver dashed;
+}
+.gallery{
+    position: absolute;
+    height: 197px;
+    width: 210px;
+    left: 249px;
+    background:aliceblue;
+    border-radius: 77px;
+}
+.photo1{
+  width: 70px;
+  height: 70px;
+  background: darkslateblue;
+  position: absolute;
+  left: 33px;
+  top: 26px;
+  border-radius: 36px;
+}
+.photo2{
+  width: 70px;
+  height: 70px;
+  background: darkslateblue;
+  position: absolute;
+  left: 118px;
+  top: 26px;
+  border-radius: 36px;
+}
+.photo3{
+  width: 70px;
+  height: 70px;
+  background: darkslateblue;
+  position: absolute;
+  left: 33px;
+  top: 106px;
+  border-radius: 36px;
+}
+.photo4{
+  width: 70px;
+  height: 70px;
+  background: darkslateblue;
+  position: absolute;
+  left: 118px;
+  top: 106px;
+  border-radius: 36px;
+}
+.savebtn{
+  position: absolute;
+  left: 96px;
+  top: 83px;
+}
+.btn-modify{
+  border-radius: 34px;
+  position: absolute;
+  left: -7px;
+  top: 0px;
+}
+.uploadbtn{
+  position: absolute;
+  top: 178px;
+  left: 105px;
+}
+.btn-param{
+  position: absolute;
+  width: 212px;
+  left: -84px;
+  border-radius: 9px;
+  top: 21px;
+}
+.file-image{
+  position: absolute;
+  left: -84px;
+  width: 212px;
+  top: -173px;
+}
+.edit{
+  position: absolute;
+  left: 279px;
+  top: 320px;
+  visibility: visible;
+}
+.name-field{
+  height: 44px;
+  border-radius: 10px;
+  border: 1px blue dashed;
+  position: absolute;
+  left: 32px;
+}
+.btn-user{
+  position: absolute;
+  left: 193px;
+  top: 3px;
+  border-radius: 25px;
+  color: yellow;
+}
+.last-field{
+  height: 44px;
+  border-radius: 10px;
+  border: 1px blue dashed;
+  position: absolute;
+  left: 362px;
+  top: 0px;
+}
+.btn-users{
+  position: absolute;
+  left: 519px;
+  top: 4px;
+  border-radius: 25px; 
+  color: yellow;
+}
+.adam{
+  top: 75px;
+  left: 268px;
+  position: absolute;
+}
+.eve{
+  top: 75px;
+  left: 307px;
+  position: absolute;
+}
+.btn-male{
+  width: 65px;
+  height: 65px;
+  position: absolute;
+  left: -30px;
+  border-radius: 24px;
+}
+.btn-female{
+  width: 65px;
+  height: 65px;
+  position: absolute;
+  left: 1px;
+  border-radius: 24px;
+}
+.address-field{
+  height: 44px;
+  border-radius: 10px;
+  border: 1px blue dashed;
+  position: absolute;
+  left: 30px;
+  top: 162px;
+  width: 549px;
+}
+.btn-home{
+  position: absolute;
+  left: 528px;
+  top: 166px;
+  border-radius: 25px;
+  color: yellow;
+}
+.apartment-field{
+  height: 44px;
+  border-radius: 10px;
+  border: 1px blue dashed;
+  position: absolute;
+  left: 30px;
+  top: 238px;
+  width: 549px;
+}
+.btn-apartment{
+  position: absolute;
+  left: 528px;
+  top: 242px;
+  border-radius: 25px;
+  color: yellow;
+}
+.country-field{
+  height: 44px;
+  border-radius: 10px;
+  border: 1px blue dashed;
+  position: absolute;
+  left: 32px;
+  top: 311px;
+}
+.btn-country{
+  position: absolute;
+  left: 193px;
+  top: 315px;
+  border-radius: 25px;
+  color: yellow;
+}
+.city-field{
+  height: 44px;
+  border-radius: 10px;
+  border: 1px blue dashed;
+  position: absolute;
+  left: 371px;
+  top: 311px;
+}
+.btn-city{
+  position: absolute;
+  left: 535px;
+  top: 315px;
+  border-radius: 25px;
+  color: yellow;
+}
+.email-field{
+  height: 44px;
+  border-radius: 10px;
+  border: 1px blue dashed;
+  position: absolute;
+  left: 31px;
+  top: 385px;
+}
+.span-email{
+  position: absolute;
+  left: 193px;
+  top: 397px;
+  color: green;
+  visibility: hidden;
+}
+.span-email-unchecked{
+  position: absolute;
+  left: 213px;
+  top: 397px;
+  color: red;
+  visibility: visible;
+}
+.phone-field{
+  height: 44px;
+  border-radius: 10px;
+  border: 1px blue dashed;
+  position: absolute;
+  left: 371px;
+  top: 385px;
+}
+.span-phone{
+  position: absolute;
+  left: 535px;
+  top: 397px;
+  color: green;
+  visibility: hidden;
+}
+.span-phone-unchecked{
+  position: absolute;
+  left: 554px;
+  top: 397px;
+  color: red;
+  visibility: visible;
+}
+.zip-field{
+  height: 44px;
+  border-radius: 10px;
+  border: 1px blue dashed;
+  position: absolute;
+  left: 31px;
+  top: 458px;
+}
+.btn-zip{
+  position: absolute;
+  left: 196px;
+  top: 463px;
+  border-radius: 25px;
+  color: yellow;
+}
+.tweet-field{
+  height: 44px;
+  border-radius: 10px;
+  border: 1px blue dashed;
+  position: absolute;
+  left: 371px;
+  top: 458px; 
+}
+.btn-tweet{
+  position: absolute;
+  left: 532px;
+  top: 463px;
+  border-radius: 25px;
+  color: yellow;
+}
+.btn-tweet:hover,.btn-zip:hover,
+.btn-city:hover,.btn-country:hover,
+.btn-apartment:hover,.btn-home:hover,
+.btn-users:hover,.btn-user:hover, .btn-male:hover{
+  color: blue;
+}
+.btn-female:hover{
+  color:red;
+}
+.btn-save{
+  position: absolute;
+  top: 521px;
+  left: 233px;
+}
+.btn-cloud{
+  width: 158px;
+}
+.btn-cloud:hover{
+  color:chartreuse;
+  border-radius: 50px;
+}
