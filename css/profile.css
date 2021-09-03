@@ -61,7 +61,7 @@ margin-right: 18px;
 }
 .camera{
   width: 214px;
-  height: 197px;
+  height: 161px;
   border: 1px silver dashed;
 }
 .gallery{
@@ -121,7 +121,7 @@ margin-right: 18px;
 }
 .uploadbtn{
   position: absolute;
-  top: 178px;
+  top: 161px;
   left: 105px;
 }
 .btn-param{
@@ -152,7 +152,7 @@ margin-right: 18px;
 }
 .btn-user{
   position: absolute;
-  left: 193px;
+  left: 161px;
   top: 3px;
   border-radius: 25px;
   color: yellow;
@@ -167,7 +167,7 @@ margin-right: 18px;
 }
 .btn-users{
   position: absolute;
-  left: 519px;
+  left: 492px;
   top: 4px;
   border-radius: 25px; 
   color: yellow;
@@ -352,4 +352,9 @@ margin-right: 18px;
 .btn-cloud:hover{
   color:chartreuse;
   border-radius: 50px;
+}
+.myphotos{
+  position: absolute;
+  top: 61px;
+  left: 186px;
 }

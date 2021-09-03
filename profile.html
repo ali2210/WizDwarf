@@ -96,11 +96,12 @@
                   <div class="camera">
                     <div class="uploadbtn">
                       <button class="btn btn-dark btn-param" type="button">
-                        <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+                        <i class="fa fa-video-camera" aria-hidden="true"></i>
                       </button>
-                      <button class="btn btn-dark file-image" type="button">
+                      <input type="file" class="myphotos" accept="images/*">
+                      <!-- <button class="btn btn-dark file-image" type="button">
                         <i class="fa fa-desktop" aria-hidden="true"></i>
-                      </button>
+                      </button> -->
                     </div>
                   </div>
                   <div class="gallery">
@@ -118,53 +119,52 @@
             </div>
             </div>
           </div>
-        </div>
         <div class="edit">
           <div class="col">
             <div class="row">
-              <input type="text" placeholder="Name" class="name-field" name="name" readonly>
+              <input type="text" placeholder="Name" class="name-field" name="name" readonly required>
               <button class="btn btn-light btn-user" type="button">
                 <i class="fa fa-user-o" aria-hidden="true"></i>
               </button>
               </div>
               <div class="row">
-                <input type="text" placeholder="Lastname" class="last-field" name="lastname" readonly>
+                <input type="text" placeholder="Lastname" class="last-field" name="lastname" readonly required>
                 <button class="btn btn-light btn-users" type="button">
                   <i class="fa fa-users" aria-hidden="true"></i>
                 </button>
               </div>
               <div class="row">
                 <div class="adam">
-                    <button class="btn btn-light btn-male" type="button" name="gender">
+                    <button class="btn btn-light btn-male" type="button" name="gender" aria-required="true">
                       <i class="fa fa-male" aria-hidden="true"></i>
                     </button>
                 </div>
                 <div class="eve">
-                  <button class="btn btn-light btn-female" type="button" name="gender">
+                  <button class="btn btn-light btn-female" type="button" name="gender" aria-required="true">
                     <i class="fa fa-female" aria-hidden="true"></i>
                   </button>
                 </div>
               </div>
               <div class="row">
-                <input class="address-field" type="text" placeholder="Address" name="address">
+                <input class="address-field" type="text" placeholder="Address" name="address" readonly required>
                 <button class="btn btn-light btn-home" type="button">
                   <i class="fa fa-home" aria-hidden="true"></i>
                 </button>
               </div>
               <div class="row">
-                <input class="apartment-field" type="text" placeholder="Aparatment" name="apartment">
+                <input class="apartment-field" type="text" placeholder="Aparatment" name="apartment" readonly required>
                 <button class="btn btn-light btn-apartment" type="button">
                   <i class="fa fa-bed" aria-hidden="true"></i>
                 </button>
               </div>
               <div class="row">
-                <input class="country-field" type="text" placeholder="Country" name="country">
+                <input class="country-field" type="text" placeholder="Country" name="country" readonly required>
                 <button class="btn btn-light btn-country" type="button">
                   <i class="fa fa-globe" aria-hidden="true"></i>
                 </button>
               </div>
               <div class="row">
-                <input class="city-field" type="text" placeholder="City" name="city">
+                <input class="city-field" type="text" placeholder="City" name="city" readonly required>
                 <button class="btn btn-light btn-city" type="button">
                   <i class="fa fa-map-marker" aria-hidden="true"></i>
                 </button>
@@ -179,7 +179,7 @@
                 </span>
               </div>
               <div class="row">
-                <input class="phone-field" type="tel" name="phone" placeholder="Phone" value="">
+                <input class="phone-field" type="tel" name="phone" placeholder="Phone" value="" readonly>
                 <span class="span-phone">
                   <i class="fa fa-check-circle-o" aria-hidden="true"></i>
                 </span>
@@ -188,25 +188,26 @@
                 </span>                
               </div>
               <div class="row">
-                <input class="zip-field" type="number" name="zip" placeholder="ZIP" value="">
+                <input class="zip-field" type="number" name="zip" placeholder="ZIP" value="" readonly required>
                 <button class="btn btn-light btn-zip" type="button">
                   <i class="fa fa-map-pin" aria-hidden="true"></i>
                 </button>
               </div>
               <div class="row">
-                <input class="tweet-field" type="text" name="tweet" placeholder="Tweet" value="">
+                <input class="tweet-field" type="text" name="tweet" placeholder="Tweet" value="" readonly required>
                 <button class="btn btn-light btn-tweet" type="button">
                   <i class="fa fa-twitter-square" aria-hidden="true"></i>
                 </button>
             </div>
             <div class="btn-save">
-              <button type="submit" class="btn btn-success btn-cloud">
+              <button type="submit" class="btn btn-success btn-cloud" disabled>
                 <i class="fa fa-cloud" aria-hidden="true"></i>
               </button>
             </div>
           </div>
         </div>
     </form>
+    </div>
 
 
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
