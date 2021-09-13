@@ -67,7 +67,7 @@ margin-right: 18px;
     position: absolute;
     height: 197px;
     width: 210px;
-    left: 249px;
+    left: 266px;
     background:aliceblue;
     border-radius: 77px;
 }
@@ -120,7 +120,7 @@ margin-right: 18px;
 }
 .uploadbtn{
   position: absolute;
-  top: 161px;
+  top: 125px;
   left: 105px;
 }
 .btn-param{
@@ -354,8 +354,8 @@ margin-right: 18px;
 }
 .myphotos{
   position: absolute;
-  top: 61px;
-  left: 186px;
+  top: 105px;
+  left: -5px;
 }
 .img-class{
   position: absolute;
@@ -373,4 +373,14 @@ margin-right: 18px;
   top: 198px;
   width: 377px;
   font-size:small;
+}
+.photo-card{
+  position: absolute;
+  left: -200px;
+  top: 70px;
+}
+.profile-form{
+  position: absolute;
+  left: -226px;
+  top: -22px;
 }

@@ -268,8 +268,8 @@ uploadImage.children[0].children[0].addEventListener("click", (event) =>{
     uploadImage.children[0].children[0].style.color = "white";
     uploadImage.children[0].children[0].className = "btn btn-success";
     uploadImage.children[0].children[0].style.position = "absolute";
-    uploadImage.children[0].children[0].style.top = "32px";
-    uploadImage.children[0].children[0].style.left = "-84px";
+    uploadImage.children[0].children[0].style.top = "30px";
+    uploadImage.children[0].children[0].style.left = "-96px";
     uploadImage.children[0].children[0].style.borderRadius ="10px";
     
     /**
@@ -299,8 +299,8 @@ uploadImage.children[0].children[0].addEventListener("click", (event) =>{
     stop.appendChild(index);
     
     stop.style.position = "absolute";
-    stop.style.left = "187px";
-    stop.style.top = "193px";
+    stop.style.left = "207px";
+    stop.style.top = "155px";
     stop.style.borderRadius = "10px";
     uploadImage.appendChild(stop);
 
@@ -375,16 +375,16 @@ uploadImage.children[0].children[0].addEventListener("click", (event) =>{
          * Still pictures frame adjust window size
          */
         
-        canvas_Session[0].style.left = "43px";
+        canvas_Session[0].style.left = "46px";
         canvas_Session[0].style.top = "37px";
 
-        canvas_Session[1].style.left = "128px";
+        canvas_Session[1].style.left = "134px";
         canvas_Session[1].style.top = "37px";
         
-        canvas_Session[2].style.left = "43px";
+        canvas_Session[2].style.left = "46px";
         canvas_Session[2].style.top = "119px";
         
-        canvas_Session[3].style.left = "128px";
+        canvas_Session[3].style.left = "134px";
         canvas_Session[3].style.top = "118px";
         
         var frames_per_sec = new Array(4); 
