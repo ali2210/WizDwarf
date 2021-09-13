@@ -3,8 +3,6 @@ package users
 import (
 	"context"
 	"fmt"
-	//"log"
-	//firebase "firebase.google.com/go"
 	"cloud.google.com/go/firestore"
 	"google.golang.org/api/iterator"
 )
@@ -16,10 +14,11 @@ const (
 type (
 	
 	DBFirestore interface {
+		
 		AddUser(client *firestore.Client, member Visitors) (*firestore.DocumentRef,*firestore.WriteResult, error)
 		GetDocumentById(client *firestore.Client, member Visitors) (map[string]interface{}, error)
 		SearchUser(client *firestore.Client, member Visitors) (map[string]interface{}, error)
-		
+
 	}
 	
 	FirestoreClient struct{}
@@ -40,12 +39,11 @@ func (*FirestoreClient) AddUser(client *firestore.Client, member Visitors) (*fir
 		"city" : member.City,
 		"zip" : member.Zip,
 		"address" : member.Address,
-		"apparment" : member.Apparment,
+		"appartment" : member.Appartment,
 		"country" : member.Country,
 		"eve" : member.Eve,
 		"phone" : member.PhoneNo,
 		"twitter" : member.Twitter,
-		// "remember" : member.Remember,
 	})
 
 	if err!= nil{

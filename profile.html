@@ -41,15 +41,12 @@
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
               <!-- <a class="dropdown-item active" href="/open"><i class="fa fa-handshake-o " aria-hidden="true"></i> Premium </a>
               <a class="dropdown-item" href="/"> <i class="fa fa-briefcase" aria-hidden="true"> Service </i>
-              </a>
-              <a class="dropdown-item" href="/"> <i class="fa fa-money" aria-hidden="true"> Transactions </i>
-              </a> -->
-              <!-- <a class="dropdown-item" href="/open/setting"><i class="fa fa-cogs" aria-hidden="true"></i> Settings</a> -->
-              <div class="card" style="width: 25rem; height:27rem;">
-                <img
+              </a>-->
+              <div class="card" style="width: 25rem; height:22rem;">
+                <img class="images"
                   src="https://nakedsecurity.sophos.com/wp-content/uploads/sites/2/2020/01/shutterstock_1027402033.jpg?w=640"
                   class="card-img-top" alt="digital Fingerprints">
-                <div class="card-body">
+                <div class="card-body card-body-text">
                   <h5 class="card-title"> Browser Fingerprint Experience!</h5>
                   <p class="card-text"> Now a days internet is an basic necessity of life. Everyone stay connected with their love ones. With Browser Fingerprint, only authorize
                     user access it's data. We ensure your data remain in your hand, particularly your actions or choices that make during session.
@@ -59,18 +56,16 @@
             </div>
           </li>
           <li class="nav-item dropdown pl-3">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+            <a class="nav-link dropdown-toggle" href="/dashboard/profile" id="navbarDropdownMenuLink" data-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false">
               <i class="fa fa-user icon-light" aria-hidden="true"></i>
               Profile
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <!-- <a class="dropdown-item" href="/dashbaord/setting"><i class="fa fa-sliders" aria-hidden="true"></i>
-                Setting</a> -->
               <a class="dropdown-item" href="/logout"><i class="fa fa-sign-out icon icon-light"
                   aria-hidden="true"></i>Logout</a>
               <div class="card" style="width: 25rem; height: 25rem;">
-                <img
+                <img class="img-class"
                   src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOaJY0dC2FWMzFME5auGOpwMHAgoVJfWiDyw&usqp=CAU"
                   alt="Biomolecular Computing">
                 <div class="card-body">
@@ -83,7 +78,7 @@
       </div>
     </nav>
 
-    <form class="profile-form">
+    <form class="profile-form" action="/dashboard/profile", method="post">
         <div class="avatar">
           <div class="photo">
             <p>
@@ -219,6 +214,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
     </script>
+  <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
   <script src="/js/profile.js"></script>
 </body>
 

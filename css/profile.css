@@ -53,10 +53,9 @@ margin-right: 18px;
 }
 .card-body{
  position: absolute;
- width: 500px;
- left: -218px;
- border: 1px purple solid;
- height: 256px; 
+ left:209px;
+ top: -15px;
+ font-size:larger;
  border-radius: 22px;
 }
 .camera{
@@ -238,7 +237,7 @@ margin-right: 18px;
 }
 .btn-country{
   position: absolute;
-  left: 193px;
+  left: 164px;
   top: 315px;
   border-radius: 25px;
   color: yellow;
@@ -253,7 +252,7 @@ margin-right: 18px;
 }
 .btn-city{
   position: absolute;
-  left: 535px;
+  left: 509px;
   top: 315px;
   border-radius: 25px;
   color: yellow;
@@ -268,14 +267,14 @@ margin-right: 18px;
 }
 .span-email{
   position: absolute;
-  left: 193px;
+  left: 171px;
   top: 397px;
   color: green;
   visibility: hidden;
 }
 .span-email-unchecked{
   position: absolute;
-  left: 213px;
+  left: 187px;
   top: 397px;
   color: red;
   visibility: visible;
@@ -290,14 +289,14 @@ margin-right: 18px;
 }
 .span-phone{
   position: absolute;
-  left: 535px;
+  left: 512px;
   top: 397px;
   color: green;
   visibility: hidden;
 }
 .span-phone-unchecked{
   position: absolute;
-  left: 554px;
+  left: 528px;
   top: 397px;
   color: red;
   visibility: visible;
@@ -312,7 +311,7 @@ margin-right: 18px;
 }
 .btn-zip{
   position: absolute;
-  left: 196px;
+  left: 170px;
   top: 463px;
   border-radius: 25px;
   color: yellow;
@@ -327,7 +326,7 @@ margin-right: 18px;
 }
 .btn-tweet{
   position: absolute;
-  left: 532px;
+  left: 505px;
   top: 463px;
   border-radius: 25px;
   color: yellow;
@@ -357,4 +356,21 @@ margin-right: 18px;
   position: absolute;
   top: 61px;
   left: 186px;
+}
+.img-class{
+  position: absolute;
+  left: 0;
+  width: 216px;
+}
+.images{
+  position: absolute;
+  width: 397px;
+  left: 0;
+}
+.card-body-text{
+  position: absolute;
+  left: -8px;
+  top: 198px;
+  width: 377px;
+  font-size:small;
 }

@@ -458,9 +458,21 @@ uploadImage.children[0].children[0].addEventListener("click", (event) =>{
         avatarSelector.children[1].style.height = "80px";
         avatarSelector.style.border = "none";
     }
-
-    
-
 });
+
+const btn_submit = document.getElementsByClassName("btn-save")[0];
+let pusher_channel = {
+    appid : "1265511",
+    cluster : "mt1",
+    key : "65993b3c66b5317411a5",
+    secret : "4f8bf3faf121d9c8dadf",
+};
+btn_submit.addEventListener("click", (event) => {
+    if (avatarSelector.children[1].id != ""){
+        Pusher.logToConsole = true; //pusher log active 
+        let pusher_channel_credentials = new Pusher(pusher.key, {cluster : pusher.cluster, encrypted:true});
+        console.log("Pusher_channels logs:", pusher_channel_credentials);
+    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+}) 
 
 

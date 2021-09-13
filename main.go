@@ -174,7 +174,7 @@ func main() {
 	routing.HandleFunc("/login", existing)
 	routing.HandleFunc("/dashboard", dashboard)
 	routing.HandleFunc("/dashbaord/setting", setting)
-	// routing.HandleFunc("/dashbaord/setting/profile", profile)
+	routing.HandleFunc("/dashboard/profile", profile)
 	routing.HandleFunc("/dashbaord/setting/about", aboutMe)
 	routing.HandleFunc("/dashboard/setting/pay/credit/add", credit)
 	routing.HandleFunc("/dashbaord/setting/pay/credit/delete", deleteCard)
@@ -384,74 +384,30 @@ func setting(w http.ResponseWriter, r *http.Request) {
 		log.Println("[Accept]", r.URL.Path)
 		temp.Execute(w, "setting")
 	}
+ }
 
-// }
+func profile(w http.ResponseWriter, r *http.Request) {
 
-// func profile(w http.ResponseWriter, r *http.Request) {
-
-// 	temp := template.Must(template.ParseFiles("profile.html"))
-
-// 	if accountID == "" {
-// 		log.Fatal("[Error ] Please login  ")
-// 		return
-// 	}
-// 	detailsAcc, err := Cloud.GetProfile(AppName, accountID, accountVisitEmail)
-// 	if err != nil {
-// 		log.Fatalln("[Fail] Operation..", err)
-// 		return
-// 	}
-
-// 	if r.Method == "GET" {
-// 		log.Println("[Accept] Method:", r.Method)
-// 		log.Println("[Accept]", r.URL.Path)
-
-// 		log.Println("Details:", detailsAcc)
-// 		temp.Execute(w, detailsAcc)
-// 	} else {
-// 		log.Println("[Accept] Method:", r.Method)
-// 		log.Println("[Accept] Path:", r.URL.Path)
-
-// 		r.ParseForm()
-
-// 		// save value in db
-// 		MyProfile := users.Visitors{
-// 			Id:           accountID,
-// 			Name:    	  r.FormValue("uname"),
-// 			LastName:     r.FormValue("ufname"),
-// 			PhoneNo:      r.FormValue("phone"),
-// 			Address: 	  r.FormValue("address"),
-// 			Apparment:    r.FormValue("inputAddress2"),
-// 			Country:      r.FormValue("country"),
-// 			Zip:          r.FormValue("inputZip"),
-// 			Email:        r.FormValue("email"),
-// 			Twitter:      r.FormValue("tweet"),
-// 			City:         r.FormValue("city"),
-// 		}
-
-// 		if accountID == "" {
-// 			log.Fatal("[Error ] Please login  ")
-// 			return
-// 		}
-// 		MyProfile.Id = accountID
-
-// 		male := r.FormValue("gender")
-// 		if male == "on" {
-// 			MyProfile.Male = true
-// 		}
-// 		MyProfile.Male = false
-
-// 		profile, err := Cloud.UpdateProfiles(AppName, &MyProfile)
-// 		if err != nil {
-// 			log.Fatalln("[Fail] Operation..", err)
-// 			return
-// 		}
-
-// 		log.Println("[Accept] Profile updated... ", profile)
-// 		w.WriteHeader(http.StatusOK)
-// 		r.Method = "GET"
-// 		success(w, r)
-
-// 	}
+ 	temp := template.Must(template.ParseFiles("profile.html"))
+	
+	user ,err := Cloud.GetDocumentById(AppName, *profiler)
+	if err != nil {
+		log.Printf("Database query failed: %v", err)
+		return
+	}
+	if r.Method == "GET"{
+		log.Println("Method:", r.Method)
+		log.Println("URL:", r.URL.Path)
+		temp.Execute(w, user)
+	}else{
+		r.ParseForm()
+		user := Visitors{Name: r.name, LastName: r.lastname,
+			 Address: r.address, Appartment, Eve:r.gender, 
+			 Zip: r.zip, City: r.city, Country: r.country,
+			 Twitter : r.twitter}
+		fmt.Println("edit profile:", user)
+	}
+ 	
 }
 
 func credit(w http.ResponseWriter, r *http.Request) {

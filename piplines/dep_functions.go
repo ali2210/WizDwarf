@@ -405,6 +405,14 @@ func Mounted(w http.ResponseWriter, r *http.Request, openReadFile string) (strin
 
 }
 
+func Encrypted_Stream_Channel(w http.ResponseWriter, r *http.Request){
+
+	/*
+	*  To keep user privacy , Encrypted-Channels accept stream of data. 
+	*  Onces the data transfer complete this path completely closed.
+	*/
+}
+
 func ReadAllow(serverFile *os.File, userFile os.FileInfo) ([]string, []string, error) {
 
 	seq, err := RFiles(userFile.Name())
