@@ -18,7 +18,6 @@ type (
 		AddUser(client *firestore.Client, member Visitors) (*firestore.DocumentRef,*firestore.WriteResult, error)
 		GetDocumentById(client *firestore.Client, member Visitors) (map[string]interface{}, error)
 		SearchUser(client *firestore.Client, member Visitors) (map[string]interface{}, error)
-
 	}
 	
 	FirestoreClient struct{}
@@ -77,5 +76,6 @@ func (*FirestoreClient) SearchUser(client *firestore.Client, member Visitors) (m
 	}
 	return profile_search, nil
 }
+
 
 

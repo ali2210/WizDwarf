@@ -8,6 +8,7 @@ import(
 	"crypto/sha256"
 	"encoding/hex"
 	"net/http"
+	"log"
 	"cloud.google.com/go/firestore"
 	// "github.com/ali2210/wizdwarf/db"
 	// "errors"
@@ -17,7 +18,6 @@ import(
 	"reflect"
 	"crypto/ecdsa"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"log"
 	"encoding/json"
 	"fmt"
 	"golang.org/x/net/context"
@@ -33,6 +33,9 @@ import(
 	info "github.com/ali2210/wizdwarf/structs/bioinformatics/model"
 	"github.com/ali2210/wizdwarf/structs/users"
 	"github.com/ali2210/wizdwarf/structs"
+	"database/sql"
+	"time"
+	//"io"
 	// cloudWallet "github.com/ali2210/wizdwarf/db/cloudwalletclass"
 )
 
@@ -40,9 +43,101 @@ var(
 	Firestore_Rf string
 )
 
-const(
-	
+
+// type Pictures struct {
+// 	ID string `json:"id", omitempty`
+// 	Data string `json:"data", omitempty`
+// 	Times time.Time `json:"time", omitempty`
+// 	Dates float64 `json:"dates", omitempty`
+// }
+
+// type Photos_Collection struct {
+// 	Collection []Pictures `json:"collection", omitempty`	
+// }
+
+const (
+	host = "0.0.0.0"
+	port = "5432"
+	dbname = "pictures"
+	user = "dwarfs"
+	password  = "wiz"
 )
+
+func OpenSQLConnection()(*sql.DB, error){
+	
+	// open postgres sql connection  
+	postgresSqlParam := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disabled", host, port, user, password, dbname)
+	connection,err := sql.Open("postgres", postgresSqlParam); if err != nil  || connection == nil{
+		log.Println("Failed to open database", err.Error())
+		return connection, err
+	}
+
+	// connection accept 
+	fmt.Println("Conncetion accept:", connection)
+	return connection, nil
+}
+
+
+func Migrate_Sql_Instance(connection *sql.DB)(*sql.Result, error){
+	 
+		// Table store pictures information such as 
+		// picture_id , data, time and date.
+	sql := `
+		CREATE TABLE IF NOT EXISTS photos(
+			id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+			data VARCHAR NOT NULL,
+			time VARCHAR NOT NULL, 
+			date VARCHAR NOT NULL
+		);
+
+	`
+	// Create new table with the provided information
+	result , err := connection.Exec(sql); if err != nil {
+		log.Println("Error executing query :", err.Error())
+		return &result, err
+	}
+	return &result, nil
+}
+
+
+func Pictures_Stream(db *sql.DB, r *http.Request){
+	
+	file , handle , err := r.FormFile("avatars_gen")
+	if err != nil{
+		log.Println("Error in streaming reading file :", err.Error())
+		return
+	}
+	
+	fmt.Println("File :", file, "handle :", handle)
+	defer file.Close()
+
+	path, err := os.Stat("public/");if os.IsExist(err) {
+		log.Println("public folder does not exist", err.Error())
+		return 
+	}
+
+	fmt.Println("Path:", path)
+
+	dst , err := os.Create("public/"+handle.Filename); if err != nil {
+		log.Println("New File Create", err.Error())
+		return 
+	}
+	fmt.Println(" Destination file :", dst)
+	defer dst.Close()
+
+	// src, err := handle.Filename().Open(); if err != nil {
+	// 	log.Println("Stream file opening", err.Error())
+	// 	return
+	// }
+	// fmt.Println("Source File :", src)
+	// defer src.Close()
+
+	// data , err := io.Copy(dst, src); if err != nil {
+	// 	log.Println("Copy data to destination file", err.Error())
+	// 	return
+	// }
+	// fmt.Println(" Data written :", data)
+}
 
 func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member users.Visitors) (*users.Visitors, error) {
 
@@ -84,6 +179,50 @@ func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member users.Vi
 // 	json.NewEncoder(response).Encode(visitor)
 //
 // }
+
+func UpdateProfile(w http.ResponseWriter, r *http.Request, user users.Visitors)(*users.Visitors, error){
+
+	var member users.Visitors
+	request_member , err := json.Marshal(member); if err != nil {
+		log.Println("Error marshalling", err.Error())
+		return &member, err 
+	}
+
+	if err = json.Unmarshal(request_member, &member); err != nil {
+		log.Println("Error unmarshalling", err.Error())
+		return &member , err
+	}
+	fire_gateway, err := Firebase_Gatekeeper(w,r,user); if err != nil {
+		log.Println("Error data request", err.Error())
+		return &member, err
+	}
+
+	if !reflect.DeepEqual(fire_gateway, request_member){
+		doc , result, err := cloud.AddUser(GetDBClientRef(), user); if err != nil {
+			log.Println("Error update user", err.Error())
+			return &member, err
+		}
+
+		fmt.Println("Document:", doc, "Result:", result)
+		json_firebase_user, err := cloud.SearchUser(GetDBClientRef(), user); if err != nil {
+			log.Println("Error search user", err.Error())
+			return &member, err 
+		}
+		data, err := json.Marshal(json_firebase_user); if err != nil {
+			log.Println("Error marshal user", err.Error())
+			return &member, err
+		}
+		if err = json.Unmarshal(data, &member); err != nil {
+			log.Println("Error unmarshal user", err.Error())
+			return  &member, err
+		}
+		log.Println("Data:", string(data))
+	}else{
+		log.Println("Error when updating user", err.Error())
+		return &member, err
+	}
+	return fire_gateway, nil
+}
 
 func AddNewProfile(response http.ResponseWriter, request *http.Request, user users.Visitors, im string) (*firestore.DocumentRef, error){
 
@@ -127,7 +266,7 @@ func AddNewProfile(response http.ResponseWriter, request *http.Request, user use
 				member.Eve = user.Eve
 			}
 			member.Address = user.Address
-			member.Apparment = user.Apparment
+			member.Appartment = user.Appartment
 			member.City = user.City
 			member.Zip = user.Zip
 			member.Country = user.Country

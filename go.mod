@@ -17,6 +17,7 @@ require (
 	github.com/logpacker/PayPal-Go-SDK v2.0.5+incompatible
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect
+	github.com/mattn/go-sqlite3 v1.14.8 // indirect
 	github.com/onsi/ginkgo v1.16.4
 	github.com/onsi/gomega v1.16.0
 	github.com/plutov/paypal v2.0.5+incompatible // indirect

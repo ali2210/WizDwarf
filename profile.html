@@ -13,6 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" type="text/css" media="screen" href="/css/profile.css">
+  <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 </head>
 
 <body>
@@ -45,7 +46,7 @@
               <div class="card" style="width: 25rem; height:22rem;">
                 <img class="images"
                   src="https://nakedsecurity.sophos.com/wp-content/uploads/sites/2/2020/01/shutterstock_1027402033.jpg?w=640"
-                  class="card-img-top" alt="digital Fingerprints">
+                  alt="Digital Fingerprints">
                 <div class="card-body card-body-text">
                   <h5 class="card-title"> Browser Fingerprint Experience!</h5>
                   <p class="card-text"> Now a days internet is an basic necessity of life. Everyone stay connected with their love ones. With Browser Fingerprint, only authorize
@@ -56,14 +57,17 @@
             </div>
           </li>
           <li class="nav-item dropdown pl-3">
-            <a class="nav-link dropdown-toggle" href="/dashboard/profile" id="navbarDropdownMenuLink" data-toggle="dropdown"
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false">
               <i class="fa fa-user icon-light" aria-hidden="true"></i>
               Profile
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="/dashboard/profile"><i class="fa fa-sliders" aria-hidden="true"></i>
+                Edit-Profile </a>
               <a class="dropdown-item" href="/logout"><i class="fa fa-sign-out icon icon-light"
                   aria-hidden="true"></i>Logout</a>
+                  
               <div class="card" style="width: 25rem; height: 25rem;">
                 <img class="img-class"
                   src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOaJY0dC2FWMzFME5auGOpwMHAgoVJfWiDyw&usqp=CAU"
@@ -78,7 +82,7 @@
       </div>
     </nav>
 
-    <form class="profile-form" action="/dashboard/profile", method="post">
+    <form class="profile-form" action="/dashboard/profile" method="post">
         <div class="avatar">
           <div class="photo">
             <p>
@@ -117,13 +121,13 @@
         <div class="edit">
           <div class="col">
             <div class="row">
-              <input type="text" placeholder="Name" class="name-field" name="name" readonly required>
+              <input type="text" placeholder="Name" class="name-field" name="name" value="{{.Name}}" readonly required>
               <button class="btn btn-light btn-user" type="button">
                 <i class="fa fa-user-o" aria-hidden="true"></i>
               </button>
               </div>
               <div class="row">
-                <input type="text" placeholder="Lastname" class="last-field" name="lastname" readonly required>
+                <input type="text" placeholder="Lastname" class="last-field" name="lastname" value="{{.LastName}}" readonly required>
                 <button class="btn btn-light btn-users" type="button">
                   <i class="fa fa-users" aria-hidden="true"></i>
                 </button>
@@ -141,31 +145,31 @@
                 </div>
               </div>
               <div class="row">
-                <input class="address-field" type="text" placeholder="Address" name="address" readonly required>
+                <input class="address-field" type="text" placeholder="Address" name="address" value="{{.Address}}" readonly required>
                 <button class="btn btn-light btn-home" type="button">
                   <i class="fa fa-home" aria-hidden="true"></i>
                 </button>
               </div>
               <div class="row">
-                <input class="apartment-field" type="text" placeholder="Aparatment" name="apartment" readonly required>
+                <input class="apartment-field" type="text" placeholder="Aparatment" name="apartment" value="{{.Appartment}}" readonly required>
                 <button class="btn btn-light btn-apartment" type="button">
                   <i class="fa fa-bed" aria-hidden="true"></i>
                 </button>
               </div>
               <div class="row">
-                <input class="country-field" type="text" placeholder="Country" name="country" readonly required>
+                <input class="country-field" type="text" placeholder="Country" name="country" value="{{.Country}}" readonly required>
                 <button class="btn btn-light btn-country" type="button">
                   <i class="fa fa-globe" aria-hidden="true"></i>
                 </button>
               </div>
               <div class="row">
-                <input class="city-field" type="text" placeholder="City" name="city" readonly required>
+                <input class="city-field" type="text" placeholder="City" name="city" value="{{.City}}" readonly required>
                 <button class="btn btn-light btn-city" type="button">
                   <i class="fa fa-map-marker" aria-hidden="true"></i>
                 </button>
               </div>
               <div class="row">
-                <input class="email-field" type="text" name="email" placeholder="Email" value="" readonly>
+                <input class="email-field" type="text" name="email" placeholder="Email" value="{{.Email}}" readonly>
                 <span class="span-email">
                   <i class="fa fa-check-circle-o" aria-hidden="true"></i>
                 </span>
@@ -174,7 +178,7 @@
                 </span>
               </div>
               <div class="row">
-                <input class="phone-field" type="tel" name="phone" placeholder="Phone" value="" readonly>
+                <input class="phone-field" type="tel" name="phone" placeholder="Phone">
                 <span class="span-phone">
                   <i class="fa fa-check-circle-o" aria-hidden="true"></i>
                 </span>
@@ -183,13 +187,13 @@
                 </span>                
               </div>
               <div class="row">
-                <input class="zip-field" type="number" name="zip" placeholder="ZIP" value="" readonly required>
+                <input class="zip-field" type="number" name="zip" placeholder="ZIP" readonly required>
                 <button class="btn btn-light btn-zip" type="button">
                   <i class="fa fa-map-pin" aria-hidden="true"></i>
                 </button>
               </div>
               <div class="row">
-                <input class="tweet-field" type="text" name="tweet" placeholder="Tweet" value="" readonly required>
+                <input class="tweet-field" type="text" name="tweet" placeholder="Tweet" readonly required>
                 <button class="btn btn-light btn-tweet" type="button">
                   <i class="fa fa-twitter-square" aria-hidden="true"></i>
                 </button>
@@ -214,7 +218,6 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
     </script>
-  <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
   <script src="/js/profile.js"></script>
 </body>
 

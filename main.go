@@ -389,23 +389,55 @@ func setting(w http.ResponseWriter, r *http.Request) {
 func profile(w http.ResponseWriter, r *http.Request) {
 
  	temp := template.Must(template.ParseFiles("profile.html"))
-	
-	user ,err := Cloud.GetDocumentById(AppName, *profiler)
+	var member users.Visitors
+	visit ,err := Cloud.GetDocumentById(AppName, *profiler)
 	if err != nil {
-		log.Printf("Database query failed: %v", err)
+		log.Printf("Database query failed: %v", err.Error())
 		return
 	}
+
+	data , err := json.Marshal(visit); if err != nil {
+		log.Printf("json marshal: %v", err.Error())
+		return
+	}
+
+	err = json.Unmarshal(data, &member); if err != nil {
+		log.Printf("json unmarshal: %v", err.Error())
+	}
+
+	fmt.Println("Member :", member)
+
 	if r.Method == "GET"{
 		log.Println("Method:", r.Method)
 		log.Println("URL:", r.URL.Path)
-		temp.Execute(w, user)
+		temp.Execute(w, member)
 	}else{
+		
+		// Read Profile Form 
 		r.ParseForm()
-		user := Visitors{Name: r.name, LastName: r.lastname,
-			 Address: r.address, Appartment, Eve:r.gender, 
-			 Zip: r.zip, City: r.city, Country: r.country,
-			 Twitter : r.twitter}
+		
+		// update users information 
+		user := users.Visitors{Name: r.FormValue("name"), LastName: r.FormValue("lastname"),
+			 Address: r.FormValue("address"), Appartment: r.FormValue("apartment"),  
+			 Zip: r.FormValue("zip"), City: r.FormValue("city"), Country: r.FormValue("country"),
+			 Twitter : r.FormValue("tweet"), PhoneNo : r.FormValue("phone")}
 		fmt.Println("edit profile:", user)
+		
+		// store user pictures in the database
+		sql_connect , err := OpenSQLConnection(); if err != nil {
+			log.Println(" Sql connection failed: ", err.Error())
+			return 
+		}
+
+		// create new table 
+		result, err := Migrate_Sql_Instance(sql_connect); if err != nil {
+			log.Println(" Query Failed: ", err.Error())
+			return 
+		}
+
+		fmt.Println("Result :", result)
+		
+		Pictures_Stream(sql_connect, r)
 	}
  	
 }
@@ -1461,7 +1493,7 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 		LastName:    "",
 		Eve:    false,
 		Address:  "",
-		Apparment: "",
+		Appartment: "",
 		Zip:      "",
 		City:     "",
 		Country:  "",
@@ -1469,7 +1501,6 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 		Password: "",
 		PhoneNo: "",
 		Twitter : "",
-		// Secure:   false,
 	}
 
 	if r.Method == "GET" {
@@ -1482,7 +1513,7 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 		user.Name = r.FormValue("uname")
 		user.LastName = r.FormValue("ufname")
 		user.Address = r.FormValue("address")
-		user.Apparment = r.FormValue("add")
+		user.Appartment = r.FormValue("add")
 		user.City = r.FormValue("inputCity")
 		user.Country = r.FormValue("co")
 		user.Zip = r.FormValue("inputZip")
@@ -1531,7 +1562,7 @@ func existing(w http.ResponseWriter, r *http.Request) {
 		LastName:    "",
 		Eve:    false,
 		Address:  "",
-		Apparment: "",
+		Appartment: "",
 		Zip:      "",
 		City:     "",
 		Country:  "",
@@ -1540,7 +1571,6 @@ func existing(w http.ResponseWriter, r *http.Request) {
 		Id : "",
 		PhoneNo : "",
 		Twitter : "",
-		// Remember:  false,
 	}
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)

@@ -419,6 +419,8 @@ uploadImage.children[0].children[0].addEventListener("click", (event) =>{
             let avatar_build = document.createElement('img');
             avatar_build.id = "avatar";
             avatar_build.src = data;
+            avatar_build.ref = "pictures";
+            avatar_build.name = "avatars_gen";
             console.log(avatar_build);
             
             /**
@@ -461,17 +463,29 @@ uploadImage.children[0].children[0].addEventListener("click", (event) =>{
 });
 
 const btn_submit = document.getElementsByClassName("btn-save")[0];
-let pusher_channel = {
+const pusher_channel = {
     appid : "1265511",
     cluster : "mt1",
     key : "65993b3c66b5317411a5",
     secret : "4f8bf3faf121d9c8dadf",
 };
+
 btn_submit.addEventListener("click", (event) => {
     if (avatarSelector.children[1].id != ""){
         Pusher.logToConsole = true; //pusher log active 
-        let pusher_channel_credentials = new Pusher(pusher.key, {cluster : pusher.cluster, encrypted:true});
+        let pusher_channel_credentials = new Pusher(pusher_channel.key, 
+            {cluster : pusher_channel.cluster, 
+              encrypted:true
+            });
         console.log("Pusher_channels logs:", pusher_channel_credentials);
+        
+        let channel_subcribe = pusher_channel_credentials.subscribe('encrypted-photo-stream');
+        console.log("subcribe:",channel_subcribe);
+        
+        channel_subcribe.bind('photos-bytes', (pusher_data) => {
+            
+            console.log("Data logs:", pusher_data.data.items); 
+        });
     }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
 }) 
 

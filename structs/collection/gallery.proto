@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package collection;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/ali2210/wizdwarf/structs/collection";
+
+
+message Pictures {
+    string Pic_id = 1;
+    string Pic_src = 2;
+    google.protobuf.Timestamp Pic_time = 3;
+    float Pic_date= 4;
+    string User_agent_id = 5;
+}
+
+message Collection {
+    repeated Pictures gallery = 1;
+}
+
+
+service StreamService {
+    rpc NewPictures (Pictures) returns (Collection);
+    rpc SearchPictures (Pictures) returns (Collection);
+    rpc DisplayPictures (Pictures) returns (Collection);
+}
