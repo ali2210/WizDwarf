@@ -82,8 +82,8 @@
       </div>
     </nav>
 
-    <form class="profile-form" action="/dashboard/profile" method="post">
-        <div class="avatar">
+    <form class="profile-form" action="/dashboard/profile" method="post" enctype="multipart/form-data">
+        <div class="avatar" name="avato-pic" id="avato-pics">
           <div class="photo">
             <p>
               <button class="btn btn-primary " type="button" data-toggle="collapse" data-target="#collapsePhoto" aria-expanded="false" aria-controls="collapsePhoto">
@@ -91,32 +91,24 @@
               </button>
             </p>
             <div class="collapse" id="collapsePhoto">
-              <div class="card card-body photo-card">
-                  <div class="camera">
-                    <div class="uploadbtn">
-                      <button class="btn btn-dark btn-param" type="button">
-                        <i class="fa fa-video-camera" aria-hidden="true"></i>
-                      </button>
-                      <input type="file" class="myphotos" accept="images/*">
-                      <!-- <button class="btn btn-dark file-image" type="button">
-                        <i class="fa fa-desktop" aria-hidden="true"></i>
-                      </button> -->
+              <div class="card card-body">
+                  <h5 class="card-title"></h5>
+                  <div class="float-card">
+                    <input type="file" class="myphotos" accept="images/*" name="profile-input">
+                    <div class="line">
                     </div>
+                    <div class="photo-preview"></div>
+                    <a href="http://" class="btn btn-success btns-links">
+                      <i class="fa fa-video-camera" aria-hidden="true"></i>
+                    </a>
+                    <btn class="btn btn-success uploads" type="button">
+                      <i class="fa fa-check-square" aria-hidden="true"></i>
+                    </btn>
                   </div>
-                  <div class="gallery">
-                    <div class="photo1"></div>
-                    <div class="photo2"></div>
-                    <div class="photo3"></div>
-                    <div class="photo4"></div>
-                    <div class="savebtn">
-                      <button class="btn btn-success btn-modify" type="button">
-                        <i class="fa fa-camera" aria-hidden="true"></i>
-                      </button>
-                    </div>
-                  </div>
-              </div>
+                </div>
             </div>
-            </div>
+          </div>
+          <img name="profile-avatar"/>
           </div>
         <div class="edit">
           <div class="col">

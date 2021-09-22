@@ -413,8 +413,9 @@ func profile(w http.ResponseWriter, r *http.Request) {
 		temp.Execute(w, member)
 	}else{
 		
-		// Read Profile Form 
-		r.ParseForm()
+				
+		// user add profile picture resolution must be less 2kb
+		Pictures_Stream(r)
 		
 		// update users information 
 		user := users.Visitors{Name: r.FormValue("name"), LastName: r.FormValue("lastname"),
@@ -423,21 +424,7 @@ func profile(w http.ResponseWriter, r *http.Request) {
 			 Twitter : r.FormValue("tweet"), PhoneNo : r.FormValue("phone")}
 		fmt.Println("edit profile:", user)
 		
-		// store user pictures in the database
-		sql_connect , err := OpenSQLConnection(); if err != nil {
-			log.Println(" Sql connection failed: ", err.Error())
-			return 
-		}
-
-		// create new table 
-		result, err := Migrate_Sql_Instance(sql_connect); if err != nil {
-			log.Println(" Query Failed: ", err.Error())
-			return 
-		}
-
-		fmt.Println("Result :", result)
 		
-		Pictures_Stream(sql_connect, r)
 	}
  	
 }

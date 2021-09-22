@@ -10,9 +10,7 @@ import(
 	"net/http"
 	"log"
 	"cloud.google.com/go/firestore"
-	// "github.com/ali2210/wizdwarf/db"
-	// "errors"
-	// ."github.com/ali2210/wizdwarf/genetics/graph"
+	"strconv"
 	"path/filepath"
 	"io/ioutil"
 	"reflect"
@@ -21,7 +19,7 @@ import(
 	"encoding/json"
 	"fmt"
 	"golang.org/x/net/context"
-	"strconv"
+	"time"
 	"regexp"
 	"text/template"
 	"os"
@@ -33,111 +31,78 @@ import(
 	info "github.com/ali2210/wizdwarf/structs/bioinformatics/model"
 	"github.com/ali2210/wizdwarf/structs/users"
 	"github.com/ali2210/wizdwarf/structs"
-	"database/sql"
-	"time"
-	//"io"
-	// cloudWallet "github.com/ali2210/wizdwarf/db/cloudwalletclass"
+	galleryApi "github.com/ali2210/wizdwarf/structs/collection"
 )
 
 var(
 	Firestore_Rf string
+	gallery_firestore_object galleryApi.Gallery_Stream_Server = galleryApi.Gallery_Stream_Server{} 
 )
 
 
-// type Pictures struct {
-// 	ID string `json:"id", omitempty`
-// 	Data string `json:"data", omitempty`
-// 	Times time.Time `json:"time", omitempty`
-// 	Dates float64 `json:"dates", omitempty`
-// }
-
-// type Photos_Collection struct {
-// 	Collection []Pictures `json:"collection", omitempty`	
-// }
-
-const (
-	host = "0.0.0.0"
-	port = "5432"
-	dbname = "pictures"
-	user = "dwarfs"
-	password  = "wiz"
-)
-
-func OpenSQLConnection()(*sql.DB, error){
+func Pictures_Stream(r *http.Request){
 	
-	// open postgres sql connection  
-	postgresSqlParam := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disabled", host, port, user, password, dbname)
-	connection,err := sql.Open("postgres", postgresSqlParam); if err != nil  || connection == nil{
-		log.Println("Failed to open database", err.Error())
-		return connection, err
-	}
-
-	// connection accept 
-	fmt.Println("Conncetion accept:", connection)
-	return connection, nil
-}
-
-
-func Migrate_Sql_Instance(connection *sql.DB)(*sql.Result, error){
-	 
-		// Table store pictures information such as 
-		// picture_id , data, time and date.
-	sql := `
-		CREATE TABLE IF NOT EXISTS photos(
-			id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-			data VARCHAR NOT NULL,
-			time VARCHAR NOT NULL, 
-			date VARCHAR NOT NULL
-		);
-
-	`
-	// Create new table with the provided information
-	result , err := connection.Exec(sql); if err != nil {
-		log.Println("Error executing query :", err.Error())
-		return &result, err
-	}
-	return &result, nil
-}
-
-
-func Pictures_Stream(db *sql.DB, r *http.Request){
+	r.ParseMultipartForm(10 << 50)
+	// Read picture file 
+	file , fileHandle, err := r.FormFile("profile-input")
 	
-	file , handle , err := r.FormFile("avatars_gen")
-	if err != nil{
-		log.Println("Error in streaming reading file :", err.Error())
+	if err != nil {
+		log.Printf("Error parsing avatars: %v", err.Error())
+		return 
+	}
+	defer file.Close()
+	fmt.Println(" File Handler :", fileHandle.Filename, fileHandle.Size)
+	
+	// image file accessible to application
+	if _ , err := os.Stat(fileHandle.Filename);os.IsExist(err) {
+		log.Println(" Error directory exists :", err.Error())
 		return
 	}
 	
-	fmt.Println("File :", file, "handle :", handle)
-	defer file.Close()
-
-	path, err := os.Stat("public/");if os.IsExist(err) {
-		log.Println("public folder does not exist", err.Error())
-		return 
+	// application store user picture in the app_data directory
+	path , err := os.Stat("app_data/"); if err != nil {
+		log.Println(" Error stat :", err.Error())
+		return
 	}
 
-	fmt.Println("Path:", path)
 
-	dst , err := os.Create("public/"+handle.Filename); if err != nil {
-		log.Println("New File Create", err.Error())
-		return 
+	// application storage path 
+	if !path.IsDir(){
+		log.Fatalln("[Error] Reading File", err.Error())
+		return
 	}
-	fmt.Println(" Destination file :", dst)
-	defer dst.Close()
+	// Store user-picture file in the storage directory
+	imageFile, err := ioutil.TempFile(filepath.Dir("app_data/"), "img-"+fileHandle.Filename+".png")
+	if err != nil {
+		log.Printf("Error creating temporary image file: %v", err.Error())
+		return
+	}
+	defer imageFile.Close()
+	
+	// Read data from image-file 
+	readBytes , err := ioutil.ReadAll(file); if err != nil {
+		log.Println("Error reading image file", err.Error())
+		return
+	}
+	
+	// In case of error all proceding stop, otherwise file content copy into new file
+	if _, err := imageFile.Write(readBytes); err != nil {
+		log.Println("Error writing image file", err.Error())
+		return
+	}
 
-	// src, err := handle.Filename().Open(); if err != nil {
-	// 	log.Println("Stream file opening", err.Error())
-	// 	return
-	// }
-	// fmt.Println("Source File :", src)
-	// defer src.Close()
-
-	// data , err := io.Copy(dst, src); if err != nil {
-	// 	log.Println("Copy data to destination file", err.Error())
-	// 	return
-	// }
-	// fmt.Println(" Data written :", data)
+	// user image file returned name 
+	fmt.Println("Image file created: ", imageFile.Name())
+	// img := galleryApi.Pictures{
+	// 	Pic_id : 
+	// } 
 }
+
+
+func GetToday(year int, month time.Month, date int) (time.Time) {
+	return time.Date(year, month, date,12,30, 0,0,time.UTC)
+}
+
 
 func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member users.Visitors) (*users.Visitors, error) {
 

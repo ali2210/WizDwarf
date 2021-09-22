@@ -54,10 +54,11 @@ margin-right: 18px;
 }
 .card-body{
  position: absolute;
- left:209px;
- top: -15px;
- font-size:larger;
- border-radius: 22px;
+ width: 584px;
+ left:-222px;
+ height:301px;
+ border-radius: 54px;
+ border:1px skyblue dotted;
 }
 .camera{
   width: 214px;
@@ -354,9 +355,10 @@ margin-right: 18px;
   border-radius: 50px;
 }
 .myphotos{
-  position: absolute;
-  top: 105px;
-  left: -5px;
+  position: relative;
+  left:5px;
+  border: 5px skyblue dotted;
+  border-radius: 27px;
 }
 .img-class{
   position: absolute;
@@ -384,4 +386,70 @@ margin-right: 18px;
   position: absolute;
   left: -226px;
   top: -22px;
+}
+/* .float-card{
+
+} */
+.line{
+  width: 554px; 
+  height: 10px;
+  background: aquamarine;
+  position: relative;
+  top: 11px; 
+}
+.photo-preview{
+  position: relative;
+  width: 552px;
+  height: 166px;
+  background:aquamarine; 
+  top: 20px;
+  overflow: scroll;
+}
+.btns-links{
+  position: relative;
+  top:-215px;
+  left: 495px;
+  border-radius: 26px;
+}
+.btns-links:hover{
+  animation: skid 3s linear infinite alternate;
+}
+
+@keyframes skid {
+  20%{ 
+    left : 395px;
+  }
+  40%{
+    left : 295px;
+  }
+  60%{
+    left : 395px;
+  }
+  100%{
+    left : 495px;
+  }
+}
+.uploads{
+  position: relative;
+  top: -215px;
+  left: 245px;
+  border-radius:36px;
+}
+.uploads:hover{
+  animation: skid-right 2s infinite linear alternate;
+}
+
+@keyframes skid-right {
+  20%{
+    left: 245px;
+  }
+  60%{
+    left: 345px;
+  }
+  80%{
+    left: 345px;
+  }
+  100%{
+    left: 245px;
+  }
 }
