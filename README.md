@@ -1,11 +1,7 @@
 [![CircleCI](https://circleci.com/gh/ali2210/WizDwarf/tree/master.svg?style=svg)](https://circleci.com/gh/ali2210/WizDwarf/tree/master)
 [![GitNFT](https://img.shields.io/badge/%F0%9F%94%AE-Open%20in%20GitNFT-darkviolet?style=social)](https://gitnft.quine.sh/app/commits/list/repo/WizDwarf)
 [![Gitter](https://badges.gitter.im/wizdwarfs/futuristic-tech-dev.svg)](https://gitter.im/wizdwarfs/futuristic-tech-dev?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/T6T25CVYQ)
- <a href='https://opencollective.com/wizdwarfs/contribute/love-and-support-29623' target='blank'>
-    <img alt="open collective badge" src="https://opencollective.com/wizdwarfs/tiers/love-and-support/badge.svg?label=Love%26Support&color=brightgreen" />
- </a>
- <object><a href="https://app.element.io/#/room/!XdCqKpBpqSSgLLcNPI:matrix.org">Element</a></object>
+
  
  
  
@@ -65,11 +61,14 @@
       <img src="https://opencollective.com/wizdwarfs/tiers/love-and-support.svg?avatarHeight=36"/>
    </object>
    
-   
-   
-
-
 ## Discusion
      
     https://app.slack.com/client/T02AQ62EHHR/C02ALUWQ4LV/help
     >>>>>>> 93ae0ff54319133c57487e772c8e0f1045690945
+
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/T6T25CVYQ)
+ <a href='https://opencollective.com/wizdwarfs/contribute/love-and-support-29623' target='blank'>
+    <img alt="open collective badge" src="https://opencollective.com/wizdwarfs/tiers/love-and-support/badge.svg?label=Love%26Support&color=brightgreen" />
+ </a>
+ <object><a href="https://app.element.io/#/room/!XdCqKpBpqSSgLLcNPI:matrix.org">Element</a></object>
