@@ -65,7 +65,7 @@
       <img src="https://opencollective.com/wizdwarfs/tiers/love-and-support.svg?avatarHeight=36"/>
    </object>
    
-   [![Element]("https://app.element.io/#/room/!XdCqKpBpqSSgLLcNPI:matrix.org")]
+   [![Element](https://app.element.io/#/room/!XdCqKpBpqSSgLLcNPI:matrix.org)]
    
 
 
