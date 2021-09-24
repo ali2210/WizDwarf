@@ -64,9 +64,9 @@
    <object>
       <img src="https://opencollective.com/wizdwarfs/tiers/love-and-support.svg?avatarHeight=36"/>
    </object>
-   <object>
-    <a href="https://app.element.io/#/room/!XdCqKpBpqSSgLLcNPI:matrix.org"/>
-   </object>
+   
+   [![Element]("https://app.element.io/#/room/!XdCqKpBpqSSgLLcNPI:matrix.org")]
+   
 
 
 ## Discusion
