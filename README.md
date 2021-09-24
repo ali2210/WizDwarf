@@ -5,7 +5,7 @@
  <a href='https://opencollective.com/wizdwarfs/contribute/love-and-support-29623' target='blank'>
     <img alt="open collective badge" src="https://opencollective.com/wizdwarfs/tiers/love-and-support/badge.svg?label=Love%26Support&color=brightgreen" />
  </a>
- 
+ <object><a href="https://app.element.io/#/room/!XdCqKpBpqSSgLLcNPI:matrix.org">Element</a></object>
  
  
  
@@ -65,7 +65,7 @@
       <img src="https://opencollective.com/wizdwarfs/tiers/love-and-support.svg?avatarHeight=36"/>
    </object>
    
-   [![Element](https://app.element.io/#/room/!XdCqKpBpqSSgLLcNPI:matrix.org)]
+   
    
 
 
