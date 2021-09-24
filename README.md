@@ -62,9 +62,11 @@
       <img src="https://opencollective.com/wizdwarfs/tiers/badge.svg"/>
     </object>
    <object>
-      <img src="https://opencollective.com/wizdwarfs/tiers/love-and-support.svg?avatarHeight=36"
+      <img src="https://opencollective.com/wizdwarfs/tiers/love-and-support.svg?avatarHeight=36"/>
    </object>
-   <object><img src ="https://app.element.io/#/room/!XdCqKpBpqSSgLLcNPI:matrix.org"/></object>
+   <object>
+    <img src="https://app.element.io/#/room/!XdCqKpBpqSSgLLcNPI:matrix.org"/>
+   </object>
 
 
 ## Discusion
