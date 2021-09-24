@@ -62,10 +62,12 @@
      
     https://app.slack.com/client/T02AQ62EHHR/C02ALUWQ4LV/help
     >>>>>>> 93ae0ff54319133c57487e772c8e0f1045690945
-   
-   <a href="https://opencollective.com/wizdwarfs/tiers/badge.svg"></a>
-   <a href="https://app.element.io/#/room/!XdCqKpBpqSSgLLcNPI:matrix.org"/>
-   <a href="https://opencollective.com/wizdwarfs/tiers/love-and-support.svg?avatarHeight=36">
-   </a>
-   <object type="image/svg+xml" data="https://opencollective.com/wizdwarfs/tiers/love-and-support.svg?avatarHeight=36&width=600">
-   </object>
+    <a href="https://app.element.io/#/room/!XdCqKpBpqSSgLLcNPI:matrix.org"/>
+    
+    
+  <object type="image/svg+xml" data="https://opencollective.com/wizdwarfs/tiers/love-and-support.svg?avatarHeight=36&width=600">
+      <img src="https://opencollective.com/wizdwarfs/tiers/badge.svg"/>
+    </object>
+ <object>
+     <img src="https://opencollective.com/wizdwarfs/tiers/love-and-support.svg?avatarHeight=36"
+ </object>
