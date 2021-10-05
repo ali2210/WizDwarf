@@ -252,6 +252,7 @@ uploadImage.children[0].addEventListener("change", (event) =>{
 });
 
 // let profile_pic = ;
+const dte_picker = document.getElementsByClassName("date-picker")[0];
 uploadImage.children[4].addEventListener("click", (event) => {
     console.log(event.target);
     if(preview.src != "" && image_size <= 2745){
@@ -263,6 +264,11 @@ uploadImage.children[4].addEventListener("click", (event) => {
          avatarSelector.children[1].style.left = "40px";
          avatarSelector.children[1].style.top = "40px";
          avatarSelector.children[1].src = preview.src;
+         const date = new Date();
+         const [year, month, today] = [date.getFullYear(), date.getMonth(), date.getDate()];
+         console.log("today :" , year,month,today);
+         dte_picker.style.visibility = 'visible';
+         dte_picker.value = ' '+today+'-'+month+'-'+year+' ';
         // avatarSelector.appendChild(profile_pic);
     }else if(image_size > 2745){
         alert("File size must be less than 2745", image_size);

@@ -52,13 +52,13 @@ margin-right: 18px;
   top: 125px ;
   left: 50px;
 }
-.card-body{
- position: absolute;
- width: 584px;
- left:-222px;
- height:301px;
- border-radius: 54px;
- border:1px skyblue dotted;
+.description{
+  position: absolute;
+  width: 397px;
+  left:2px;
+  height:227px;
+  border-radius: 54px;
+  top: 214px;
 }
 .camera{
   width: 214px;
@@ -362,8 +362,9 @@ margin-right: 18px;
 }
 .img-class{
   position: absolute;
-  left: 0;
-  width: 216px;
+  left: 95px;
+  width: 218px;
+  top: 30px;
 }
 .images{
   position: absolute;
@@ -372,8 +373,8 @@ margin-right: 18px;
 }
 .card-body-text{
   position: absolute;
-  left: -8px;
-  top: 198px;
+  left: -15px;
+  top: 195px;
   width: 377px;
   font-size:small;
 }
@@ -387,9 +388,9 @@ margin-right: 18px;
   left: -226px;
   top: -22px;
 }
-/* .float-card{
-
-} */
+ .float-card{
+  position: relative;
+} 
 .line{
   width: 554px; 
   height: 10px;
@@ -452,4 +453,17 @@ margin-right: 18px;
   100%{
     left: 245px;
   }
+}
+.date-picker{
+  position: absolute;
+  top:274px;
+  display: flex;
+  left: 367px;
+  border-radius: 40px;
+  border: 1px blue dotted;
+  color: blue;
+  visibility : hidden;
+}
+.date-picker:hover{
+  color: purple;
 }

@@ -6,6 +6,7 @@ require (
 	cloud.google.com/go/firestore v1.3.0
 	firebase.google.com/go v3.13.0+incompatible
 	github.com/PuerkitoBio/goquery v1.6.1
+	github.com/SkynetLabs/go-skynet/v2 v2.0.2
 	github.com/agnivade/levenshtein v1.1.0
 	github.com/biogo/biogo v1.0.2
 	github.com/briandowns/openweathermap v0.16.0
@@ -15,12 +16,15 @@ require (
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/gorilla/mux v1.7.4
 	github.com/gorilla/sessions v1.2.0
+	github.com/ipfs/go-cid v0.1.0
 	github.com/logpacker/PayPal-Go-SDK v2.0.5+incompatible
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect
+	github.com/multiformats/go-multihash v0.0.16
 	github.com/onsi/ginkgo v1.16.4
 	github.com/onsi/gomega v1.16.0
 	github.com/plutov/paypal v2.0.5+incompatible // indirect
+	gitlab.com/NebulousLabs/errors v0.0.0-20200929122200-06c536cf6975 // indirect
 	golang.org/x/crypto v0.0.0-20210915214749-c084706c2272
 	golang.org/x/net v0.0.0-20210813160813-60bc85c4be6d
 	golang.org/x/sys v0.0.0-20210917161153-d61c044b1678 // indirect

@@ -26,6 +26,9 @@ firebase.google.com/go/storage
 # github.com/PuerkitoBio/goquery v1.6.1
 ## explicit
 github.com/PuerkitoBio/goquery
+# github.com/SkynetLabs/go-skynet/v2 v2.0.2
+## explicit
+github.com/SkynetLabs/go-skynet/v2
 # github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6
 github.com/StackExchange/wmi
 # github.com/agnivade/levenshtein v1.1.0
@@ -108,10 +111,15 @@ github.com/gorilla/securecookie
 github.com/gorilla/sessions
 # github.com/gorilla/websocket v1.4.2
 github.com/gorilla/websocket
+# github.com/ipfs/go-cid v0.1.0
+## explicit
+github.com/ipfs/go-cid
 # github.com/jstemmer/go-junit-report v0.9.1
 github.com/jstemmer/go-junit-report
 github.com/jstemmer/go-junit-report/formatter
 github.com/jstemmer/go-junit-report/parser
+# github.com/klauspost/cpuid/v2 v2.0.4
+github.com/klauspost/cpuid/v2
 # github.com/logpacker/PayPal-Go-SDK v2.0.5+incompatible
 ## explicit
 github.com/logpacker/PayPal-Go-SDK
@@ -119,6 +127,28 @@ github.com/logpacker/PayPal-Go-SDK
 ## explicit
 # github.com/mattn/go-isatty v0.0.12
 ## explicit
+# github.com/minio/blake2b-simd v0.0.0-20160723061019-3f5f724cb5b1
+github.com/minio/blake2b-simd
+# github.com/minio/sha256-simd v1.0.0
+github.com/minio/sha256-simd
+# github.com/mr-tron/base58 v1.2.0
+github.com/mr-tron/base58/base58
+# github.com/multiformats/go-base32 v0.0.3
+github.com/multiformats/go-base32
+# github.com/multiformats/go-base36 v0.1.0
+github.com/multiformats/go-base36
+# github.com/multiformats/go-multibase v0.0.3
+github.com/multiformats/go-multibase
+# github.com/multiformats/go-multihash v0.0.16
+## explicit
+github.com/multiformats/go-multihash
+github.com/multiformats/go-multihash/core
+github.com/multiformats/go-multihash/register/all
+github.com/multiformats/go-multihash/register/blake2
+github.com/multiformats/go-multihash/register/miniosha256
+github.com/multiformats/go-multihash/register/sha3
+# github.com/multiformats/go-varint v0.0.6
+github.com/multiformats/go-varint
 # github.com/nxadm/tail v1.4.8
 github.com/nxadm/tail
 github.com/nxadm/tail/ratelimiter
@@ -167,6 +197,9 @@ github.com/shirou/gopsutil/internal/common
 github.com/tklauser/go-sysconf
 # github.com/tklauser/numcpus v0.2.2
 github.com/tklauser/numcpus
+# gitlab.com/NebulousLabs/errors v0.0.0-20200929122200-06c536cf6975
+## explicit
+gitlab.com/NebulousLabs/errors
 # go.opencensus.io v0.23.0
 go.opencensus.io
 go.opencensus.io/internal
@@ -187,6 +220,7 @@ go.opencensus.io/trace/propagation
 go.opencensus.io/trace/tracestate
 # golang.org/x/crypto v0.0.0-20210915214749-c084706c2272
 ## explicit
+golang.org/x/crypto/blake2s
 golang.org/x/crypto/sha3
 # golang.org/x/lint v0.0.0-20210508222113-6edffad5e616
 golang.org/x/lint

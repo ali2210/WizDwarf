@@ -415,7 +415,7 @@ func profile(w http.ResponseWriter, r *http.Request) {
 		
 				
 		// user add profile picture resolution must be less 2kb
-		Pictures_Stream(r)
+		Pictures_Stream(r, member.Id)
 		
 		// update users information 
 		user := users.Visitors{Name: r.FormValue("name"), LastName: r.FormValue("lastname"),
