@@ -1,8 +1,10 @@
 [![CircleCI](https://circleci.com/gh/ali2210/WizDwarf/tree/master.svg?style=svg)](https://circleci.com/gh/ali2210/WizDwarf/tree/master)
 [![GitNFT](https://img.shields.io/badge/%F0%9F%94%AE-Open%20in%20GitNFT-darkviolet?style=social)](https://gitnft.quine.sh/app/commits/list/repo/WizDwarf)
 [![Gitter](https://badges.gitter.im/wizdwarfs/futuristic-tech-dev.svg)](https://gitter.im/wizdwarfs/futuristic-tech-dev?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+<a href="https://codeclimate.com/github/ali2210/WizDwarf/maintainability"><img src="https://api.codeclimate.com/v1/badges/b1a8e6c05b3ec74b3074/maintainability" /></a>
+<a href="https://codeclimate.com/github/ali2210/WizDwarf/test_coverage"><img src="https://api.codeclimate.com/v1/badges/b1a8e6c05b3ec74b3074/test_coverage" /></a>
 [![Wizdwarfs](https://img.shields.io/badge/Wizdwarfs-designed%20by-green)](https://wizdwarfs-365b9.web.app/)
-
+)
  
  
  
