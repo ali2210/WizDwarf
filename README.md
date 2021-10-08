@@ -4,7 +4,7 @@
 <a href="https://codeclimate.com/github/ali2210/WizDwarf/maintainability"><img src="https://api.codeclimate.com/v1/badges/b1a8e6c05b3ec74b3074/maintainability" /></a>
 <a href="https://codeclimate.com/github/ali2210/WizDwarf/test_coverage"><img src="https://api.codeclimate.com/v1/badges/b1a8e6c05b3ec74b3074/test_coverage" /></a>
 [![Wizdwarfs](https://img.shields.io/badge/Wizdwarfs-designed%20by-green)](https://wizdwarfs-365b9.web.app/)
-)
+
  
  
  
