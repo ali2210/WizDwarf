@@ -34,6 +34,39 @@
   background-color: #ededed;
 }
 
+.img-class{
+	position: absolute;
+	left: 2px;
+	width: 398px;
+	top: -2px;
+	border: none;
+  }
+
+  .images{
+	position: absolute;
+	width: 304px;
+	left: -2px;
+	top: -9px;
+	height:212px;
+  }
+
+  .card-body-text{
+	position: absolute;
+	left: -15px;
+	top: 195px;
+	width: 315px;
+	font-size:medium;
+  }
+
+  .description{
+	position: absolute;
+	width: 397px;
+	left:2px;
+	height:227px;
+	border-radius: 54px;
+	top: 214px;
+  }
+
 [type="file"] {
   height: 0;
   overflow: hidden;

@@ -40,19 +40,19 @@ type (
 	// }
 
 	Visitors struct {
-		Id       string `json:"id", omitempty`
-		Name     string `json:"name", omitempty`
-		Email    string `json:"email", omitempty`
-		Password string `json:"password", omitempty`
-		LastName    string `json:"lastname", omitempty`
-		City     string `json:"city",omitempty `
-		Zip      string `json:"zip", omitempty`
-		Address  string `json:"address", omitempty`
+		Id         string `json:"id", omitempty`
+		Name       string `json:"name", omitempty`
+		Email      string `json:"email", omitempty`
+		Password   string `json:"password", omitempty`
+		LastName   string `json:"lastname", omitempty`
+		City       string `json:"city",omitempty `
+		Zip        string `json:"zip", omitempty`
+		Address    string `json:"address", omitempty`
 		Appartment string `json:"appartment", omitempty`
-		Country  string `json:"country", omitempty`
-		Eve      bool   `json:"eve",omitempty`
-		PhoneNo  string `json:"phone", omitempty`
-		Twitter string 	`json:"twitter", omitempty`
+		Country    string `json:"country", omitempty`
+		Eve        bool   `json:"eve",omitempty`
+		PhoneNo    string `json:"phone", omitempty`
+		Twitter    string `json:"twitter", omitempty`
 		// Remember bool `json:"remember", omitempty`
 	}
 
@@ -63,21 +63,6 @@ type (
 	}
 
 	DigitalPrint struct{}
-
-	// UpdateProfile struct {
-	// 	Id           string
-	// 	FirstName    string
-	// 	LastName     string
-	// 	Phone        string
-	// 	HouseAddress string
-	// 	SubAddress   string
-	// 	Country      string
-	// 	Zip          string
-	// 	Male         bool
-	// 	Email        string
-	// 	Twitter      string
-	// 	City         string
-	// }
 )
 
 func NewClient() CreditCardInfo {

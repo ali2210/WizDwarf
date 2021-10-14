@@ -30,12 +30,11 @@
 
 
 .heading-text{
-margin-top: 70px;
+  margin-top: 70px;
   display: flex;
   justify-content: center;
-position: relative;
-margin-right: 18px;
-
+  position: relative;
+  margin-right: 18px;
 }
 .avatar{
   position: absolute;
@@ -351,7 +350,7 @@ margin-right: 18px;
   width: 158px;
 }
 .btn-cloud:hover{
-  color:chartreuse;
+  color:whitesmoke;
   border-radius: 50px;
 }
 .myphotos{
@@ -362,22 +361,25 @@ margin-right: 18px;
 }
 .img-class{
   position: absolute;
-  left: 95px;
-  width: 218px;
-  top: 30px;
+	left: 2px;
+	width: 398px;
+	top: -2px;
+	border: none;
 }
 .images{
   position: absolute;
-  width: 397px;
-  left: 0;
+  width: 304px;
+  left: -2px;
+  top: -9px;
+  height:212px;
 }
 .card-body-text{
-  position: absolute;
-  left: -15px;
-  top: 195px;
-  width: 377px;
-  font-size:small;
-}
+	position: absolute;
+	left: -15px;
+	top: 195px;
+	width: 315px;
+	font-size:large;
+  }
 .photo-card{
   position: absolute;
   left: -200px;
@@ -402,7 +404,7 @@ margin-right: 18px;
   position: relative;
   width: 552px;
   height: 166px;
-  background:aquamarine; 
+  background:whitesmoke; 
   top: 20px;
   overflow: scroll;
 }
@@ -466,4 +468,9 @@ margin-right: 18px;
 }
 .date-picker:hover{
   color: purple;
+}
+.container-btn{
+  position: absolute;
+  top:819px;
+  left:454px;
 }

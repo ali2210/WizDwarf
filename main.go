@@ -12,12 +12,13 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
+
 	"cloud.google.com/go/firestore"
-	// firebase "firebase.google.com/go"
 	"github.com/ali2210/wizdwarf/db"
-	."github.com/ali2210/wizdwarf/piplines"
 	CloudWallet "github.com/ali2210/wizdwarf/db/cloudwalletclass"
 	DBModel "github.com/ali2210/wizdwarf/db/model"
+	. "github.com/ali2210/wizdwarf/piplines"
 	"github.com/ali2210/wizdwarf/structs"
 	bio "github.com/ali2210/wizdwarf/structs/bioinformatics"
 	info "github.com/ali2210/wizdwarf/structs/bioinformatics/model"
@@ -40,23 +41,23 @@ import (
 // Variables
 
 var (
-	emailexp          string                    = "([A-Z][a-z]|[0-9])*[@][a-z]*"
-	passexp           string                    = "([A-Z][a-z]*[0-9])*"
-	addressexp        string                    = "(^0x[0-9a-fA-F]{40}$)"
-	AppName           *firestore.Client         = SetDBClientRef() 
-	Cloud             users.DBFirestore         = SetDBCollect()
-	digitalCode       users.CreditCardInfo      = users.NewClient()
-	vault             DBModel.Private           = DBModel.New()
-	ledger            db.PublicLedger           = db.NewCollectionInstance()
-	paypalMini        handler.PaypalClientLevel = handler.PaypalClientGo()
-	userSessions      *sessions.CookieStore     = nil //user level
-	clientInstance    *ethclient.Client         = nil
-	ledgerPubcKeys    string                    = ""
-	ledgerBits        string                    = ""
+	emailexp       string                    = "([A-Z][a-z]|[0-9])*[@][a-z]*"
+	passexp        string                    = "([A-Z][a-z]*[0-9])*"
+	addressexp     string                    = "(^0x[0-9a-fA-F]{40}$)"
+	AppName        *firestore.Client         = SetDBClientRef()
+	Cloud          users.DBFirestore         = SetDBCollect()
+	digitalCode    users.CreditCardInfo      = users.NewClient()
+	vault          DBModel.Private           = DBModel.New()
+	ledger         db.PublicLedger           = db.NewCollectionInstance()
+	paypalMini     handler.PaypalClientLevel = handler.PaypalClientGo()
+	userSessions   *sessions.CookieStore     = nil //user level
+	clientInstance *ethclient.Client         = nil
+	ledgerPubcKeys string                    = ""
+	ledgerBits     string                    = ""
 	// Firestore_Rf      string                    = ""
-	openReadFile      string                    = ""
-	publicAddress     string                    = ""
-	edit              bio.LevenTable            = SetEditParameters()
+	openReadFile      string         = ""
+	publicAddress     string         = ""
+	edit              bio.LevenTable = SetEditParameters()
 	algo              info.Levenshtein
 	visualizeReport   weather.DataVisualization = weather.DataVisualization{}
 	accountID         string                    = " "
@@ -104,7 +105,7 @@ var (
 	coinbaseClient coin.Permission      = coin.Permission{}
 	staticData     coin.StaticWallet    = coin.StaticWallet{}
 	transactWeb    structs.ParserObject = structs.ParserObject{}
-	profiler 	   *users.Visitors = &users.Visitors{}
+	profiler       *users.Visitors      = &users.Visitors{}
 	// Https_port	   string = os.Getenv("Http_Port")
 )
 
@@ -112,9 +113,9 @@ var (
 
 const (
 	//ProjectID      string = "htickets-cb4d0"
-	mainNet        string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
-	rinkebyClient  string = "https://rinkeby.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
-	geocodeAPI     string = "7efdb33c59a74e09352479b21657aee8"
+	mainNet       string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
+	rinkebyClient string = "https://rinkeby.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
+	geocodeAPI    string = "7efdb33c59a74e09352479b21657aee8"
 )
 
 func main() {
@@ -133,14 +134,14 @@ func main() {
 
 		// env port setting
 
-		if port == " "{
+		if port == " " {
 			log.Fatalln("[Fail] No Application port allocated", port)
 		} else {
 			if port != "5000" && host == "wizdwarfs" {
 				// any Listening PORT {heroku}
 				log.Println("[Open] Application Port", port)
 				log.Println("[Open] Application host", host)
-				
+
 			} else {
 				// specfic port allocated {docker}
 				port = "5000"
@@ -168,7 +169,7 @@ func main() {
 		}
 
 	})
-	
+
 	routing.HandleFunc("/home", home)
 	routing.HandleFunc("/signup", newUser)
 	routing.HandleFunc("/login", existing)
@@ -190,7 +191,7 @@ func main() {
 	routing.HandleFunc("/methionine", methionine)
 	routing.HandleFunc("/valine", valine)
 	routing.HandleFunc("/serine", serine)
-	routing.HandleFunc("/proline",proline)
+	routing.HandleFunc("/proline", proline)
 	routing.HandleFunc("/threonine", threonine)
 	routing.HandleFunc("/alanine", alanine)
 	routing.HandleFunc("/tyrosine", tyrosine)
@@ -215,7 +216,6 @@ func main() {
 	routing.HandleFunc("/visualize", visualize)
 	routing.HandleFunc("/modal/success", success)
 
-
 	// Static Files
 	images := http.StripPrefix("/images/", http.FileServer(http.Dir("./images")))
 	routing.PathPrefix("/images/").Handler(images)
@@ -223,7 +223,6 @@ func main() {
 	routing.PathPrefix("/css/").Handler(css)
 	js := http.StripPrefix("/js/", http.FileServer(http.Dir("./js")))
 	routing.PathPrefix("/js/").Handler(js)
-
 
 	// tcp connection
 	err := http.ListenAndServe(net.JoinHostPort(host, port), routing)
@@ -269,7 +268,6 @@ func deleteCard(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 
 		accountNum := r.FormValue("account")
-		
 
 		client, err := paypalMini.NewClient()
 		if err != nil {
@@ -317,14 +315,11 @@ func aboutMe(w http.ResponseWriter, r *http.Request) {
 	// if r.Method == "GET" {
 	// 	log.Println("[Accept]", r.URL.Path)
 
-		
-
 	// 	userProfile, err := Cloud.GetProfile(AppName, accountID, accountVisitEmail)
 	// 	if err != nil && userProfile != nil {
 	// 		log.Fatal("[Fail] No info  ", err)
 	// 		return
 	// 	}
-		
 
 	// 	key, address := vault.GetCryptoDB(publicAddress)
 	// 	access := DBModel.CredentialsPrivate{
@@ -374,7 +369,7 @@ func aboutMe(w http.ResponseWriter, r *http.Request) {
 	// 	log.Println("[Accept] Profile", myProfile)
 	// 	temp.Execute(w, myProfile)
 
-	}
+}
 
 func setting(w http.ResponseWriter, r *http.Request) {
 
@@ -384,49 +379,109 @@ func setting(w http.ResponseWriter, r *http.Request) {
 		log.Println("[Accept]", r.URL.Path)
 		temp.Execute(w, "setting")
 	}
- }
+}
 
 func profile(w http.ResponseWriter, r *http.Request) {
 
- 	temp := template.Must(template.ParseFiles("profile.html"))
+	temp := template.Must(template.ParseFiles("profile.html"))
 	var member users.Visitors
-	visit ,err := Cloud.GetDocumentById(AppName, *profiler)
+	visit, err := Cloud.GetDocumentById(AppName, *profiler)
 	if err != nil {
 		log.Printf("Database query failed: %v", err.Error())
 		return
 	}
 
-	data , err := json.Marshal(visit); if err != nil {
+	data, err := json.Marshal(visit)
+	if err != nil {
 		log.Printf("json marshal: %v", err.Error())
 		return
 	}
 
-	err = json.Unmarshal(data, &member); if err != nil {
+	err = json.Unmarshal(data, &member)
+	if err != nil {
 		log.Printf("json unmarshal: %v", err.Error())
 	}
 
 	fmt.Println("Member :", member)
 
-	if r.Method == "GET"{
+	if r.Method == "GET" {
 		log.Println("Method:", r.Method)
 		log.Println("URL:", r.URL.Path)
 		temp.Execute(w, member)
-	}else{
-		
-				
+	} else {
+
 		// user add profile picture resolution must be less 2kb
 		Pictures_Stream(r, member.Id)
-		
-		// update users information 
-		user := users.Visitors{Name: r.FormValue("name"), LastName: r.FormValue("lastname"),
-			 Address: r.FormValue("address"), Appartment: r.FormValue("apartment"),  
-			 Zip: r.FormValue("zip"), City: r.FormValue("city"), Country: r.FormValue("country"),
-			 Twitter : r.FormValue("tweet"), PhoneNo : r.FormValue("phone")}
-		fmt.Println("edit profile:", user)
-		
-		
+
+		// update users information
+		user := users.Visitors{}
+
+		user.Id = member.Id
+		user.Password = member.Password
+		user.Email = member.Email
+
+		if strings.Contains(r.FormValue("name"), " ") {
+			user.Name = member.Name
+		} else {
+			user.Name = r.FormValue("name")
+		}
+
+		if strings.Contains(r.FormValue("lastname"), " ") {
+			user.LastName = member.LastName
+		} else {
+			user.LastName = r.FormValue("lastname")
+		}
+
+		if strings.Contains(r.FormValue("address"), " ") {
+			user.Address = member.Address
+		} else {
+			user.Address = r.FormValue("address")
+		}
+
+		if strings.Contains(r.FormValue("appartment"), " ") {
+			user.Appartment = member.Appartment
+		} else {
+			user.Appartment = r.FormValue("appartment")
+		}
+		if strings.Contains(r.FormValue("zip"), " ") {
+			user.Zip = member.Zip
+		} else {
+			user.Zip = r.FormValue("zip")
+		}
+
+		if strings.Contains(r.FormValue("city"), " ") {
+			user.City = member.City
+		} else {
+			user.City = r.FormValue("city")
+		}
+
+		if strings.Contains(r.FormValue("country"), " ") {
+			user.Country = member.Country
+		} else {
+			user.Country = r.FormValue("country")
+		}
+
+		if strings.Contains(r.FormValue("tweet"), " ") {
+			user.Twitter = member.Twitter
+		} else {
+			user.Twitter = r.FormValue("tweet")
+		}
+
+		if strings.Contains(r.FormValue("phone"), " ") {
+			user.PhoneNo = member.PhoneNo
+		} else {
+			user.PhoneNo = r.FormValue("phone")
+		}
+
+		// user information completed and store in database
+		if status_profile := UpdateProfileInfo(&user); status_profile {
+			log.Printf("Update  profile")
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
 	}
- 	
+
 }
 
 func credit(w http.ResponseWriter, r *http.Request) {
@@ -445,13 +500,19 @@ func credit(w http.ResponseWriter, r *http.Request) {
 		month := string(sliceByte[5:])
 
 		card := pay.CreditCard{
-			FirstName:   r.FormValue("fholder"),
-			LastName:    r.FormValue("surename"),
-			Number:      r.FormValue("cardNo"),
-			CVV2:        r.FormValue("cvv"),
-			Type:        r.FormValue("cardtype"),
-			ExpireMonth: month,
-			ExpireYear:  year,
+			ID:                 accountID,
+			PayerID:            "",
+			ExternalCustomerID: "",
+			Number:             r.FormValue("cardNo"),
+			Type:               r.FormValue("cardtype"),
+			ExpireMonth:        month,
+			ExpireYear:         year,
+			CVV2:               r.FormValue("cvv"),
+			FirstName:          r.FormValue("fholder"),
+			LastName:           r.FormValue("surename"),
+			BillingAddress:     &pay.Address{},
+			State:              "",
+			ValidUntil:         "",
 		}
 
 		// store credit card information.
@@ -605,26 +666,13 @@ func kernel(w http.ResponseWriter, r *http.Request) {
 
 func treasure(w http.ResponseWriter, r *http.Request) {
 	webpage := template.Must(template.ParseFiles("treasure.html"))
-	// userProfile, err := Cloud.GetDocumentById(AppName, *profiler)
-	// if err != nil && userProfile != nil {
-	// 	log.Fatal("[Fail] No info  ", err)
-	// 	return
-	// }
-
-	// query_json, err := json.Marshal(userProfile); if err != nil{
-	// 	log.Fatal("query return un handle data  ", err.Error())
-	// 	return		
-	// } 
-	// err = json.Unmarshal(query_json, &profiler); if err != nil{
-	// 	log.Fatal("query return un structure data", err.Error())
-	// 	return
-	// }
 	log.Println("[Path]:", r.URL.Path)
-		log.Println("[Method]:", r.Method)
+	log.Println("[Method]:", r.Method)
 	fmt.Println("@Percentage:", visualizeReport.Percentage)
 	fmt.Println("@prob parameter:", algo.GetProbParameter())
+	// analysis data results
 	algo.SetProbParameter(visualizeReport.Percentage)
-	if r.Method == "GET" && algo.GetProbParameter() != -1.0{
+	if r.Method == "GET" && algo.GetProbParameter() != -1.0 {
 		log.Println("[Path]:", r.URL.Path)
 		log.Println("[Method]:", r.Method)
 		webpage.Execute(w, visualizeReport)
@@ -687,7 +735,6 @@ func tCluster(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln("[Fail] Transaction", err)
 		return
 	}
-	
 
 }
 
@@ -747,7 +794,6 @@ func tMulticluster(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln("[Fail] Transaction", err)
 		return
 	}
-	
 
 }
 
@@ -784,7 +830,6 @@ func tKernel(w http.ResponseWriter, r *http.Request) {
 	// }
 	// log.Println("Block Header:", btx)
 
-	
 	// blockchains.Nonce = bitInterface.EthNonceAtStatus
 	// blockchains.GasLimit = uint64(21000)
 
@@ -830,7 +875,7 @@ func tKernel(w http.ResponseWriter, r *http.Request) {
 	// 	log.Fatal("[Fail] Block Balance should not be zero  ", blockchains.Balance)
 	// 	return
 	// }
-	
+
 	// balance.SetTransactionWiz(user.FirstName, fmt.Sprintf("%v", blockchains.Balance), sTotal, sTotal, credentials.PublicAddress)
 
 	// if r.Method == "GET" {
@@ -914,11 +959,13 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	query_json, err := json.Marshal(userProfile); if err != nil{
+	query_json, err := json.Marshal(userProfile)
+	if err != nil {
 		log.Fatal("query return un handle data  ", err.Error())
-		return		
-	} 
-	err = json.Unmarshal(query_json, &profiler); if err != nil{
+		return
+	}
+	err = json.Unmarshal(query_json, &profiler)
+	if err != nil {
 		log.Fatal("query return un structure data", err.Error())
 		return
 	}
@@ -954,7 +1001,7 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Url:", r.URL.Path)
 		RouteWebpage.Execute(w, "Dashboard")
 	} else {
-		
+
 		r.ParseForm()
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
@@ -966,200 +1013,203 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			log.Fatalln("[File]:", err)
 			return
 		}
-		
+
 		choose := r.FormValue("choose")
 		coordinates := r.FormValue("geo-marker")
 		var longitude_parse float64 = 0.0
 		var latitude_parse float64 = 0.0
 		fmt.Println("@length:", len(coordinates))
-		if (len(coordinates) > 0 && len(coordinates) <= 15){
-			longitude_parse , err = strconv.ParseFloat(coordinates[:5],10)
+		if len(coordinates) > 0 && len(coordinates) <= 15 {
+			longitude_parse, err = strconv.ParseFloat(coordinates[:5], 10)
 			if err != nil {
 				log.Fatalln("parse longituide value #0 :", err.Error())
-				return 
+				return
 			}
-		
+
 			fmt.Println("@longitude # 0:", longitude_parse)
-			latitude_parse , err = strconv.ParseFloat(coordinates[9:],10)
+			latitude_parse, err = strconv.ParseFloat(coordinates[9:], 10)
 			if err != nil {
 				log.Fatalln("parse latitude value # 0 :", err.Error())
-				return 
+				return
 			}
 
 			fmt.Println("@latitude:", latitude_parse)
-		}else if (len(coordinates) > 15 && len(coordinates) <= 25) {
-			longitude_parse , err := strconv.ParseFloat(coordinates[:8],10)
+		} else if len(coordinates) > 15 && len(coordinates) <= 25 {
+			longitude_parse, err := strconv.ParseFloat(coordinates[:8], 10)
 			if err != nil {
 				log.Fatalln("parse longituide value # 1 :", err.Error())
-				return 
+				return
 			}
-		
+
 			fmt.Println("@longitude # 1:", longitude_parse)
-			latitude_parse , err = strconv.ParseFloat(coordinates[12:],10)
+			latitude_parse, err = strconv.ParseFloat(coordinates[12:], 10)
 			if err != nil {
 				log.Fatalln("parse latitude value # 1 :", err.Error())
-				return 
+				return
 			}
 
 			fmt.Println("@latitude # 1:", latitude_parse)
-		}else if(len(coordinates) > 25 && len(coordinates) < 40){
-			longitude_parse , err := strconv.ParseFloat(coordinates[:18],10)
+		} else if len(coordinates) > 25 && len(coordinates) < 40 {
+			longitude_parse, err := strconv.ParseFloat(coordinates[:18], 10)
 			if err != nil {
 				log.Fatalln("parse longituide value :", err.Error())
-				return 
+				return
 			}
-		
+
 			fmt.Println("@longitude # 2:", longitude_parse)
-			latitude_parse , err := strconv.ParseFloat(coordinates[21:],10)
+			latitude_parse, err := strconv.ParseFloat(coordinates[21:], 10)
 			if err != nil {
 				log.Fatalln("parse latitude value # 2 :", err.Error())
-				return 
+				return
 			}
 
 			fmt.Println("@latitude: # 2", latitude_parse)
-		}else if len(coordinates) > 15 && len(coordinates) == 23 {
-			longitude_parse , err := strconv.ParseFloat(coordinates[:8],10)
+		} else if len(coordinates) > 15 && len(coordinates) == 23 {
+			longitude_parse, err := strconv.ParseFloat(coordinates[:8], 10)
 			if err != nil {
 				log.Fatalln("parse longituide value # 1 :", err.Error())
-				return 
+				return
 			}
-		
+
 			fmt.Println("@longitude # 3:", longitude_parse)
-			latitude_parse , err := strconv.ParseFloat(coordinates[13:],10)
+			latitude_parse, err := strconv.ParseFloat(coordinates[13:], 10)
 			if err != nil {
 				log.Fatalln("parse latitude value # 1 :", err.Error())
-				return 
+				return
 			}
 
 			fmt.Println("@latitude # 3:", latitude_parse)
-		}else {
+		} else {
 			log.Fatalln("Empty Field value :", err.Error())
 		}
-		
+
 		clientapi := weather.NewWeatherClient()
-		
-		weatherapi ,err := clientapi.OpenWeather(geocodeAPI); if err != nil {
+
+		weatherapi, err := clientapi.OpenWeather(geocodeAPI)
+		if err != nil {
 			log.Fatalln("weather api-key :", err.Error())
-			return 
+			return
 		}
 
 		marker_location := clientapi.GetCoordinates(&weather.MyCoordinates{
-			Longitude : longitude_parse,
-			Latitude : latitude_parse,
+			Longitude: longitude_parse,
+			Latitude:  latitude_parse,
 		})
 
 		fmt.Println("@marker:", marker_location)
 
-		err = clientapi.UVCoodinates(marker_location,weatherapi); if err != nil {
+		err = clientapi.UVCoodinates(marker_location, weatherapi)
+		if err != nil {
 			log.Fatalln("city weather coordinates:", err.Error())
-			return 
+			return
 		}
 
-		uvinfo, err := clientapi.UVCompleteInfo(weatherapi); if err != nil {
+		uvinfo, err := clientapi.UVCompleteInfo(weatherapi)
+		if err != nil {
 			log.Fatalln("city uv tracks:", err.Error())
-			return 
+			return
 		}
 
 		fmt.Println("@uv:", uvinfo)
-		
+
 		visualizeReport.UVinfo = uvinfo
-		
+
 		data, err := Open_SFiles("app_data/", fname)
 		if err != nil {
 			log.Fatalln("[No File]:", err)
 			return
 		}
-		
+
 		log.Println("File Name:", data.Name())
-		
+
 		switch choose {
 		case "0":
-		 	fmt.Fprintf(w, "Please choose any option ...")
-		 	log.Fatalln("Choose your option")
+			fmt.Fprintf(w, "Please choose any option ...")
+			log.Fatalln("Choose your option")
 			return
-		 case "1":
-		 	var name string = "Covid-19"
-		 	
-			 err := Data_Predicition(w, r, name, choose, data,algo)
-		 	if err != nil {
-		 		return
-		 	}
-			
-			 pattern_analysis := GetBioAlgoParameters()
-	 		
+		case "1":
+			var name string = "Covid-19"
+
+			err := Data_Predicition(w, r, name, choose, data, algo)
+			if err != nil {
+				return
+			}
+
+			pattern_analysis := GetBioAlgoParameters()
+
 			visualizeReport.Percentage = pattern_analysis.Percentage
 
-		 	w.WriteHeader(http.StatusOK)
-		// 	// LifeCode = genome
+			w.WriteHeader(http.StatusOK)
+			// 	// LifeCode = genome
 			r.Method = "GET"
-		 	visualize(w, r)
-		// 	// fmt.Println("Virus:", capsid)
+			visualize(w, r)
+			// 	// fmt.Println("Virus:", capsid)
 
-		 case "2":
-		 	var name string = "FlaviDengue"
-		 	err := Data_Predicition(w, r, name, choose, data, algo)
-		 	if err != nil {
-		 		return
-		 	}
+		case "2":
+			var name string = "FlaviDengue"
+			err := Data_Predicition(w, r, name, choose, data, algo)
+			if err != nil {
+				return
+			}
 			pattern_analysis := GetBioAlgoParameters()
-		 	visualizeReport.Percentage = pattern_analysis.Percentage
-		// 	// v :=  infectedUv()
-		// 	// v.UVinfo = uvslice
-		 	w.WriteHeader(http.StatusOK)
+			visualizeReport.Percentage = pattern_analysis.Percentage
+			// 	// v :=  infectedUv()
+			// 	// v.UVinfo = uvslice
+			w.WriteHeader(http.StatusOK)
 
-		 	r.Method = "GET"
-		 	visualize(w, r)
-		// 	// Wallet(w,r)
-		// 	// fmt.Println("Virus:", capsid)
-		 case "3":
-		 	var name string = "KenyaEbola"
-		 	err := Data_Predicition(w, r, name, choose, data,algo)
-		 	if err != nil {
-		 		return
-		 	}
-		 	pattern_analysis := GetBioAlgoParameters()
-		 	visualizeReport.Percentage = pattern_analysis.Percentage
-		// 	// v :=  infectedUv()
-		// 	// v.UVinfo = uvslice
+			r.Method = "GET"
+			visualize(w, r)
+			// 	// Wallet(w,r)
+			// 	// fmt.Println("Virus:", capsid)
+		case "3":
+			var name string = "KenyaEbola"
+			err := Data_Predicition(w, r, name, choose, data, algo)
+			if err != nil {
+				return
+			}
+			pattern_analysis := GetBioAlgoParameters()
+			visualizeReport.Percentage = pattern_analysis.Percentage
+			// 	// v :=  infectedUv()
+			// 	// v.UVinfo = uvslice
 
-		 	w.WriteHeader(http.StatusOK)
-		 	r.Method = "GET"
-		 	visualize(w, r)
+			w.WriteHeader(http.StatusOK)
+			r.Method = "GET"
+			visualize(w, r)
 
-		// 	// fmt.Println("Virus:", capsid)
-		 case "4":
-		 	var name string = "ZikaVirusBrazil"
-		 	err := Data_Predicition(w, r, name, choose, data, algo)
-		 	if err != nil {
-		 		return
-		 	}
-		 	pattern_analysis := GetBioAlgoParameters()
-		 	visualizeReport.Percentage = pattern_analysis.Percentage
-		// 	// v :=  infectedUv()
-		// 	// openStreet.Country = r.FormValue("country")
-		// 	// openStreet.PostalCode = r.FormValue("postal")
-		// 	// openStreet.City = r.FormValue("city")
-		// 	// openStreet.State = r.FormValue("state")
-		// 	// openStreet.StreetAddress = r.FormValue("street")
-		// 	// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
-		// 	// 	return
-		// 	// }
+			// 	// fmt.Println("Virus:", capsid)
+		case "4":
+			var name string = "ZikaVirusBrazil"
+			err := Data_Predicition(w, r, name, choose, data, algo)
+			if err != nil {
+				return
+			}
+			pattern_analysis := GetBioAlgoParameters()
+			visualizeReport.Percentage = pattern_analysis.Percentage
+			// 	// v :=  infectedUv()
+			// 	// openStreet.Country = r.FormValue("country")
+			// 	// openStreet.PostalCode = r.FormValue("postal")
+			// 	// openStreet.City = r.FormValue("city")
+			// 	// openStreet.State = r.FormValue("state")
+			// 	// openStreet.StreetAddress = r.FormValue("street")
+			// 	// i, err := strconv.Atoi(r.FormValue("route")); if err != nil {
+			// 	// 	return
+			// 	// }
 
-		// 	//v.UVinfo = uvslice
+			// 	//v.UVinfo = uvslice
 
-		 	w.WriteHeader(http.StatusOK)
-		 	r.Method = "GET"
-		 	visualize(w, r)
+			w.WriteHeader(http.StatusOK)
+			r.Method = "GET"
+			visualize(w, r)
 
-		// 	// fmt.Println("Virus:", capsid)
-		 case "5":
-		 	var name string = "MersSaudiaArabia"
-		 	err := Data_Predicition(w, r, name, choose, data,algo)
-		 	if err != nil {
-		 		return
-		 	}
-		 	pattern_analysis := GetBioAlgoParameters()
-		 	visualizeReport.Percentage = pattern_analysis.Percentage
+			// 	// fmt.Println("Virus:", capsid)
+		case "5":
+			var name string = "MersSaudiaArabia"
+			err := Data_Predicition(w, r, name, choose, data, algo)
+			if err != nil {
+				return
+			}
+			pattern_analysis := GetBioAlgoParameters()
+			visualizeReport.Percentage = pattern_analysis.Percentage
 			// v :=  infectedUv()				//  openStreet.Country = r.FormValue("country")
 			//  openStreet.PostalCode = r.FormValue("postal")
 			// openStreet.City = r.FormValue("city")
@@ -1169,21 +1219,20 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			// 	return
 			// }
 			// v.UVinfo = uvslice
-		 	w.WriteHeader(http.StatusOK)
+			w.WriteHeader(http.StatusOK)
 
-		 	r.Method = "GET"
-		 	visualize(w, r)
-		// 	// fmt.Println("Virus:", capsid)
+			r.Method = "GET"
+			visualize(w, r)
+			// 	// fmt.Println("Virus:", capsid)
 
-		 default:
-		 	 RouteWebpage.Execute(w, "dashboard")
-		 }
+		default:
+			RouteWebpage.Execute(w, "dashboard")
+		}
 	}
 
 }
 
 func send() (structs.BitsBlocks, error) {
-
 
 	var err error
 
@@ -1219,7 +1268,6 @@ func send() (structs.BitsBlocks, error) {
 	}
 
 	return bitInterface, err
-	
 
 }
 
@@ -1255,7 +1303,7 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 		client, err := ethclient.Dial(mainNet)
 		if err != nil {
 			log.Fatal("[Fail] Request Failed  ", err)
-			
+
 			return
 		}
 
@@ -1287,7 +1335,6 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 		}
 
 		publicBytes := crypto.FromECDSAPub(pbcKey)
-		
 
 		PublicKey := crypto.PubkeyToAddress(*pbcKey).Hex()
 
@@ -1327,7 +1374,6 @@ func createWallet(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		
 		// ok, ethAdd := Retrieve_Crypto(&acc, ledger)
 		// if ok && ethAdd != nil {
 		// 	log.Fatal("[Replicate] Already Data exist  ", err)
@@ -1442,10 +1488,8 @@ func wallet(w http.ResponseWriter, r *http.Request) {
 		// 	ledgerBits = addr.PrvteKey
 		// 	vault.SetCryptoDB(acc.EthAddress, ledgerBits)
 
-			
 		// 	blockchains.SenderBatchID = acc.EthAddress
 		// 	log.Println("Your Wallet:", acc)
-
 
 		// 	//dataabse -- Retrieve_Crypto
 		// 	secureWallet, ok := FindEthWallet(&acc)
@@ -1456,11 +1500,12 @@ func wallet(w http.ResponseWriter, r *http.Request) {
 		// 	}
 		// 	log.Println("[Accept] Your Ethereum Wallet Info:", secureWallet)
 
-			w.WriteHeader(http.StatusOK)
-			r.Method = "GET"
-			dashboard(w, r)
-		}
+		w.WriteHeader(http.StatusOK)
+		r.Method = "GET"
+		dashboard(w, r)
 	}
+}
+
 //}
 
 func terms(w http.ResponseWriter, r *http.Request) {
@@ -1476,18 +1521,18 @@ func terms(w http.ResponseWriter, r *http.Request) {
 func newUser(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("register.html"))
 	user := users.Visitors{
-		Name:     "",
-		LastName:    "",
-		Eve:    false,
-		Address:  "",
+		Name:       "",
+		LastName:   "",
+		Eve:        false,
+		Address:    "",
 		Appartment: "",
-		Zip:      "",
-		City:     "",
-		Country:  "",
-		Email:    "",
-		Password: "",
-		PhoneNo: "",
-		Twitter : "",
+		Zip:        "",
+		City:       "",
+		Country:    "",
+		Email:      "",
+		Password:   "",
+		PhoneNo:    "",
+		Twitter:    "",
 	}
 
 	if r.Method == "GET" {
@@ -1525,9 +1570,9 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 			log.Fatal("[Fail] Password is very week ", err)
 			return
 		}
-		
+
 		fmt.Println("Regex:", regex_Pass)
-		
+
 		hash, encrypted := Presence(w, r, regex_Email, regex_Pass, user)
 		if !hash {
 			log.Fatal("[Fail] Week encryption", hash)
@@ -1545,19 +1590,19 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 func existing(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("login.html"))
 	user := users.Visitors{
-		Name:     "",
-		LastName:    "",
-		Eve:    false,
-		Address:  "",
+		Name:       "",
+		LastName:   "",
+		Eve:        false,
+		Address:    "",
 		Appartment: "",
-		Zip:      "",
-		City:     "",
-		Country:  "",
-		Email:    "",
-		Password: "",
-		Id : "",
-		PhoneNo : "",
-		Twitter : "",
+		Zip:        "",
+		City:       "",
+		Country:    "",
+		Email:      "",
+		Password:   "",
+		Id:         "",
+		PhoneNo:    "",
+		Twitter:    "",
 	}
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
@@ -1580,7 +1625,7 @@ func existing(w http.ResponseWriter, r *http.Request) {
 		ok := exp.MatchString(user.Email)
 		if !ok {
 			log.Fatal("[Fail] Mismatch ", ok)
-			
+
 			return
 
 		}
@@ -1595,38 +1640,36 @@ func existing(w http.ResponseWriter, r *http.Request) {
 
 		// Search Data in DB
 		data, err := Firebase_Gatekeeper(w, r, user)
-		
+
 		if err != nil && data == nil {
 			log.Fatal("[Result]: No Match Found  ", err)
 			return
 		}
-			accountID = data.Id
-			fmt.Printf("Search Data:%v", data.Id)
-			accountVisitEmail = data.Email
-			accountKey = data.Password
-			profiler = data
-			fmt.Println("Profile:", profiler)
-			act := structs.RouteParameter{}
-			
-			if userSessions == nil {
-				userSessions = Web_Token(data.Id)
+		accountID = data.Id
+		fmt.Printf("Search Data:%v", data.Id)
+		accountVisitEmail = data.Email
+		accountKey = data.Password
+		profiler = data
+		fmt.Println("Profile:", profiler)
+		act := structs.RouteParameter{}
 
-				act.SetContextSession(userSessions, w, r)
-				err := act.NewToken()
-				if err != nil {
-					log.Fatal("[FAIL] No Token generate .. Review logs", err)
-					return
+		if userSessions == nil {
+			userSessions = Web_Token(data.Id)
 
-				}
+			act.SetContextSession(userSessions, w, r)
+			err := act.NewToken()
+			if err != nil {
+				log.Fatal("[FAIL] No Token generate .. Review logs", err)
+				return
+
 			}
+		}
 
-			w.WriteHeader(http.StatusOK)
-			r.Method = "GET"
-			dashboard(w, r)
+		w.WriteHeader(http.StatusOK)
+		r.Method = "GET"
+		dashboard(w, r)
 	}
 }
-
-
 
 func logout(w http.ResponseWriter, r *http.Request) {
 
@@ -1637,32 +1680,32 @@ func logout(w http.ResponseWriter, r *http.Request) {
 		act.SetContextSession(userSessions, w, r)
 		err := act.ExpireToken()
 		if err != nil {
-			log.Fatal("[Fail] No Token Expire  ", err)			
+			log.Fatal("[Fail] No Token Expire  ", err)
 			return
 		}
 		existing(w, r)
 	}
 }
 
-func phenylalanine(w http.ResponseWriter, r *http.Request)  {
+func phenylalanine(w http.ResponseWriter, r *http.Request) {
 	webpge := template.Must(template.ParseFiles("Phenylalanine.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
 		fmt.Println("Path: ", r.URL.Path)
 		webpge.Execute(w, "phenylalanine")
-	}	
+	}
 }
 
-func leucine(w http.ResponseWriter, r *http.Request)  {
+func leucine(w http.ResponseWriter, r *http.Request) {
 	webpge := template.Must(template.ParseFiles("leucine.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
 		fmt.Println("Path: ", r.URL.Path)
 		webpge.Execute(w, "leucine")
-	}	
+	}
 }
 
-func isoleucine(w http.ResponseWriter, r *http.Request)  {
+func isoleucine(w http.ResponseWriter, r *http.Request) {
 	webpge := template.Must(template.ParseFiles("isoleucine.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
@@ -1671,7 +1714,7 @@ func isoleucine(w http.ResponseWriter, r *http.Request)  {
 	}
 }
 
-func methionine(w http.ResponseWriter,r *http.Request)  {
+func methionine(w http.ResponseWriter, r *http.Request) {
 	webpge := template.Must(template.ParseFiles("methionine.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
@@ -1689,7 +1732,7 @@ func valine(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func serine(w http.ResponseWriter, r *http.Request)  {
+func serine(w http.ResponseWriter, r *http.Request) {
 	webpge := template.Must(template.ParseFiles("serine.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
@@ -1698,7 +1741,7 @@ func serine(w http.ResponseWriter, r *http.Request)  {
 	}
 }
 
-func proline(w http.ResponseWriter, r *http.Request){
+func proline(w http.ResponseWriter, r *http.Request) {
 	webpge := template.Must(template.ParseFiles("proline.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
@@ -1707,7 +1750,7 @@ func proline(w http.ResponseWriter, r *http.Request){
 	}
 }
 
-func threonine(w http.ResponseWriter, r *http.Request){
+func threonine(w http.ResponseWriter, r *http.Request) {
 	webpge := template.Must(template.ParseFiles("threonine.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
@@ -1716,7 +1759,7 @@ func threonine(w http.ResponseWriter, r *http.Request){
 	}
 }
 
-func alanine(w http.ResponseWriter, r *http.Request)  {
+func alanine(w http.ResponseWriter, r *http.Request) {
 	webpge := template.Must(template.ParseFiles("alanine.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
@@ -1725,7 +1768,7 @@ func alanine(w http.ResponseWriter, r *http.Request)  {
 	}
 }
 
-func tyrosine(w http.ResponseWriter, r *http.Request)  {
+func tyrosine(w http.ResponseWriter, r *http.Request) {
 	webpge := template.Must(template.ParseFiles("tyrosine.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
@@ -1734,7 +1777,7 @@ func tyrosine(w http.ResponseWriter, r *http.Request)  {
 	}
 }
 
-func histidine(w http.ResponseWriter, r * http.Request)  {
+func histidine(w http.ResponseWriter, r *http.Request) {
 	webpge := template.Must(template.ParseFiles("histidine.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
@@ -1742,7 +1785,7 @@ func histidine(w http.ResponseWriter, r * http.Request)  {
 		webpge.Execute(w, "histidine")
 	}
 }
-func glutamine(w http.ResponseWriter, r *http.Request)  {
+func glutamine(w http.ResponseWriter, r *http.Request) {
 	webpge := template.Must(template.ParseFiles("glutamine.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
@@ -1751,7 +1794,7 @@ func glutamine(w http.ResponseWriter, r *http.Request)  {
 	}
 }
 
-func asparagine(w http.ResponseWriter, r *http.Request){
+func asparagine(w http.ResponseWriter, r *http.Request) {
 	webpge := template.Must(template.ParseFiles("asparagine.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
@@ -1760,7 +1803,7 @@ func asparagine(w http.ResponseWriter, r *http.Request){
 	}
 }
 
-func lysine(w http.ResponseWriter, r * http.Request)  {
+func lysine(w http.ResponseWriter, r *http.Request) {
 	webpge := template.Must(template.ParseFiles("lysine.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
@@ -1769,7 +1812,7 @@ func lysine(w http.ResponseWriter, r * http.Request)  {
 	}
 }
 
-func aspartic(w http.ResponseWriter, r *http.Request)  {
+func aspartic(w http.ResponseWriter, r *http.Request) {
 	webpge := template.Must(template.ParseFiles("aspartic.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
@@ -1778,7 +1821,7 @@ func aspartic(w http.ResponseWriter, r *http.Request)  {
 	}
 }
 
-func glutamic(w http.ResponseWriter, r *http.Request)  {
+func glutamic(w http.ResponseWriter, r *http.Request) {
 	webpge := template.Must(template.ParseFiles("glutamic.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
@@ -1787,7 +1830,7 @@ func glutamic(w http.ResponseWriter, r *http.Request)  {
 	}
 }
 
-func cysteine(w http.ResponseWriter, r *http.Request)  {
+func cysteine(w http.ResponseWriter, r *http.Request) {
 	webpge := template.Must(template.ParseFiles("cysteine.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
@@ -1796,7 +1839,7 @@ func cysteine(w http.ResponseWriter, r *http.Request)  {
 	}
 }
 
-func tryptophan(w http.ResponseWriter, r *http.Request)  {
+func tryptophan(w http.ResponseWriter, r *http.Request) {
 	webpge := template.Must(template.ParseFiles("tryptophan.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
@@ -1805,7 +1848,7 @@ func tryptophan(w http.ResponseWriter, r *http.Request)  {
 	}
 }
 
-func arginine(w http.ResponseWriter, r *http.Request)  {
+func arginine(w http.ResponseWriter, r *http.Request) {
 	webpge := template.Must(template.ParseFiles("arginine.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
@@ -1814,7 +1857,7 @@ func arginine(w http.ResponseWriter, r *http.Request)  {
 	}
 }
 
-func glycine(w http.ResponseWriter, r *http.Request)  {
+func glycine(w http.ResponseWriter, r *http.Request) {
 	webpge := template.Must(template.ParseFiles("glycine.html"))
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)

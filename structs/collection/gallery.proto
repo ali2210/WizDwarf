@@ -15,7 +15,7 @@ message Pictures {
     string Pic_time = 4;
     string User_agent_id = 5;
     string Pic_tags = 6;
-    map<string, string> Pic_Reference = 7;  // key : multi-format cid , value : link of storage
+    map<string, string> CDR = 7;  // key : multi-format cid , value : link of storage
 }
 
 

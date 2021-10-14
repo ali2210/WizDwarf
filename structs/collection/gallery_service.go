@@ -2,15 +2,16 @@ package collection
 
 import (
 	"context"
+	"encoding/json"
+	"log"
+
 	"cloud.google.com/go/firestore"
 	"google.golang.org/api/iterator"
-	"log"
-	"encoding/json"
 )
 
-var(
+var (
 	Firestore_Picture_Client *firestore.Client
-	Size int64 = 1
+	Size                     int64 = 1
 )
 
 const (
@@ -19,15 +20,15 @@ const (
 
 type Gallery_Stream_Server struct{}
 
-func (s *Gallery_Stream_Server) NewPictures(ctx context.Context, images *Pictures)(*Collection){
-	doc ,result, err := Firestore_Picture_Client.Collection(collection_name).Add(ctx, map[string]interface{}{
-		"pic_id" : images.PicId,
-		"pic_src": images.PicSrc,
-		"pic_date" : images.PicDate,
-		"userId" : images.UserAgentId,
-		"pic_time" : images.PicTime,
-		"pic_tags" : images.PicTags,
-		// "picRef" : images.Pic_Reference,
+func (s *Gallery_Stream_Server) NewPictures(ctx context.Context, images *Pictures) *Collection {
+	doc, result, err := Firestore_Picture_Client.Collection(collection_name).Add(ctx, map[string]interface{}{
+		"pic_id":   images.PicId,
+		"pic_src":  images.PicSrc,
+		"pic_date": images.PicDate,
+		"userId":   images.UserAgentId,
+		"pic_time": images.PicTime,
+		"pic_tags": images.PicTags,
+		"picRef":   images.CDR,
 	})
 	if err != nil {
 		log.Fatal(" images insertion error: ", err.Error())
@@ -35,10 +36,10 @@ func (s *Gallery_Stream_Server) NewPictures(ctx context.Context, images *Picture
 	}
 
 	log.Println("Doc:", doc, "Result:", result)
-	
+
 	var pic_collection map[string]interface{}
 	schema := Firestore_Picture_Client.Collection(collection_name).Where("userId", "==", images.UserAgentId).Where("pic_id", "==", images.PicId).Documents(ctx)
-	for{
+	for {
 		doc, err := schema.Next()
 		if err == iterator.Done {
 			break
@@ -46,24 +47,26 @@ func (s *Gallery_Stream_Server) NewPictures(ctx context.Context, images *Picture
 		pic_collection = doc.Data()
 	}
 
-	convert , err := json.Marshal(pic_collection); if err != nil {
+	convert, err := json.Marshal(pic_collection)
+	if err != nil {
 		log.Printf("error marshaling %v", err.Error())
 		return &Collection{}
 	}
 
-	var pic Pictures 
-	err = json.Unmarshal(convert, &pic); if err != nil {
+	var pic Pictures
+	err = json.Unmarshal(convert, &pic)
+	if err != nil {
 		log.Printf("error unmarshaling %v", err.Error())
 		return &Collection{}
 	}
-	
+
 	collection := make([]*Pictures, Size-1)
 	collection = append(collection, &pic)
 	mycollection := &Collection{}
 	mycollection.Gallery = collection
-	
+
 	//log.Println("Collection :", mycollection.Gallery)
-	
+
 	return mycollection
 }
 
@@ -83,12 +86,12 @@ func (s *Gallery_Stream_Server) NewPictures(ctx context.Context, images *Picture
 // 		return &Collection{}
 // 	}
 
-// 	var pic Pictures 
+// 	var pic Pictures
 // 	err = json.Unmarshal(convert, &pic); if err != nil {
 // 		log.Printf("error unmarshaling %v", err.Error())
 // 		return &Collection{}
 // 	}
-	
+
 // 	collection := make([]*Pictures, Size)
 // 	collection = append(collection, &pic)
 // 	mycollection :=  &Collection{}
@@ -113,12 +116,12 @@ func (s *Gallery_Stream_Server) NewPictures(ctx context.Context, images *Picture
 // 		return &Collection{}
 // 	}
 
-// 	var pic Pictures 
+// 	var pic Pictures
 // 	err = json.Unmarshal(convert, &pic); if err != nil {
 // 		log.Printf("error unmarshaling %v", err.Error())
 // 		return &Collection{}
 // 	}
-	
+
 // 	collection := make([]*Pictures, Size)
 // 	collection = append(collection, &pic)
 // 	mycollection := &Collection{}
