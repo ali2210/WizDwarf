@@ -205,6 +205,7 @@ func main() {
 	routing.HandleFunc("/tryptophan", tryptophan)
 	routing.HandleFunc("/arginine", arginine)
 	routing.HandleFunc("/glycine", glycine)
+	routing.HandleFunc("/stop", stop_codon)
 	routing.HandleFunc("/transact/pay/paypal/kernel", kernel)
 	routing.HandleFunc("/transact/pay/paypal/cluster", cluster)
 	routing.HandleFunc("/transact/pay/paypal/multicluster", multicluster)
@@ -1684,6 +1685,15 @@ func logout(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		existing(w, r)
+	}
+}
+
+func stop_codon(w http.ResponseWriter, r *http.Request) {
+	webpge := template.Must(template.ParseFiles("codons.html"))
+	if r.Method == "GET" {
+		fmt.Println("Method:" + r.Method)
+		fmt.Println("Path: ", r.URL.Path)
+		webpge.Execute(w, "codons")
 	}
 }
 

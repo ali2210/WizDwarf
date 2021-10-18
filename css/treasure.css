@@ -104,8 +104,8 @@
 
   .card-body-text{
 	position: absolute;
-	left: -15px;
-	top: 195px;
+	left: -2px;
+	top: 188px;
 	width: 315px;
 	font-size:large;
   }
@@ -302,5 +302,28 @@
 	top:339px;
 	left:593px;
   }
-
-  
+.backbtn{
+	height: 50px;
+	position: absolute;
+	left:-5px;
+	top:-3px;
+	animation: slide-left 5.5s linear infinite alternate;
+}
+.chevron-icon{
+	position: relative;
+	top:6px;
+}
+ @keyframes slide-left {
+	 20%{
+		 left:-140px;
+	 }
+	 50%{
+		 left:-120px;
+	 }
+	 70%{
+		 left:-100px;
+	 }
+	 90%{
+		 left:-80px;
+	 }
+ } 
