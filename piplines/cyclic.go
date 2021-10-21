@@ -2,24 +2,25 @@ package piplines
 
 //  one-way call
 
-import(
+import (
 	//firebase "firebase.google.com/go"
-	"cloud.google.com/go/firestore"
-	"github.com/ali2210/wizdwarf/structs/users"
-	bio "github.com/ali2210/wizdwarf/structs/bioinformatics"
-	info "github.com/ali2210/wizdwarf/structs/bioinformatics/model"
 	"reflect"
+
+	"cloud.google.com/go/firestore"
+	bio "github.com/ali2210/wizdwarf/other/bioinformatics"
+	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
+	"github.com/ali2210/wizdwarf/other/users"
 )
 
-var(
-	appName           *firestore.Client
-	cloud             users.DBFirestore
+var (
+	appName *firestore.Client
+	cloud   users.DBFirestore
 	//Firestore_Rf      string
-	Edit              bio.LevenTable
-	Algo              info.Levenshtein
+	Edit bio.LevenTable
+	Algo info.Levenshtein
 )
 
-const(
+const (
 	ConfigFilename string = "htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
 	ProjectID      string = "htickets-cb4d0"
 )
@@ -29,9 +30,11 @@ func SetDBClientRef() *firestore.Client {
 	return appName
 }
 
-func GetDBClientRef() *firestore.Client{ 
-	if appName == (&firestore.Client{}) {return (&firestore.Client{})}
-	 return appName
+func GetDBClientRef() *firestore.Client {
+	if appName == (&firestore.Client{}) {
+		return (&firestore.Client{})
+	}
+	return appName
 }
 
 func SetDBCollect() users.DBFirestore {
@@ -40,39 +43,47 @@ func SetDBCollect() users.DBFirestore {
 }
 
 func GetDBCollect() users.DBFirestore {
-	var collect users.DBFirestore 
-	if reflect.DeepEqual(cloud, collect){ return collect }
-	 return cloud
+	var collect users.DBFirestore
+	if reflect.DeepEqual(cloud, collect) {
+		return collect
+	}
+	return cloud
 }
 
-func GetKeyFile() string{ 
-	if ConfigFilename == ""{ return ""} 
+func GetKeyFile() string {
+	if ConfigFilename == "" {
+		return ""
+	}
 	return ConfigFilename
 }
 
-func GetProjectID() string{
-	if ProjectID == "" { return ""}
-	return ProjectID 
+func GetProjectID() string {
+	if ProjectID == "" {
+		return ""
+	}
+	return ProjectID
 }
 
-func GetEditParameters() bio.LevenTable{
+func GetEditParameters() bio.LevenTable {
 	var matx bio.LevenTable
-	if reflect.DeepEqual(Edit, matx){
+	if reflect.DeepEqual(Edit, matx) {
 		return matx
 	}
 	return Edit
 }
 
-func SetEditParameters() bio.LevenTable{
+func SetEditParameters() bio.LevenTable {
 	Edit = bio.NewMatch()
 	return Edit
 }
 
-func SetBioAlgoParameters(prob float32, pattern_name string, percent float32){
-	Algo = info.Levenshtein{Probablity : prob, Name : pattern_name, Percentage : percent}
+func SetBioAlgoParameters(prob float32, pattern_name string, percent float32) {
+	Algo = info.Levenshtein{Probablity: prob, Name: pattern_name, Percentage: percent}
 }
 
-func GetBioAlgoParameters() info.Levenshtein{
-	if Algo == (info.Levenshtein{}){ return info.Levenshtein{}}
-	return Algo	
+func GetBioAlgoParameters() info.Levenshtein {
+	if Algo == (info.Levenshtein{}) {
+		return info.Levenshtein{}
+	}
+	return Algo
 }

@@ -11,7 +11,6 @@ require (
 	github.com/biogo/biogo v1.0.2
 	github.com/briandowns/openweathermap v0.16.0
 	github.com/ethereum/go-ethereum v1.10.7
-	github.com/fabioberger/coinbase-go v0.0.0-20160522011833-8328539b18ab
 	github.com/fogleman/ribbon v0.0.0-20191101191537-568057efb726
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/gorilla/mux v1.7.4
