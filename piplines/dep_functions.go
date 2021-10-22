@@ -359,18 +359,18 @@ func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member users.Vi
 		return &users.Visitors{}, err
 	}
 
-	fmt.Println("Member:", data)
+	fmt.Println("search data :", data)
 
 	query, err := json.Marshal(data)
 	if err != nil {
-		log.Fatal("Alien Format:", err.Error())
+		log.Fatal("marshall encode :", err.Error())
 		return &users.Visitors{}, err
 	}
 
 	var profile users.Visitors
 	err = json.Unmarshal(query, &profile)
 	if err != nil {
-		log.Fatal("Bash processing error:  ", err)
+		log.Fatal("unmarshal error:  ", err.Error())
 		return &users.Visitors{}, err
 	}
 	fmt.Println("Profile:", profile)
@@ -441,35 +441,38 @@ func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member users.Vi
 // 	return fire_gateway, nil
 // }
 
-func AddNewProfile(response http.ResponseWriter, request *http.Request, user users.Visitors, im string) (*firestore.DocumentRef, error) {
+func AddNewProfile(response http.ResponseWriter, request *http.Request, user users.Visitors, im string) (*firestore.DocumentRef, bool, error) {
 
 	var member users.Visitors
 	var replicate *firestore.DocumentRef
 
 	fmt.Println("Member:", member, "exuser:", user)
 
+	// user data accrording to json schema
 	data, err := json.Marshal(member)
 	if err != nil {
-		log.Fatal("[Fail] Poor DATA JSON FORMAT  ", err)
-		return &firestore.DocumentRef{}, err
+		log.Fatal(" marshal data ", err.Error())
+		return &firestore.DocumentRef{}, false, err
 	}
 
 	fmt.Println("json_data:", string(data))
 
 	err = json.Unmarshal(data, &member)
 	if err != nil {
-		log.Fatal("[Fail] Poor Formating  ", err)
-		return &firestore.DocumentRef{}, err
+		log.Fatal(" unmarshal data ", err)
+		return &firestore.DocumentRef{}, false, err
 	}
 
+	// search data if there is
 	candidate, err := Firebase_Gatekeeper(response, request, user)
-
 	if err != nil {
 		log.Fatal("[Fail] Iterator Terminate :  ", err)
-		return &firestore.DocumentRef{}, err
+		return &firestore.DocumentRef{}, false, err
 	}
 
-	fmt.Println("Candiate :", candidate)
+	fmt.Println("No existing record :", candidate)
+
+	// search data doesn't exist
 	if reflect.DeepEqual(candidate, &member) {
 
 		member.Id = im
@@ -488,18 +491,23 @@ func AddNewProfile(response http.ResponseWriter, request *http.Request, user use
 		member.Zip = user.Zip
 		member.Country = user.Country
 
+		// add user data in your dataabse
 		document, _, err := cloud.AddUser(GetDBClientRef(), member)
 		if err != nil {
 			log.Fatal(" Bash Processing Error ", err.Error())
-			return &firestore.DocumentRef{}, err
+			return &firestore.DocumentRef{}, false, err
 		}
 
-		fmt.Println("Document:", document)
 		replicate = document
-		return document, nil
+
+		fmt.Println("record created:", document)
+		return document, true, nil
+	} else {
+		// database record replication
+		log.Println("Repication data error: ", err.Error())
+		log.Println("Replicate :", replicate)
+		return replicate, false, err
 	}
-	log.Fatal(" Iterator return data: ", err.Error(), replicate)
-	return replicate, err
 }
 
 // Functions

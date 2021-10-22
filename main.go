@@ -1523,8 +1523,11 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 		temp.Execute(w, "Regsiter")
 	} else {
 		r.ParseForm()
+
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
+
+		// html form
 		user.Name = r.FormValue("uname")
 		user.LastName = r.FormValue("ufname")
 		user.Address = r.FormValue("address")
@@ -1540,22 +1543,24 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 			user.Eve = false
 		}
 
+		// user email and email pattern both are same, means email created according to email rule.
 		regex_Email, err := regexp.MatchString(emailexp, user.Email)
 		if err != nil {
 			log.Fatal("[Fail] Auto email pattern  ", err)
 			return
 		}
 
-		fmt.Println("Regex:", regex_Email)
-
+		// fmt.Println("Regex:", regex_Email)
+		// user password and password pattern both are same, means password created according to password rule.
 		regex_Pass, err := regexp.MatchString(passexp, user.Password)
 		if err != nil {
 			log.Fatal("[Fail] Password is very week ", err)
 			return
 		}
 
-		fmt.Println("Regex:", regex_Pass)
+		// fmt.Println("Regex:", regex_Pass)
 
+		// encrypted user information
 		hash, encrypted := Presence(w, r, regex_Email, regex_Pass, user)
 		if !hash {
 			log.Fatal("[Fail] Week encryption", hash)
@@ -1563,30 +1568,21 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 
 		}
 
-		fmt.Println("Hash:", hash, "encrypted:", encrypted)
-		fmt.Println("Profile:", user)
-		AddNewProfile(w, r, user, encrypted.Reader)
+		// fmt.Println("Hash:", hash, "encrypted:", encrypted)
+		// fmt.Println("Profile:", user)
+		// in case your account have been created ....
+		if docs, ok, err := AddNewProfile(w, r, user, encrypted.Reader); ok && err != nil {
+			log.Println("account created successfully", docs)
+			w.WriteHeader(http.StatusOK)
+			r.Method = "GET"
+			existing(w, r)
+		}
 	}
-
+	return
 }
 
 func existing(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("login.html"))
-	user := users.Visitors{
-		Name:       "",
-		LastName:   "",
-		Eve:        false,
-		Address:    "",
-		Appartment: "",
-		Zip:        "",
-		City:       "",
-		Country:    "",
-		Email:      "",
-		Password:   "",
-		Id:         "",
-		PhoneNo:    "",
-		Twitter:    "",
-	}
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
 		temp.Execute(w, "Login")
@@ -1594,23 +1590,18 @@ func existing(w http.ResponseWriter, r *http.Request) {
 		// Parse Form
 		r.ParseForm()
 		fmt.Println("Method:\n", r.Method)
+		user := users.Visitors{}
 		user.Email = r.FormValue("email")
 		user.Password = r.FormValue("password")
-		// if r.FormValue("check") == "on" {
-		// 	user.Remember = true
-		// } else {
-		// 	user.Remember = false
-		// }
-		log.Println("Login form data[", user, "]")
 
+		log.Println("provided:", r.FormValue("email"), r.FormValue("password"))
+		log.Println("Email:", user.Email, "Password:", user.Password)
 		// Valid Data for processing
 		exp := regexp.MustCompile(emailexp)
 		ok := exp.MatchString(user.Email)
 		if !ok {
 			log.Fatal("[Fail] Mismatch ", ok)
-
 			return
-
 		}
 
 		reg := regexp.MustCompile(passexp)
