@@ -117,7 +117,6 @@
         startbutton.style.visibility = "hidden";
         savePic.style.visibility = "hidden";
       }, 100);
-
     }
   }
   // Capture a photo by fetching the current contents of the video

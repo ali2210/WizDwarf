@@ -14,83 +14,55 @@ var (
 )
 
 type (
-	// Create_User struct {
+	// DigialProfile struct {
+
+	// 	// ledger my data
+	// 	Public  string
+	// 	Private string
+
+	// 	// visitor profile
 	// 	Name     string
-	// 	Fname    string
-	// 	Madam    bool
-	// 	Address  string 
-	// 	Address2 string 
-	// 	Zip      string
-	// 	City     string
-	// 	Country  string
+	// 	FName    string
 	// 	Email    string
-	// 	Password string
-	// 	Secure   bool
+	// 	Address  string
+	// 	LAddress string
+	// 	City     string
+	// 	Zip      string
+	// 	Country  string
+	// 	Phone    string
+	// 	Twitter  string
+
+	// 	// credit card details
+	// 	Number      string
+	// 	ExpireMonth string
+	// 	ExpireYear  string
+	// 	Type        string
 	// }
-	DigialProfile struct {
-
-		// ledger my data
-		Public  string
-		Private string
-
-		// visitor profile
-		Name     string
-		FName    string
-		Email    string
-		Address  string
-		LAddress string
-		City     string
-		Zip      string
-		Country  string
-		Phone    string
-		Twitter  string
-
-		// credit card details
-		Number      string
-		ExpireMonth string
-		ExpireYear  string
-		Type        string
-	}
 
 	Visitors struct {
-		Id       string `json:"id", omitempty`
-		Name     string `json:"name", omitempty`
-		Email    string `json:"email", omitempty`
-		Password string `json:"password", omitempty`
-		LastName    string `json:"lastname", omitempty`
-		City     string `json:"city",omitempty `
-		Zip      string `json:"zip", omitempty`
-		Address  string `json:"address", omitempty`
-		Apparment string `json:"apparment", omitempty`
-		Country  string `json:"country", omitempty`
-		Eve      bool   `json:"eve",omitempty`
-		PhoneNo  string `json:"phone", omitempty`
-		Twitter string 	`json:"twitter", omitempty`
+		Id         string `json:"id", omitempty`
+		Name       string `json:"name", omitempty`
+		Email      string `json:"email", omitempty`
+		Password   string `json:"password", omitempty`
+		LastName   string `json:"lastname", omitempty`
+		City       string `json:"city",omitempty `
+		Zip        string `json:"zip", omitempty`
+		Address    string `json:"address", omitempty`
+		Appartment string `json:"appartment", omitempty`
+		Country    string `json:"country", omitempty`
+		Eve        bool   `json:"eve",omitempty`
+		PhoneNo    string `json:"phone", omitempty`
+		Twitter    string `json:"twitter", omitempty`
 		// Remember bool `json:"remember", omitempty`
 	}
 
 	CreditCardInfo interface {
 		SetAuthorizeStoreID(id string)
 		GetAuthorizeStoreID() string
-		VoidStruct() *DigialProfile
+		//VoidStruct() *DigialProfile
 	}
 
 	DigitalPrint struct{}
-
-	// UpdateProfile struct {
-	// 	Id           string
-	// 	FirstName    string
-	// 	LastName     string
-	// 	Phone        string
-	// 	HouseAddress string
-	// 	SubAddress   string
-	// 	Country      string
-	// 	Zip          string
-	// 	Male         bool
-	// 	Email        string
-	// 	Twitter      string
-	// 	City         string
-	// }
 )
 
 func NewClient() CreditCardInfo {
@@ -105,7 +77,7 @@ func (*DigitalPrint) GetAuthorizeStoreID() string {
 	return persona
 }
 
-func (*DigitalPrint) VoidStruct() *DigialProfile {
+/*func (*DigitalPrint) VoidStruct() *DigialProfile {
 	return &DigialProfile{
 		Public:      "",
 		Private:     "",
@@ -124,7 +96,7 @@ func (*DigitalPrint) VoidStruct() *DigialProfile {
 		ExpireYear:  "",
 		Type:        "",
 	}
-}
+}*/
 
 type CalculationInterface interface {
 	CalculateTotalBalance(st1, str2 float64) float64
