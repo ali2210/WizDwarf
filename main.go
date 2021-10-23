@@ -1,3 +1,7 @@
+/* This codebase desgin according to mozilla open source license.
+Redistribution , contribution and improve codebase under license
+convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
+
 package main
 
 import (
@@ -993,7 +997,7 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Method:" + r.Method)
 		fmt.Println("Url:", r.URL.Path)
 		RouteWebpage.Execute(w, "Dashboard")
-	} else {
+	} else if r.Method == "POST" {
 
 		r.ParseForm()
 		fmt.Println("Url:", r.URL.Path)
@@ -1011,69 +1015,18 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		coordinates := r.FormValue("geo-marker")
 		var longitude_parse float64 = 0.0
 		var latitude_parse float64 = 0.0
-		fmt.Println("@length:", len(coordinates))
-		if len(coordinates) > 0 && len(coordinates) <= 15 {
-			longitude_parse, err = strconv.ParseFloat(coordinates[:5], 10)
-			if err != nil {
-				log.Fatalln("parse longituide value #0 :", err.Error())
-				return
-			}
 
-			fmt.Println("@longitude # 0:", longitude_parse)
-			latitude_parse, err = strconv.ParseFloat(coordinates[9:], 10)
-			if err != nil {
-				log.Fatalln("parse latitude value # 0 :", err.Error())
-				return
-			}
+		location := Location(coordinates[0:20])
+		longitude_parse, err = strconv.ParseFloat(location.Longitude_Division, 64)
+		if err != nil {
+			log.Printf("Error parsing longitude : %v", err.Error())
+			return
+		}
 
-			fmt.Println("@latitude:", latitude_parse)
-		} else if len(coordinates) > 15 && len(coordinates) <= 25 {
-			longitude_parse, err := strconv.ParseFloat(coordinates[:8], 10)
-			if err != nil {
-				log.Fatalln("parse longituide value # 1 :", err.Error())
-				return
-			}
-
-			fmt.Println("@longitude # 1:", longitude_parse)
-			latitude_parse, err = strconv.ParseFloat(coordinates[12:], 10)
-			if err != nil {
-				log.Fatalln("parse latitude value # 1 :", err.Error())
-				return
-			}
-
-			fmt.Println("@latitude # 1:", latitude_parse)
-		} else if len(coordinates) > 25 && len(coordinates) < 40 {
-			longitude_parse, err := strconv.ParseFloat(coordinates[:18], 10)
-			if err != nil {
-				log.Fatalln("parse longituide value :", err.Error())
-				return
-			}
-
-			fmt.Println("@longitude # 2:", longitude_parse)
-			latitude_parse, err := strconv.ParseFloat(coordinates[21:], 10)
-			if err != nil {
-				log.Fatalln("parse latitude value # 2 :", err.Error())
-				return
-			}
-
-			fmt.Println("@latitude: # 2", latitude_parse)
-		} else if len(coordinates) > 15 && len(coordinates) == 23 {
-			longitude_parse, err := strconv.ParseFloat(coordinates[:8], 10)
-			if err != nil {
-				log.Fatalln("parse longituide value # 1 :", err.Error())
-				return
-			}
-
-			fmt.Println("@longitude # 3:", longitude_parse)
-			latitude_parse, err := strconv.ParseFloat(coordinates[13:], 10)
-			if err != nil {
-				log.Fatalln("parse latitude value # 1 :", err.Error())
-				return
-			}
-
-			fmt.Println("@latitude # 3:", latitude_parse)
-		} else {
-			log.Fatalln("Empty Field value :", err.Error())
+		latitude_parse, err = strconv.ParseFloat(location.Latituide_Division, 64)
+		if err != nil {
+			log.Printf("Error parsing latitude : %v", err.Error())
+			return
 		}
 
 		clientapi := weather.NewWeatherClient()
@@ -1521,7 +1474,7 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
 		temp.Execute(w, "Regsiter")
-	} else {
+	} else if r.Method == "POST" {
 		r.ParseForm()
 
 		fmt.Println("Url:", r.URL.Path)
@@ -1571,32 +1524,36 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 		// fmt.Println("Hash:", hash, "encrypted:", encrypted)
 		// fmt.Println("Profile:", user)
 		// in case your account have been created ....
-		if docs, ok, err := AddNewProfile(w, r, user, encrypted.Reader); ok && err != nil {
+		if docs, ok, err := AddNewProfile(w, r, user, encrypted.Reader); ok && err == nil {
 			log.Println("account created successfully", docs)
 			w.WriteHeader(http.StatusOK)
 			r.Method = "GET"
 			existing(w, r)
+		} else {
+			log.Println("account failed ")
+			w.WriteHeader(http.StatusBadRequest)
 		}
 	}
-	return
 }
 
 func existing(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("login.html"))
+	user := users.Visitors{}
 	if r.Method == "GET" {
 		fmt.Println("Method:" + r.Method)
 		temp.Execute(w, "Login")
-	} else {
+	} else if r.Method == "POST" {
+
 		// Parse Form
 		r.ParseForm()
-		fmt.Println("Method:\n", r.Method)
-		user := users.Visitors{}
+		fmt.Println("Method:", r.Method)
+
 		user.Email = r.FormValue("email")
 		user.Password = r.FormValue("password")
 
-		log.Println("provided:", r.FormValue("email"), r.FormValue("password"))
 		log.Println("Email:", user.Email, "Password:", user.Password)
-		// Valid Data for processing
+
+		// match email patten with email addresss
 		exp := regexp.MustCompile(emailexp)
 		ok := exp.MatchString(user.Email)
 		if !ok {
@@ -1604,26 +1561,28 @@ func existing(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		// match password pattern against password
 		reg := regexp.MustCompile(passexp)
 		okx := reg.MatchString(user.Password)
 		if !okx {
-			log.Fatal("[Fail] Mismatch password", !okx)
+			log.Fatal("[Fail] Mismatch ", !okx)
 			return
 		}
-		println("regexp_pass:", okx)
 
 		// Search Data in DB
 		data, err := Firebase_Gatekeeper(w, r, user)
-
 		if err != nil && data == nil {
 			log.Fatal("[Result]: No Match Found  ", err)
 			return
 		}
 		accountID = data.Id
+
 		fmt.Printf("Search Data:%v", data.Id)
+
 		accountVisitEmail = data.Email
 		accountKey = data.Password
 		profiler = data
+
 		fmt.Println("Profile:", profiler)
 		act := structs.RouteParameter{}
 

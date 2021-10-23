@@ -1,3 +1,7 @@
+/* This codebase desgin according to mozilla open source license.
+Redistribution , contribution and improve codebase under license
+convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
+
 package piplines
 
 import (
@@ -51,6 +55,11 @@ var (
 	pic_tags     string
 	pic_id       string
 )
+
+type Point struct {
+	Latituide_Division string
+	Longitude_Division string
+}
 
 var cdr map[string]string = make(map[string]string, 1)
 
@@ -339,7 +348,15 @@ func SiaObjectStorage(client skynet.SkynetClient, file string) bool {
 	cdr = make(map[string]string, 1)
 	cdr[cid.String()] = sia_object_url
 	return true
+}
 
+func Location(str string) Point {
+	current_nav := make(chan Point)
+	go func() {
+		current_nav <- Point{Longitude_Division: str[0:5], Latituide_Division: str[13:18]}
+	}()
+	location := <-current_nav
+	return location
 }
 
 func UpdateProfileInfo(member *users.Visitors) bool {
@@ -449,7 +466,7 @@ func AddNewProfile(response http.ResponseWriter, request *http.Request, user use
 	fmt.Println("Member:", member, "exuser:", user)
 
 	// user data accrording to json schema
-	data, err := json.Marshal(member)
+	data, err := json.Marshal(user)
 	if err != nil {
 		log.Fatal(" marshal data ", err.Error())
 		return &firestore.DocumentRef{}, false, err
@@ -457,7 +474,7 @@ func AddNewProfile(response http.ResponseWriter, request *http.Request, user use
 
 	fmt.Println("json_data:", string(data))
 
-	err = json.Unmarshal(data, &member)
+	err = json.Unmarshal(data, &user)
 	if err != nil {
 		log.Fatal(" unmarshal data ", err)
 		return &firestore.DocumentRef{}, false, err
@@ -470,7 +487,7 @@ func AddNewProfile(response http.ResponseWriter, request *http.Request, user use
 		return &firestore.DocumentRef{}, false, err
 	}
 
-	fmt.Println("No existing record :", candidate)
+	fmt.Println("Existing record :", candidate)
 
 	// search data doesn't exist
 	if reflect.DeepEqual(candidate, &member) {
@@ -500,17 +517,14 @@ func AddNewProfile(response http.ResponseWriter, request *http.Request, user use
 
 		replicate = document
 
-		fmt.Println("record created:", document)
+		fmt.Println("record created:", document, replicate)
 		return document, true, nil
 	} else {
 		// database record replication
-		log.Println("Repication data error: ", err.Error())
 		log.Println("Replicate :", replicate)
 		return replicate, false, err
 	}
 }
-
-// Functions
 
 func Firestore_Reference() *firestore.Client {
 
