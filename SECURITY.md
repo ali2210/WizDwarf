@@ -11,17 +11,17 @@ currently being supported with security updates.
 --------------------------------
 
 
-|Error              | Type Status | why this happen                      |
-|-------------------|-------------|--------------------------------------|
-|Unsupported Media  |:tick:       | application not supported media type |
-|-------------------|-------------|--------------------------------------|
-|Server Cash Report |:tick:       | application have no single point of  |
-                                                               faliure   |
-|------------------------------------------------------------------------|
- Load balancing access |:tick:    | application have load balancing 
-                                    protocols which serve better routing 
-                                    inside the application for the 
-                                    container.      
+|Error              | Type Status | why this happen                       |
+|-------------------|-------------|-------------------------------------- |
+|Unsupported Media  |:tick:       | application not supported media type  |
+|-------------------|-------------|---------------------------------------|
+|Server Cash Report |:tick:       | application have no single point of   |
+|                                                             faliure     | 
+|-------------------------------------------------------------------------|
+| Load balancing access |:tick:    | application have load balancing      |
+|                                    protocols which serve better routing |
+|                                    inside the application for the       |
+|                                    container.                           |
 |-------------------------------------------------------------------------|
 
 
