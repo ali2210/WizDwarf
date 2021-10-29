@@ -7,7 +7,7 @@ currently being supported with security updates.
 
 | Version | Supported          | 
 | ------- | ------------------ |
-| 0.1.x   | :x:                |
+| 0.0.x   | :tick:             |
 --------------------------------
 
 
@@ -15,8 +15,14 @@ currently being supported with security updates.
 |-------------------|-------------|--------------------------------------|
 |Unsupported Media  |:tick:       | application not supported media type |
 |-------------------|-------------|--------------------------------------|
-|EOF Error          |:x:          | request bytes reader still reading   |
---------------------------------------------------------------------------
+|Server Cash Report |:tick:       | application have no single point of  |
+                                                               faliure   |
+|------------------------------------------------------------------------|
+ Load balancing access |:tick:    | application have load balancing 
+                                    protocols which serve better routing 
+                                    inside the application for the 
+                                    container.      
+|-------------------------------------------------------------------------|
 
 
 ## Reporting a Vulnerability
