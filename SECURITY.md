@@ -14,12 +14,15 @@ currently being supported with security updates.
 |Error              | Type Status | why this happen                       |
 |-------------------|-------------|-------------------------------------- |
 |Unsupported Media  |:tick:       | application not supported media type  |
-|Server Cash Report |:tick:       | application have no single point of   |
+|Server Cash Report |:tick:       | application have multiple point of    |
 |                   |             | failure                               | 
-|Load balancing access |:tick:    | application have load balancing       |
-|                       |         | protocols which serve better routing  |
-|                       |         | inside the application for the        |
-|                       |         |  container.                           |
+|Gateway Failure    |:tick:       | application connect with common       |
+|                   |             | traffic handling point                |
+|Dependencies issues|:x:          | frequently update                     |
+|Multiple containers|:x:          | resource allocation for multiple vm   | 
+|provision          |             | machines                              |
+|Technologies       |:x:          | technologies handshake                |
+|incompactibility   |             |                                       |
 
 
 
