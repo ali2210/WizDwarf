@@ -33,6 +33,7 @@ import (
 	structs "github.com/ali2210/wizdwarf/other"
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
 	"github.com/ali2210/wizdwarf/other/collection"
+	biosubtypes "github.com/ali2210/wizdwarf/other/proteins"
 	"github.com/ali2210/wizdwarf/other/users"
 	"github.com/biogo/biogo/alphabet"
 	"github.com/ethereum/go-ethereum/common"
@@ -54,6 +55,7 @@ var (
 	pic_time     string
 	pic_tags     string
 	pic_id       string
+	chain        map[string]string
 )
 
 type Point struct {
@@ -366,6 +368,27 @@ func UpdateProfileInfo(member *users.Visitors) bool {
 		return false
 	}
 	return true
+}
+
+func Active_Proteins(str string) map[string]string {
+	i, j := 0, 3
+
+	chain = make(map[string]string, len(str))
+
+	for u := 0; u <= len(str); u++ {
+		if strings.Contains(str, str[i:j]) && u != len(str) {
+
+			if !strings.Contains(biosubtypes.Class(str, i, j), " ") {
+				chain[str[i:j]] = biosubtypes.Class(str, i, j)
+			}
+			i = i + 3
+			j = j + 3
+			if j >= len(str) {
+				break
+			}
+		}
+	}
+	return chain
 }
 
 func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member users.Visitors) (*users.Visitors, error) {

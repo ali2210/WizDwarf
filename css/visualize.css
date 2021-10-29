@@ -1,63 +1,64 @@
-.main-dashboard-div {
+  .main-dashboard-div {
     background-color:#f9f9f9;
     font-family: 'Lato', sans-serif;
     height: 100vh;
   }
+  
   .icon-light {
     color: black;
     margin-right: 5px;
   }
+  
   .dropdown-menu {
     left: 30px;
   }
+  
   .h4 {
     margin: 20px 0px;
     font-family: 'Roboto Mono', monospace;
     font-size: 20px;
   }
+  
   .main-container {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
-  /* .infection-field, .file-upload-field  {
-    margin-top: 45px;
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  } */
+  
   .logo {
     height: 60px;
   }
+  
   .custom-navbar {
     background-color: #ededed;
   }
   
 
-.heading-text{
-	margin-top: 70px;
+  .heading-text{
+	  margin-top: 70px;
     display: flex;
     justify-content: center;
-	position: relative;
-	margin-right: 18px;
-	
-}
-.canvasdiv{
-	display: flex;
+	  position: relative;
+	  margin-right: 18px;
+  }
+  
+  .canvasdiv{
+	  display: flex;
     justify-content: center;
     position: relative;
     margin-top: 20px;
-	margin-right: 14px;
-	margin-left: 30px;
+	  margin-right: 14px;
+	  margin-left: 30px;
     visibility: hidden;
-}
-.card-body{
-    height: 150px;
-}
+  }
 
-.div-span{
-	display: flex;    
+  .card-body{
+      height: 150px;
+  }
+
+
+  .div-span{
+  	display: flex;    
     margin-top: 200px;
     position: relative;
     color: teal;
@@ -65,26 +66,29 @@
     font-size: medium;
     text-align: center;
     left: 150px;
-}
-.div-canvas{
-	display: flex;
+  }
+
+  .div-canvas{
+  	display: flex;
     position: relative;
     left : 100px;
-}
-.backBtn{
-    display: flex;
-    position: relative;
-    justify-content: flex-end;
-}
+  }
 
-.progress {
-    height: 30px;
-    width: 300px;
-    background-color: lightgray;
-    border-radius: 20px;
-    margin-left: 40%;
-    margin-bottom: 20px;
-    position: relative;
+  .backBtn{
+      display: flex;
+      position: relative;
+      justify-content: flex-end;
+  }
+
+  .progress {
+      height: 30px;
+      width: 300px;
+      background-color: lightgray;
+      border-radius: 20px;
+      margin-left: 30%;
+      margin-bottom: 20px;
+      position: relative;
+      display: contents;
   }
   
   .progress-done {
@@ -100,73 +104,155 @@
     box-shadow: 0 3px 3px -5px #f2709c, 0 2px 5px #f2709c;
     transition: 30s ease;
   }
-  .btn-success{
+
+  /* .btn-success{
       visibility: hidden;
         display: inline;
         position: relative;
         justify-content: center;
         left: 50px;
-  }
-.pay-btn{
+  } */
+
+  /* .pay-btn{
     display: flex;
     position: relative;
     justify-content:center;
-}
-.lnkBtn{
+} */
+
+/* .lnkBtn{
     display: flex;
     visibility: hidden;
     position: relative;
     left: 57px;
     top: -8px;
-}
+} */
+
 .container-alert{
     margin: 50px;
     position: relative;
     width: 80%;
    left: 40px;
  }
+
  .alert-danger{
      border-radius: 20px;
      color:red;
  }
+
  .alert-success{
      border-radius: 20px;
      color: green;
  }
+
  .span-message{
      position: inherit;
      display: inherit;
      margin-top: 30px ;
  }
+
  #danger{
      margin-left: 90%;
       border-radius: 10px; 
       margin-bottom: 50px;
  }
+ 
  .btn-primary{
      position: absolute;
      top: 150px;
      height: 11%;
  }
- .free-service{
+ 
+ /* .free-service{
     position: relative;
     left: 195px;
     visibility: visible;
     top: -40px;
- }
+ } */
+ 
  .uv-div{
      position: relative;
      display: flex;
      justify-content: flex-start;
      top: 5px;
  }
-.line{
-  width: 100%;
-  height: 10px;
-  background: black;
-}
 
-.risk-div{
-  position: relative;
-  top: 9px;
-}
+ .line{
+    width: 100%;
+    height: 10px;
+    background: black;
+  }
+
+  .risk-div{
+    position: relative;
+    top: 9px;
+  }
+
+  .description{
+    position: absolute;
+    width: 397px;
+    left:2px;
+    height:227px;
+    border-radius: 54px;
+    top: 214px;
+    }
+  
+  .img-class{
+      position: absolute;
+        left: 2px;
+        width: 398px;
+        top: -2px;
+        border: none;
+    }
+  
+  .images{
+      position: absolute;
+      width: 304px;
+      left: -2px;
+      top: -9px;
+      height:212px;
+    }
+  
+  .card-body-text{
+      position: absolute;
+      left: -15px;
+      top: 188px;
+      width: 315px;
+      font-size:large;
+      border-radius: 10px;
+  }
+  
+  .process{
+    position: relative;
+    top:7px;
+    left: -5px;
+    color:#fff;
+    border: 1px dotted snow;
+  }
+  
+  .process:hover{
+    animation: change 2s infinite alternate; 
+  }
+  
+  @keyframes change {
+    20%{
+      color:#ededed;
+    }
+    40%{
+      color:darkgray;
+    }
+    60%{
+      color:darkgrey;
+    }
+    80%{
+      color:slategray;
+    }
+    100%{
+      color:whitesmoke;
+    }
+
+  }
+
+  .list-groups{
+    position: relative;
+    top: 24px;
+  }
