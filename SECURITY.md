@@ -15,11 +15,11 @@ currently being supported with security updates.
 |-------------------|-------------|-------------------------------------- |
 |Unsupported Media  |:tick:       | application not supported media type  |
 |Server Cash Report |:tick:       | application have no single point of   |
-|                                                             faliure     | 
-| Load balancing access |:tick:    | application have load balancing      |
-|                                    protocols which serve better routing |
-|                                    inside the application for the       |
-|                                    container.                           |
+|                                 | failure                               | 
+| Load balancing access |:tick:   | application have load balancing       |
+|                                 | protocols which serve better routing  |
+|                                 | inside the application for the        |
+|                                 |  container.                           |
 |-------------------------------------------------------------------------|
 
 
