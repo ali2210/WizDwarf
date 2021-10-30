@@ -3,7 +3,7 @@
 [![Gitter](https://badges.gitter.im/wizdwarfs/futuristic-tech-dev.svg)](https://gitter.im/wizdwarfs/futuristic-tech-dev?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 <a href="https://codeclimate.com/github/ali2210/WizDwarf/maintainability"><img src="https://api.codeclimate.com/v1/badges/b1a8e6c05b3ec74b3074/maintainability" /></a>
 <a href="https://codeclimate.com/github/ali2210/WizDwarf/test_coverage"><img src="https://api.codeclimate.com/v1/badges/b1a8e6c05b3ec74b3074/test_coverage" /></a>
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/4fa84cf43d69415aa8cb51cad7b73a4f)](https://www.codacy.com/gh/ali2210/WizDwarf/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ali2210/WizDwarf&amp;utm_campaign=Badge_Grade)
+[![Docker](https://github.com/ali2210/WizDwarf/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/ali2210/WizDwarf/actions/workflows/docker-publish.yml)
 [![Wizdwarfs](https://img.shields.io/badge/Wizdwarfs-designed%20by-green)](https://wizdwarfs-365b9.web.app/)
 
  
@@ -79,3 +79,7 @@
     <img alt="open collective badge" src="https://opencollective.com/wizdwarfs/tiers/love-and-support/badge.svg?label=Love%26Support&color=brightgreen" />
  </a>
  <object><a href='https://app.element.io/#/room/!XdCqKpBpqSSgLLcNPI:matrix.org' target='blank'>Element</a></object>
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/4fa84cf43d69415aa8cb51cad7b73a4f)](https://www.codacy.com/gh/ali2210/WizDwarf/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ali2210/WizDwarf&amp;utm_campaign=Badge_Grade)
+[![OSSAR](https://github.com/ali2210/WizDwarf/actions/workflows/ossar-analysis.yml/badge.svg)](https://github.com/ali2210/WizDwarf/actions/workflows/ossar-analysis.yml)
+[![Docker](https://github.com/ali2210/WizDwarf/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/ali2210/WizDwarf/actions/workflows/docker-publish.yml)
+[![Go](https://github.com/ali2210/WizDwarf/actions/workflows/go.yml/badge.svg)](https://github.com/ali2210/WizDwarf/actions/workflows/go.yml)
