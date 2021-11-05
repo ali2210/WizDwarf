@@ -10,6 +10,7 @@
   <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap"
     rel="stylesheet">
+  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/dashboard.css">
   <title>WizDwarfs</title>
 </head>
@@ -103,6 +104,13 @@
             </span>
           </label>
         </div>
+        <div class="sign">
+          <label>
+            <input type="checkbox" id="signed" data-toggle="toggle" data-on="<i class='fa fa-user' aria-hidden='true'></i>" data-off="<i class='fa fa-user-secret' aria-hidden='true'></i>"data-onstyle="success" data-offstyle="danger" data-style="mode" name="signed"/>
+            Signed Message?
+          </label>
+          <p name="signed_status" class="signed_message"></p>
+        </div>
         <!-- <p>
             <button type="button" class="btn btn-primary Location" data-toggle="collapse" data-target="#location">
               <i class="fa fa-compass" aria-hidden="true"></i> Add Location
@@ -183,9 +191,9 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
-  <!-- <script src="https://cdn.apple-mapkit.com/mk/5.1.x/mapkit.js"></script> -->
-  <script src="/js/additional.js"></script>
+  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
   <script src="/js/dashboard.js"></script>
+  <script src="/js/additional.js"></script>
 </body>
 
 </html>

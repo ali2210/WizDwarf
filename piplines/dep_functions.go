@@ -8,9 +8,11 @@ import (
 	"bytes"
 	contxt "context"
 	"crypto/ecdsa"
+	"crypto/ed25519"
 	"crypto/elliptic"
 	"crypto/rand"
 	"crypto/sha256"
+	"crypto/sha512"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -64,6 +66,10 @@ type Point struct {
 }
 
 var cdr map[string]string = make(map[string]string, 1)
+var genes []string
+var unlock_key ed25519.PrivateKey
+
+const Errors = "Operation Failed"
 
 func Pictures_Stream(r *http.Request, user_id string) {
 
@@ -196,7 +202,6 @@ func Pictures_Stream(r *http.Request, user_id string) {
 	// parse file name which user shared. (Remove image file format which access to shared images namespace)
 	// This arose a new problem that is namespace in array object and there may be at most 2% probability that
 	// file don't have any file format. Compare shared resources namespace must not be empty
-
 	rdn.Seed(1024)
 
 	parse_num := strconv.Itoa(rdn.Intn(512))
@@ -390,6 +395,27 @@ func Active_Proteins(str string) map[string]string {
 	}
 	return chain
 }
+
+func PKK255(message string) string {
+
+	// according ed25519 key must ahve sized in this case key 32 length ok
+	seed := sha512.Sum512([]byte(message))
+
+	// generate private key
+	private := ed25519.NewKeyFromSeed(seed[32:])
+
+	// private key store in memory location 0xffaa2
+	SetKey(private)
+
+	// generate public key with the existing private key
+	return fmt.Sprintf("%x", GetKey().Public())
+}
+
+func SetKey(key ed25519.PrivateKey) {
+	unlock_key = key
+}
+
+func GetKey() ed25519.PrivateKey { return unlock_key }
 
 func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member users.Visitors) (*users.Visitors, error) {
 
@@ -914,24 +940,41 @@ func Data_Predicition(w http.ResponseWriter, r *http.Request, fname, choose stri
 		return err
 	}
 	if (i > 0 && i < 6) && (fname != " ") {
+
+		// data have peristance location address
 		svrFile := MountDisk(w, r, fname)
+
+		// read document and convert into managable format for processing
 		Usr, Virus, err := ReadAllow(file, svrFile)
 		if err != nil {
 			log.Fatalln("Sequence data file error", err)
 			return err
 		}
-		log.Println("Genome:", len(Virus), "virus:", len(Usr))
+
+		// Gene store in the memory
+		SetGenes(Usr)
+
+		// calculate matching probability
 		distance := GetEditParameters().EditDistanceStrings(Virus, Usr)
 		SetBioAlgoParameters(algo.Result(distance), fname, algo.CalcualtePercentage(algo.Probablity))
 
 		return err
 	} else if i == 0 {
+		// reload dashboard page
 		temFile := template.Must(template.ParseFiles("dashboard.html"))
 		temFile.Execute(w, "Dashbaord")
 	}
 	return err
 
 }
+
+// set genes
+func SetGenes(gene []string) {
+	genes = append(genes, gene...)
+}
+
+// get genes
+func GetGenes() []string { return genes }
 
 func Card_Verification(s1, s2 string) bool {
 

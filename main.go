@@ -5,6 +5,7 @@ convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -24,6 +25,9 @@ import (
 	structs "github.com/ali2210/wizdwarf/other"
 	bio "github.com/ali2210/wizdwarf/other/bioinformatics"
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
+	genetics "github.com/ali2210/wizdwarf/other/genetic"
+	genome "github.com/ali2210/wizdwarf/other/genetic/binary"
+	"github.com/ali2210/wizdwarf/piplines"
 
 	// Shop "github.com/ali2210/wizdwarf/other/cart"
 	// coin "github.com/ali2210/wizdwarf/other/coinbaseApi"
@@ -31,6 +35,7 @@ import (
 	"github.com/ali2210/wizdwarf/other/paypal/handler"
 
 	// wizSdk "github.com/ali2210/wizdwarf/other/transaction"
+
 	"github.com/ali2210/wizdwarf/other/users"
 	. "github.com/ali2210/wizdwarf/piplines"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -64,6 +69,7 @@ var (
 	accountID         string                    = " "
 	accountKey        string                    = " "
 	accountVisitEmail string                    = " "
+	signed_msg        string                    = " "
 	// checkout          Shop.Shopping             = Shop.Shopping{
 	// 	Price:         "",
 	// 	TypeofService: "",
@@ -949,7 +955,7 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("visualize.html"))
 	log.Println("Report percentage", visualizeReport.Percentage)
 	log.Println("Report uv ", visualizeReport.UVinfo)
-	fmt.Println("Profile:", profiler)
+	// fmt.Println("Profile:", profiler)
 	userProfile, err := Cloud.GetDocumentById(AppName, *profiler)
 	if err != nil && userProfile != nil {
 		log.Fatal("[Fail] No info  ", err)
@@ -971,9 +977,16 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
-		visualizeReport.Process = 1
-		visualizeReport.SeenBy = profiler.Name
-
+		// visualizeReport.Process = 1
+		// visualizeReport.SeenBy = profiler.Name
+		genetics.Client = piplines.Firestore_Reference()
+		genetics.Pkk = piplines.PKK255(profiler.Id)
+		rece_gen := genetics.New()
+		life := genome.Lifecode{}
+		life.Genes = strings.Join(piplines.GetGenes(), "")
+		life.Pkk = genetics.Pkk
+		status := rece_gen.AddCode(context.Background(), &life)
+		log.Println("data published", status)
 		temp.Execute(w, visualizeReport)
 	}
 
@@ -1003,9 +1016,11 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
 
+		msg := r.FormValue("signed_status")
+		log.Println("signed msg:", msg)
+
 		// FILE Upload ....
 		fname, err := Mounted(w, r, openReadFile)
-
 		if err != nil {
 			log.Fatalln("[File]:", err)
 			return
@@ -1086,10 +1101,10 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			visualizeReport.Percentage = pattern_analysis.Percentage
 
 			w.WriteHeader(http.StatusOK)
-			// 	// LifeCode = genome
+			// LifeCode = genome
 			r.Method = "GET"
 			visualize(w, r)
-			// 	// fmt.Println("Virus:", capsid)
+			// fmt.Println("Virus:", capsid)
 
 		case "2":
 			var name string = "FlaviDengue"
