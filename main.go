@@ -1016,9 +1016,6 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Url:", r.URL.Path)
 		fmt.Println("Method:" + r.Method)
 
-		msg := r.FormValue("signed_status")
-		log.Println("signed msg:", msg)
-
 		// FILE Upload ....
 		fname, err := Mounted(w, r, openReadFile)
 		if err != nil {
@@ -1027,6 +1024,8 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		}
 
 		choose := r.FormValue("choose")
+		msg := r.FormValue("status")
+		log.Println("signed msg:", msg)
 		coordinates := r.FormValue("geo-marker")
 		var longitude_parse float64 = 0.0
 		var latitude_parse float64 = 0.0

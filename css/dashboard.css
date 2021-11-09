@@ -213,6 +213,18 @@ convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
     left: -5px;
   }
   
-  .signed_message{
+  .signed_message,.verified{
     visibility: hidden;
   }
+
+  .sign{
+    position: relative;
+    left: 105px;
+    top: 10px;
+    display: flex;
+  }
+
+  .fortcard{
+    width: 18rem;
+  }
+  

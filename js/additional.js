@@ -1,5 +1,5 @@
 
-const marker_location = document.getElementsByClassName("location-div")[0];
+const marker_location = document.getElementsByClassName('location-div')[0];
 
 marker_location.children[0].addEventListener("click", function(){
   marker_location.children[1].style.visibility = "visible";
@@ -27,6 +27,8 @@ marker_location.children[0].addEventListener("click", function(){
         marker_location.children[1].value = lati +` , `+ logi; 
       });
     }
-  })
+  });
 });
+
+
 
