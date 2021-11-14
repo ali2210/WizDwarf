@@ -1,25 +1,35 @@
+
+/* This codebase desgin according to mozilla open source license.
+Redistribution , contribution and improve codebase under license
+convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
+
 .main-dashboard-div {
   background-color:#f9f9f9;
   font-family: 'Lato', sans-serif;
   height: 100vh;
 }
+
 .icon-light {
   color: black;
   margin-right: 5px;
 }
+
 .dropdown-menu {
   left: 30px;
 }
+
 .h4 {
   margin: 20px 0px;
   font-family: 'Roboto Mono', monospace;
   font-size: 20px;
 }
+
 .main-container {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 .infection-field, .file-upload-field  {
   margin-top: 45px;
   width: 50%;
@@ -27,9 +37,11 @@
   flex-direction: column;
   align-items: center;
 }
+
 .logo {
   height: 60px;
 }
+
 .custom-navbar {
   background-color: #ededed;
 }
@@ -42,7 +54,7 @@
 	border: none;
   }
 
-  .images{
+.images{
 	position: absolute;
 	width: 304px;
 	left: -2px;
@@ -50,7 +62,7 @@
 	height:212px;
   }
 
-  .card-body-text{
+.card-body-text{
 	position: absolute;
 	left: -15px;
 	top: 195px;
@@ -58,7 +70,7 @@
 	font-size:medium;
   }
 
-  .description{
+.description{
 	position: absolute;
 	width: 397px;
 	left:2px;
@@ -87,32 +99,39 @@
   display: flex;
   justify-content: center;
 }
+
 .dashboard-form {
   margin: 109px 0px;
 }
+
 .submit-button {
   background: #31dc58;
   margin-top: 20px;
   width: 25%;
 }
+
 .file-uploaded {
   text-align: center;
   font-size: 15px;
 }
+
 .verified-icon {
   margin-top: 10px;
   color: #cdf7d7;
 }
+
 .unveriied-icon{
   margin-top: 10px;
   color : #ff0000;
 }
+
 .Location{
   background-color: #31dc58;
   border-style : none;
   font-size: medium;
   font-weight: bold;
 }
+
 #Homeland,
 #Hometown,
 #buttonTown,
@@ -120,30 +139,36 @@
 #snumButton{
   visibility: visible;
 }
+
 .container-alert{
   margin: 50px;
   position: relative;
   width: 80%;
  left: 40px;
  }
+ 
  .alert-danger{
    border-radius: 20px;
    color:red;
  }
+ 
  .alert-success{
    border-radius: 20px;
    color: green;
  }
+ 
  .span-message{
    position: inherit;
    display: inherit;
    margin-top: 30px ;
  }
+ 
  #danger{
    margin-left: 90%;
     border-radius: 10px; 
     margin-bottom: 50px;
  }
+ 
  .location-div{
    position: absolute;
    left: 9px;
@@ -151,9 +176,11 @@
    top: 86px;
 
  }
+ 
  .fa-map-marker{
    color: green;
  }
+ 
  .small-div{
    visibility: hidden;
    border-radius: 10px;
@@ -163,3 +190,41 @@
    border: 2px white none; 
    width: 300px;
  }
+ 
+  .toggle.mode, .toggle.on.mode{ 
+   border-radius: 20px;
+   border: 2px greenyellow dotted;
+   transition: left 0.7s; -webkit-transition: left 0.7s;
+  }
+  
+  .toggle.off.mode{
+    border-radius: 20px;
+    border: 2px red dashed;
+    transition: right 0.7s; -webkit-transition: right 0.7s;
+  }
+  
+  .fa-user{
+    position: relative;
+    left: 7px;
+  }
+
+  .fa-user-secret{
+    position: relative;
+    left: -5px;
+  }
+  
+  .signed_message,.verified{
+    visibility: hidden;
+  }
+
+  .sign{
+    position: relative;
+    left: 105px;
+    top: 10px;
+    display: flex;
+  }
+
+  .fortcard{
+    width: 18rem;
+  }
+  

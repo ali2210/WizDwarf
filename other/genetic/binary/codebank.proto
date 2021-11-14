@@ -1,0 +1,33 @@
+
+/* This codebase desgin according to mozilla open source license.
+Redistribution , contribution and improve codebase under license
+convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
+
+syntax = "proto3";
+
+package binary;
+
+option go_package = "github.com/ali2210/wizdwarf/other/genetic/binary";
+
+message Lifecode{
+    string Genes = 1;
+    string Pkk = 2;
+}
+
+message Lifecode_Status{
+    bool Status = 1;
+    string Error = 2;
+    Errors ErrorCode = 3;
+}
+
+enum Errors {
+    OK = 0;
+    Error = 1;
+}
+
+message Request{}
+
+service GBank{
+    rpc AddCode(Lifecode) returns (Lifecode_Status);
+    rpc GetCode(Request) returns (Lifecode);
+}

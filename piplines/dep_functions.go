@@ -1,12 +1,18 @@
+/* This codebase desgin according to mozilla open source license.
+Redistribution , contribution and improve codebase under license
+convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
+
 package piplines
 
 import (
 	"bytes"
 	contxt "context"
 	"crypto/ecdsa"
+	"crypto/ed25519"
 	"crypto/elliptic"
 	"crypto/rand"
 	"crypto/sha256"
+	"crypto/sha512"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -26,10 +32,11 @@ import (
 	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
 	skynet "github.com/SkynetLabs/go-skynet/v2"
-	"github.com/ali2210/wizdwarf/structs"
-	info "github.com/ali2210/wizdwarf/structs/bioinformatics/model"
-	"github.com/ali2210/wizdwarf/structs/collection"
-	"github.com/ali2210/wizdwarf/structs/users"
+	structs "github.com/ali2210/wizdwarf/other"
+	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
+	"github.com/ali2210/wizdwarf/other/collection"
+	biosubtypes "github.com/ali2210/wizdwarf/other/proteins"
+	"github.com/ali2210/wizdwarf/other/users"
 	"github.com/biogo/biogo/alphabet"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -50,9 +57,19 @@ var (
 	pic_time     string
 	pic_tags     string
 	pic_id       string
+	chain        map[string]string
 )
 
+type Point struct {
+	Latituide_Division string
+	Longitude_Division string
+}
+
 var cdr map[string]string = make(map[string]string, 1)
+var genes []string
+var unlock_key ed25519.PrivateKey
+
+const Errors = "Operation Failed"
 
 func Pictures_Stream(r *http.Request, user_id string) {
 
@@ -185,7 +202,6 @@ func Pictures_Stream(r *http.Request, user_id string) {
 	// parse file name which user shared. (Remove image file format which access to shared images namespace)
 	// This arose a new problem that is namespace in array object and there may be at most 2% probability that
 	// file don't have any file format. Compare shared resources namespace must not be empty
-
 	rdn.Seed(1024)
 
 	parse_num := strconv.Itoa(rdn.Intn(512))
@@ -339,7 +355,15 @@ func SiaObjectStorage(client skynet.SkynetClient, file string) bool {
 	cdr = make(map[string]string, 1)
 	cdr[cid.String()] = sia_object_url
 	return true
+}
 
+func Location(str string) Point {
+	current_nav := make(chan Point)
+	go func() {
+		current_nav <- Point{Longitude_Division: str[0:5], Latituide_Division: str[13:18]}
+	}()
+	location := <-current_nav
+	return location
 }
 
 func UpdateProfileInfo(member *users.Visitors) bool {
@@ -351,6 +375,48 @@ func UpdateProfileInfo(member *users.Visitors) bool {
 	return true
 }
 
+func Active_Proteins(str string) map[string]string {
+	i, j := 0, 3
+
+	chain = make(map[string]string, len(str))
+
+	for u := 0; u <= len(str); u++ {
+		if strings.Contains(str, str[i:j]) && u != len(str) {
+
+			if !strings.Contains(biosubtypes.Class(str, i, j), " ") {
+				chain[str[i:j]] = biosubtypes.Class(str, i, j)
+			}
+			i = i + 3
+			j = j + 3
+			if j >= len(str) {
+				break
+			}
+		}
+	}
+	return chain
+}
+
+func PKK255(message string) string {
+
+	// according ed25519 key must ahve sized in this case key 32 length ok
+	seed := sha512.Sum512([]byte(message))
+
+	// generate private key
+	private := ed25519.NewKeyFromSeed(seed[32:])
+
+	// private key store in memory location 0xffaa2
+	SetKey(private)
+
+	// generate public key with the existing private key
+	return fmt.Sprintf("%x", GetKey().Public())
+}
+
+func SetKey(key ed25519.PrivateKey) {
+	unlock_key = key
+}
+
+func GetKey() ed25519.PrivateKey { return unlock_key }
+
 func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member users.Visitors) (*users.Visitors, error) {
 
 	data, err := cloud.SearchUser(GetDBClientRef(), member)
@@ -359,18 +425,18 @@ func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member users.Vi
 		return &users.Visitors{}, err
 	}
 
-	fmt.Println("Member:", data)
+	fmt.Println("search data :", data)
 
 	query, err := json.Marshal(data)
 	if err != nil {
-		log.Fatal("Alien Format:", err.Error())
+		log.Fatal("marshall encode :", err.Error())
 		return &users.Visitors{}, err
 	}
 
 	var profile users.Visitors
 	err = json.Unmarshal(query, &profile)
 	if err != nil {
-		log.Fatal("Bash processing error:  ", err)
+		log.Fatal("unmarshal error:  ", err.Error())
 		return &users.Visitors{}, err
 	}
 	fmt.Println("Profile:", profile)
@@ -441,35 +507,38 @@ func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member users.Vi
 // 	return fire_gateway, nil
 // }
 
-func AddNewProfile(response http.ResponseWriter, request *http.Request, user users.Visitors, im string) (*firestore.DocumentRef, error) {
+func AddNewProfile(response http.ResponseWriter, request *http.Request, user users.Visitors, im string) (*firestore.DocumentRef, bool, error) {
 
 	var member users.Visitors
 	var replicate *firestore.DocumentRef
 
 	fmt.Println("Member:", member, "exuser:", user)
 
-	data, err := json.Marshal(member)
+	// user data accrording to json schema
+	data, err := json.Marshal(user)
 	if err != nil {
-		log.Fatal("[Fail] Poor DATA JSON FORMAT  ", err)
-		return &firestore.DocumentRef{}, err
+		log.Fatal(" marshal data ", err.Error())
+		return &firestore.DocumentRef{}, false, err
 	}
 
 	fmt.Println("json_data:", string(data))
 
-	err = json.Unmarshal(data, &member)
+	err = json.Unmarshal(data, &user)
 	if err != nil {
-		log.Fatal("[Fail] Poor Formating  ", err)
-		return &firestore.DocumentRef{}, err
+		log.Fatal(" unmarshal data ", err)
+		return &firestore.DocumentRef{}, false, err
 	}
 
+	// search data if there is
 	candidate, err := Firebase_Gatekeeper(response, request, user)
-
 	if err != nil {
 		log.Fatal("[Fail] Iterator Terminate :  ", err)
-		return &firestore.DocumentRef{}, err
+		return &firestore.DocumentRef{}, false, err
 	}
 
-	fmt.Println("Candiate :", candidate)
+	fmt.Println("Existing record :", candidate)
+
+	// search data doesn't exist
 	if reflect.DeepEqual(candidate, &member) {
 
 		member.Id = im
@@ -488,21 +557,23 @@ func AddNewProfile(response http.ResponseWriter, request *http.Request, user use
 		member.Zip = user.Zip
 		member.Country = user.Country
 
+		// add user data in your dataabse
 		document, _, err := cloud.AddUser(GetDBClientRef(), member)
 		if err != nil {
 			log.Fatal(" Bash Processing Error ", err.Error())
-			return &firestore.DocumentRef{}, err
+			return &firestore.DocumentRef{}, false, err
 		}
 
-		fmt.Println("Document:", document)
 		replicate = document
-		return document, nil
-	}
-	log.Fatal(" Iterator return data: ", err.Error(), replicate)
-	return replicate, err
-}
 
-// Functions
+		fmt.Println("record created:", document, replicate)
+		return document, true, nil
+	} else {
+		// database record replication
+		log.Println("Replicate :", replicate)
+		return replicate, false, err
+	}
+}
 
 func Firestore_Reference() *firestore.Client {
 
@@ -869,24 +940,41 @@ func Data_Predicition(w http.ResponseWriter, r *http.Request, fname, choose stri
 		return err
 	}
 	if (i > 0 && i < 6) && (fname != " ") {
+
+		// data have peristance location address
 		svrFile := MountDisk(w, r, fname)
+
+		// read document and convert into managable format for processing
 		Usr, Virus, err := ReadAllow(file, svrFile)
 		if err != nil {
 			log.Fatalln("Sequence data file error", err)
 			return err
 		}
-		log.Println("Genome:", len(Virus), "virus:", len(Usr))
+
+		// Gene store in the memory
+		SetGenes(Usr)
+
+		// calculate matching probability
 		distance := GetEditParameters().EditDistanceStrings(Virus, Usr)
 		SetBioAlgoParameters(algo.Result(distance), fname, algo.CalcualtePercentage(algo.Probablity))
 
 		return err
 	} else if i == 0 {
+		// reload dashboard page
 		temFile := template.Must(template.ParseFiles("dashboard.html"))
 		temFile.Execute(w, "Dashbaord")
 	}
 	return err
 
 }
+
+// set genes
+func SetGenes(gene []string) {
+	genes = append(genes, gene...)
+}
+
+// get genes
+func GetGenes() []string { return genes }
 
 func Card_Verification(s1, s2 string) bool {
 

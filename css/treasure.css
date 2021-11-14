@@ -327,3 +327,13 @@
 		 left:-80px;
 	 }
  } 
+ .dataviz{
+	 position: relative;
+	 top: -575px;
+	 left: 94px;
+	 overflow: hidden;
+	 box-shadow: 3px 5px whitesmoke;
+	 width: 444px; height: 441px;
+	 transform-style: preserve-3d;
+	 border-radius: 10px;
+ }

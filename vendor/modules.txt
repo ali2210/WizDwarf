@@ -67,10 +67,6 @@ github.com/ethereum/go-ethereum/p2p/netutil
 github.com/ethereum/go-ethereum/params
 github.com/ethereum/go-ethereum/rlp
 github.com/ethereum/go-ethereum/rpc
-# github.com/fabioberger/coinbase-go v0.0.0-20160522011833-8328539b18ab
-## explicit
-github.com/fabioberger/coinbase-go
-github.com/fabioberger/coinbase-go/config
 # github.com/fogleman/ribbon v0.0.0-20191101191537-568057efb726
 ## explicit
 github.com/fogleman/ribbon/pdb

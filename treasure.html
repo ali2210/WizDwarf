@@ -13,7 +13,8 @@
 	</link>
 	<link rel="shortcut icon" type="image/png" href="/images/favicon.png">
 	<title>WizDwarfs</title>
-
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script> -->
+	<script src="https://d3js.org/d3.v4.js"></script>
 <body>
 	<div class='main-dashboard-div'>
 		<nav class="navbar navbar-expand-md navbar-light custom-navbar">
@@ -150,7 +151,8 @@
 		<a href="/dashboard" class="btn btn-danger backbtn" title="Previous page">      
 		  <i class="fa fa-chevron-circle-left chevron-icon" aria-hidden="true"></i>
 		</a>
-	  </div>
+	</div>
+	<div id="my_dataviz" class="dataviz"></div>
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
     crossorigin="anonymous"></script>
@@ -159,7 +161,7 @@
     crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>	
+    crossorigin="anonymous"></script>
 	<script type="text/javascript" src="/js/treasure.js"></script>
 </body>
 

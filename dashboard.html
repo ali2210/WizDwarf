@@ -10,6 +10,7 @@
   <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap"
     rel="stylesheet">
+  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/dashboard.css">
   <title>WizDwarfs</title>
 </head>
@@ -103,6 +104,14 @@
             </span>
           </label>
         </div>
+        <div class="sign">
+          <label>
+            <input type="checkbox" id="signed" data-toggle="toggle" data-on="<i class='fa fa-user' aria-hidden='true'></i>" data-off="<i class='fa fa-user-secret' aria-hidden='true'></i>"data-onstyle="success" data-offstyle="danger" data-style="mode" name="signed"/>
+            Signed Message?
+          </label>
+          <input class="signed_message" name="status" />
+          <button class="btn btn-light verified" type="button"></button>
+        </div>
         <!-- <p>
             <button type="button" class="btn btn-primary Location" data-toggle="collapse" data-target="#location">
               <i class="fa fa-compass" aria-hidden="true"></i> Add Location
@@ -183,9 +192,161 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
-  <!-- <script src="https://cdn.apple-mapkit.com/mk/5.1.x/mapkit.js"></script> -->
-  <script src="/js/additional.js"></script>
+  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fortmatic@latest/dist/fortmatic.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.min.js"></script>
   <script src="/js/dashboard.js"></script>
+  <script src="/js/additional.js"></script>
+  <script type="text/javascript">
+
+    const parent_div = document.getElementsByClassName('sign')[0];
+    const para_div = document.getElementsByClassName('signed_message')[0];
+    const verifiedBtn = document.getElementsByClassName('verified')[0];
+    console.log(para_div, parent_div);
+    
+    $('#signed').on('change', () =>{
+  
+      console.log("props:" , ($('#signed').prop('checked')));
+      if ($('#signed').prop('checked', true)){
+    
+      // create div, icon and button
+      const div = document.createElement('div');
+      const icon = document.createElement('i');
+    
+
+      // adjust button props
+      verifiedBtn.id  = 'fortmatic';
+      verifiedBtn.style.visibility = 'visible';
+      verifiedBtn.style.position ='relative';
+      verifiedBtn.style.top = '11px';
+      verifiedBtn.style.left = '63px';
+      verifiedBtn.style.color = 'lawngreen';
+
+      //adjust icon properties
+      icon.className = 'fa fa-check-circle';
+      icon.ariaHidden = true;
+
+      // icon render
+      verifiedBtn.appendChild(icon);
+
+      // user action message
+      para_div.style.visibility = 'visible';
+      para_div.value = 'The message have been signed. Please verify your message.';
+      para_div.style.position = 'relative';
+      para_div.style.width = '500px';
+      para_div.style.left = '-135px';
+      para_div.style.border = '2px whitesmoke none';
+      para_div.style.borderRadius = '13px';
+    
+      //  newly created div render
+      div.className = 'actions';
+      div.appendChild(para_div);
+      div.appendChild(verifiedBtn);
+
+      // message props
+      parent_div.style.position = 'relative';
+      parent_div.style.left = '87px';
+      parent_div.style.width = '500px';
+      parent_div.style.boxShadow = '5px 5px white';
+      parent_div.style.zIndex = '2';
+      parent_div.style.borderRadius = '35px';
+      parent_div.style.top = '-1px';
+      parent_div.style.display = 'flex'; 
+    
+      // message box render
+      parent_div.appendChild(div);
+    }
+      if ($('#signed').prop('checked', false)) {
+        parent_div.children[0].style.visibility = 'hidden';
+        console.log("checked false");
+      }
+});
+  </script>
+  <script type="text/javascript">
+    
+    // verified button 
+    const vbtn = document.getElementsByClassName('verified')[0];
+    
+    
+    // Keys
+    const FORTMATIC_API_KEY = 'pk_test_1089727802E62684';
+    const ToAddress = '0x157B2Ba4Fd6667c2CF4Ae1b9aFb4c1C02494c115'; 
+    console.log("verified :", vbtn);
+    
+    
+    // verified button event
+    vbtn.addEventListener('click', ()=>{
+      
+      // additional params and objects such as fortmatic and web3js
+      let fsdk = new Fortmatic(FORTMATIC_API_KEY);
+      let web3eth = new Web3(fsdk.getProvider());
+      console.log("web3eth :", web3eth);
+
+      // ether balance pay for signed message
+      let Tovalue = web3eth.utils.toWei('0.0002', 'ether');
+      
+      
+      // if user have fortmatic access 
+      if(fsdk.getProvider().isFortmatic){
+        console.log("weldone fortmatic ..");
+        
+        // then active fortmatic api
+        web3eth.currentProvider.enable = true;
+        
+        // user login credentials 
+        let accountLogin = fsdk.user.isLoggedIn();
+        
+        // user fortmatic account created from user 'email address'
+        fsdk.configure({
+          primaryLoginOption: 'email' 
+        }).then(()=>{
+
+          // if user have email account created and also login then
+          if (accountLogin){
+
+            console.log("fortmatic account login successfully:", accountLogin);
+            
+
+            // get coinbase addresss for market and other transact activities
+            web3eth.eth.getCoinbase().then((coinbase)=>{
+                 console.log("fortmatic transaction verified on coinbase:", coinbase);
+            });
+            
+            // get user account and open wallet for transaction 
+            web3eth.eth.getAccounts().then((account)=>{
+              
+              // transact request object
+              let tnxParam = {
+                from: account,
+                to : ToAddress,
+                value : Tovalue,
+              };
+              
+              console.log("Fortmatic address:", account, tnxParam);
+              try{
+                
+                // user will transact 0.0002 eth for signed message
+                web3eth.eth.sendTransaction(tnxParam)  .once('transactionHash', (hash) => { console.log(hash); })  .once('receipt', (receipt) => { console.log("user recipt generate via fortmatic wallet:", receipt); });
+              }catch{
+                
+                // user transaction failed
+                console.log("User transactions failed: " + error);
+              }
+
+              //  after transaction event will view virtual market transact
+              fsdk.user.deposit();
+            });
+          }else{
+
+            // user credentials failed
+            console.log("fortmatic account login failed:", accountLogin);
+            alert(" Fortmatic account login failed ...");
+          }
+        });      
+    }
+  });
+  </script>
 </body>
 
 </html>
