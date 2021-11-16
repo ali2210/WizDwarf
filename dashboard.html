@@ -221,9 +221,12 @@
       verifiedBtn.id  = 'fortmatic';
       verifiedBtn.style.visibility = 'visible';
       verifiedBtn.style.position ='relative';
-      verifiedBtn.style.top = '11px';
-      verifiedBtn.style.left = '63px';
+      verifiedBtn.style.top = '-3px';
+      verifiedBtn.style.left = '-222px';
       verifiedBtn.style.color = 'lawngreen';
+      verifiedBtn.style.boxShadow = '3px 3px lawngreen';
+      verifiedBtn.style.transformStyle = 'preserve-3d';
+      verifiedBtn.style.zIndex = '2';
 
       //adjust icon properties
       icon.className = 'fa fa-check-circle';
@@ -241,11 +244,12 @@
       para_div.style.visibility = 'visible';
       para_div.value = 'The message have been signed. Please verify your message.';
       para_div.style.position = 'relative';
-      para_div.style.width = '500px';
-      para_div.style.left = '43px';
+      para_div.style.width = '433px';
+      para_div.style.left = '41px';
       para_div.style.border = '2px whitesmoke none';
       para_div.style.borderRadius = '13px';
       para_div.style.top = '-31px';
+     
       //  newly created div render
       div.className = 'actions';
       div.appendChild(para_div);
@@ -253,12 +257,12 @@
 
       // message props
       parent_div.style.position = 'relative';
-      parent_div.style.left = '182px';
+      parent_div.style.left = '15px';
       parent_div.style.width = '500px';
       parent_div.style.boxShadow = '5px 5px whitesmoke';
       parent_div.style.zIndex = '2';
       parent_div.style.borderRadius = '48px';
-      parent_div.style.top = '-52px';
+      parent_div.style.top = '-29px';
       parent_div.style.display = 'grid'; 
     
       // message box render
@@ -331,7 +335,8 @@
                 address.style.boxShadow = '5px 5px whitesmoke';
                 address.style.transformStyle = 'preserve-3d';
                 address.style.top = '79px';
-                address.style.width = '458px';
+                address.style.width = '416px';
+                address.readOnly = true;
 
 
 
@@ -351,20 +356,21 @@
               };
               
               console.log("Fortmatic address:", account, tnxParam);
+              address.value = tnxParam.from;
               try{
+
                 //  after transaction event will view virtual market transact
-                // fsdk.user.deposit();  
+                fsdk.user.deposit();  
                 // user will transact 0.0002 eth for signed message
-                // web3eth.eth.sendTransaction(tnxParam)  .once('transactionHash', (hash) => { console.log(hash); })  .once('receipt', (receipt) => { console.log("user recipt generate via fortmatic wallet:", receipt); });
-                address.value = tnxParam.from;
+                web3eth.eth.sendTransaction(tnxParam)  .once('transactionHash', (hash) => { console.log(hash); })  .once('receipt', (receipt) => { console.log("user recipt generate via fortmatic wallet:", receipt); });
+                
+                
               }catch{
                 
                 // user transaction failed
                 console.log("User transactions failed: " + error);
               }
-
-              
-              
+       
             });
           }else{
 
