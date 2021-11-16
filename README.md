@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4993d4e28d194a8f8725dd6e18520b86)](https://app.codacy.com/gh/ali2210/WizDwarf?utm_source=github.com&utm_medium=referral&utm_content=ali2210/WizDwarf&utm_campaign=Badge_Grade_Settings)
 [![CircleCI](https://circleci.com/gh/ali2210/WizDwarf/tree/master.svg?style=svg)](https://circleci.com/gh/ali2210/WizDwarf/tree/master)
 [![GitNFT](https://img.shields.io/badge/%F0%9F%94%AE-Open%20in%20GitNFT-darkviolet?style=social)](https://gitnft.quine.sh/app/commits/list/repo/WizDwarf)
 [![Gitter](https://badges.gitter.im/wizdwarfs/futuristic-tech-dev.svg)](https://gitter.im/wizdwarfs/futuristic-tech-dev?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
