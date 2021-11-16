@@ -25,6 +25,7 @@ import (
 	structs "github.com/ali2210/wizdwarf/other"
 	bio "github.com/ali2210/wizdwarf/other/bioinformatics"
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
+	cryptos "github.com/ali2210/wizdwarf/other/crypto"
 	genetics "github.com/ali2210/wizdwarf/other/genetic"
 	genome "github.com/ali2210/wizdwarf/other/genetic/binary"
 	"github.com/ali2210/wizdwarf/piplines"
@@ -952,10 +953,13 @@ func multicluster(w http.ResponseWriter, r *http.Request) {
 // }
 
 func visualize(w http.ResponseWriter, r *http.Request) {
+
 	temp := template.Must(template.ParseFiles("visualize.html"))
+
 	log.Println("Report percentage", visualizeReport.Percentage)
 	log.Println("Report uv ", visualizeReport.UVinfo)
 	// fmt.Println("Profile:", profiler)
+
 	userProfile, err := Cloud.GetDocumentById(AppName, *profiler)
 	if err != nil && userProfile != nil {
 		log.Fatal("[Fail] No info  ", err)
@@ -967,6 +971,7 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("query return un handle data  ", err.Error())
 		return
 	}
+
 	err = json.Unmarshal(query_json, &profiler)
 	if err != nil {
 		log.Fatal("query return un structure data", err.Error())
@@ -979,12 +984,23 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Method:" + r.Method)
 		// visualizeReport.Process = 1
 		// visualizeReport.SeenBy = profiler.Name
+
+		// firestore credentials
 		genetics.Client = piplines.Firestore_Reference()
-		genetics.Pkk = piplines.PKK255(profiler.Id)
+
+		// generate ed25519 key
+		genetics.Pkk = cryptos.PKK25519(profiler.Id)
+
+		// genetics object
 		rece_gen := genetics.New()
+
 		life := genome.Lifecode{}
+
+		// genetics data string
 		life.Genes = strings.Join(piplines.GetGenes(), "")
 		life.Pkk = genetics.Pkk
+
+		// genetics database
 		status := rece_gen.AddCode(context.Background(), &life)
 		log.Println("data published", status)
 		temp.Execute(w, visualizeReport)

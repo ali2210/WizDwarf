@@ -8,11 +8,9 @@ import (
 	"bytes"
 	contxt "context"
 	"crypto/ecdsa"
-	"crypto/ed25519"
 	"crypto/elliptic"
 	"crypto/rand"
 	"crypto/sha256"
-	"crypto/sha512"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -67,7 +65,6 @@ type Point struct {
 
 var cdr map[string]string = make(map[string]string, 1)
 var genes []string
-var unlock_key ed25519.PrivateKey
 
 const Errors = "Operation Failed"
 
@@ -395,27 +392,6 @@ func Active_Proteins(str string) map[string]string {
 	}
 	return chain
 }
-
-func PKK255(message string) string {
-
-	// according ed25519 key must ahve sized in this case key 32 length ok
-	seed := sha512.Sum512([]byte(message))
-
-	// generate private key
-	private := ed25519.NewKeyFromSeed(seed[32:])
-
-	// private key store in memory location 0xffaa2
-	SetKey(private)
-
-	// generate public key with the existing private key
-	return fmt.Sprintf("%x", GetKey().Public())
-}
-
-func SetKey(key ed25519.PrivateKey) {
-	unlock_key = key
-}
-
-func GetKey() ed25519.PrivateKey { return unlock_key }
 
 func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member users.Visitors) (*users.Visitors, error) {
 
