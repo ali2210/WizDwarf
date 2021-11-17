@@ -16,7 +16,7 @@ func SetKey(key ed25519.PrivateKey) { unlock_key = key }
 
 func GetKey() ed25519.PrivateKey { return unlock_key }
 
-func PKK25519(message string) string {
+func PKK25519(message string) (string, string) {
 
 	// according ed25519 key must have sized in this case key 32 length ok
 	seed := sha512.Sum512([]byte(message))
@@ -28,7 +28,7 @@ func PKK25519(message string) string {
 	SetKey(private)
 
 	// generate public key with the existing private key
-	return fmt.Sprintf("%x", GetKey().Public())
+	return fmt.Sprintf("%x", GetKey().Public()), fmt.Sprintf("%x", GetKey())
 }
 
 // bob want to create own keys.

@@ -989,7 +989,7 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		genetics.Client = piplines.Firestore_Reference()
 
 		// generate ed25519 key
-		genetics.Pkk = cryptos.PKK25519(profiler.Id)
+		genetics.Pkk, _ = cryptos.PKK25519(profiler.Id)
 
 		// genetics object
 		rece_gen := genetics.New()

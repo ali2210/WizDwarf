@@ -13,6 +13,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -33,6 +34,7 @@ import (
 	structs "github.com/ali2210/wizdwarf/other"
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
 	"github.com/ali2210/wizdwarf/other/collection"
+	"github.com/ali2210/wizdwarf/other/crypto"
 	biosubtypes "github.com/ali2210/wizdwarf/other/proteins"
 	"github.com/ali2210/wizdwarf/other/users"
 	"github.com/biogo/biogo/alphabet"
@@ -42,6 +44,7 @@ import (
 	linkcid "github.com/ipfs/go-cid"
 	multihash "github.com/multiformats/go-multihash"
 	pusher "github.com/pusher/pusher-http-go"
+	cryptos "github.com/wizdwarf/other/crypto"
 	"golang.org/x/net/context"
 	"google.golang.org/api/option"
 )
@@ -370,6 +373,57 @@ func UpdateProfileInfo(member *users.Visitors) bool {
 		return false
 	}
 	return true
+}
+
+func TrustRequest(message, verifier, request string) (bool, error) {
+
+	// contain check whether request have pass-key ,
+	// address contain address of trusted user wallet
+	//  & message must not be empty
+
+	if strings.Contains(request, "signed") && !strings.Contains(verifier, " ") && !strings.Contains(message, " ") {
+
+		// generate keys for message
+		BbKey, AleKey, err := cryptos.PKK25519(message)
+		if err != nil {
+			log.Printf(" Error keys fail to generate %v", err.Error())
+			return false, errors.New("Key generate failed")
+		}
+
+		// bind keys with message
+		bind_message, err := crypto.ASED25519(message, AleKey)
+		if err != nil {
+			log.Printf(" Error message binding fail %v", err.Error())
+			return false, err.Error()
+		}
+
+		// key signature verified
+		if verified := cryptos.AVED25519(message, bind_message, AleKey, BbKey); verified {
+			return verified, nil
+		}
+
+		// key verification failed.
+		return false, errors.New("Verification failed")
+	} else {
+
+		// generate keys
+		BbKey, _, err := cryptos.BKED25519()
+		if err != nil {
+			log.Printf(" Error generating key: %v", err.Error())
+			return false, err.Error()
+		}
+
+		// bind message with your public key
+		bindMessage := cryptos.BSED25519(message)
+
+		// bind message verification against key
+		if verify := cryptos.BVED25519(BbKey, bindMessage, message); verify {
+			return verify, nil
+		}
+
+		// bind message verification failed
+		return false, errors.New("Error verification error")
+	}
 }
 
 func Active_Proteins(str string) map[string]string {
