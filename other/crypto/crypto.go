@@ -5,7 +5,6 @@ import (
 	"crypto/ed25519"
 	"crypto/rand"
 	"crypto/sha512"
-	"fmt"
 	"log"
 	"reflect"
 )
@@ -16,19 +15,19 @@ func SetKey(key ed25519.PrivateKey) { unlock_key = key }
 
 func GetKey() ed25519.PrivateKey { return unlock_key }
 
-func PKK25519(message string) (string, string) {
+func PKK25519(message string) (crypto.PublicKey, ed25519.PrivateKey) {
 
 	// according ed25519 key must have sized in this case key 32 length ok
 	seed := sha512.Sum512([]byte(message))
 
 	// generate private key
-	private := ed25519.NewKeyFromSeed(seed[32:])
+	private := ed25519.NewKeyFromSeed(seed[:32])
 
 	// private key store in memory location 0xffaa2
 	SetKey(private)
 
 	// generate public key with the existing private key
-	return fmt.Sprintf("%x", GetKey().Public()), fmt.Sprintf("%x", GetKey())
+	return GetKey().Public(), GetKey()
 }
 
 // bob want to create own keys.
@@ -64,14 +63,14 @@ func BVED25519(key ed25519.PublicKey, proof, content []byte) bool {
 // @return byte, err
 
 func ASED25519(message string, lock ed25519.PrivateKey) ([]byte, error) {
-	return lock.Sign(rand.Reader, []byte(message), crypto.Hash(1).HashFunc())
+	return lock.Sign(rand.Reader, []byte(message), crypto.Hash(0).HashFunc())
 }
 
 // AVED25519 proved bob ownership if special key is used
 // @param message, trust and bob private key
 // @return bool
 
-func AVED25519(message string, proof []byte, lock ed25519.PrivateKey, public ed25519.PublicKey) bool {
+func AVED25519(message string, proof []byte, lock ed25519.PrivateKey, public crypto.PublicKey) bool {
 
 	// crypographic trust when a message bind with same private key
 	ased25519, err := ASED25519(message, lock)
@@ -80,5 +79,5 @@ func AVED25519(message string, proof []byte, lock ed25519.PrivateKey, public ed2
 		log.Printf(" Error verification failed : %v", err.Error())
 		return false
 	}
-	return reflect.DeepEqual(ased25519, proof) && public.Equal(lock.Public())
+	return reflect.DeepEqual(ased25519, proof) && lock.Equal(lock.Public)
 }

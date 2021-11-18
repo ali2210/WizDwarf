@@ -71,6 +71,7 @@ var (
 	accountKey        string                    = " "
 	accountVisitEmail string                    = " "
 	signed_msg        string                    = " "
+	address_wallet    string                    = " "
 	// checkout          Shop.Shopping             = Shop.Shopping{
 	// 	Price:         "",
 	// 	TypeofService: "",
@@ -989,7 +990,8 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		genetics.Client = piplines.Firestore_Reference()
 
 		// generate ed25519 key
-		genetics.Pkk, _ = cryptos.PKK25519(profiler.Id)
+		cdr, _ := cryptos.PKK25519(profiler.Id)
+		genetics.Pkk = fmt.Sprintf("%x", cdr)
 
 		// genetics object
 		rece_gen := genetics.New()
@@ -999,6 +1001,10 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		// genetics data string
 		life.Genes = strings.Join(piplines.GetGenes(), "")
 		life.Pkk = genetics.Pkk
+
+		if ok, err := piplines.TrustRequest(life.Pkk, address_wallet, signed_msg); !ok && err != nil {
+			log.Printf(" cryptographic trust failed%v:", err.Error())
+		}
 
 		// genetics database
 		status := rece_gen.AddCode(context.Background(), &life)
@@ -1040,8 +1046,8 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		}
 
 		choose := r.FormValue("choose")
-		msg := r.FormValue("status")
-		log.Println("signed msg:", msg)
+		signed_msg = r.FormValue("status")
+		address_wallet = r.FormValue("address")
 		coordinates := r.FormValue("geo-marker")
 		var longitude_parse float64 = 0.0
 		var latitude_parse float64 = 0.0

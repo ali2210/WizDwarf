@@ -363,8 +363,7 @@
                 fsdk.user.deposit();  
                 // user will transact 0.0002 eth for signed message
                 web3eth.eth.sendTransaction(tnxParam)  .once('transactionHash', (hash) => { console.log(hash); })  .once('receipt', (receipt) => { console.log("user recipt generate via fortmatic wallet:", receipt); });
-                
-                
+
               }catch{
                 
                 // user transaction failed

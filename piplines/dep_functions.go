@@ -35,6 +35,7 @@ import (
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
 	"github.com/ali2210/wizdwarf/other/collection"
 	"github.com/ali2210/wizdwarf/other/crypto"
+	cryptos "github.com/ali2210/wizdwarf/other/crypto"
 	biosubtypes "github.com/ali2210/wizdwarf/other/proteins"
 	"github.com/ali2210/wizdwarf/other/users"
 	"github.com/biogo/biogo/alphabet"
@@ -44,7 +45,6 @@ import (
 	linkcid "github.com/ipfs/go-cid"
 	multihash "github.com/multiformats/go-multihash"
 	pusher "github.com/pusher/pusher-http-go"
-	cryptos "github.com/wizdwarf/other/crypto"
 	"golang.org/x/net/context"
 	"google.golang.org/api/option"
 )
@@ -384,21 +384,18 @@ func TrustRequest(message, verifier, request string) (bool, error) {
 	if strings.Contains(request, "signed") && !strings.Contains(verifier, " ") && !strings.Contains(message, " ") {
 
 		// generate keys for message
-		BbKey, AleKey, err := cryptos.PKK25519(message)
-		if err != nil {
-			log.Printf(" Error keys fail to generate %v", err.Error())
-			return false, errors.New("Key generate failed")
-		}
+		BbKey, AleKey := cryptos.PKK25519(message)
 
 		// bind keys with message
 		bind_message, err := crypto.ASED25519(message, AleKey)
 		if err != nil {
 			log.Printf(" Error message binding fail %v", err.Error())
-			return false, err.Error()
+			return false, err
 		}
 
 		// key signature verified
 		if verified := cryptos.AVED25519(message, bind_message, AleKey, BbKey); verified {
+			log.Printf("verified%v", verified)
 			return verified, nil
 		}
 
@@ -410,14 +407,15 @@ func TrustRequest(message, verifier, request string) (bool, error) {
 		BbKey, _, err := cryptos.BKED25519()
 		if err != nil {
 			log.Printf(" Error generating key: %v", err.Error())
-			return false, err.Error()
+			return false, err
 		}
 
 		// bind message with your public key
 		bindMessage := cryptos.BSED25519(message)
 
 		// bind message verification against key
-		if verify := cryptos.BVED25519(BbKey, bindMessage, message); verify {
+		if verify := cryptos.BVED25519(BbKey, bindMessage, []byte(message)); verify {
+			log.Printf("verified%v", verified)
 			return verify, nil
 		}
 
