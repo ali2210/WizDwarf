@@ -10,6 +10,7 @@ import (
 )
 
 var unlock_key ed25519.PrivateKey
+var Borrow_key ed25519.PublicKey
 
 func SetKey(key ed25519.PrivateKey) { unlock_key = key }
 
@@ -17,7 +18,7 @@ func GetKey() ed25519.PrivateKey { return unlock_key }
 
 func PKK25519(message string) (crypto.PublicKey, ed25519.PrivateKey) {
 
-	// according ed25519 key must have sized in this case key 32 length ok
+	// according ed25519 key must have sized in this case key 42 length ok
 	seed := sha512.Sum512([]byte(message))
 
 	// generate private key
@@ -30,7 +31,7 @@ func PKK25519(message string) (crypto.PublicKey, ed25519.PrivateKey) {
 	return GetKey().Public(), GetKey()
 }
 
-// bob want to create own keys.
+// bob want to create own keys.  3
 
 // @param(none)
 // @return the public key, private key and fail process message
@@ -79,5 +80,5 @@ func AVED25519(message string, proof []byte, lock ed25519.PrivateKey, public cry
 		log.Printf(" Error verification failed : %v", err.Error())
 		return false
 	}
-	return reflect.DeepEqual(ased25519, proof) && lock.Equal(lock.Public)
+	return reflect.DeepEqual(ased25519, proof) && !reflect.DeepEqual(lock.Seed(), " ") && reflect.DeepEqual(public, lock.Public())
 }

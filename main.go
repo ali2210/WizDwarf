@@ -1002,13 +1002,23 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		life.Genes = strings.Join(piplines.GetGenes(), "")
 		life.Pkk = genetics.Pkk
 
+		// create trust object ... trust verified whom that content .
 		if ok, err := piplines.TrustRequest(life.Pkk, address_wallet, signed_msg); !ok && err != nil {
-			log.Printf(" cryptographic trust failed%v:", err.Error())
+			log.Printf(" cryptographic trust failed %v:", err.Error())
 		}
 
 		// genetics database
 		status := rece_gen.AddCode(context.Background(), &life)
 		log.Println("data published", status)
+
+		// get all proteins symbols
+		listProteinsName := piplines.Active_Proteins(life.Genes)
+		log.Println("Proteins Symbols:", listProteinsName)
+
+		// get all amino table
+		listProteins := piplines.AminoChains(life.Genes)
+		log.Println("Amino Chains:", listProteins["AAA"])
+
 		temp.Execute(w, visualizeReport)
 	}
 

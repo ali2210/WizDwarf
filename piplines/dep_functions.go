@@ -395,12 +395,11 @@ func TrustRequest(message, verifier, request string) (bool, error) {
 
 		// key signature verified
 		if verified := cryptos.AVED25519(message, bind_message, AleKey, BbKey); verified {
-			log.Printf("verified%v", verified)
 			return verified, nil
 		}
 
 		// key verification failed.
-		return false, errors.New("Verification failed")
+		return false, errors.New("verification failed")
 	} else {
 
 		// generate keys
@@ -415,12 +414,11 @@ func TrustRequest(message, verifier, request string) (bool, error) {
 
 		// bind message verification against key
 		if verify := cryptos.BVED25519(BbKey, bindMessage, []byte(message)); verify {
-			log.Printf("verified%v", verified)
 			return verify, nil
 		}
 
 		// bind message verification failed
-		return false, errors.New("Error verification error")
+		return false, errors.New("error verification error")
 	}
 }
 
@@ -443,6 +441,40 @@ func Active_Proteins(str string) map[string]string {
 		}
 	}
 	return chain
+}
+
+func AminoChains(str string) map[string]biosubtypes.Aminochain {
+
+	// initalization & declaration of local attributes
+	chain := make(map[string]biosubtypes.Aminochain, len(str))
+	i, j := 0, 3
+
+	// get amino map chain
+	for u := 0; u <= len(str); u++ {
+
+		if strings.Contains(str, str[i:j]) && u != len(str) {
+			log.Println("chain", threepairs(str, i, j), str[i:i+1])
+			// in case amino chain return protein symbol and store back to the local attribute
+			if !strings.Contains(biosubtypes.GetAmino(str, i, j).Symbol, " ") {
+				chain[str[i:j]] = biosubtypes.GetAmino(str, i, j)
+			}
+
+			// protein patterns
+			i = i + 3
+			j = j + 3
+
+			// "j" indicator make sure that iteration won't panic
+			if j >= len(str) {
+				break
+			}
+		}
+	}
+	return chain
+}
+
+func threepairs(str string, i, j int) bool {
+	log.Println("string:", str[i:i])
+	return !strings.Contains(str[i:i], " ")
 }
 
 func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member users.Visitors) (*users.Visitors, error) {
