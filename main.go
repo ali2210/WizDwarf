@@ -13,6 +13,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -1017,7 +1018,11 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 
 		// get all amino table
 		listProteins := piplines.AminoChains(life.Genes)
-		log.Println("Amino Chains:", listProteins["AAA"])
+
+		iterate := reflect.ValueOf(listProteinsName).MapRange()
+		for iterate.Next() {
+			fmt.Println(" AminoChains :", listProteins[iterate.Key().String()])
+		}
 
 		temp.Execute(w, visualizeReport)
 	}

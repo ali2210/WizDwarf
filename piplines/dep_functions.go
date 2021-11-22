@@ -453,9 +453,9 @@ func AminoChains(str string) map[string]biosubtypes.Aminochain {
 	for u := 0; u <= len(str); u++ {
 
 		if strings.Contains(str, str[i:j]) && u != len(str) {
-			log.Println("chain", threepairs(str, i, j), str[i:i+1])
+
 			// in case amino chain return protein symbol and store back to the local attribute
-			if !strings.Contains(biosubtypes.GetAmino(str, i, j).Symbol, " ") {
+			if !strings.Contains(biosubtypes.GetAmino(str, i, j).Symbol, " ") && threepairs(str, i) {
 				chain[str[i:j]] = biosubtypes.GetAmino(str, i, j)
 			}
 
@@ -472,9 +472,8 @@ func AminoChains(str string) map[string]biosubtypes.Aminochain {
 	return chain
 }
 
-func threepairs(str string, i, j int) bool {
-	log.Println("string:", str[i:i])
-	return !strings.Contains(str[i:i], " ")
+func threepairs(str string, i int) bool {
+	return !strings.Contains(str[i:i+1], " ") && !strings.Contains(str[i+1:i+2], " ") && !strings.Contains(str[i+2:i+3], " ")
 }
 
 func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member users.Visitors) (*users.Visitors, error) {
