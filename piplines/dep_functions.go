@@ -36,7 +36,9 @@ import (
 	"github.com/ali2210/wizdwarf/other/collection"
 	"github.com/ali2210/wizdwarf/other/crypto"
 	cryptos "github.com/ali2210/wizdwarf/other/crypto"
+	"github.com/ali2210/wizdwarf/other/proteins"
 	biosubtypes "github.com/ali2210/wizdwarf/other/proteins"
+	"github.com/ali2210/wizdwarf/other/proteins/binary"
 	"github.com/ali2210/wizdwarf/other/users"
 	"github.com/biogo/biogo/alphabet"
 	"github.com/ethereum/go-ethereum/common"
@@ -364,6 +366,78 @@ func Location(str string) Point {
 	}()
 	location := <-current_nav
 	return location
+}
+
+// genome function return  maromolecules props .
+//  this function written in fp style . In a single line of code dozen of functions depend on one another
+func Genome(m map[string]map[string]proteins.Aminochain, key string) *binary.Micromolecule {
+
+	molecules := binary.Micromolecule{}
+
+	// apply map filter to read map value
+	it := reflect.ValueOf(m).MapRange()
+
+	// check iterator hold values
+	for it.Next() {
+		// molecule symbols
+		molecules.Symbol = it.Value().MapIndex(it.Value().MapKeys()[0]).FieldByName("Symbol").String()
+
+		// molecule mass
+		mass, err := strconv.ParseFloat(it.Value().MapIndex(it.Value().MapKeys()[0]).FieldByName("Mass").String(), 64)
+		if err != nil {
+			log.Printf("Error parsing mass: %v", err.Error())
+			return &binary.Micromolecule{}
+		}
+		molecules.Mass = mass
+
+		// molecule carbon
+		crbn, err := strconv.ParseInt(it.Value().MapIndex(it.Value().MapKeys()[0]).FieldByName("Carbon").String(), 10, 64)
+		if err != nil {
+			log.Printf("Error parsing : %v", err.Error())
+			return &binary.Micromolecule{}
+		}
+		molecules.Composition.C = int64(crbn)
+
+		// molecule sulphur
+		sul, err := strconv.ParseInt(it.Value().MapIndex(it.Value().MapKeys()[0]).FieldByName("Sulpur").String(), 10, 64)
+		if err != nil {
+			log.Printf("Error parsing : %v", err.Error())
+			return &binary.Micromolecule{}
+		}
+		molecules.Composition.S = sul
+
+		// molecule hydrogen
+		hydro, err := strconv.ParseInt(it.Value().MapIndex(it.Value().MapKeys()[0]).FieldByName("Hydrogen").String(), 10, 64)
+		if err != nil {
+			log.Printf("Error parsing : %v", err.Error())
+			return &binary.Micromolecule{}
+		}
+		molecules.Composition.H = hydro
+
+		// molecule nitrogen
+		nitro, err := strconv.ParseInt(it.Value().MapIndex(it.Value().MapKeys()[0]).FieldByName("Nitrogen").String(), 10, 64)
+		if err != nil {
+			log.Printf("Error parsing: %v", err.Error())
+			return &binary.Micromolecule{}
+		}
+		molecules.Composition.N = nitro
+
+		// molecule oxygen
+		oxy, err := strconv.ParseInt(it.Value().MapIndex(it.Value().MapKeys()[0]).FieldByName("Oxygen").String(), 10, 64)
+		if err != nil {
+			log.Printf("Error parsing: %v", err.Error())
+			return &binary.Micromolecule{}
+		}
+		molecules.Composition.O = oxy
+
+		// molecule acidicty
+		molecules.Molecule.A = it.Value().MapIndex(it.Value().MapKeys()[0]).FieldByName("Acidity_a").String()
+		molecules.Molecule.B = it.Value().MapIndex(it.Value().MapKeys()[0]).FieldByName("Acidity_b").String()
+
+		// molecule magnetic impact
+		molecules.Molecule.Magnetic_Field = it.Value().MapIndex(it.Value().MapKeys()[0]).FieldByName("Magnetic").String()
+	}
+	return &molecules
 }
 
 func UpdateProfileInfo(member *users.Visitors) bool {

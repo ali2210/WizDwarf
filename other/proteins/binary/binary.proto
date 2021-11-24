@@ -45,7 +45,7 @@ message Traits{
 // micromolecule is a subset of the marcomolecule
 message Micromolecule {
     string Symbol = 1;
-    float Mass = 2;
+    double Mass = 2;
     Element Composition = 3;
     Traits Molecule = 4;
 }

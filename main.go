@@ -29,6 +29,7 @@ import (
 	cryptos "github.com/ali2210/wizdwarf/other/crypto"
 	genetics "github.com/ali2210/wizdwarf/other/genetic"
 	genome "github.com/ali2210/wizdwarf/other/genetic/binary"
+	"github.com/ali2210/wizdwarf/other/proteins"
 	"github.com/ali2210/wizdwarf/piplines"
 
 	// Shop "github.com/ali2210/wizdwarf/other/cart"
@@ -1020,8 +1021,13 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		listProteins := piplines.AminoChains(life.Genes)
 
 		iterate := reflect.ValueOf(listProteinsName).MapRange()
+		// chains := binary.Micromolecule_List{}
+		// chains.Peplide = make([]*binary.Micromolecule, len(life.Genes))
+
 		for iterate.Next() {
-			fmt.Println(" AminoChains :", listProteins[iterate.Key().String()])
+			ribbon := make(map[string]map[string]proteins.Aminochain)
+			ribbon[listProteinsName[iterate.Value().String()]] = listProteins
+			fmt.Println("amino details :", piplines.Genome(ribbon, iterate.Value().String()))
 		}
 
 		temp.Execute(w, visualizeReport)
