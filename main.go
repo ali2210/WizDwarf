@@ -1019,15 +1019,18 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 
 		// get all amino table
 		listProteins := piplines.AminoChains(life.Genes)
+		ribbon := make(map[string]map[string]proteins.Aminochain)
 
 		iterate := reflect.ValueOf(listProteinsName).MapRange()
+
 		// chains := binary.Micromolecule_List{}
 		// chains.Peplide = make([]*binary.Micromolecule, len(life.Genes))
 
 		for iterate.Next() {
-			ribbon := make(map[string]map[string]proteins.Aminochain)
+
 			ribbon[listProteinsName[iterate.Value().String()]] = listProteins
-			fmt.Println("amino details :", piplines.Genome(ribbon, iterate.Value().String()))
+			log.Println("values:", ribbon[listProteinsName["AAA"]])
+			log.Println("data values:", piplines.Genome_Extract(ribbon, listProteinsName, iterate.Value().String(), 0))
 		}
 
 		temp.Execute(w, visualizeReport)

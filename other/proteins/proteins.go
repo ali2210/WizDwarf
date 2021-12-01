@@ -18,7 +18,7 @@ type Aminochain struct {
 	Carbon    int64
 	Hydrogen  int64
 	Oxygen    int64
-	Sulpur    int64
+	Sulphur   int64
 	Nitrogen  int64
 	Magnetic  string
 }
@@ -1890,264 +1890,264 @@ func GetSulphur(s string, i, j int) (int64, string) {
 	switch s[i:j] {
 	case "TTT":
 		aminochain.Symbol = "F"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "TTC":
 		aminochain.Symbol = "F"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "TTA":
 		aminochain.Symbol = "L"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "TTG":
 		aminochain.Symbol = "L"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "CTT":
 		aminochain.Symbol = "L"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "CTC":
 		aminochain.Symbol = "L"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "CTA":
 		aminochain.Symbol = "L"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "CTG":
 		aminochain.Symbol = "L"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "ATT":
 		aminochain.Symbol = "I"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "ATC":
 		aminochain.Symbol = "I"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "ATA":
 		aminochain.Symbol = "M"
-		aminochain.Sulpur = 1
+		aminochain.Sulphur = 1
 		break
 	case "ATG":
 		aminochain.Symbol = "M"
-		aminochain.Sulpur = 1
+		aminochain.Sulphur = 1
 		break
 	case "GTT":
 		aminochain.Symbol = "V"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "GTC":
 		aminochain.Symbol = "V"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "GTA":
 		aminochain.Symbol = "V"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "GTG":
 		aminochain.Symbol = "V"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "TCT":
 		aminochain.Symbol = "S"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "TCC":
 		aminochain.Symbol = "S"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "TCA":
 		aminochain.Symbol = "S"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "TCG":
 		aminochain.Symbol = "S"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "CCT":
 		aminochain.Symbol = "P"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "CCC":
 		aminochain.Symbol = "P"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "CCA":
 		aminochain.Symbol = "P"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "CCG":
 		aminochain.Symbol = "P"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "ACT":
 		aminochain.Symbol = "T"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "ACC":
 		aminochain.Symbol = "T"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "ACA":
 		aminochain.Symbol = "T"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "ACG":
 		aminochain.Symbol = "T"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "GCT":
 		aminochain.Symbol = "A"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "GCC":
 		aminochain.Symbol = "A"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "GCA":
 		aminochain.Symbol = "A"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "GCG":
 		aminochain.Symbol = "A"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "TAT":
 		aminochain.Symbol = "Y"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "TAC":
 		aminochain.Symbol = "Y"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "TAA":
 		aminochain.Symbol = "!"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "TAG":
 		aminochain.Symbol = "!*"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "CAT":
 		aminochain.Symbol = "H"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "CAC":
 		aminochain.Symbol = "H"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "CAA":
 		aminochain.Symbol = "Q"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "CAG":
 		aminochain.Symbol = "Q"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "AAT":
 		aminochain.Symbol = "N"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "AAC":
 		aminochain.Symbol = "N"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "AAA":
 		aminochain.Symbol = "K"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "AAG":
 		aminochain.Symbol = "K"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "GAT":
 		aminochain.Symbol = "D"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "GAC":
 		aminochain.Symbol = "D"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "GAA":
 		aminochain.Symbol = "E"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "GAG":
 		aminochain.Symbol = "E"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "TGT":
 		aminochain.Symbol = "C"
-		aminochain.Sulpur = 1
+		aminochain.Sulphur = 1
 		break
 	case "TGC":
 		aminochain.Symbol = "C"
-		aminochain.Sulpur = 1
+		aminochain.Sulphur = 1
 		break
 	case "TGA":
 		aminochain.Symbol = "!**"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "TGG":
 		aminochain.Symbol = "!**"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "CGT":
 		aminochain.Symbol = "R"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "CGC":
 		aminochain.Symbol = "R"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "CGA":
 		aminochain.Symbol = "R"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "CGG":
 		aminochain.Symbol = "R"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "AGT":
 		aminochain.Symbol = "S"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "AGC":
 		aminochain.Symbol = "S"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "AGA":
 		aminochain.Symbol = "R"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "AGG":
 		aminochain.Symbol = "R"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "GGT":
 		aminochain.Symbol = "G"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "GGC":
 		aminochain.Symbol = "G"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "GGA":
 		aminochain.Symbol = "G"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	case "GGG":
 		aminochain.Symbol = "G"
-		aminochain.Sulpur = 0
+		aminochain.Sulphur = 0
 		break
 	default:
 		return 0, " "
 	}
-	return aminochain.Sulpur, aminochain.Symbol
+	return aminochain.Sulphur, aminochain.Symbol
 }
 
 // proteins behaves wired in the presence of magnetic field.
@@ -2425,6 +2425,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 11
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "TTC":
 		aminochain.Symbol = "F"
@@ -2435,6 +2437,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 11
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "TTA":
 		aminochain.Symbol = "L"
@@ -2445,6 +2449,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 13
 		aminochain.Oxygen = 2
 		aminochain.Nitrogen = 1
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-84.9·10−6"
 		break
 	case "TTG":
@@ -2456,6 +2461,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 13
 		aminochain.Oxygen = 2
 		aminochain.Nitrogen = 1
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-84.9·10−6"
 		break
 	case "CTT":
@@ -2467,6 +2473,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 13
 		aminochain.Oxygen = 2
 		aminochain.Nitrogen = 1
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-84.9·10−6"
 		break
 	case "CTC":
@@ -2478,6 +2485,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 13
 		aminochain.Oxygen = 2
 		aminochain.Nitrogen = 1
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-84.9·10−6"
 		break
 	case "CTA":
@@ -2489,6 +2497,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 13
 		aminochain.Oxygen = 2
 		aminochain.Nitrogen = 1
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-84.9·10−6"
 		break
 	case "CTG":
@@ -2500,6 +2509,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 13
 		aminochain.Oxygen = 2
 		aminochain.Nitrogen = 1
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-84.9·10−6"
 		break
 	case "ATT":
@@ -2510,6 +2520,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 13
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "ATC":
 		aminochain.Symbol = "I"
@@ -2519,6 +2531,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 13
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "ATA":
 		aminochain.Symbol = "M"
@@ -2529,7 +2543,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 11
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 2
-		aminochain.Sulpur = 1
+		aminochain.Sulphur = 1
+		aminochain.Magnetic = "0.00"
 		break
 	case "ATG":
 		aminochain.Symbol = "M"
@@ -2540,7 +2555,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 11
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 2
-		aminochain.Sulpur = 1
+		aminochain.Sulphur = 1
+		aminochain.Magnetic = "0.00"
 		break
 	case "GTT":
 		aminochain.Symbol = "V"
@@ -2551,6 +2567,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 11
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-74.3·10−6"
 		break
 	case "GTC":
@@ -2562,6 +2579,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 11
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-74.3·10−6"
 		break
 	case "GTA":
@@ -2573,6 +2591,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 11
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-74.3·10−6"
 		break
 	case "GTG":
@@ -2584,6 +2603,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 11
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-74.3·10−6"
 		break
 	case "TCT":
@@ -2595,6 +2615,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 7
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 3
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "TCC":
 		aminochain.Symbol = "S"
@@ -2605,6 +2627,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 7
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 3
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "TCA":
 		aminochain.Symbol = "S"
@@ -2615,6 +2639,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 7
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 3
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "TCG":
 		aminochain.Symbol = "S"
@@ -2625,6 +2651,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 7
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 3
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "CCT":
 		aminochain.Symbol = "P"
@@ -2635,6 +2663,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 9
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "CCC":
 		aminochain.Symbol = "P"
@@ -2645,6 +2675,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 9
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "CCA":
 		aminochain.Symbol = "P"
@@ -2655,6 +2687,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 9
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "CCG":
 		aminochain.Symbol = "P"
@@ -2665,6 +2699,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 9
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "ACT":
 		aminochain.Symbol = "T"
@@ -2675,6 +2711,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 9
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 3
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "ACC":
 		aminochain.Symbol = "T"
@@ -2685,6 +2723,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 9
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 3
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "ACA":
 		aminochain.Symbol = "T"
@@ -2695,6 +2735,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 9
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 3
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "ACG":
 		aminochain.Symbol = "T"
@@ -2705,6 +2747,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 9
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 3
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "GCT":
 		aminochain.Symbol = "A"
@@ -2715,6 +2759,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 7
 		aminochain.Oxygen = 2
 		aminochain.Nitrogen = 1
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-50.5·10−6"
 		break
 	case "GCC":
@@ -2726,6 +2771,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 7
 		aminochain.Oxygen = 2
 		aminochain.Nitrogen = 1
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-50.5·10−6"
 		break
 	case "GCA":
@@ -2737,6 +2783,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 7
 		aminochain.Oxygen = 2
 		aminochain.Nitrogen = 1
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-50.5·10−6"
 		break
 	case "GCG":
@@ -2748,11 +2795,14 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 7
 		aminochain.Oxygen = 2
 		aminochain.Nitrogen = 1
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-50.5·10−6"
 		break
 	case "TAT":
 		aminochain.Symbol = "Y"
 		aminochain.Mass = "181.191"
+		aminochain.Acidity_a = "0.00"
+		aminochain.Acidity_b = "0.00"
 		aminochain.Carbon = 9
 		aminochain.Hydrogen = 11
 		aminochain.Nitrogen = 1
@@ -2762,33 +2812,62 @@ func GetAmino(s string, i, j int) Aminochain {
 	case "TAC":
 		aminochain.Symbol = "Y"
 		aminochain.Mass = "181.191"
+		aminochain.Acidity_a = "0.00"
+		aminochain.Acidity_b = "0.00"
 		aminochain.Carbon = 9
 		aminochain.Hydrogen = 11
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 3
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-105.3·10−6"
 		break
 	case "TAA":
 		aminochain.Symbol = "!"
+		aminochain.Mass = "undefined"
+		aminochain.Acidity_a = "undefined"
+		aminochain.Acidity_b = "undefined"
+		aminochain.Carbon = 0
+		aminochain.Hydrogen = 0
+		aminochain.Nitrogen = 0
+		aminochain.Oxygen = 0
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "TAG":
 		aminochain.Symbol = "!*"
+		aminochain.Mass = "undefined"
+		aminochain.Acidity_a = "undefined"
+		aminochain.Acidity_b = "undefined"
+		aminochain.Carbon = 0
+		aminochain.Hydrogen = 0
+		aminochain.Nitrogen = 0
+		aminochain.Oxygen = 0
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "CAT":
 		aminochain.Symbol = "H"
 		aminochain.Mass = "155.157"
+		aminochain.Acidity_a = "0.00"
+		aminochain.Acidity_b = "0.00"
 		aminochain.Carbon = 6
 		aminochain.Hydrogen = 9
 		aminochain.Nitrogen = 3
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "CAC":
 		aminochain.Symbol = "H"
 		aminochain.Mass = "155.157"
+		aminochain.Acidity_a = "0.00"
+		aminochain.Acidity_b = "0.00"
 		aminochain.Carbon = 6
 		aminochain.Hydrogen = 9
 		aminochain.Nitrogen = 3
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "CAA":
 		aminochain.Symbol = "Q"
@@ -2799,6 +2878,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 10
 		aminochain.Oxygen = 3
 		aminochain.Nitrogen = 2
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "CAG":
 		aminochain.Symbol = "Q"
@@ -2809,6 +2890,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 10
 		aminochain.Oxygen = 3
 		aminochain.Nitrogen = 2
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "AAT":
 		aminochain.Symbol = "N"
@@ -2819,6 +2902,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 8
 		aminochain.Oxygen = 3
 		aminochain.Nitrogen = 2
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-69.5·10−6"
 		break
 	case "AAC":
@@ -2830,23 +2914,32 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 8
 		aminochain.Oxygen = 3
 		aminochain.Nitrogen = 2
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-69.5·10−6"
 		break
 	case "AAA":
 		aminochain.Symbol = "K"
 		aminochain.Mass = "146.190"
+		aminochain.Acidity_a = "0.00"
+		aminochain.Acidity_b = "0.00"
 		aminochain.Carbon = 6
 		aminochain.Hydrogen = 14
 		aminochain.Nitrogen = 2
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "AAG":
 		aminochain.Symbol = "K"
 		aminochain.Mass = "146.190"
+		aminochain.Acidity_a = "0.00"
+		aminochain.Acidity_b = "0.00"
 		aminochain.Carbon = 6
 		aminochain.Hydrogen = 14
 		aminochain.Nitrogen = 2
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "GAT":
 		aminochain.Symbol = "D"
@@ -2857,6 +2950,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 7
 		aminochain.Oxygen = 4
 		aminochain.Nitrogen = 1
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-64.2·10−6"
 		break
 	case "GAC":
@@ -2868,6 +2962,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 7
 		aminochain.Oxygen = 4
 		aminochain.Nitrogen = 1
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-64.2·10−6"
 		break
 	case "GAA":
@@ -2879,6 +2974,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 9
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 4
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "−78.5·10−6"
 		break
 	case "GAG":
@@ -2890,31 +2986,56 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 9
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 4
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "−78.5·10−6"
 		break
 	case "TGT":
 		aminochain.Symbol = "C"
 		aminochain.Mass = "121.15"
+		aminochain.Acidity_a = "0.00"
+		aminochain.Acidity_b = "0.00"
 		aminochain.Carbon = 3
 		aminochain.Hydrogen = 7
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 2
-		aminochain.Sulpur = 1
+		aminochain.Sulphur = 1
+		aminochain.Magnetic = "0.00"
 		break
 	case "TGC":
 		aminochain.Symbol = "C"
 		aminochain.Mass = "121.15"
+		aminochain.Acidity_a = "0.00"
+		aminochain.Acidity_b = "0.00"
 		aminochain.Carbon = 3
 		aminochain.Hydrogen = 7
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 2
-		aminochain.Sulpur = 1
+		aminochain.Sulphur = 1
+		aminochain.Magnetic = "0.00"
 		break
 	case "TGA":
 		aminochain.Symbol = "!**"
+		aminochain.Mass = "undefined"
+		aminochain.Acidity_a = "undefined"
+		aminochain.Acidity_b = "undefined"
+		aminochain.Carbon = 0
+		aminochain.Hydrogen = 0
+		aminochain.Nitrogen = 0
+		aminochain.Oxygen = 0
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "undefined"
 		break
 	case "TGG":
 		aminochain.Symbol = "!**"
+		aminochain.Mass = "undefined"
+		aminochain.Acidity_a = "undefined"
+		aminochain.Acidity_b = "undefined"
+		aminochain.Carbon = 0
+		aminochain.Hydrogen = 0
+		aminochain.Nitrogen = 0
+		aminochain.Oxygen = 0
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "undefined"
 		break
 	case "CGT":
 		aminochain.Symbol = "R"
@@ -2925,6 +3046,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 14
 		aminochain.Nitrogen = 4
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "CGC":
 		aminochain.Symbol = "R"
@@ -2935,6 +3058,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 14
 		aminochain.Nitrogen = 4
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "CGA":
 		aminochain.Symbol = "R"
@@ -2945,6 +3070,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 14
 		aminochain.Nitrogen = 4
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "CGG":
 		aminochain.Symbol = "R"
@@ -2955,6 +3082,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 14
 		aminochain.Nitrogen = 4
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "AGT":
 		aminochain.Symbol = "S"
@@ -2965,6 +3094,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 7
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 3
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "AGC":
 		aminochain.Symbol = "S"
@@ -2975,6 +3106,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 7
 		aminochain.Nitrogen = 1
 		aminochain.Oxygen = 3
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "AGA":
 		aminochain.Symbol = "R"
@@ -2985,6 +3118,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 14
 		aminochain.Nitrogen = 4
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "AGG":
 		aminochain.Symbol = "R"
@@ -2995,6 +3130,8 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 14
 		aminochain.Nitrogen = 4
 		aminochain.Oxygen = 2
+		aminochain.Sulphur = 0
+		aminochain.Magnetic = "0.00"
 		break
 	case "GGT":
 		aminochain.Symbol = "G"
@@ -3005,6 +3142,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 5
 		aminochain.Oxygen = 2
 		aminochain.Nitrogen = 1
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-40.3·10−6"
 		break
 	case "GGC":
@@ -3016,6 +3154,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 5
 		aminochain.Oxygen = 2
 		aminochain.Nitrogen = 1
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-40.3·10−6"
 		break
 	case "GGA":
@@ -3027,6 +3166,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 5
 		aminochain.Oxygen = 2
 		aminochain.Nitrogen = 1
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-40.3·10−6"
 		break
 	case "GGG":
@@ -3038,6 +3178,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		aminochain.Hydrogen = 5
 		aminochain.Oxygen = 2
 		aminochain.Nitrogen = 1
+		aminochain.Sulphur = 0
 		aminochain.Magnetic = "-40.3·10−6"
 		break
 	default:

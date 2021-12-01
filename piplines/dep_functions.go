@@ -370,80 +370,26 @@ func Location(str string) Point {
 
 // genome function return  maromolecules props .
 //  this function written in fp style . In a single line of code dozen of functions depend on one another
-func Genome(m map[string]map[string]proteins.Aminochain, key string) *binary.Micromolecule {
+func Genome_Extract(m map[string]map[string]proteins.Aminochain, n map[string]string, key string, k int) *binary.Micromolecule {
 
 	molecules := binary.Micromolecule{}
 
-	// apply map filter to read map value
-	it := reflect.ValueOf(m).MapRange()
-
-	// check iterator hold values
-	for it.Next() {
-		// molecule symbols
-		molecules.Symbol = it.Value().MapIndex(it.Value().MapKeys()[0]).FieldByName("Symbol").String()
-
-		// molecule mass
-		mass, err := strconv.ParseFloat(it.Value().MapIndex(it.Value().MapKeys()[0]).FieldByName("Mass").String(), 64)
-		if err != nil {
-			log.Printf("Error parsing mass: %v", err.Error())
-			return &binary.Micromolecule{}
-		}
-		molecules.Mass = mass
-
-		// molecule carbon
-		crbn, err := strconv.ParseInt(it.Value().MapIndex(it.Value().MapKeys()[0]).FieldByName("Carbon").String(), 10, 64)
-		if err != nil {
-			log.Printf("Error parsing : %v", err.Error())
-			return &binary.Micromolecule{}
-		}
-		molecules.Composition.C = int64(crbn)
-
-		// molecule sulphur
-		sul, err := strconv.ParseInt(it.Value().MapIndex(it.Value().MapKeys()[0]).FieldByName("Sulpur").String(), 10, 64)
-		if err != nil {
-			log.Printf("Error parsing : %v", err.Error())
-			return &binary.Micromolecule{}
-		}
-		molecules.Composition.S = sul
-
-		// molecule hydrogen
-		hydro, err := strconv.ParseInt(it.Value().MapIndex(it.Value().MapKeys()[0]).FieldByName("Hydrogen").String(), 10, 64)
-		if err != nil {
-			log.Printf("Error parsing : %v", err.Error())
-			return &binary.Micromolecule{}
-		}
-		molecules.Composition.H = hydro
-
-		// molecule nitrogen
-		nitro, err := strconv.ParseInt(it.Value().MapIndex(it.Value().MapKeys()[0]).FieldByName("Nitrogen").String(), 10, 64)
-		if err != nil {
-			log.Printf("Error parsing: %v", err.Error())
-			return &binary.Micromolecule{}
-		}
-		molecules.Composition.N = nitro
-
-		// molecule oxygen
-		oxy, err := strconv.ParseInt(it.Value().MapIndex(it.Value().MapKeys()[0]).FieldByName("Oxygen").String(), 10, 64)
-		if err != nil {
-			log.Printf("Error parsing: %v", err.Error())
-			return &binary.Micromolecule{}
-		}
-		molecules.Composition.O = oxy
-
-		// molecule acidicty
-		molecules.Molecule.A = it.Value().MapIndex(it.Value().MapKeys()[0]).FieldByName("Acidity_a").String()
-		molecules.Molecule.B = it.Value().MapIndex(it.Value().MapKeys()[0]).FieldByName("Acidity_b").String()
-
-		// molecule magnetic impact
-		molecules.Molecule.Magnetic_Field = it.Value().MapIndex(it.Value().MapKeys()[0]).FieldByName("Magnetic").String()
+	iterate := reflect.ValueOf(m[n[key]]).MapRange()
+	for iterate.Next() {
+		log.Println("iterator:", iterate.Value())
+		log.Println("key:", iterate.Value().FieldByName("Symbol"))
+		//molecules.Symbol = iterate.Value().MapIndex(iterate.Value().MapKeys()[0]).String()
+		// mass := iterate.Value().MapIndex(iterate.Value().MapKeys()[k]).FieldByName("Mass").String()
+		//log.Println("values:", molecules.Symbol)
 	}
+
 	return &molecules
 }
 
 func UpdateProfileInfo(member *users.Visitors) bool {
 	err := cloud.UpdateUserDetails(GetDBClientRef(), *member)
 	if err != nil {
-		log.Fatal(" Bash Processing Error ", err.Error())
+		log.Printf(" Bash Processing Error %v", err.Error())
 		return false
 	}
 	return true
