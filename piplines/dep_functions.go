@@ -373,17 +373,68 @@ func Location(str string) Point {
 func Genome_Extract(m map[string]map[string]proteins.Aminochain, n map[string]string, key string, k int) *binary.Micromolecule {
 
 	molecules := binary.Micromolecule{}
+	var molecules_traits_a string = ""
+	var molecules_traits_b string = ""
+	var molecule_magnetic string = ""
 
 	iterate := reflect.ValueOf(m[n[key]]).MapRange()
 	for iterate.Next() {
 		log.Println("iterator:", iterate.Value())
-		log.Println("key:", iterate.Value().FieldByName("Symbol"))
-		//molecules.Symbol = iterate.Value().MapIndex(iterate.Value().MapKeys()[0]).String()
-		// mass := iterate.Value().MapIndex(iterate.Value().MapKeys()[k]).FieldByName("Mass").String()
-		//log.Println("values:", molecules.Symbol)
+
+		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") {
+			molecules.Symbol = iterate.Value().FieldByName("Symbol").String()
+		}
+
+		if !strings.Contains(iterate.Value().FieldByName("Mass").String(), "undefined") && !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
+			mass, err := strconv.ParseFloat(iterate.Value().FieldByName("Mass").String(), 64)
+			if err != nil {
+				log.Println("Error:", errors.New("data parsed failed"))
+				return &binary.Micromolecule{}
+			}
+			molecules.Mass = mass
+		} else {
+			log.Println("mass values:", strings.Contains(iterate.Value().FieldByName("Symbol").String(), " "), strings.Contains(iterate.Value().FieldByName("Mass").String(), "undefined"), special_proteins(iterate.Value().FieldByName("Symbol").String()))
+		}
+
+		if !strings.Contains(iterate.Value().FieldByName("Acidity_a").String(), "undefined") && !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
+			molecules_traits_a = iterate.Value().FieldByName("Acidity_a").String()
+			log.Println("pka:", molecules_traits_a)
+		} else {
+			log.Println("pka values:", strings.Contains(iterate.Value().FieldByName("Symbol").String(), " "), strings.Contains(iterate.Value().FieldByName("Acidity_a").String(), "undefined"), special_proteins(iterate.Value().FieldByName("Symbol").String()))
+		}
+
+		if !strings.Contains(iterate.Value().FieldByName("Acidity_b").String(), "undefined") && !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
+			molecules_traits_b = iterate.Value().FieldByName("Acidity_b").String()
+			log.Println("pkb:", molecules_traits_b)
+		} else {
+			log.Println("pkb values:", strings.Contains(iterate.Value().FieldByName("Symbol").String(), " "), strings.Contains(iterate.Value().FieldByName("Acidity_b").String(), "undefined"), special_proteins(iterate.Value().FieldByName("Symbol").String()))
+		}
+
+		if !strings.Contains(iterate.Value().FieldByName("Magnetic").String(), "undefined") && !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
+			molecule_magnetic = iterate.Value().FieldByName("Magnetic").String()
+			log.Println("magnetic:", molecule_magnetic)
+		}
+
+		molecules.Molecule = &binary.Traits{A: molecules_traits_a, B: molecules_traits_b, Magnetic_Field: molecule_magnetic}
+
+		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
+			log.Println("carbon:", iterate.Value().FieldByName("Carbon"))
+		}
+
 	}
 
 	return &molecules
+}
+
+func special_proteins(str string) bool {
+	if strings.Contains(str, "!") {
+		return false
+	} else if strings.Contains(str, "!*") {
+		return false
+	} else if strings.Contains(str, "!**") {
+		return false
+	}
+	return true
 }
 
 func UpdateProfileInfo(member *users.Visitors) bool {
