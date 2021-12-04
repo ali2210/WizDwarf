@@ -12,7 +12,7 @@ import (
 
 type Aminochain struct {
 	Symbol    string
-	Mass      string
+	Mass      float64
 	Acidity_a string
 	Acidity_b string
 	Carbon    int64
@@ -238,143 +238,143 @@ func Class(s string, i, j int) string {
 
 //Potein chain molar mass
 
-func GetMolarMass(s string, i, j int) (string, string) {
+func GetMolarMass(s string, i, j int) (float64, string) {
 	switch s[i:j] {
 	case "TTT":
 		aminochain.Symbol = "F"
-		aminochain.Mass = "165.192"
+		aminochain.Mass = 165.192
 		break
 	case "TTC":
 		aminochain.Symbol = "F"
-		aminochain.Mass = "165.192"
+		aminochain.Mass = 165.192
 		break
 	case "TTA":
 		aminochain.Symbol = "L"
-		aminochain.Mass = "131.175"
+		aminochain.Mass = 131.175
 		break
 	case "TTG":
 		aminochain.Symbol = "L"
-		aminochain.Mass = "131.175"
+		aminochain.Mass = 131.175
 		break
 	case "CTT":
 		aminochain.Symbol = "L"
-		aminochain.Mass = "131.175"
+		aminochain.Mass = 131.175
 		break
 	case "CTC":
 		aminochain.Symbol = "L"
-		aminochain.Mass = "131.175"
+		aminochain.Mass = 131.175
 		break
 	case "CTA":
 		aminochain.Symbol = "L"
-		aminochain.Mass = "131.175"
+		aminochain.Mass = 131.175
 		break
 	case "CTG":
 		aminochain.Symbol = "L"
-		aminochain.Mass = "131.175"
+		aminochain.Mass = 131.175
 		break
 	case "ATT":
 		aminochain.Symbol = "I"
-		aminochain.Mass = "131.175"
+		aminochain.Mass = 131.175
 		break
 	case "ATC":
 		aminochain.Symbol = "I"
-		aminochain.Mass = "131.175"
+		aminochain.Mass = 131.175
 		break
 	case "ATA":
 		aminochain.Symbol = "M"
-		aminochain.Mass = "149.21"
+		aminochain.Mass = 149.21
 		break
 	case "ATG":
 		aminochain.Symbol = "M"
-		aminochain.Mass = "149.21"
+		aminochain.Mass = 149.21
 		break
 	case "GTT":
 		aminochain.Symbol = "V"
-		aminochain.Mass = "117.148"
+		aminochain.Mass = 117.148
 		break
 	case "GTC":
 		aminochain.Symbol = "V"
-		aminochain.Mass = "117.148"
+		aminochain.Mass = 117.148
 		break
 	case "GTA":
 		aminochain.Symbol = "V"
-		aminochain.Mass = "117.148"
+		aminochain.Mass = 117.148
 		break
 	case "GTG":
 		aminochain.Symbol = "V"
-		aminochain.Mass = "117.148"
+		aminochain.Mass = 117.148
 		break
 	case "TCT":
 		aminochain.Symbol = "S"
-		aminochain.Mass = "105.093"
+		aminochain.Mass = 105.093
 		break
 	case "TCC":
 		aminochain.Symbol = "S"
-		aminochain.Mass = "105.093"
+		aminochain.Mass = 105.093
 		break
 	case "TCA":
 		aminochain.Symbol = "S"
-		aminochain.Mass = "105.093"
+		aminochain.Mass = 105.093
 		break
 	case "TCG":
 		aminochain.Symbol = "S"
-		aminochain.Mass = "105.093"
+		aminochain.Mass = 105.093
 		break
 	case "CCT":
 		aminochain.Symbol = "P"
-		aminochain.Mass = "115.132"
+		aminochain.Mass = 115.132
 		break
 	case "CCC":
 		aminochain.Symbol = "P"
-		aminochain.Mass = "115.132"
+		aminochain.Mass = 115.132
 		break
 	case "CCA":
 		aminochain.Symbol = "P"
-		aminochain.Mass = "115.132"
+		aminochain.Mass = 115.132
 		break
 	case "CCG":
 		aminochain.Symbol = "P"
-		aminochain.Mass = "115.132"
+		aminochain.Mass = 115.132
 		break
 	case "ACT":
 		aminochain.Symbol = "T"
-		aminochain.Mass = "119.120"
+		aminochain.Mass = 119.120
 		break
 	case "ACC":
 		aminochain.Symbol = "T"
-		aminochain.Mass = "119.120"
+		aminochain.Mass = 119.120
 		break
 	case "ACA":
 		aminochain.Symbol = "T"
-		aminochain.Mass = "119.120"
+		aminochain.Mass = 119.120
 		break
 	case "ACG":
 		aminochain.Symbol = "T"
-		aminochain.Mass = "119.120"
+		aminochain.Mass = 119.120
 		break
 	case "GCT":
 		aminochain.Symbol = "A"
-		aminochain.Mass = "89.094"
+		aminochain.Mass = 89.094
 		break
 	case "GCC":
 		aminochain.Symbol = "A"
-		aminochain.Mass = "89.094"
+		aminochain.Mass = 89.094
 		break
 	case "GCA":
 		aminochain.Symbol = "A"
-		aminochain.Mass = "89.094"
+		aminochain.Mass = 89.094
 		break
 	case "GCG":
 		aminochain.Symbol = "A"
-		aminochain.Mass = "89.094"
+		aminochain.Mass = 89.094
 		break
 	case "TAT":
 		aminochain.Symbol = "Y"
-		aminochain.Mass = "181.191"
+		aminochain.Mass = 181.191
 		break
 	case "TAC":
 		aminochain.Symbol = "Y"
-		aminochain.Mass = "181.191"
+		aminochain.Mass = 181.191
 		break
 	case "TAA":
 		aminochain.Symbol = "!"
@@ -384,59 +384,59 @@ func GetMolarMass(s string, i, j int) (string, string) {
 		break
 	case "CAT":
 		aminochain.Symbol = "H"
-		aminochain.Mass = "155.157"
+		aminochain.Mass = 155.157
 		break
 	case "CAC":
 		aminochain.Symbol = "H"
-		aminochain.Mass = "155.157"
+		aminochain.Mass = 155.157
 		break
 	case "CAA":
 		aminochain.Symbol = "Q"
-		aminochain.Mass = "146.146"
+		aminochain.Mass = 146.146
 		break
 	case "CAG":
 		aminochain.Symbol = "Q"
-		aminochain.Mass = "146.146"
+		aminochain.Mass = 146.146
 		break
 	case "AAT":
 		aminochain.Symbol = "N"
-		aminochain.Mass = "132.119"
+		aminochain.Mass = 132.119
 		break
 	case "AAC":
 		aminochain.Symbol = "N"
-		aminochain.Mass = "132.119"
+		aminochain.Mass = 132.119
 		break
 	case "AAA":
 		aminochain.Symbol = "K"
-		aminochain.Mass = "146.190"
+		aminochain.Mass = 146.190
 		break
 	case "AAG":
 		aminochain.Symbol = "K"
-		aminochain.Mass = "146.190"
+		aminochain.Mass = 146.190
 		break
 	case "GAT":
 		aminochain.Symbol = "D"
-		aminochain.Mass = "133.103"
+		aminochain.Mass = 133.103
 		break
 	case "GAC":
 		aminochain.Symbol = "D"
-		aminochain.Mass = "133.103"
+		aminochain.Mass = 133.103
 		break
 	case "GAA":
 		aminochain.Symbol = "E"
-		aminochain.Mass = "147.130"
+		aminochain.Mass = 147.130
 		break
 	case "GAG":
 		aminochain.Symbol = "E"
-		aminochain.Mass = "147.130"
+		aminochain.Mass = 147.130
 		break
 	case "TGT":
 		aminochain.Symbol = "C"
-		aminochain.Mass = "121.15"
+		aminochain.Mass = 121.15
 		break
 	case "TGC":
 		aminochain.Symbol = "C"
-		aminochain.Mass = "121.15"
+		aminochain.Mass = 121.15
 		break
 	case "TGA":
 		aminochain.Symbol = "!**"
@@ -446,54 +446,52 @@ func GetMolarMass(s string, i, j int) (string, string) {
 		break
 	case "CGT":
 		aminochain.Symbol = "R"
-		aminochain.Mass = "174.204"
+		aminochain.Mass = 174.204
 		break
 	case "CGC":
 		aminochain.Symbol = "R"
-		aminochain.Mass = "174.204"
+		aminochain.Mass = 174.204
 		break
 	case "CGA":
 		aminochain.Symbol = "R"
-		aminochain.Mass = "174.204"
+		aminochain.Mass = 174.204
 		break
 	case "CGG":
 		aminochain.Symbol = "R"
-		aminochain.Mass = "174.204"
+		aminochain.Mass = 174.204
 		break
 	case "AGT":
 		aminochain.Symbol = "S"
-		aminochain.Mass = "105.093"
+		aminochain.Mass = 105.093
 		break
 	case "AGC":
 		aminochain.Symbol = "S"
-		aminochain.Mass = "105.093"
+		aminochain.Mass = 105.093
 		break
 	case "AGA":
 		aminochain.Symbol = "R"
-		aminochain.Mass = "174.204"
+		aminochain.Mass = 174.204
 		break
 	case "AGG":
 		aminochain.Symbol = "R"
-		aminochain.Mass = "174.204"
+		aminochain.Mass = 174.204
 		break
 	case "GGT":
 		aminochain.Symbol = "G"
-		aminochain.Mass = "75.067"
+		aminochain.Mass = 75.067
 		break
 	case "GGC":
 		aminochain.Symbol = "G"
-		aminochain.Mass = "75.067"
+		aminochain.Mass = 75.067
 		break
 	case "GGA":
 		aminochain.Symbol = "G"
-		aminochain.Mass = "75.067"
+		aminochain.Mass = 75.067
 		break
 	case "GGG":
 		aminochain.Symbol = "G"
-		aminochain.Mass = "75.067"
+		aminochain.Mass = 75.067
 		break
-	default:
-		return " ", " "
 	}
 	return aminochain.Mass, aminochain.Symbol
 }
@@ -2418,7 +2416,7 @@ func GetAmino(s string, i, j int) Aminochain {
 	switch s[i:j] {
 	case "TTT":
 		aminochain.Symbol = "F"
-		aminochain.Mass = "165.192"
+		aminochain.Mass = 165.192
 		aminochain.Acidity_a = "1.83"
 		aminochain.Acidity_b = "9.13"
 		aminochain.Carbon = 9
@@ -2430,7 +2428,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "TTC":
 		aminochain.Symbol = "F"
-		aminochain.Mass = "165.192"
+		aminochain.Mass = 165.192
 		aminochain.Acidity_a = "1.83"
 		aminochain.Acidity_b = "9.13"
 		aminochain.Carbon = 9
@@ -2442,7 +2440,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "TTA":
 		aminochain.Symbol = "L"
-		aminochain.Mass = "131.175"
+		aminochain.Mass = 131.175
 		aminochain.Acidity_a = "2.36"
 		aminochain.Acidity_b = "9.60"
 		aminochain.Carbon = 6
@@ -2454,7 +2452,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "TTG":
 		aminochain.Symbol = "L"
-		aminochain.Mass = "131.175"
+		aminochain.Mass = 131.175
 		aminochain.Acidity_a = "2.36"
 		aminochain.Acidity_b = "9.60"
 		aminochain.Carbon = 6
@@ -2466,7 +2464,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "CTT":
 		aminochain.Symbol = "L"
-		aminochain.Mass = "131.175"
+		aminochain.Mass = 131.175
 		aminochain.Acidity_a = "2.36"
 		aminochain.Acidity_b = "9.60"
 		aminochain.Carbon = 6
@@ -2478,7 +2476,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "CTC":
 		aminochain.Symbol = "L"
-		aminochain.Mass = "131.175"
+		aminochain.Mass = 131.175
 		aminochain.Acidity_a = "2.36"
 		aminochain.Acidity_b = "9.60"
 		aminochain.Carbon = 6
@@ -2490,7 +2488,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "CTA":
 		aminochain.Symbol = "L"
-		aminochain.Mass = "131.175"
+		aminochain.Mass = 131.175
 		aminochain.Acidity_a = "2.36"
 		aminochain.Acidity_b = "9.60"
 		aminochain.Carbon = 6
@@ -2502,7 +2500,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "CTG":
 		aminochain.Symbol = "L"
-		aminochain.Mass = "131.175"
+		aminochain.Mass = 131.175
 		aminochain.Acidity_a = "2.36"
 		aminochain.Acidity_b = "9.60"
 		aminochain.Carbon = 6
@@ -2514,7 +2512,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "ATT":
 		aminochain.Symbol = "I"
-		aminochain.Mass = "131.175"
+		aminochain.Mass = 131.175
 		aminochain.Magnetic = "−84.9·10−6"
 		aminochain.Carbon = 6
 		aminochain.Hydrogen = 13
@@ -2525,7 +2523,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "ATC":
 		aminochain.Symbol = "I"
-		aminochain.Mass = "131.175"
+		aminochain.Mass = 131.175
 		aminochain.Magnetic = "−84.9·10−6"
 		aminochain.Carbon = 6
 		aminochain.Hydrogen = 13
@@ -2536,7 +2534,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "ATA":
 		aminochain.Symbol = "M"
-		aminochain.Mass = "149.21"
+		aminochain.Mass = 149.21
 		aminochain.Acidity_a = "2.28"
 		aminochain.Acidity_b = "9.21"
 		aminochain.Carbon = 5
@@ -2548,7 +2546,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "ATG":
 		aminochain.Symbol = "M"
-		aminochain.Mass = "149.21"
+		aminochain.Mass = 149.21
 		aminochain.Acidity_a = "2.28"
 		aminochain.Acidity_b = "9.21"
 		aminochain.Carbon = 5
@@ -2560,7 +2558,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "GTT":
 		aminochain.Symbol = "V"
-		aminochain.Mass = "117.148"
+		aminochain.Mass = 117.148
 		aminochain.Acidity_a = "2.32"
 		aminochain.Acidity_b = "9.62"
 		aminochain.Carbon = 5
@@ -2572,7 +2570,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "GTC":
 		aminochain.Symbol = "V"
-		aminochain.Mass = "117.148"
+		aminochain.Mass = 117.148
 		aminochain.Acidity_a = "2.32"
 		aminochain.Acidity_b = "9.62"
 		aminochain.Carbon = 5
@@ -2584,7 +2582,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "GTA":
 		aminochain.Symbol = "V"
-		aminochain.Mass = "117.148"
+		aminochain.Mass = 117.148
 		aminochain.Acidity_a = "2.32"
 		aminochain.Acidity_b = "9.62"
 		aminochain.Carbon = 5
@@ -2596,7 +2594,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "GTG":
 		aminochain.Symbol = "V"
-		aminochain.Mass = "117.148"
+		aminochain.Mass = 117.148
 		aminochain.Acidity_a = "2.32"
 		aminochain.Acidity_b = "9.62"
 		aminochain.Carbon = 5
@@ -2608,7 +2606,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "TCT":
 		aminochain.Symbol = "S"
-		aminochain.Mass = "105.093"
+		aminochain.Mass = 105.093
 		aminochain.Acidity_a = "2.21"
 		aminochain.Acidity_b = "9.15"
 		aminochain.Carbon = 3
@@ -2620,7 +2618,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "TCC":
 		aminochain.Symbol = "S"
-		aminochain.Mass = "105.093"
+		aminochain.Mass = 105.093
 		aminochain.Acidity_a = "2.21"
 		aminochain.Acidity_b = "9.15"
 		aminochain.Carbon = 3
@@ -2632,7 +2630,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "TCA":
 		aminochain.Symbol = "S"
-		aminochain.Mass = "105.093"
+		aminochain.Mass = 105.093
 		aminochain.Acidity_a = "2.21"
 		aminochain.Acidity_b = "9.15"
 		aminochain.Carbon = 3
@@ -2644,7 +2642,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "TCG":
 		aminochain.Symbol = "S"
-		aminochain.Mass = "105.093"
+		aminochain.Mass = 105.093
 		aminochain.Acidity_a = "2.21"
 		aminochain.Acidity_b = "9.15"
 		aminochain.Carbon = 3
@@ -2656,7 +2654,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "CCT":
 		aminochain.Symbol = "P"
-		aminochain.Mass = "115.132"
+		aminochain.Mass = 115.132
 		aminochain.Acidity_a = "1.99"
 		aminochain.Acidity_b = "10.96"
 		aminochain.Carbon = 5
@@ -2668,7 +2666,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "CCC":
 		aminochain.Symbol = "P"
-		aminochain.Mass = "115.132"
+		aminochain.Mass = 115.132
 		aminochain.Acidity_a = "1.99"
 		aminochain.Acidity_b = "10.96"
 		aminochain.Carbon = 5
@@ -2680,7 +2678,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "CCA":
 		aminochain.Symbol = "P"
-		aminochain.Mass = "115.132"
+		aminochain.Mass = 115.132
 		aminochain.Acidity_a = "1.99"
 		aminochain.Acidity_b = "10.96"
 		aminochain.Carbon = 5
@@ -2692,7 +2690,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "CCG":
 		aminochain.Symbol = "P"
-		aminochain.Mass = "115.132"
+		aminochain.Mass = 115.132
 		aminochain.Acidity_a = "1.99"
 		aminochain.Acidity_b = "10.96"
 		aminochain.Carbon = 5
@@ -2704,7 +2702,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "ACT":
 		aminochain.Symbol = "T"
-		aminochain.Mass = "119.120"
+		aminochain.Mass = 119.120
 		aminochain.Acidity_a = "2.63"
 		aminochain.Acidity_b = "10.43"
 		aminochain.Carbon = 4
@@ -2716,7 +2714,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "ACC":
 		aminochain.Symbol = "T"
-		aminochain.Mass = "119.120"
+		aminochain.Mass = 119.120
 		aminochain.Acidity_a = "2.63"
 		aminochain.Acidity_b = "10.43"
 		aminochain.Carbon = 4
@@ -2728,7 +2726,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "ACA":
 		aminochain.Symbol = "T"
-		aminochain.Mass = "119.120"
+		aminochain.Mass = 119.120
 		aminochain.Acidity_a = "2.63"
 		aminochain.Acidity_b = "10.43"
 		aminochain.Carbon = 4
@@ -2740,7 +2738,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "ACG":
 		aminochain.Symbol = "T"
-		aminochain.Mass = "119.120"
+		aminochain.Mass = 119.120
 		aminochain.Acidity_a = "2.63"
 		aminochain.Acidity_b = "10.43"
 		aminochain.Carbon = 4
@@ -2752,7 +2750,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "GCT":
 		aminochain.Symbol = "A"
-		aminochain.Mass = "89.094"
+		aminochain.Mass = 89.094
 		aminochain.Acidity_a = "2.34"
 		aminochain.Acidity_b = "9.87"
 		aminochain.Carbon = 3
@@ -2764,7 +2762,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "GCC":
 		aminochain.Symbol = "A"
-		aminochain.Mass = "89.094"
+		aminochain.Mass = 89.094
 		aminochain.Acidity_a = "2.34"
 		aminochain.Acidity_b = "9.87"
 		aminochain.Carbon = 3
@@ -2776,7 +2774,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "GCA":
 		aminochain.Symbol = "A"
-		aminochain.Mass = "89.094"
+		aminochain.Mass = 89.094
 		aminochain.Acidity_a = "2.34"
 		aminochain.Acidity_b = "9.87"
 		aminochain.Carbon = 3
@@ -2788,7 +2786,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "GCG":
 		aminochain.Symbol = "A"
-		aminochain.Mass = "89.094"
+		aminochain.Mass = 89.094
 		aminochain.Acidity_a = "2.34"
 		aminochain.Acidity_b = "9.87"
 		aminochain.Carbon = 3
@@ -2800,7 +2798,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "TAT":
 		aminochain.Symbol = "Y"
-		aminochain.Mass = "181.191"
+		aminochain.Mass = 181.191
 		aminochain.Acidity_a = "0.00"
 		aminochain.Acidity_b = "0.00"
 		aminochain.Carbon = 9
@@ -2811,7 +2809,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "TAC":
 		aminochain.Symbol = "Y"
-		aminochain.Mass = "181.191"
+		aminochain.Mass = 181.191
 		aminochain.Acidity_a = "0.00"
 		aminochain.Acidity_b = "0.00"
 		aminochain.Carbon = 9
@@ -2823,7 +2821,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "TAA":
 		aminochain.Symbol = "!"
-		aminochain.Mass = "undefined"
+		aminochain.Mass = 0.00
 		aminochain.Acidity_a = "undefined"
 		aminochain.Acidity_b = "undefined"
 		aminochain.Carbon = 0
@@ -2835,7 +2833,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "TAG":
 		aminochain.Symbol = "!*"
-		aminochain.Mass = "undefined"
+		aminochain.Mass = 0.00
 		aminochain.Acidity_a = "undefined"
 		aminochain.Acidity_b = "undefined"
 		aminochain.Carbon = 0
@@ -2847,7 +2845,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "CAT":
 		aminochain.Symbol = "H"
-		aminochain.Mass = "155.157"
+		aminochain.Mass = 155.157
 		aminochain.Acidity_a = "0.00"
 		aminochain.Acidity_b = "0.00"
 		aminochain.Carbon = 6
@@ -2859,7 +2857,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "CAC":
 		aminochain.Symbol = "H"
-		aminochain.Mass = "155.157"
+		aminochain.Mass = 155.157
 		aminochain.Acidity_a = "0.00"
 		aminochain.Acidity_b = "0.00"
 		aminochain.Carbon = 6
@@ -2871,7 +2869,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "CAA":
 		aminochain.Symbol = "Q"
-		aminochain.Mass = "146.146"
+		aminochain.Mass = 146.146
 		aminochain.Acidity_a = "2.2"
 		aminochain.Acidity_b = "9.1"
 		aminochain.Carbon = 5
@@ -2883,7 +2881,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "CAG":
 		aminochain.Symbol = "Q"
-		aminochain.Mass = "146.146"
+		aminochain.Mass = 146.146
 		aminochain.Acidity_a = "2.2"
 		aminochain.Acidity_b = "9.1"
 		aminochain.Carbon = 5
@@ -2895,7 +2893,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "AAT":
 		aminochain.Symbol = "N"
-		aminochain.Mass = "132.119"
+		aminochain.Mass = 132.119
 		aminochain.Acidity_a = "2.1"
 		aminochain.Acidity_b = "8.80"
 		aminochain.Carbon = 4
@@ -2907,7 +2905,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "AAC":
 		aminochain.Symbol = "N"
-		aminochain.Mass = "132.119"
+		aminochain.Mass = 132.119
 		aminochain.Acidity_a = "2.1"
 		aminochain.Acidity_b = "8.80"
 		aminochain.Carbon = 4
@@ -2919,7 +2917,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "AAA":
 		aminochain.Symbol = "K"
-		aminochain.Mass = "146.190"
+		aminochain.Mass = 146.190
 		aminochain.Acidity_a = "0.00"
 		aminochain.Acidity_b = "0.00"
 		aminochain.Carbon = 6
@@ -2931,7 +2929,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "AAG":
 		aminochain.Symbol = "K"
-		aminochain.Mass = "146.190"
+		aminochain.Mass = 146.190
 		aminochain.Acidity_a = "0.00"
 		aminochain.Acidity_b = "0.00"
 		aminochain.Carbon = 6
@@ -2943,7 +2941,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "GAT":
 		aminochain.Symbol = "D"
-		aminochain.Mass = "133.103"
+		aminochain.Mass = 133.103
 		aminochain.Acidity_a = "1.99"
 		aminochain.Acidity_b = "9.90" + "*/sc" + "3.90" //*/sc means side-chain pk_A
 		aminochain.Carbon = 4
@@ -2955,7 +2953,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "GAC":
 		aminochain.Symbol = "D"
-		aminochain.Mass = "133.103"
+		aminochain.Mass = 133.103
 		aminochain.Acidity_a = "1.99"
 		aminochain.Acidity_b = "9.90" + "*/sc" + "3.90" //*/sc means side-chain pk_A
 		aminochain.Carbon = 4
@@ -2967,7 +2965,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "GAA":
 		aminochain.Symbol = "E"
-		aminochain.Mass = "147.130"
+		aminochain.Mass = 147.130
 		aminochain.Acidity_a = "2.10"
 		aminochain.Acidity_b = "9.47" + "*/sc" + "4.07"
 		aminochain.Carbon = 5
@@ -2979,7 +2977,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "GAG":
 		aminochain.Symbol = "E"
-		aminochain.Mass = "147.130"
+		aminochain.Mass = 147.130
 		aminochain.Acidity_a = "2.10"
 		aminochain.Acidity_b = "9.47" + "*/sc" + "4.07"
 		aminochain.Carbon = 5
@@ -2991,7 +2989,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "TGT":
 		aminochain.Symbol = "C"
-		aminochain.Mass = "121.15"
+		aminochain.Mass = 121.15
 		aminochain.Acidity_a = "0.00"
 		aminochain.Acidity_b = "0.00"
 		aminochain.Carbon = 3
@@ -3003,7 +3001,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "TGC":
 		aminochain.Symbol = "C"
-		aminochain.Mass = "121.15"
+		aminochain.Mass = 121.15
 		aminochain.Acidity_a = "0.00"
 		aminochain.Acidity_b = "0.00"
 		aminochain.Carbon = 3
@@ -3015,7 +3013,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "TGA":
 		aminochain.Symbol = "!**"
-		aminochain.Mass = "undefined"
+		aminochain.Mass = 0.00
 		aminochain.Acidity_a = "undefined"
 		aminochain.Acidity_b = "undefined"
 		aminochain.Carbon = 0
@@ -3027,7 +3025,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "TGG":
 		aminochain.Symbol = "!**"
-		aminochain.Mass = "undefined"
+		aminochain.Mass = 0.00
 		aminochain.Acidity_a = "undefined"
 		aminochain.Acidity_b = "undefined"
 		aminochain.Carbon = 0
@@ -3039,7 +3037,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "CGT":
 		aminochain.Symbol = "R"
-		aminochain.Mass = "174.204"
+		aminochain.Mass = 174.204
 		aminochain.Acidity_a = "2.18"
 		aminochain.Acidity_b = "9.09" + "*/gc" + "13.2" //gc meeans guanidino
 		aminochain.Carbon = 6
@@ -3051,7 +3049,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "CGC":
 		aminochain.Symbol = "R"
-		aminochain.Mass = "174.204"
+		aminochain.Mass = 174.204
 		aminochain.Acidity_a = "2.18"
 		aminochain.Acidity_b = "9.09" + "*/gc" + "13.2" //gc meeans guanidino
 		aminochain.Carbon = 6
@@ -3063,7 +3061,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "CGA":
 		aminochain.Symbol = "R"
-		aminochain.Mass = "174.204"
+		aminochain.Mass = 174.204
 		aminochain.Acidity_a = "2.18"
 		aminochain.Acidity_b = "9.09" + "*/gc" + "13.2" //gc meeans guanidino
 		aminochain.Carbon = 6
@@ -3075,7 +3073,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "CGG":
 		aminochain.Symbol = "R"
-		aminochain.Mass = "174.204"
+		aminochain.Mass = 174.204
 		aminochain.Acidity_a = "2.18"
 		aminochain.Acidity_b = "9.09" + "*/gc" + "13.2" //gc meeans guanidino
 		aminochain.Carbon = 6
@@ -3087,7 +3085,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "AGT":
 		aminochain.Symbol = "S"
-		aminochain.Mass = "105.093"
+		aminochain.Mass = 105.093
 		aminochain.Acidity_a = "2.21"
 		aminochain.Acidity_b = "9.15"
 		aminochain.Carbon = 3
@@ -3099,7 +3097,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "AGC":
 		aminochain.Symbol = "S"
-		aminochain.Mass = "105.093"
+		aminochain.Mass = 105.093
 		aminochain.Acidity_a = "2.21"
 		aminochain.Acidity_b = "9.15"
 		aminochain.Carbon = 3
@@ -3111,7 +3109,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "AGA":
 		aminochain.Symbol = "R"
-		aminochain.Mass = "174.204"
+		aminochain.Mass = 174.204
 		aminochain.Acidity_a = "2.18"
 		aminochain.Acidity_b = "9.09" + "*/gc" + "13.2" //gc meeans guanidino
 		aminochain.Carbon = 6
@@ -3123,7 +3121,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "AGG":
 		aminochain.Symbol = "R"
-		aminochain.Mass = "174.204"
+		aminochain.Mass = 174.204
 		aminochain.Acidity_a = "2.18"
 		aminochain.Acidity_b = "9.09" + "*/gc" + "13.2" //gc meeans guanidino
 		aminochain.Carbon = 6
@@ -3135,7 +3133,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "GGT":
 		aminochain.Symbol = "G"
-		aminochain.Mass = "75.067"
+		aminochain.Mass = 75.067
 		aminochain.Acidity_a = "2.34"
 		aminochain.Acidity_b = "9.6"
 		aminochain.Carbon = 2
@@ -3147,7 +3145,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "GGC":
 		aminochain.Symbol = "G"
-		aminochain.Mass = "75.067"
+		aminochain.Mass = 75.067
 		aminochain.Acidity_a = "2.34"
 		aminochain.Acidity_b = "9.6"
 		aminochain.Carbon = 2
@@ -3159,7 +3157,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "GGA":
 		aminochain.Symbol = "G"
-		aminochain.Mass = "75.067"
+		aminochain.Mass = 75.067
 		aminochain.Acidity_a = "2.34"
 		aminochain.Acidity_b = "9.6"
 		aminochain.Carbon = 2
@@ -3171,7 +3169,7 @@ func GetAmino(s string, i, j int) Aminochain {
 		break
 	case "GGG":
 		aminochain.Symbol = "G"
-		aminochain.Mass = "75.067"
+		aminochain.Mass = 75.067
 		aminochain.Acidity_a = "2.34"
 		aminochain.Acidity_b = "9.6"
 		aminochain.Carbon = 2

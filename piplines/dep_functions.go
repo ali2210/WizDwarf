@@ -370,12 +370,17 @@ func Location(str string) Point {
 
 // genome function return  maromolecules props .
 //  this function written in fp style . In a single line of code dozen of functions depend on one another
-func Genome_Extract(m map[string]map[string]proteins.Aminochain, n map[string]string, key string, k int) *binary.Micromolecule {
+func Genome_Extract(m map[string]map[string]proteins.Aminochain, n map[string]string, key string) *binary.Micromolecule {
 
 	molecules := binary.Micromolecule{}
 	var molecules_traits_a string = ""
 	var molecules_traits_b string = ""
 	var molecule_magnetic string = ""
+	var carbonAtom int64 = 0
+	var hydroAtom int64 = 0
+	var sulphurAtom int64 = 0
+	var oxygenAtom int64 = 0
+	var nitrogenAtom int64 = 0
 
 	iterate := reflect.ValueOf(m[n[key]]).MapRange()
 	for iterate.Next() {
@@ -385,44 +390,46 @@ func Genome_Extract(m map[string]map[string]proteins.Aminochain, n map[string]st
 			molecules.Symbol = iterate.Value().FieldByName("Symbol").String()
 		}
 
-		if !strings.Contains(iterate.Value().FieldByName("Mass").String(), "undefined") && !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
-			mass, err := strconv.ParseFloat(iterate.Value().FieldByName("Mass").String(), 64)
-			if err != nil {
-				log.Println("Error:", errors.New("data parsed failed"))
-				return &binary.Micromolecule{}
-			}
-			molecules.Mass = mass
-		} else {
-			log.Println("mass values:", strings.Contains(iterate.Value().FieldByName("Symbol").String(), " "), strings.Contains(iterate.Value().FieldByName("Mass").String(), "undefined"), special_proteins(iterate.Value().FieldByName("Symbol").String()))
+		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
+			molecules.Mass = iterate.Value().FieldByName("Mass").Float()
 		}
 
 		if !strings.Contains(iterate.Value().FieldByName("Acidity_a").String(), "undefined") && !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
 			molecules_traits_a = iterate.Value().FieldByName("Acidity_a").String()
-			log.Println("pka:", molecules_traits_a)
-		} else {
-			log.Println("pka values:", strings.Contains(iterate.Value().FieldByName("Symbol").String(), " "), strings.Contains(iterate.Value().FieldByName("Acidity_a").String(), "undefined"), special_proteins(iterate.Value().FieldByName("Symbol").String()))
 		}
 
 		if !strings.Contains(iterate.Value().FieldByName("Acidity_b").String(), "undefined") && !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
 			molecules_traits_b = iterate.Value().FieldByName("Acidity_b").String()
-			log.Println("pkb:", molecules_traits_b)
-		} else {
-			log.Println("pkb values:", strings.Contains(iterate.Value().FieldByName("Symbol").String(), " "), strings.Contains(iterate.Value().FieldByName("Acidity_b").String(), "undefined"), special_proteins(iterate.Value().FieldByName("Symbol").String()))
 		}
 
 		if !strings.Contains(iterate.Value().FieldByName("Magnetic").String(), "undefined") && !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
 			molecule_magnetic = iterate.Value().FieldByName("Magnetic").String()
-			log.Println("magnetic:", molecule_magnetic)
 		}
-
-		molecules.Molecule = &binary.Traits{A: molecules_traits_a, B: molecules_traits_b, Magnetic_Field: molecule_magnetic}
 
 		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
-			log.Println("carbon:", iterate.Value().FieldByName("Carbon"))
+			carbonAtom = iterate.Value().FieldByName("Carbon").Int()
 		}
 
-	}
+		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
+			hydroAtom = iterate.Value().FieldByName("Hydrogen").Int()
+		}
 
+		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
+			nitrogenAtom = iterate.Value().FieldByName("Nitrogen").Int()
+		}
+
+		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
+			sulphurAtom = iterate.Value().FieldByName("Sulphur").Int()
+		}
+
+		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
+			oxygenAtom = iterate.Value().FieldByName("Oxygen").Int()
+		}
+
+		molecules.Composition = &binary.Element{C: carbonAtom, H: hydroAtom, N: nitrogenAtom, O: oxygenAtom, S: sulphurAtom}
+		molecules.Molecule = &binary.Traits{A: molecules_traits_a, B: molecules_traits_b, Magnetic_Field: molecule_magnetic}
+		//log.Println("molecules:", molecules)
+	}
 	return &molecules
 }
 

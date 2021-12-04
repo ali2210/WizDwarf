@@ -30,6 +30,7 @@ import (
 	genetics "github.com/ali2210/wizdwarf/other/genetic"
 	genome "github.com/ali2210/wizdwarf/other/genetic/binary"
 	"github.com/ali2210/wizdwarf/other/proteins"
+	"github.com/ali2210/wizdwarf/other/proteins/binary"
 	"github.com/ali2210/wizdwarf/piplines"
 
 	// Shop "github.com/ali2210/wizdwarf/other/cart"
@@ -1023,16 +1024,18 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 
 		iterate := reflect.ValueOf(listProteinsName).MapRange()
 
-		// chains := binary.Micromolecule_List{}
-		// chains.Peplide = make([]*binary.Micromolecule, len(life.Genes))
+		chains := binary.Micromolecule_List{}
+		chains.Peplide = make([]*binary.Micromolecule, len(life.Genes))
 
 		for iterate.Next() {
 
 			ribbon[listProteinsName[iterate.Value().String()]] = listProteins
-			log.Println("values:", ribbon[listProteinsName["AAA"]])
-			log.Println("data values:", piplines.Genome_Extract(ribbon, listProteinsName, iterate.Value().String(), 0))
+			extraction := piplines.Genome_Extract(ribbon, listProteinsName, iterate.Value().String())
+			log.Println("proteins info:", extraction)
+			chains.Peplide = append(chains.Peplide, extraction)
 		}
 
+		log.Println("Chains:", chains)
 		temp.Execute(w, visualizeReport)
 	}
 
