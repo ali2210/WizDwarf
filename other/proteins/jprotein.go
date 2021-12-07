@@ -25,9 +25,9 @@ type AbstractBiomolecules interface {
 type Biomolecules struct{}
 
 // variables which are initailize at time of calling
-var client *firestore.Client
+var Client *firestore.Client
 var Size_Bond int
-var ckk string
+var Ckk string
 
 // service name
 const hottopic = "peptideBond_Topic"
@@ -48,7 +48,7 @@ func (biomolecules *Biomolecules) AddPDB(context context.Context, list *binary.M
 	if i != Size_Bond {
 
 		// check whether data exists
-		query := client.Collection(hottopic).Where("ckk", "==", ckk).Documents(context)
+		query := Client.Collection(hottopic).Where("ckk", "==", Ckk).Documents(context)
 		for {
 			// iterator point to the document if exist
 			doc, err := query.Next()
@@ -63,7 +63,7 @@ func (biomolecules *Biomolecules) AddPDB(context context.Context, list *binary.M
 			if reflect.DeepEqual(check, empty_rec) {
 
 				// create new document in the database
-				doc, result, err := client.Collection(hottopic).Add(context, map[string]interface{}{
+				doc, result, err := Client.Collection(hottopic).Add(context, map[string]interface{}{
 					"symbol":    list.Peplide[i].Symbol,
 					"mass":      list.Peplide[i].Mass,
 					"carbon":    list.Peplide[i].Composition.C,
@@ -74,10 +74,10 @@ func (biomolecules *Biomolecules) AddPDB(context context.Context, list *binary.M
 					"acid_a":    list.Peplide[i].Molecule.A,
 					"acid_b":    list.Peplide[i].Molecule.B,
 					"magnetism": list.Peplide[i].Molecule.Magnetic_Field,
-					"ckk":       ckk,
+					"ckk":       Ckk,
 				})
 				if err != nil {
-					log.Printf(" Error add your record in the topic:%v", err.Error())
+					log.Printf(" Error add your record in the topic :%v ", err.Error())
 					return &binary.MolecularState{State: false, Error: error_desc}
 				}
 				log.Println("Document created", doc, "Result:", result)
@@ -98,10 +98,10 @@ func (biomolecules *Biomolecules) AddPDB(context context.Context, list *binary.M
 				"acid_a":    list.Peplide[i].Molecule.A,
 				"acid_b":    list.Peplide[i].Molecule.B,
 				"magnetism": list.Peplide[i].Molecule.Magnetic_Field,
-				"ckk":       ckk,
+				"ckk":       Ckk,
 			})
 			if err != nil {
-				log.Printf(" Error document updating molecule%v", err.Error())
+				log.Printf(" Error document updating molecule%v ", err.Error())
 				return &binary.MolecularState{State: false, Error: error_desc}
 			}
 			log.Println("document updates:", docUpdate, "epoch:", i)
@@ -113,7 +113,7 @@ func (biomolecules *Biomolecules) AddPDB(context context.Context, list *binary.M
 func (biomolecules *Biomolecules) DisplayPDB(context context.Context, req *binary.Request) *binary.Micromolecule_List {
 
 	var list binary.Micromolecule_List
-	query := client.Collection(hottopic).Where("ckk", "==", ckk).Documents(context)
+	query := Client.Collection(hottopic).Where("ckk", "==", Ckk).Documents(context)
 	for {
 		doc, err := query.Next()
 		if err != iterator.Done {
@@ -122,12 +122,12 @@ func (biomolecules *Biomolecules) DisplayPDB(context context.Context, req *binar
 		result := doc.Data()
 		marshaldata, err := json.Marshal(result)
 		if err != nil {
-			log.Printf(" Error marshaling result%v", err.Error())
+			log.Printf(" Error marshaling result%v ", err.Error())
 			return &binary.Micromolecule_List{}
 		}
 		err = json.Unmarshal(marshaldata, &list)
 		if err != nil {
-			log.Printf(" Error unmarshaling list%v", err.Error())
+			log.Printf(" Error unmarshaling list%v ", err.Error())
 			return &binary.Micromolecule_List{}
 		}
 	}

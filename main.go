@@ -1006,8 +1006,10 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		life.Pkk = genetics.Pkk
 
 		// create trust object ... trust verified whom that content .
-		if ok, err := piplines.TrustRequest(life.Pkk, address_wallet, signed_msg); !ok && err != nil {
+		ok, err, key := piplines.TrustRequest(life.Pkk, address_wallet, signed_msg)
+		if !ok && err != nil {
 			log.Printf(" cryptographic trust failed %v:", err.Error())
+			return
 		}
 
 		// genetics database
@@ -1022,20 +1024,35 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		listProteins := piplines.AminoChains(life.Genes)
 		ribbon := make(map[string]map[string]proteins.Aminochain)
 
+		// read map values
 		iterate := reflect.ValueOf(listProteinsName).MapRange()
 
+		// create new marcomolecules which hold molecule state for a while
 		chains := binary.Micromolecule_List{}
 		chains.Peplide = make([]*binary.Micromolecule, len(life.Genes))
 
+		// iterate over map values
 		for iterate.Next() {
 
+			// store map value in other map
 			ribbon[listProteinsName[iterate.Value().String()]] = listProteins
+
+			// get polypeptide information in structured data
 			extraction := piplines.Genome_Extract(ribbon, listProteinsName, iterate.Value().String())
-			log.Println("proteins info:", extraction)
-			chains.Peplide = append(chains.Peplide, extraction)
+
+			// if the information return void space or empty field then discard , otherwise hold that state
+			if !piplines.Chain_valid(extraction) {
+
+				chains.Peplide = append(chains.Peplide, extraction)
+				// log.Println("chain:", extraction, extraction.Symbol)
+			}
 		}
 
-		log.Println("Chains:", chains)
+		if !reflect.DeepEqual(key.Public(), " ") && len(key.Seed()) == 32 {
+			proteins.Ckk = fmt.Sprintf("%x", key.Public())
+			log.Println("you have key:", proteins.Ckk)
+		}
+
 		temp.Execute(w, visualizeReport)
 	}
 

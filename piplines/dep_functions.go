@@ -8,6 +8,7 @@ import (
 	"bytes"
 	contxt "context"
 	"crypto/ecdsa"
+	"crypto/ed25519"
 	"crypto/elliptic"
 	"crypto/rand"
 	"crypto/sha256"
@@ -372,6 +373,7 @@ func Location(str string) Point {
 //  this function written in fp style . In a single line of code dozen of functions depend on one another
 func Genome_Extract(m map[string]map[string]proteins.Aminochain, n map[string]string, key string) *binary.Micromolecule {
 
+	// *************** declaration of props *************
 	molecules := binary.Micromolecule{}
 	var molecules_traits_a string = ""
 	var molecules_traits_b string = ""
@@ -381,19 +383,24 @@ func Genome_Extract(m map[string]map[string]proteins.Aminochain, n map[string]st
 	var sulphurAtom int64 = 0
 	var oxygenAtom int64 = 0
 	var nitrogenAtom int64 = 0
+	// ***************************************************
 
+	// iterate over map of map with specialized keys
 	iterate := reflect.ValueOf(m[n[key]]).MapRange()
 	for iterate.Next() {
-		log.Println("iterator:", iterate.Value())
+		//log.Println("iterator:", iterate.Value())
 
+		// hold molecules symbol
 		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") {
 			molecules.Symbol = iterate.Value().FieldByName("Symbol").String()
 		}
 
+		// hold molecules mass
 		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
 			molecules.Mass = iterate.Value().FieldByName("Mass").Float()
 		}
 
+		// hold molecules acidity level
 		if !strings.Contains(iterate.Value().FieldByName("Acidity_a").String(), "undefined") && !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
 			molecules_traits_a = iterate.Value().FieldByName("Acidity_a").String()
 		}
@@ -402,26 +409,32 @@ func Genome_Extract(m map[string]map[string]proteins.Aminochain, n map[string]st
 			molecules_traits_b = iterate.Value().FieldByName("Acidity_b").String()
 		}
 
+		// hold molecule magnetic fields level
 		if !strings.Contains(iterate.Value().FieldByName("Magnetic").String(), "undefined") && !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
 			molecule_magnetic = iterate.Value().FieldByName("Magnetic").String()
 		}
 
+		// hold molecules carbon state
 		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
 			carbonAtom = iterate.Value().FieldByName("Carbon").Int()
 		}
 
+		// hold molecules hydrogen state
 		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
 			hydroAtom = iterate.Value().FieldByName("Hydrogen").Int()
 		}
 
+		// hold molecules nitrogen state
 		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
 			nitrogenAtom = iterate.Value().FieldByName("Nitrogen").Int()
 		}
 
+		// hold molecules sulphur state
 		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
 			sulphurAtom = iterate.Value().FieldByName("Sulphur").Int()
 		}
 
+		// hold molecule oxygen state
 		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
 			oxygenAtom = iterate.Value().FieldByName("Oxygen").Int()
 		}
@@ -431,6 +444,12 @@ func Genome_Extract(m map[string]map[string]proteins.Aminochain, n map[string]st
 		//log.Println("molecules:", molecules)
 	}
 	return &molecules
+}
+
+func Chain_valid(molecule *binary.Micromolecule) bool {
+	
+	// check protocol message traits and elements both have data or just bozo work. 
+	return reflect.DeepEqual(molecule.GetMolecule(), " ") && reflect.DeepEqual(molecule.GetComposition(), " ")
 }
 
 func special_proteins(str string) bool {
@@ -453,7 +472,7 @@ func UpdateProfileInfo(member *users.Visitors) bool {
 	return true
 }
 
-func TrustRequest(message, verifier, request string) (bool, error) {
+func TrustRequest(message, verifier, request string) (bool, error, *ed25519.PrivateKey) {
 
 	// contain check whether request have pass-key ,
 	// address contain address of trusted user wallet
@@ -468,23 +487,23 @@ func TrustRequest(message, verifier, request string) (bool, error) {
 		bind_message, err := crypto.ASED25519(message, AleKey)
 		if err != nil {
 			log.Printf(" Error message binding fail %v", err.Error())
-			return false, err
+			return false, err, &AleKey
 		}
 
 		// key signature verified
 		if verified := cryptos.AVED25519(message, bind_message, AleKey, BbKey); verified {
-			return verified, nil
+			return verified, nil, &AleKey
 		}
 
 		// key verification failed.
-		return false, errors.New("verification failed")
+		return false, errors.New("verification failed"), &AleKey
 	} else {
 
 		// generate keys
-		BbKey, _, err := cryptos.BKED25519()
+		BbKey, AleKey, err := cryptos.BKED25519()
 		if err != nil {
 			log.Printf(" Error generating key: %v", err.Error())
-			return false, err
+			return false, err, &AleKey
 		}
 
 		// bind message with your public key
@@ -492,11 +511,11 @@ func TrustRequest(message, verifier, request string) (bool, error) {
 
 		// bind message verification against key
 		if verify := cryptos.BVED25519(BbKey, bindMessage, []byte(message)); verify {
-			return verify, nil
+			return verify, nil, &AleKey
 		}
 
 		// bind message verification failed
-		return false, errors.New("error verification error")
+		return false, errors.New("error verification error"), &AleKey
 	}
 }
 
