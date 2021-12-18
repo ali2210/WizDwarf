@@ -1,6 +1,4 @@
-# Content
-
-      [![Wizdwarfs](https://img.shields.io/badge/Wizdwarfs-designed%20by-green)](https://wizdwarfs-365b9.web.app/)
+[![Wizdwarfs](https://img.shields.io/badge/Wizdwarfs-designed%20by-green)](https://wizdwarfs-365b9.web.app/)
 
  
  # About Project
@@ -49,27 +47,19 @@
 
 ## Links:
  
-      1. [Docker](https://hub.docker.com/repository/docker/ali2210/wiz-dwarfs)
+      1. [Docker](https://hub.docker.com/repository/docker/ali2210/wiz-dwarfs)   
+[![Docker](https://github.com/ali2210/WizDwarf/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/ali2210/WizDwarf/actions/workflows/docker-publish.yml)
 
-         ### Badges   
-         
-            [![Docker](https://github.com/ali2210/WizDwarf/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/ali2210/WizDwarf/actions/workflows/docker-publish.yml)
+[![Go](https://github.com/ali2210/WizDwarf/actions/workflows/go.yml/badge.svg)](https://github.com/ali2210/WizDwarf/actions/workflows/go.yml)         
 
-         ### Language 
-            
-            [![Go](https://github.com/ali2210/WizDwarf/actions/workflows/go.yml/badge.svg)](https://github.com/ali2210/WizDwarf/actions/workflows/go.yml)
+[![OSSAR](https://github.com/ali2210/WizDwarf/actions/workflows/ossar-analysis.yml/badge.svg)](https://github.com/ali2210/WizDwarf/actions/workflows/ossar-analysis.yml)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/4fa84cf43d69415aa8cb51cad7b73a4f)](https://www.codacy.com/gh/ali2210/WizDwarf/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ali2210/WizDwarf&amp;utm_campaign=Badge_Grade)
 
-         ### Actions
-         
-            [![OSSAR](https://github.com/ali2210/WizDwarf/actions/workflows/ossar-analysis.yml/badge.svg)](https://github.com/ali2210/WizDwarf/actions/workflows/ossar-analysis.yml)
+<a href="https://codeclimate.com/github/ali2210/WizDwarf/test_coverage"><img src="https://api.codeclimate.com/v1/badges/b1a8e6c05b3ec74b3074/test_coverage" /></a>
 
-            [![Codacy Badge](https://app.codacy.com/project/badge/Grade/4fa84cf43d69415aa8cb51cad7b73a4f)](https://www.codacy.com/gh/ali2210/WizDwarf/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ali2210/WizDwarf&amp;utm_campaign=Badge_Grade)
+<a href="https://codeclimate.com/github/ali2210/WizDwarf/maintainability"><img src="https://api.codeclimate.com/v1/badges/b1a8e6c05b3ec74b3074/maintainability" /></a>
 
-            <a href="https://codeclimate.com/github/ali2210/WizDwarf/test_coverage"><img src="https://api.codeclimate.com/v1/badges/b1a8e6c05b3ec74b3074/test_coverage" /></a>
-
-            <a href="https://codeclimate.com/github/ali2210/WizDwarf/maintainability"><img src="https://api.codeclimate.com/v1/badges/b1a8e6c05b3ec74b3074/maintainability" /></a>
-
-            [![CircleCI](https://circleci.com/gh/ali2210/WizDwarf/tree/master.svg?style=svg)](https://circleci.com/gh/ali2210/WizDwarf/tree/master)
+[![CircleCI](https://circleci.com/gh/ali2210/WizDwarf/tree/master.svg?style=svg)](https://circleci.com/gh/ali2210/WizDwarf/tree/master)
 
       2. [Contributor](https://github.com/ali2210/WizDwarf/wiki)
 
@@ -80,20 +70,17 @@
       <!-- <a href='https://ko-fi.com/T6T25CVYQ' target='_blank'> -->
         <!-- <img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi4.png?v=3' border='0'      alt='Buy Me a Coffee at ko-fi.com' /></a>-->
 
-      ### Kofi
             
-            [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/T6T25CVYQ)
+ [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/T6T25CVYQ)
    
       ### Opencollective 
    
-            <object type="image/svg+xml" data="https://opencollective.com/wizdwarfs/tiers/love-and-support.svg?avatarHeight=36&width=600">
+ <object type="image/svg+xml" data="https://opencollective.com/wizdwarfs/tiers/love-and-support.svg?avatarHeight=36&width=600">
       
    
-            <a href="https://opencollective.com/wizdwarfs/contribute/love-and-support-29623"> <img src="https://opencollective.com/wizdwarfs/tiers/love-and-support.svg?avatarHeight=36"/>
-            </a>
+ <a href="https://opencollective.com/wizdwarfs/contribute/love-and-support-29623"> <img src="https://opencollective.com/wizdwarfs/tiers/love-and-support.svg?avatarHeight=36"/></a>
    
-             <a href='https://opencollective.com/wizdwarfs/contribute/love-and-support-29623' target='blank'><img alt="open collective badge" src="https://opencollective.com/wizdwarfs/tiers/love-and-support/badge.svg?label=Love%26Support&color=brightgreen" />
-             </a>
+ <a href='https://opencollective.com/wizdwarfs/contribute/love-and-support-29623' target='blank'><img alt="open collective badge" src="https://opencollective.com/wizdwarfs/tiers/love-and-support/badge.svg?label=Love%26Support&color=brightgreen" /></a>
    
 ## Discusion
      
@@ -101,22 +88,14 @@
             
             https://app.slack.com/client/T02AQ62EHHR/C02ALUWQ4LV/93ae0ff54319133c57487e772c8e0f1045690945
 
-     ### Element
-            <object><a href='https://app.element.io/#/room/!XdCqKpBpqSSgLLcNPI:matrix.org' target='blank'>Element</a></object>
-
-     ### Reddit
-         
-            [![reddit](reddit.com/wizdwarfs)]
-
-     ### Gitter
+ <object><a href='https://app.element.io/#/room/!XdCqKpBpqSSgLLcNPI:matrix.org' target='blank'>Element</a></object>
             
-            [![Gitter](https://badges.gitter.im/wizdwarfs/futuristic-tech-dev.svg)](https://gitter.im/wizdwarfs/futuristic-tech-dev?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+ <a href='https://www.reddit.com/r/wizdwarfs/a'> wizdwarfs_reddit
 
-## Digitalization
-      
-      ### Git
+ [![Gitter](https://badges.gitter.im/wizdwarfs/futuristic-tech-dev.svg)](https://gitter.im/wizdwarfs/futuristic-tech-dev?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-            [![GitNFT](https://img.shields.io/badge/%F0%9F%94%AE-Open%20in%20GitNFT-darkviolet?style=social)](https://gitnft.quine.sh/app/commits/list/repo/WizDwarf)
+
+ [![GitNFT](https://img.shields.io/badge/%F0%9F%94%AE-Open%20in%20GitNFT-darkviolet?style=social)](https://gitnft.quine.sh/app/commits/list/repo/WizDwarf)
 
  
 ## BitTransaction
