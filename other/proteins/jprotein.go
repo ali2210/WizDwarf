@@ -8,7 +8,6 @@ import (
 	"context"
 	"encoding/json"
 	"log"
-	"reflect"
 
 	"cloud.google.com/go/firestore"
 	"github.com/ali2210/wizdwarf/other/proteins/binary"
@@ -40,74 +39,16 @@ func NewPeptideTopic() AbstractBiomolecules { return &Biomolecules{} }
 
 func (biomolecules *Biomolecules) AddPDB(context context.Context, list *binary.Micromolecule_List) *binary.MolecularState {
 
-	i := 0
-	var empty_rec map[string]interface{}
-	var docx *firestore.DocumentSnapshot
-
-	// initial i declare at 0 which means i have enough lifespan
-	if i != Size_Bond {
-
-		// check whether data exists
-		query := Client.Collection(hottopic).Where("ckk", "==", Ckk).Documents(context)
-		for {
-			// iterator point to the document if exist
-			doc, err := query.Next()
-			if err != iterator.Done {
-				break
-			}
-
-			check := doc.Data()
-			docx = doc
-
-			// if the iterator point empty document
-			if reflect.DeepEqual(check, empty_rec) {
-
-				// create new document in the database
-				doc, result, err := Client.Collection(hottopic).Add(context, map[string]interface{}{
-					"symbol":    list.Peplide[i].Symbol,
-					"mass":      list.Peplide[i].Mass,
-					"carbon":    list.Peplide[i].Composition.C,
-					"hydrogen":  list.Peplide[i].Composition.H,
-					"sulfpur":   list.Peplide[i].Composition.S,
-					"nitrogen":  list.Peplide[i].Composition.N,
-					"oxygen":    list.Peplide[i].Composition.O,
-					"acid_a":    list.Peplide[i].Molecule.A,
-					"acid_b":    list.Peplide[i].Molecule.B,
-					"magnetism": list.Peplide[i].Molecule.Magnetic_Field,
-					"ckk":       Ckk,
-				})
-				if err != nil {
-					log.Printf(" Error add your record in the topic :%v ", err.Error())
-					return &binary.MolecularState{State: false, Error: error_desc}
-				}
-				log.Println("Document created", doc, "Result:", result)
-			}
-
-			// update offset of a list
-			i = i + 1
-
-			// document already have created and have some data; list still have data
-			docUpdate, err := docx.Ref.Set(context, map[string]interface{}{
-				"symbol":    list.Peplide[i].Symbol,
-				"mass":      list.Peplide[i].Mass,
-				"carbon":    list.Peplide[i].Composition.C,
-				"hydrogen":  list.Peplide[i].Composition.H,
-				"sulfpur":   list.Peplide[i].Composition.S,
-				"nitrogen":  list.Peplide[i].Composition.N,
-				"oxygen":    list.Peplide[i].Composition.O,
-				"acid_a":    list.Peplide[i].Molecule.A,
-				"acid_b":    list.Peplide[i].Molecule.B,
-				"magnetism": list.Peplide[i].Molecule.Magnetic_Field,
-				"ckk":       Ckk,
-			})
-			if err != nil {
-				log.Printf(" Error document updating molecule%v ", err.Error())
-				return &binary.MolecularState{State: false, Error: error_desc}
-			}
-			log.Println("document updates:", docUpdate, "epoch:", i)
-		}
+	doc, write, err := Client.Collection(hottopic).Add(context, map[string]interface{}{
+		"chains": list.Peplide,
+		"ckk":    Ckk,
+	})
+	if err != nil {
+		log.Println("Data generation error:", err.Error())
+		return &binary.MolecularState{State: false, Error: error_desc}
 	}
-	return &binary.MolecularState{State: true, Error: ""}
+	log.Println("document created successfully", doc, write)
+	return &binary.MolecularState{State: true, Error: " "}
 }
 
 func (biomolecules *Biomolecules) DisplayPDB(context context.Context, req *binary.Request) *binary.Micromolecule_List {

@@ -446,10 +446,23 @@ func Genome_Extract(m map[string]map[string]proteins.Aminochain, n map[string]st
 	return &molecules
 }
 
-func Chain_valid(molecule *binary.Micromolecule) bool {
-	
-	// check protocol message traits and elements both have data or just bozo work. 
-	return reflect.DeepEqual(molecule.GetMolecule(), " ") && reflect.DeepEqual(molecule.GetComposition(), " ")
+func GetMoleculesState(molecule *binary.Micromolecule) bool {
+
+	// check protocol message traits .
+	return !strings.Contains(molecule.Symbol, " ") && !reflect.DeepEqual(molecule.Molecule, &binary.Traits{})
+}
+
+func GetCompositionState(molecule *binary.Micromolecule) bool {
+
+	return !strings.Contains(molecule.Symbol, " ") && !reflect.DeepEqual(molecule.Composition, &binary.Element{})
+}
+
+func Molecular(p *binary.Micromolecule) bool {
+
+	if reflect.ValueOf(p).Elem().Kind() == reflect.Struct {
+		return !reflect.DeepEqual(reflect.ValueOf(p).Elem(), &binary.Micromolecule{})
+	}
+	return false
 }
 
 func special_proteins(str string) bool {
