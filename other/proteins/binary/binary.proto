@@ -48,6 +48,7 @@ message Micromolecule {
     double Mass = 2;
     Element Composition = 3;
     Traits Molecule = 4;
+    int64 Abundance = 5;
 }
 
 // micromolecules exist in the form of long chain and have common features

@@ -388,7 +388,6 @@ func Genome_Extract(m map[string]map[string]proteins.Aminochain, n map[string]st
 	// iterate over map of map with specialized keys
 	iterate := reflect.ValueOf(m[n[key]]).MapRange()
 	for iterate.Next() {
-		//log.Println("iterator:", iterate.Value())
 
 		// hold molecules symbol
 		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") {
@@ -454,18 +453,23 @@ func GetMoleculesState(molecule *binary.Micromolecule) bool {
 
 func GetCompositionState(molecule *binary.Micromolecule) bool {
 
+	// check element traits
 	return !strings.Contains(molecule.Symbol, " ") && !reflect.DeepEqual(molecule.Composition, &binary.Element{})
 }
 
 func Molecular(p *binary.Micromolecule) bool {
 
+	// check whether chain have proper type and the molecule have some information
 	if reflect.ValueOf(p).Elem().Kind() == reflect.Struct {
 		return !reflect.DeepEqual(reflect.ValueOf(p).Elem(), &binary.Micromolecule{})
 	}
+	// return false state
 	return false
 }
 
 func special_proteins(str string) bool {
+
+	// check molecule codon have start or end codon
 	if strings.Contains(str, "!") {
 		return false
 	} else if strings.Contains(str, "!*") {
@@ -473,7 +477,27 @@ func special_proteins(str string) bool {
 	} else if strings.Contains(str, "!**") {
 		return false
 	}
+	// this is a valid codon
 	return true
+}
+
+func Abundance(molecule *binary.Micromolecule, str string, iter int) (int, string) {
+
+	count := 0
+	// if molecule have valid type and that molecule exist more than once
+	if reflect.ValueOf(molecule).Elem().Kind() == reflect.Struct {
+		count = strings.Count(str, reflect.ValueOf(molecule).Elem().Field(3).String())
+	}
+	return count, reflect.ValueOf(molecule).Elem().Field(3).String()
+}
+
+func Make_string(chain *binary.Micromolecule) string {
+
+	symbols := ""
+	if reflect.ValueOf(chain).Elem().Kind() == reflect.Struct {
+		symbols = reflect.ValueOf(chain).Elem().Field(3).String()
+	}
+	return symbols
 }
 
 func UpdateProfileInfo(member *users.Visitors) bool {

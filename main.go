@@ -29,6 +29,7 @@ import (
 	cryptos "github.com/ali2210/wizdwarf/other/crypto"
 	genetics "github.com/ali2210/wizdwarf/other/genetic"
 	genome "github.com/ali2210/wizdwarf/other/genetic/binary"
+	"github.com/ali2210/wizdwarf/other/jsonpb"
 	"github.com/ali2210/wizdwarf/other/proteins"
 	"github.com/ali2210/wizdwarf/other/proteins/binary"
 	"github.com/ali2210/wizdwarf/piplines"
@@ -1028,9 +1029,9 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		iterate := reflect.ValueOf(listProteinsName).MapRange()
 
 		// create new marcomolecules which hold molecule state for a while
-		chains := binary.Micromolecule_List{}
+		// chains := binary.Micromolecule_List{}
 		aminochain := make([]*binary.Micromolecule, len(life.Genes))
-		chains.Peplide = make([]*binary.Micromolecule, len(life.Genes))
+		//chains.Peplide = make([]*binary.Micromolecule, len(life.Genes))
 
 		// iterate over map values
 		for iterate.Next() {
@@ -1054,17 +1055,49 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 			log.Println("you have key:", proteins.Ckk)
 		}
 
-		for i := range aminochain {
-			if piplines.Molecular(aminochain[i]) {
-				chains.Peplide = append(chains.Peplide, aminochain...)
-				// proteins.Client = piplines.Firestore_Reference()
-				// state := proteins.NewPeptideTopic().AddPDB(context.Background(), &binary.Micromolecule_List{Peplide: chains.Peplide})
+		s := make([]string, len(life.Genes))
+		for j := range aminochain {
+			if str := piplines.Make_string(aminochain[j]); str != " " {
+				s = append(s, str)
 			}
 		}
 
-		//proteins.Size_Bond = len(life.Genes)
+		var sumof int64 = 0
 
-		//log.Println("Molecule state: ", state)
+		// iterate_over aminochain
+		for i := range aminochain {
+
+			// check aminochain have execpted type
+			if piplines.Molecular(aminochain[i]) && s[i] != " " {
+				abundance, syms := piplines.Abundance(aminochain[i], strings.Join(s, ""), i)
+				if reflect.DeepEqual(aminochain[i].Symbol, syms) {
+					aminochain[i].Abundance = int64(abundance)
+				}
+
+				// marshal the protos message
+				data, err := jsonpb.ProtojsonMarshaler(aminochain[i])
+				if err != nil {
+					log.Printf(" Error marshalling protos %v", err.Error())
+					return
+				}
+
+				// unmarhal the protos message
+				err = jsonpb.ProtojsonUnmarshaler(data, aminochain[i])
+				if err != nil {
+					log.Printf(" Error Un-marshalling protos %v", err.Error())
+					return
+				}
+
+				sumof = sumof + proteins.Total_chain_filter(aminochain[i].Abundance)
+			}
+		}
+
+		log.Println("Total:", sumof, proteins.AminoHealth(sumof))
+
+		//proteins.Size_Bond = len(life.Genes)
+		// proteins.Client = piplines.Firestore_Reference()
+		// state := proteins.NewPeptideTopic().AddPDB(context.Background(), &binary.Micromolecule_List{Peplide: chains.Peplide})
+		// log.Println("Molecule state: ", state)
 
 		temp.Execute(w, visualizeReport)
 	}

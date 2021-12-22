@@ -4,12 +4,6 @@ convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
 
 package proteins
 
-import (
-	"log"
-	"strconv"
-	"strings"
-)
-
 type Aminochain struct {
 	Symbol    string
 	Mass      float64
@@ -25,7 +19,7 @@ type Aminochain struct {
 
 // aminochain object
 var aminochain Aminochain = Aminochain{}
-var total = 0
+var total int64 = 0
 
 // ******************************* "0" indicate universal constant which means zero level ****************
 // Magnetic = "0" no presence
@@ -3185,24 +3179,11 @@ func GetAmino(s string, i, j int) Aminochain {
 	return aminochain
 }
 
-// total mass of a proteins chain, data exist in string format. For Add up we used default library
-func TotalChainMass(str string) int {
-	num, err := strconv.Atoi(str)
-	if err != nil {
-		log.Printf(" Error converting :%v", err.Error())
-		return 0
-	}
-	total += num
-	return total
+func Total_chain_filter(radi int64) int64 {
+
+	return total + radi
 }
 
-// UQProteins perform two operations. First is to calculate unique protein in a chain. (int)
-// Second calculate proteins chain length
-func UQProteins(s string, i, j int) int {
-	return strings.Count(s, s[i:j])
-}
-
-// An healthy person have 20 amino acid in their celluar bodies but we used 21 because there is some research 21 amino acid also exist
-func HealthCheck(a int) float64 {
-	return float64(a) / 21
+func AminoHealth(sum int64) float64 {
+	return float64(sum / 21)
 }
