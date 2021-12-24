@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/big"
 	rdn "math/rand"
 	"net/http"
 	"os"
@@ -44,6 +45,7 @@ import (
 	"github.com/biogo/biogo/alphabet"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/goombaio/namegenerator"
 	"github.com/gorilla/sessions"
 	linkcid "github.com/ipfs/go-cid"
 	multihash "github.com/multiformats/go-multihash"
@@ -498,6 +500,25 @@ func Make_string(chain *binary.Micromolecule) string {
 		symbols = reflect.ValueOf(chain).Elem().Field(3).String()
 	}
 	return symbols
+}
+
+func Generator() string {
+	left, err := rand.Int(rand.Reader, big.NewInt(55))
+	if err != nil {
+		log.Printf(" Error name generator failed to generate good name for left side%v", err.Error())
+		return ""
+	}
+
+	right, err := rand.Int(rand.Reader, big.NewInt(52))
+	if err != nil {
+		log.Printf(" Error name generator failed to generate good name for right side%v", err.Error())
+		return ""
+	}
+
+	leftGen := namegenerator.NewNameGenerator(left.Int64())
+	rightGen := namegenerator.NewNameGenerator(right.Int64())
+
+	return rightGen.Generate() + "_" + leftGen.Generate()
 }
 
 func UpdateProfileInfo(member *users.Visitors) bool {
@@ -1196,12 +1217,3 @@ func Open_SFiles(path, filename string) (*os.File, error) {
 	defer file.Close()
 	return file, nil
 }
-
-// func getValuesFromStruct(parser interface{}) []reflect.Value {
-// 	y := reflect.ValueOf(parser).Elem()
-// 	x := make([]reflect.Value, y.NumField())
-// 	for i := 0; i < y.NumField(); i++ {
-// 		x[i] = y.Field(i)
-// 	}
-// 	return x
-// }

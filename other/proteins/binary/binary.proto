@@ -5,7 +5,7 @@ convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
 
 syntax = "proto3";
 
-package proteins;
+package binary;
 
 option go_package = "github.com/ali2210/wizdwarf/other/proteins/binary";
 

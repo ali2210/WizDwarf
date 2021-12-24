@@ -30,6 +30,7 @@ import (
 	genetics "github.com/ali2210/wizdwarf/other/genetic"
 	genome "github.com/ali2210/wizdwarf/other/genetic/binary"
 	"github.com/ali2210/wizdwarf/other/jsonpb"
+	"github.com/ali2210/wizdwarf/other/jsonpb/jsonledit"
 	"github.com/ali2210/wizdwarf/other/proteins"
 	"github.com/ali2210/wizdwarf/other/proteins/binary"
 	"github.com/ali2210/wizdwarf/piplines"
@@ -1092,12 +1093,12 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		log.Println("Total:", sumof, proteins.AminoHealth(sumof))
+		jsonFile := &jsonledit.FileDescriptor{}
+		jsonFile.Types = ".json"
+		jsonFile.Names = piplines.Generator()
+		jsonFile.Molecule = aminochain
 
-		//proteins.Size_Bond = len(life.Genes)
-		// proteins.Client = piplines.Firestore_Reference()
-		// state := proteins.NewPeptideTopic().AddPDB(context.Background(), &binary.Micromolecule_List{Peplide: chains.Peplide})
-		// log.Println("Molecule state: ", state)
+		proteins.CreateNewJSONFile(jsonFile)
 
 		temp.Execute(w, visualizeReport)
 	}
