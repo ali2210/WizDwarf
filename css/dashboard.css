@@ -98,6 +98,7 @@ convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
   width: 100%;
   display: flex;
   justify-content: center;
+  border-radius: 15px;
 }
 
 .dashboard-form {
@@ -220,12 +221,17 @@ convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
   .sign{
     position: relative;
     left: 129px;
-    top: 1px;
+    top: 4px;
     width: 445px;
     z-index: 2;
     border-radius: 29px;
     box-shadow: 5px 5px whitesmoke;
     display: grid;
+  }
+
+  .custom-select{
+    border-radius: 26px;
+    box-shadow:5px 2px whitesmoke;
   }
 
 

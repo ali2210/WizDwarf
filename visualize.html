@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
   <link rel="stylesheet" type="text/css" href="/css/visualize.css">
   <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r126/three.js"
@@ -86,16 +85,17 @@
 
     <div class="uv-div">
       <button class="btn btn-light" title="With city uv-index level, you will know how much radiations level in your city">
-        <i class="far fa-sun">
+        <i class="fa fa-sun-o" aria-hidden="true"></i>
         </i>
-        <small class="uvindex"> {{.UVinfo}}
-        </small>
       </button>
+      <small class="uvindex"> {{.UVinfo}} </small>
     </div>
     <div class="risk-div">
       <div class="line"></div>
     </div>
-    <canvas></canvas>
+    <div class="window" style="position: relative; top: 20px; width: 100%; height: 100%;">
+      <canvas></canvas>
+    </div>
 
    <div class="card text-center" style="position: relative; left: 1px; width:204%; border-radius: 18px; border:2px silver dotted; z-index:2; top:-210px; display:contents;">
     <div class="card-header">
@@ -121,7 +121,7 @@
                   </p>
                   <div class="collapse" id="background">
                     <div class="card card-body">
-                      Standard Computation Genetics <a href="/visualize"> Automated-Report </a>
+                      Standard Computation Genetics <a href="/treasure"> Automated-Report </a>
                     </div>
                   </div>
                 </li>
