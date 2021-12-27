@@ -150,4 +150,43 @@
 	margin-top: 40px;
 	background-color: black;
 	color: whitesmoke;
+	width: 724px;
+	left: -45px;
+}
+
+.terms{
+	position: absolute;
+	display: flex;
+	top:38px;
+	color: whitesmoke;
+}
+
+.channels{
+	display: flex;
+	position: absolute;
+	top:-20px;
+}
+
+.fb{
+	display: flex;
+	position: absolute;
+	left: -34px;
+}
+
+.insta{
+	display: flex;
+	position: absolute;
+	left: -19px;
+}
+
+.tweet{
+	display: flex;
+	position: absolute;
+	left: 0px;
+}
+
+.reddit{
+	display: flex;
+	position: absolute;
+	left: 19px;
 }
