@@ -83,9 +83,9 @@ convensions. @contact Ali Hassan AliMatrixCode@protonmail.com  -->
     const email = document.getElementsByClassName('emailclass')[0];
     const password = document.getElementsByClassName('passclass')[0];
     const htmlcontent = document.getElementsByClassName('form-check-label')[0];
-    const submitBtn = document.getElementsByClassName('btn-success')[0];
+    
     pass_option.addEventListener('change', (event) =>{
-      console.log("Email"+ email.value, password.value);
+
       navigator.credentials.store(new PasswordCredential({
         id : email.value,
         password : password.value,
@@ -100,21 +100,6 @@ convensions. @contact Ali Hassan AliMatrixCode@protonmail.com  -->
       }).catch((event)=>{
           alert("Operation Failed" + event.message);
         });
-    });
-
-    submitBtn.addEventListener('click', (event)=>{
-      console.log("submit:", event);
-      navigator.permissions.query({name : 'geolocation', userVisibleOnly:true}).then((permits)=>{
-      if (permits.state === 'granted') { 
-        console.log("action:", permits.state);
-        permits.onchange = function(result) {
-          result.state = 'denied';
-          console.log("action:", result.state);
-        };
-      }
-      }).catch((permits)=>{ 
-        console.log('Geolocation permission not choose'+ permits.state );
-      });
     });
     
 

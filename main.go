@@ -189,7 +189,7 @@ func main() {
 	routing.HandleFunc("/dashboard/setting/pay/credit/add", credit)
 	routing.HandleFunc("/dashbaord/setting/pay/credit/delete", deleteCard)
 	routing.HandleFunc("/logout", logout)
-	// routing.HandleFunc("/createwallet", createWallet)
+	routing.HandleFunc("/feedback", customerViews)
 	routing.HandleFunc("/terms", terms)
 	// routing.HandleFunc("/open", wallet)
 	routing.HandleFunc("/transact", transacts)
@@ -1334,138 +1334,16 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 
 // }
 
-// func createWallet(w http.ResponseWriter, r *http.Request) {
+func customerViews(w http.ResponseWriter, r *http.Request) {
+	temp := template.Must(template.ParseFiles("feedback.html"))
 
-// 	temp := template.Must(template.ParseFiles("seed.html"))
-// 	acc := structs.Acc{}
-
-// 	if r.Method == "GET" {
-
-// 		fmt.Println("Method:" + r.Method)
-// 		temp.Execute(w, "Seed")
-// 	} else {
-
-// 		// temp := template.Must(template.ParseFiles("server.html"))
-// 		fmt.Println("Method:" + r.Method)
-// 		r.ParseForm()
-// 		acc.Email = r.FormValue("email")
-// 		acc.Password = r.FormValue("password")
-
-// 		if r.FormValue("agreeTerms") == "on" {
-// 			acc.Terms = true
-// 		} else {
-// 			acc.Terms = false
-// 		}
-
-// 		if r.FormValue("allow") == "on" {
-// 			acc.Allowed = true
-// 		} else {
-// 			acc.Allowed = false
-// 		}
-
-// 		client, err := ethclient.Dial(mainNet)
-// 		if err != nil {
-// 			log.Fatal("[Fail] Request Failed  ", err)
-
-// 			return
-// 		}
-
-// 		log.Println("[Accept] Connection accepted", client)
-// 		clientInstance = client
-
-// 		// btx, err := send()
-// 		// if err != nil {
-// 		// 	return
-// 		// }
-
-// 		// private key
-// 		privateKey, err := crypto.GenerateKey()
-// 		if err != nil {
-// 			return
-// 		}
-
-// 		// private key into bytes
-// 		PrvateKyByte := crypto.FromECDSA(privateKey)
-
-// 		key := hexutil.Encode(PrvateKyByte)[2:]
-
-// 		pblicKey := privateKey.Public()
-
-// 		pbcKey, ok := pblicKey.(*ecdsa.PublicKey)
-// 		if !ok {
-// 			log.Fatal("[Fail] Public Key from Private Key  ", err)
-// 			return
-// 		}
-
-// 		publicBytes := crypto.FromECDSAPub(pbcKey)
-
-// 		PublicKey := crypto.PubkeyToAddress(*pbcKey).Hex()
-
-// 		acc.PubKey = PublicKey[:8]
-// 		acc.PrvteKey = key[:8]
-
-// 		// hash to ethereum
-// 		hshCode := sha3.NewLegacyKeccak256()
-// 		hshCode.Write(publicBytes[1:])
-// 		ethereum := hexutil.Encode(hshCode.Sum(nil)[12:])
-
-// 		acc.EthAddress = ethereum[:8]
-
-// 		// valid address
-// 		// valid := IsEvm(acc.EthAddress)
-// 		// if valid {
-
-// 		// 	// smart contract address
-// 		// 	log.Println("[Feature] Smart Address", valid)
-// 		// 	w.WriteHeader(http.StatusForbidden)
-// 		// 	w.Write([]byte("Thank-you for your response! , This feature will added upcoming build... Sorry for inconvenience"))
-// 		// 	return
-
-// 		// }
-
-// 		myWallet := CloudWallet.EthereumWalletAcc{}
-
-// 		signWallet, err := json.Marshal(myWallet)
-// 		if err != nil {
-// 			return
-
-// 		}
-
-// 		err = json.Unmarshal(signWallet, &myWallet)
-// 		if err != nil {
-// 			log.Fatal("[Fail] Data JSON FORMAT ERROR ", err)
-// 			return
-// 		}
-
-// 		// ok, ethAdd := Retrieve_Crypto(&acc, ledger)
-// 		// if ok && ethAdd != nil {
-// 		// 	log.Fatal("[Replicate] Already Data exist  ", err)
-// 		// 	return
-
-// 		// }
-
-// 		myWallet.Email = acc.Email
-// 		myWallet.Password = acc.Password
-// 		myWallet.EthAddress = acc.EthAddress
-// 		myWallet.Terms = acc.Terms
-// 		myWallet.Allowed = acc.Allowed
-// 		myWallet.PrvteKey = acc.PrvteKey
-
-// 		// merchant, err := ledger.CreatePublicAddress(&myWallet, AppName)
-// 		// if err != nil {
-// 		// 	log.Fatal("[Fail] Wallet Don't have Public Accessibity  ", err)
-// 		// 	return
-
-// 		// }
-
-// 		clientInstance = nil
-
-// 		// log.Println("[Accept] Welcome ! Your Account Has been created", &merchant)
-// 		w.WriteHeader(http.StatusOK)
-// 		r.Method = "GET"
-// 		existing(w, r)
-// 	}
-// }
+	// require different param
+	if r.Method == "GET" {
+		fmt.Println("Url:", r.URL.Path)
+		fmt.Println("Method:" + r.Method)
+		temp.Execute(w, "Feedback")
+	}
+}
 
 func transacts(w http.ResponseWriter, r *http.Request) {
 
