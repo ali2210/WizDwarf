@@ -19,4 +19,5 @@ message FileDescriptor{
     string Names = 1;
     string Types = 2;
     repeated binary.Micromolecule molecule =3;
+    int64 Occurance = 4;
 }

@@ -51,23 +51,4 @@ message Micromolecule {
     int64 Abundance = 5;
 }
 
-// micromolecules exist in the form of long chain and have common features
-message Micromolecule_List{
-    repeated Micromolecule Peplide = 1;
-}
 
-
-// during transciption and other process that take will happen or have happened either failed or not. In case process failed hold what the caused behind the failed process.
-message MolecularState{
-    bool State = 1;
-    string Error = 2;
-}
-
-// Empty message
-message Request{}
-
-// Protein Bank provide following functionalities.In future lot of more functionalities 
-service ProteinBnk {
-    rpc AddPDB (Micromolecule_List) returns (MolecularState);
-    rpc DisplayPDB (Request) returns (Micromolecule_List);
-}

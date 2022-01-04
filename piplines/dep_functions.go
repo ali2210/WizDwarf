@@ -35,6 +35,8 @@ import (
 	skynet "github.com/SkynetLabs/go-skynet/v2"
 	structs "github.com/ali2210/wizdwarf/other"
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
+	"github.com/ali2210/wizdwarf/other/bucket"
+	"github.com/ali2210/wizdwarf/other/bucket/proto"
 	"github.com/ali2210/wizdwarf/other/collection"
 	"github.com/ali2210/wizdwarf/other/crypto"
 	cryptos "github.com/ali2210/wizdwarf/other/crypto"
@@ -369,6 +371,12 @@ func Location(str string) Point {
 	}()
 	location := <-current_nav
 	return location
+}
+
+func Download_Content_ownership(File string, client bucket.Bucket_Service) *proto.QState {
+
+	return client.Download(&proto.Query{ByName: File})
+
 }
 
 // genome function return  maromolecules props .
