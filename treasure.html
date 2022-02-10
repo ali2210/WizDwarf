@@ -4,6 +4,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+	<META HTTP-EQUIV="Expires" CONTENT="-1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -13,8 +15,9 @@
 	</link>
 	<link rel="shortcut icon" type="image/png" href="/images/favicon.png">
 	<title>WizDwarfs</title>
-	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script> -->
-	<script src="https://d3js.org/d3.v4.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script> 
+	<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+	<script src="https://js.pusher.com/7.0/pusher-with-encryption.min.js"></script>
 <body>
 	<div class='main-dashboard-div'>
 		<nav class="navbar navbar-expand-md navbar-light custom-navbar">
@@ -66,7 +69,6 @@
 					Edit-Profile </a>
 				  <a class="dropdown-item" href="/logout"><i class="fa fa-sign-out icon icon-light"
 					  aria-hidden="true"></i>Logout</a>
-					  
 				  <div class="card" style="width: 25rem; height: 23rem; position: relative; left: 103px; top:-2px; border-radius:17px;">
 					<img class="img-class"
 					  src="https://6lli539m39y3hpkelqsm3c2fg-wpengine.netdna-ssl.com/wp-content/uploads/2019/01/tech-abstract_shutterstock-1191298288_700x-675x380.jpg"
@@ -147,12 +149,24 @@
 			<a  class="btn btn-link" href="/glycine"> G </a>
 		</div>
 	</div>
-	<div class="container-btn">
+	<div class="menu-div">
+		<button class="btn btn-light matices" id="analytics" type="button" title="build chart for the data">
+			<i class="fa fa-area-chart" aria-hidden="true"></i>
+		</button>
 		<a href="/dashboard" class="btn btn-danger backbtn" title="Previous page">      
-		  <i class="fa fa-chevron-circle-left chevron-icon" aria-hidden="true"></i>
+			<i class="fa fa-chevron-circle-left chevron-icon" aria-hidden="true"></i>
 		</a>
 	</div>
-	<div id="my_dataviz" class="dataviz"></div>
+	<div class="chart-container">
+		<canvas id="chart" width="500px" height="250px"></canvas>
+	</div>
+
+	<div class="progress-container" style="position: absolute; top:628px; left: 200px; display: flex; transform: scale(2.5);">
+		<i class="fa fa-spinner progress-circle" aria-hidden="true"></i>
+	</div>
+	<div class="span-item" style="position: absolute; left: 559px;">
+		<small class="span-value"></small>
+	</div>
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
     crossorigin="anonymous"></script>
@@ -162,7 +176,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
-	<script type="text/javascript" src="/js/treasure.js"></script>
+	<script src="/js/treasure.js"></script>
 </body>
 
 </html>

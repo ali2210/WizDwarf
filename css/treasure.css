@@ -1,8 +1,8 @@
 .main-dashboard-div {
 	background-color:#f9f9f9;
 	font-family: 'Lato', sans-serif;
-	height: 173vh;
-	width: 109vh;
+	height: 64vh;
+	width: 212vh;
   }
 
   .icon-light {
@@ -135,14 +135,20 @@
 	  position: absolute;
 	  left: 63px;
 	  top: 286px;
+	  box-shadow:5px 5px whitesmoke;
+	  z-index: auto;
+	  border-radius: 15px;
   }
   .proteins-box-1{
-	background:antiquewhite;
+	background: silver;
 	height: 50px;
 	width: 50px;
 	position: absolute;
 	left: 113px;
 	top: 286px;
+	box-shadow:5px 5px whitesmoke;
+	  z-index: auto;
+	  border-radius: 15px;
  }
  .proteins-box-2{
 	background:hotpink;
@@ -151,6 +157,9 @@
 	position: absolute;
 	left: 63px;
 	top: 336px;
+	box-shadow:5px 5px whitesmoke;
+	  z-index: auto;
+	  border-radius: 15px;
 }
 .proteins-box-3{
   background:orange;
@@ -159,6 +168,9 @@
   position: absolute;
   left: 113px;
   top: 336px;
+  box-shadow:5px 5px whitesmoke;
+	  z-index: auto;
+	  border-radius: 15px;
 }
 
 .proteins-box-4{
@@ -168,6 +180,9 @@
 	position: absolute;
 	left: 163px;
 	top: 336px;
+	box-shadow:5px 5px whitesmoke;
+	  z-index: auto;
+	  border-radius: 15px;
 }
 .proteins-box-5{
   background:blue;
@@ -176,6 +191,9 @@
   position: absolute;
   left: 213px;
   top: 336px;
+  box-shadow:5px 5px whitesmoke;
+	  z-index: auto;
+	  border-radius: 15px;
 }
 
 .proteins-box-6{
@@ -185,6 +203,9 @@
 	position: absolute;
 	left: 263px;
 	top: 336px;
+	box-shadow:5px 5px whitesmoke;
+	  z-index: auto;
+	  border-radius: 15px;
 }
 .proteins-box-7{
   background:olive;
@@ -193,6 +214,9 @@
   position: absolute;
   left: 313px;
   top: 336px;
+  box-shadow:5px 5px whitesmoke;
+	  z-index: auto;
+	  border-radius: 15px;
 }
 .proteins-box-8{
 	background:blueviolet;
@@ -201,6 +225,9 @@
 	position: absolute;
 	left: 363px;
 	top: 336px;
+	box-shadow:5px 5px whitesmoke;
+	  z-index: auto;
+	  border-radius: 15px;
 }
 .proteins-box-9{
   background:green;
@@ -209,6 +236,9 @@
   position: absolute;
   left: 413px;
   top: 336px;
+  box-shadow:5px 5px whitesmoke;
+	  z-index: auto;
+	  border-radius: 15px;
 }
 .proteins-box-10{
 	background:red;
@@ -217,6 +247,9 @@
 	position: absolute;
 	left: 776px;
 	top: 336px;
+	box-shadow:5px 5px whitesmoke;
+	  z-index: auto;
+	  border-radius: 15px;
 }
 .proteins-box-11{
   background:yellow;
@@ -225,6 +258,9 @@
   position: absolute;
   left: 826px;
   top: 336px;
+  box-shadow:5px 5px whitesmoke;
+	  z-index: auto;
+	  border-radius: 15px;
 }
 .proteins-box-12{
 	background:chartreuse;
@@ -233,6 +269,9 @@
 	position: absolute;
 	left: 876px;
 	top: 336px;
+	box-shadow:5px 5px whitesmoke;
+	  z-index: auto;
+	  border-radius: 15px;
 }
 .proteins-box-13{
   background:cornflowerblue;
@@ -241,6 +280,9 @@
   position: absolute;
   left: 926px;
   top: 336px;
+  box-shadow:5px 5px whitesmoke;
+	  z-index: auto;
+	  border-radius: 15px;
 }
 .proteins-box-14{
 	background:cadetblue;
@@ -249,6 +291,9 @@
 	position: absolute;
 	left: 976px;
 	top: 336px;
+	box-shadow:5px 5px whitesmoke;
+	  z-index: auto;
+	  border-radius: 15px;
 }
 .proteins-box-15{
   background:cyan;
@@ -257,6 +302,9 @@
   position: absolute;
   left: 1026px;
   top: 336px;
+  box-shadow:5px 5px whitesmoke;
+	  z-index: auto;
+	  border-radius: 15px;
 }
 
 .proteins-box-16{
@@ -266,6 +314,9 @@
 	position: absolute;
 	left: 1076px;
 	top: 336px;
+	box-shadow:5px 5px whitesmoke;
+	  z-index: auto;
+	  border-radius: 15px;
 }
 .proteins-box-17{
   background:sienna;
@@ -274,6 +325,9 @@
   position: absolute;
   left: 1126px;
   top: 336px;
+  box-shadow:5px 5px whitesmoke;
+	  z-index: auto;
+	  border-radius: 15px;
 }
 .proteins-box-18{
 	background:gold;
@@ -282,6 +336,9 @@
 	position: absolute;
 	left: 1076px;
 	top: 286px;
+	/* box-shadow:5px 5px whitesmoke; */
+	  z-index: auto;
+	  border-radius: 15px;
 }
 .proteins-box-19{
   background:blueviolet;
@@ -290,6 +347,9 @@
   position: absolute;
   left: 1126px;
   top: 286px;
+  /* box-shadow:5px 5px whitesmoke; */
+	  z-index: auto;
+	  border-radius: 15px;
 }
 .result{
 	position: absolute;
@@ -312,40 +372,154 @@
 	left:593px;
   }
 .backbtn{
-	height: 50px;
+	height: 45px;
+	width: 45px;
 	position: absolute;
-	left:-5px;
-	top:-3px;
-	animation: slide-left 5.5s linear infinite alternate;
+	left: 25px;
+	top: 252px;
+	transform: scale(1);
+	/* animation: slide-left 4s linear infinite alternate; */
 }
 .chevron-icon{
 	position: relative;
 	top:6px;
 }
  @keyframes slide-left {
-	 20%{
-		 left:-140px;
-	 }
-	 50%{
+	 5%{
 		 left:-120px;
 	 }
-	 70%{
+	 20%{
 		 left:-100px;
 	 }
-	 90%{
+	 35%{
 		 left:-80px;
 	 }
+	 50%{
+		 left:-60px;
+	 }
+	 55%{
+		 left: -40px;
+	 }
+	 60%{ 
+		 left: -20px; 
+	 }
+	 70%{
+		 left: 20px;
+	 }
+
  } 
- .dataviz{
-	 position: relative;
-	 top: -575px;
-	 left: 94px;
-	 overflow: hidden;
-	 box-shadow: 3px 5px whitesmoke;
-	 width: 444px; height: 441px;
-	 transform-style: preserve-3d;
-	 border-radius: 10px;
-	 visibility: hidden;
-	 width: 100%;
-	 height: 100%;
+
+
+ .matices{
+	 display:flex;
+	 position:absolute;
+	 top: 87px;
+	 transform:scale(1.0);
+	 color: black;
+	 left: 22px;
+	 /* visibility: hidden; */
+ }
+
+ .menu-div{
+	 position:absolute;
+	 display: flex;
+	 height: 676px;
+	 width: 90px;
+	 background-color: whitesmoke;
+	 top: 89px;
+	 left:1204px;
+	 border-radius: 20px;
+ }
+ 
+ .chart-container{
+	 display: flex;
+	 position: absolute;
+	 top:480px;
+	 left:457px;
+ }
+
+ .progress-circle{
+	 display: flex;
+	 animation: circles 7s ease-in-out infinite alternate;
+	 color: darkgrey;
+	 position: absolute;
+ }
+
+ @keyframes circles {
+	 10%{
+		 transform: rotate3d(1,1,1,45deg);
+		 color: transparent;
+		 box-shadow: 5px 5px whitesmoke;
+		 z-index: 1;
+		 border-radius: 11px;
+		 border: 1px solid whitesmoke;
+	 }
+	 20%{
+		/* color: lightgrey; */
+		box-shadow: 5px 5px whitesmoke;
+		z-index: 1;
+		transform: rotate3d(1,1,1,40deg);
+		border-radius: 11px;
+		border:1px solid whitesmoke;
+	}
+	30%{
+		box-shadow: 5px 5px whitesmoke;
+		z-index: 1;
+		transform: rotate3d(1,1,1,35deg);
+		border-radius: 11px;
+		border: 1px solid whitesmoke;
+	}
+	40%{
+		 color: lightgrey;
+		 box-shadow: 5px 5px lightgrey;
+		 z-index: 1;
+		 transform: rotate3d(1,1,1,30deg);
+		 border-radius: 11px;
+		 border:1px solid lightgrey;
+	 }
+	50%{
+		box-shadow: 5px 5px lightgrey;
+		z-index: 1;
+		transform: rotate3d(1,1,1,25deg);
+		border-radius: 11px;
+		border: 1px solid lightgrey;
+	}
+	60%{
+		color: darkgrey;
+		box-shadow: 5px 5px darkgrey;
+		 z-index: 1;
+		 transform: rotate3d(1,1,1,20deg);
+		 border-radius: 11px;
+		 border: 1px solid darkgrey;
+	}
+	70%{
+			box-shadow: 5px 5px darkgrey;
+			 z-index: 1;
+			 transform: rotate3d(1,1,1,15deg);
+			 border-radius: 11px;
+			 border: 1px solid darkgrey;
+	}
+	80%{
+		color: grey;
+		box-shadow: 5px 5px grey;
+		 z-index: 1;
+		transform: translate(1,1,1, 10deg); 
+		border-radius: 11px;
+		border: 1px solid darkgrey;
+	}
+	90%{
+		box-shadow: 5px 5px grey;
+		z-index: 1;
+		transform: rotate3d(1,1,1,5deg);
+		border-radius: 11px;
+		border: 1px solid gray;
+	}
+	100%{
+		color: black;
+		box-shadow: 5px 5px black;
+		 z-index: 1;
+		 transform:rotate(1,1,1,0deg);
+		 border-radius: 11px;
+		 border: 1px solid black;
+	}
  }

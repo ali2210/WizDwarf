@@ -41,6 +41,8 @@ import (
 	// coin "github.com/ali2210/wizdwarf/other/coinbaseApi"
 	weather "github.com/ali2210/wizdwarf/other/openweather"
 	"github.com/ali2210/wizdwarf/other/paypal/handler"
+	"github.com/pusher/pusher-http-go"
+
 
 	// wizSdk "github.com/ali2210/wizdwarf/other/transaction"
 
@@ -80,47 +82,12 @@ var (
 	signed_msg        string                    = " "
 	address_wallet    string                    = " "
 	File              string                    = ""
-	// checkout          Shop.Shopping             = Shop.Shopping{
-	// 	Price:         "",
-	// 	TypeofService: "",
-	// 	PaymentMethod: "",
-	// 	Description:   "",
-	// }
-	// payment wizSdk.BankRecord = wizSdk.BankRecord{
-	// 	Name:       "",
-	// 	Btc:        "",
-	// 	CreditCard: "",
-	// 	TotalCash:  "",
-	// 	Public:     publicAddress,
-	// }
-	// cart        Shop.Items         = Shop.Items{}
-	// balance wizSdk.FingerPrint = wizSdk.FingerPrint{}
-	// blockchains structs.Block      = structs.Block{
-	// 	Balance:        &big.Int{},
-	// 	SenderBatchID:  "",
-	// 	RecieveBatchID: "",
-	// 	Amount:         &big.Int{},
-	// 	Nonce:          0,
-	// 	GasPrice:       &big.Int{},
-	// 	GasLimit:       0,
-	// 	DataBlock:      structs.DataBlock{},
-	// }
-	// genesis      structs.BlockTransactionGateway = structs.BlockTransactionGateway{}
-	// eth          structs.EthToken                = structs.EthToken{}
-	// bitInterface structs.BitsBlocks              = structs.BitsBlocks{
-	// 	SenderBatchID:            "",
-	// 	SenderPrivateKey:         &ecdsa.PrivateKey{},
-	// 	EthBlockHeader:           "",
-	// 	EthNewPublicKeyGenerator: eth,
-	// 	EthNewPublic:             &ecdsa.PublicKey{},
-	// 	EthAddress:               [20]byte{},
-	// 	EthNonceAtStatus:         0,
-	// 	EthGasUnits:              &big.Int{},
-	// 	EthReciptAddress:         [20]byte{},
-	// }
-	// // js gopher.EmptyDomObject = gopher.EmptyDomObject{}
-	// coinbaseClient coin.Permission      = coin.Permission{}
-	// staticData     coin.StaticWallet    = coin.StaticWallet{}
+	sumof int64 = 0
+	sb []string
+	mss []float64
+	occ []int64
+	count int = 0
+	aminochain []*binary.Micromolecule	
 	transactWeb structs.ParserObject = structs.ParserObject{}
 	profiler    *users.Visitors      = &users.Visitors{}
 )
@@ -129,42 +96,55 @@ var (
 
 const (
 	//ProjectID      string = "htickets-cb4d0"
-	mainNet       string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
-	rinkebyClient string = "https://rinkeby.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
-	geocodeAPI    string = "7efdb33c59a74e09352479b21657aee8"
+	// mainNet       string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
+	// rinkebyClient string = "https://rinkeby.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
+	GEO_Index_KEY    string = "7efdb33c59a74e09352479b21657aee8"
+	APP_CHANNEL_KEY string 				   = "65993b3c66b5317411a5"
+	APP_CHANNEL_ID string = "1265511"
+	APP_CHANNEL_SCRECT string = "4f8bf3faf121d9c8dadf"
+	APP_CHANNEL_CLUSTER_ID string = "mt1"
 )
 
 func main() {
 
 	// Server
-	log.Println("[OK] Wiz-Dwarfs starting")
+	
 	host := os.Getenv("HOST")
 	port := os.Getenv("PORT")
 	wizDir := os.Getenv("WIZ_VOLUME_DIR")
-	if wizDir == "" {
-		log.Fatalln("Make sure volume mount", wizDir)
-		return
-	}
+	
+	
 
 	// allocate port and host
 	if host == "" {
-		if port == " " {
-			log.Fatalln("[Fail] No Application port allocated", port)
-		} else {
-			if port != "5000" && host == "wizdwarfs" {
-				log.Println("[Open] Application Port", port)
-				log.Println("[Open] Application host", host)
-			} else {
-				// specfic port allocated {docker}
-				port = "5000"
-				host = "wizdwarfs"
-				log.Println("[New] Application Default port", port)
-				log.Println("[Host] Explicit Host ", host)
-			}
-
-		}
+		if port == " " && wizDir == " "{
+			
+			fmt.Println(" Firebase Configuration complete ... [wel-done]")
+			fmt.Println(" Static IP-Address Configuration ... [FAIL]")
+			fmt.Println(" Protocol-Buffer v3 Configuration complete ... [wel-done]")
+			fmt.Println(" UI Webboard Configuration ... [FAIL]")
+			fmt.Println(" Application Configuration ... [FAIL]")
+			fmt.Println(" Application Default IP-Address Allocate ... [FAIL]")
+			fmt.Println(" Application Persistance Storage Configuration completed ...  [FAIL]")
+			log.Fatalln("Make sure volume mount")
+			panic("Application fail to started because no port is specified and we do not have writing permission on your disk ")
+		} 
 	} else {
-		log.Println("[Accept] Application hostname allocated", host)
+		fmt.Println(" Firebase Configuration complete ... [wel-done]")
+		fmt.Println(" Static IP-Address Configuration complete ... [wel-done]")
+		fmt.Println(" Protocol-Buffer v3 Configuration complete ... [wel-done]")
+		fmt.Println(" UI Webboard Configuration complete ... [wel-done]")
+		fmt.Println(" Application started ... [wel-done](All process have completed)")
+		fmt.Println(" Application Default IP-Address Allocate ... Default IP-Address allow user to access UI Webboard on your browser. The webboard started with this address 127.0.0.1:5000/ [wel-done]")
+		fmt.Println(" Application Persistance Storage Configuration completed ...  [wel-done]")
+
+		fmt.Println(" ***************************************************************************************")                                                                                 
+  		fmt.Println("  @@@  @@@  @@@ @@@ @@@@@@@@ @@@@@@@  @@@  @@@  @@@  @@@@@@  @@@@@@@  @@@@@@@@  @@@@@@ ") 
+		fmt.Println("   @@!  @@!  @@! @@!      @@! @@!  @@@ @@!  @@!  @@! @@!  @@@ @@!  @@@ @@!      !@@     ")
+		fmt.Println("   @!!  !!@  @!@ !!@    @!!   @!@  !@! @!!  !!@  @!@ @!@!@!@! @!@!!@!  @!!!:!    !@@!!  ")
+		fmt.Println("    !:  !!:  !!  !!:  !!:     !!:  !!!  !:  !!:  !!  !!:  !!! !!: :!!  !!:          !:! ")
+		fmt.Println("    ::.:  :::   :   :.::.: : :: :  :    ::.:  :::    :   : :  :   : :  :       ::.: :  ") 
+		fmt.Println(" ****************************************************************************************")
 	}
 
 	// Routing
@@ -174,6 +154,8 @@ func main() {
 	routing.HandleFunc("/", func(arg1 http.ResponseWriter, arg2 *http.Request) {
 
 		temp := template.Must(template.ParseFiles("initial.html"))
+
+		
 
 		if arg2.Method == "GET" {
 			log.Println("[OK] URL :", arg2.URL.Path)
@@ -249,6 +231,11 @@ func main() {
 // Routes Handle
 
 func home(w http.ResponseWriter, r *http.Request) {
+	
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+                    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+                    w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
+
 	temp := template.Must(template.ParseFiles("index.html"))
 
 	if r.Method == "GET" {
@@ -260,6 +247,10 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 func success(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("modal-success.html"))
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+                    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+                    w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
+
 	if r.Method == "GET" {
 		log.Println("[Accept]", r.URL.Path)
 		temp.Execute(w, "success")
@@ -268,6 +259,10 @@ func success(w http.ResponseWriter, r *http.Request) {
 
 func deleteCard(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("delete.html"))
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+                    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+                    w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	if r.Method == "GET" {
 
@@ -396,32 +391,43 @@ func setting(w http.ResponseWriter, r *http.Request) {
 
 func profile(w http.ResponseWriter, r *http.Request) {
 
-	temp := template.Must(template.ParseFiles("profile.html"))
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+                    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+                    w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
+
+	// short live variable called visitor
 	var member users.Visitors
+
+	// page renderer
+	temp := template.Must(template.ParseFiles("profile.html"))
+	
+	// to find app have information
 	visit, err := Cloud.GetDocumentById(AppName, *profiler)
 	if err != nil {
 		log.Printf("Database query failed: %v", err.Error())
 		return
 	}
 
+	// encode information with json schema
 	data, err := json.Marshal(visit)
 	if err != nil {
 		log.Printf("json marshal: %v", err.Error())
 		return
 	}
 
+	// proper encoding over data streams
 	err = json.Unmarshal(data, &member)
 	if err != nil {
 		log.Printf("json unmarshal: %v", err.Error())
 	}
 
-	fmt.Println("Member :", member)
-
+	
+	// web request "get"
 	if r.Method == "GET" {
 		log.Println("Method:", r.Method)
 		log.Println("URL:", r.URL.Path)
 		temp.Execute(w, member)
-	} else {
+	} else if r.Method == "POST" {
 
 		// user add profile picture resolution must be less 2kb
 		Pictures_Stream(r, member.Id)
@@ -429,10 +435,12 @@ func profile(w http.ResponseWriter, r *http.Request) {
 		// update users information
 		user := users.Visitors{}
 
+		// users information hold 
 		user.Id = member.Id
 		user.Password = member.Password
 		user.Email = member.Email
 
+		
 		if strings.Contains(r.FormValue("name"), " ") {
 			user.Name = member.Name
 		} else {
@@ -488,7 +496,7 @@ func profile(w http.ResponseWriter, r *http.Request) {
 
 		// user information completed and store in database
 		if status_profile := UpdateProfileInfo(&user); status_profile {
-			log.Printf("Update  profile")
+			
 			w.WriteHeader(http.StatusOK)
 			return
 		}
@@ -678,16 +686,58 @@ func kernel(w http.ResponseWriter, r *http.Request) {
 }
 
 func treasure(w http.ResponseWriter, r *http.Request) {
+	
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
+	
 	webpage := template.Must(template.ParseFiles("treasure.html"))
-	log.Println("[Path]:", r.URL.Path)
-	log.Println("[Method]:", r.Method)
-	fmt.Println("@Percentage:", visualizeReport.Percentage)
-	fmt.Println("@prob parameter:", algo.GetProbParameter())
+	
+	
 	// analysis data results
 	algo.SetProbParameter(visualizeReport.Percentage)
-	if r.Method == "GET" && algo.GetProbParameter() != -1.0 {
+	if r.Method == "GET" && algo.GetProbParameter() < 101{
+		
 		log.Println("[Path]:", r.URL.Path)
 		log.Println("[Method]:", r.Method)
+
+		// client param
+		pusherClient := pusher.Client{
+					AppID : APP_CHANNEL_ID,
+					Key : APP_CHANNEL_KEY,
+					Secret : APP_CHANNEL_SCRECT,
+					Cluster : APP_CHANNEL_CLUSTER_ID,
+					Secure : true,
+		}
+
+		chain := piplines.DashboardAnalytics(aminochain, sumof)
+
+		// log.Println("chain: ", chain)
+
+		analytics_amino := make([]map[string]interface{}, len(chain))
+
+		for i := range chain {
+			
+			if !reflect.DeepEqual(reflect.ValueOf(chain[i]).Interface(),chain[0]){
+					analytics_amino = append(analytics_amino,map[string]interface{}{
+						"key" : piplines.Mapper(chain[i],"Symbol").(string),
+						"values" : piplines.Mapper(chain[i],"Occurance").(int64),
+					})
+			}
+			
+		}
+
+		//log.Println("whole data:", analytics_amino[len(analytics_amino)-count:])
+		data := analytics_amino[len(analytics_amino)-count:]	
+		err  := pusherClient.TriggerMulti([]string{"protein"},"molecule", data)
+		if err != nil {
+			log.Println("Error trigger event:", err.Error())
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		//w.WriteHeader(http.StatusOK)
+
 		webpage.Execute(w, visualizeReport)
 	}
 }
@@ -965,8 +1015,8 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 
 	temp := template.Must(template.ParseFiles("visualize.html"))
 
-	log.Println("Report percentage", visualizeReport.Percentage)
-	log.Println("Report uv ", visualizeReport.UVinfo)
+	// log.Println("Report percentage", visualizeReport.Percentage)
+	// log.Println("Report uv ", visualizeReport.UVinfo)
 	// fmt.Println("Profile:", profiler)
 
 	userProfile, err := Cloud.GetDocumentById(AppName, *profiler)
@@ -1036,7 +1086,7 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 
 		// create new marcomolecules which hold molecule state for a while
 		// chains := binary.Micromolecule_List{}
-		aminochain := make([]*binary.Micromolecule, len(life.Genes))
+		aminochain = make([]*binary.Micromolecule, len(life.Genes))
 		//chains.Peplide = make([]*binary.Micromolecule, len(life.Genes))
 
 		// iterate over map values
@@ -1069,7 +1119,10 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		var sumof int64 = 0
+		
+		sb = make([]string, len(aminochain))
+		occ = make([]int64, len(aminochain))
+		mss = make([]float64, len(aminochain))
 
 		// iterate_over aminochain
 		for i := range aminochain {
@@ -1079,7 +1132,15 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 				abundance, syms := piplines.Abundance(aminochain[i], strings.Join(s, ""), i)
 				if reflect.DeepEqual(aminochain[i].Symbol, syms) {
 					aminochain[i].Abundance = int64(abundance)
+					count += 1
 				}
+
+				
+				
+				sb = append(sb, piplines.Symbol(aminochain[i]))
+				mss = append(mss, piplines.Mass(aminochain[i]))
+				occ = append(occ, piplines.Occurance(aminochain[i]))
+				
 
 				// marshal the protos message
 				data, err := jsonpb.ProtojsonMarshaler(aminochain[i])
@@ -1127,10 +1188,19 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		}
 
 		File = jsonFile.Names + jsonFile.Types
+
+		
+		
 		//prev_object := client.Preview(&proto.Query{ByName: file})
 		//log.Println("prev_object:", prev_object)
 
+		//w.WriteHeader(http.StatusOK)		
+
 		temp.Execute(w, visualizeReport)
+	}else if r.Method != "POST" {
+		fmt.Println("Url:", r.URL.Path)
+		fmt.Println("Method:" + r.Method)
+		return
 	}
 
 }
@@ -1188,7 +1258,7 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 
 		clientapi := weather.NewWeatherClient()
 
-		weatherapi, err := clientapi.OpenWeather(geocodeAPI)
+		weatherapi, err := clientapi.OpenWeather(GEO_Index_KEY)
 		if err != nil {
 			log.Fatalln("weather api-key :", err.Error())
 			return
@@ -1199,7 +1269,7 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			Latitude:  latitude_parse,
 		})
 
-		fmt.Println("@marker:", marker_location)
+		// fmt.Println("@marker:", marker_location)
 
 		err = clientapi.UVCoodinates(marker_location, weatherapi)
 		if err != nil {
@@ -1213,7 +1283,7 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		fmt.Println("@uv:", uvinfo)
+		// fmt.Println("@uv:", uvinfo)
 
 		visualizeReport.UVinfo = uvinfo
 
@@ -1223,7 +1293,7 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		log.Println("File Name:", data.Name())
+		//log.Println("File Name:", data.Name())
 
 		switch choose {
 		case "0":

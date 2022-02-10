@@ -1,4 +1,7 @@
 
+// This codebase desgin according to mozilla open source license.
+// Redistribution , contribution and improve codebase under license
+// convensions. @contact Ali Hassan AliMatrixCode@protonmail.com
 
 /**
  * declaration variables
@@ -9,17 +12,28 @@ const userProfileForm = document.getElementsByClassName('profile-form')[0];
 /**
  * Editform input fields
  */
+
+// global marcos
 const editForm = document.getElementsByClassName('edit')[0];
 const editchoice = document.getElementsByClassName('col')[0];
+const _ed01 = document.getElementsByClassName('_ed01')[0];
+const _b01 = document.getElementsByClassName('btn-mycontainer')[0];
 
 /**
  * Avatar Upload or capture via stream
  */
+
 userProfileForm.children[0].children[0].children[0].children[0].addEventListener("click", event=>{
-    if(event.target){
-        editForm.style.top = "700px";
-        avatarSelector.style.left= "452px";
-     }
+    
+  if(_ed01.style.top === '' && event.target){
+      _ed01.style.position = 'relative';
+      _ed01.style.top = '758px';
+      _ed01.style.left = '217px';
+  }else if(_ed01.style.top === '758px'){
+        _ed01.style.position = 'relative';
+        _ed01.style.top = '167px';
+        _ed01.style.left = '217px';
+  }
     
 });
 
@@ -29,20 +43,29 @@ userProfileForm.children[0].children[0].children[0].children[0].addEventListener
  *  Edit your Name 
  */ 
 editchoice.children[0].children[1].addEventListener("click", event =>{
-    console.log(editForm.children[0].firstElementChild.children[0].readOnly);
-    editForm.children[0].firstElementChild.children[0].readOnly = false;
-    editForm.children[0].firstElementChild.children[0].addEventListener("change", function(){
-        console.log(editForm.children[0].firstElementChild.children[0].value.length);
-        if(editForm.children[0].firstElementChild.children[0].value.length>0){
-            editForm.children[0].firstElementChild.children[0].style.color = "green";
-            editForm.children[0].firstElementChild.children[1].style.color = "green";
-            editchoice.children[11].children[0].disabled = false;
-            editchoice.children[11].children[0].style.color = "green";
-        }else if(editForm.children[0].firstElementChild.children[0].value.length == 0){
-            editForm.children[0].firstElementChild.children[0].style.color = "red";
-            editForm.children[0].firstElementChild.children[1].style.color = "red";
-            editchoice.children[11].children[0].style.color = "red";
-            editchoice.children[11].children[0].disabled = true;
+    
+    editchoice.children[0].children[0].readOnly = false;
+    console.log(editchoice.children[0].children[0].readOnly);
+    
+    editchoice.children[0].children[0].addEventListener("change", function(){
+
+        console.log(editchoice.children[0].children[0].value);
+        if(editchoice.children[0].children[0].value !== "{{.Name}}" && editchoice.children[0].children[0].value.length>0){
+           
+            editchoice.children[0].children[0].style.color = "green";
+            editchoice.children[0].children[1].style.color = "green";
+            editchoice.children[0].children[0].style.border = "1px transparent";
+           
+            _b01.children[0].children[0].disabled = false;
+            _b01.children[0].children[0].style.color = "green";
+        }else if(editchoice.children[0].children[0].value.length === 0 || editchoice.children[0].children[0].value.length < 0){
+            
+            editchoice.children[0].children[0].style.color = "red";
+            editchoice.children[0].children[1].style.color = "red";
+            editchoice.children[0].children[0].style.border = "1px transparent";
+
+            _b01.children[0].children[1].style.color = "red";
+            _b01.children[0].children[0].disabled = true;
         }
     });
 });
@@ -52,20 +75,27 @@ editchoice.children[0].children[1].addEventListener("click", event =>{
  */
 
 editchoice.children[1].children[1].addEventListener("click", event =>{
-    console.log(editForm.children[0].children[1].firstElementChild.readOnly);
-    editForm.children[0].children[1].firstElementChild.readOnly = false;
-    editForm.children[0].children[1].children[0].addEventListener("change", function(){
-        console.log(editForm.children[0].children[1].firstElementChild.value.length);
-        if(editForm.children[0].children[1].firstElementChild.value.length>0){
-            editForm.children[0].children[1].firstElementChild.style.color = "green";
-            editForm.children[0].children[1].lastElementChild.style.color = "green";
-            editchoice.children[11].children[0].disabled = false;
-            editchoice.children[11].children[0].style.color = "green";
-        }else if(editForm.children[0].children[1].firstElementChild.value.length == 0){
-            editForm.children[0].children[1].firstElementChild.style.color = "red";
-            editForm.children[0].children[1].lastElementChild.style.color = "red";
-            editchoice.children[11].children[0].style.color = "red";
-            editchoice.children[11].children[0].disabled = true;
+    
+    editchoice.children[1].children[0].readOnly = false;
+    console.log(editchoice.children[1].children[0].readOnly);
+    editchoice.children[1].children[0].addEventListener("change", function(){
+        
+        if(editchoice.children[1].children[0].value !== "{{.LastName}}" && editchoice.children[1].children[0].value.length>0){
+            
+            editchoice.children[1].children[1].style.color = "green";
+            editchoice.children[1].children[0].style.color = "green";
+            editchoice.children[1].children[0].style.border = "1px transparent";
+            
+            _b01.children[0].children[0].disabled = false;
+            _b01.children[0].children[0].style.color = "green";
+        }else if(editchoice.children[1].children[0].value.length === 0 || editchoice.children[1].children[0].value.length < 0) {
+            
+            editchoice.children[1].children[1].style.color = "red";
+            editchoice.children[1].children[0].style.color = "red";
+            editchoice.children[0].children[0].style.border = "1px transparent";
+            
+            _b01.children[0].children[1].style.color = "red";
+            _b01.children[0].children[0].disabled = true;
         }
     });
 });
@@ -75,11 +105,14 @@ editchoice.children[1].children[1].addEventListener("click", event =>{
  */
 
 
-editchoice.children[2].children[0].children[0].addEventListener("click", event=>{
-    console.log(editForm.children[0].children[2].children[0].children[0].children[0].style.border);
-    editForm.children[0].children[2].children[0].children[0].style.border = "1px green dotted";
-    editForm.children[0].children[2].children[0].children[0].style.color = "green";
-    editForm.children[0].children[2].children[0].children[0].style.backgroundColor = "white";
+editchoice.children[2].children[0].addEventListener("click", event=>{
+    
+    editchoice.children[2].children[0].children[0].style.border = "1px green dotted";
+    console.log(editchoice.children[2].children[0].children[0].style.border);
+
+    editchoice.children[2].children[0].children[0].style.color = "green";
+    editchoice.children[2].children[0].children[0].style.border = "1px transparent";
+    editchoice.children[2].children[0].children[0].style.backgroundColor = "white";
 });
 
 /**
@@ -87,10 +120,13 @@ editchoice.children[2].children[0].children[0].addEventListener("click", event=>
  */
 
 editchoice.children[2].children[1].addEventListener("click", event=>{
-    console.log("female",editForm.children[0].children[2].children[1].children[0].children[0].style.border);
-    editForm.children[0].children[2].children[1].children[0].style.border = "1px green dotted";
-    editForm.children[0].children[2].children[1].children[0].style.color = "green";
-    editForm.children[0].children[2].children[1].children[0].style.backgroundColor = "white";
+    
+    editchoice.children[2].children[1].children[0].style.border = "1px green dotted";
+    console.log("female",editchoice.children[2].children[1].children[0].style.border);
+    
+    editchoice.children[2].children[1].children[0].style.color = "red";
+    editchoice.children[2].children[1].children[0].style.border = "1px transparent";
+    editchoice.children[2].children[1].children[0].style.backgroundColor = "white";
 });
 
 /**
@@ -98,20 +134,28 @@ editchoice.children[2].children[1].addEventListener("click", event=>{
  */
 
 editchoice.children[3].children[1].addEventListener("click", event =>{
-    console.log(editForm.children[0].children[3].firstElementChild.readOnly);
-    editForm.children[0].children[3].firstElementChild.readOnly = false;
-    editForm.children[0].children[3].firstElementChild.addEventListener("change", function(){
-        console.log("address", editForm.children[0].children[3].firstElementChild.value.length);
-        if(editForm.children[0].children[3].firstElementChild.value.length>0){
-            editForm.children[0].children[3].firstElementChild.style.color = "green";
-            editForm.children[0].children[3].lastElementChild.style.color = "green";
-            editchoice.children[11].children[0].disabled = false;
-            editchoice.children[11].children[0].style.color = "green";
-        }else if(editForm.children[0].children[3].firstElementChild.value.length == 0){
-            editForm.children[0].children[3].firstElementChild.style.color = "red";
-            editForm.children[0].children[3].lastElementChild.style.color = "red";
-            editchoice.children[11].children[0].style.color = "red";
-            editchoice.children[11].children[0].disabled = true;
+    
+    editchoice.children[3].children[0].readOnly = false;
+    console.log(editchoice.children[3].children[0].readOnly);
+
+    editchoice.children[3].children[0].addEventListener("change", function(){
+    
+        if(editchoice.children[3].children[0].value !== "{{.Address}}" && editchoice.children[3].children[0].value.length>0){
+
+            editchoice.children[3].children[1].style.color = "green";
+            editchoice.children[3].children[0].style.color = "green";
+            editchoice.children[3].children[0].style.border = "1px transparent";
+            
+            _b01.children[0].children[0].disabled = false;
+            _b01.children[0].children[0].style.color = "green";
+        }else if(editchoice.children[3].children[0].value.length == 0 || editchoice.children[3].children[0].value.length < 0) {
+            
+            editchoice.children[3].children[1].style.color = "red";
+            editchoice.children[3].children[0].style.color = "red";
+            editchoice.children[3].children[0].style.border = "1px transparent";
+            
+            _b01.children[0].children[0].disabled = true;
+            _b01.children[0].children[1].style.color = "red";
         }
     });
 });
@@ -120,20 +164,28 @@ editchoice.children[3].children[1].addEventListener("click", event =>{
  * Edit your Apartment
  */
 editchoice.children[4].children[1].addEventListener("click", event =>{
-    console.log(editForm.children[0].children[4].firstElementChild.readOnly);
-    editForm.children[0].children[4].firstElementChild.readOnly = false;
-    editForm.children[0].children[4].firstElementChild.addEventListener("change", function(){
-        console.log("address", editForm.children[0].children[4].firstElementChild.value.length);
-        if(editForm.children[0].children[4].firstElementChild.value.length>0){
-            editForm.children[0].children[4].firstElementChild.style.color = "green";
-            editForm.children[0].children[4].lastElementChild.style.color = "green";
-            editchoice.children[11].children[0].disabled = false;
-            editchoice.children[11].children[0].style.color = "green";
-        }else if(editForm.children[0].children[4].firstElementChild.value.length == 0){
-            editForm.children[0].children[4].firstElementChild.style.color = "red";
-            editForm.children[0].children[4].lastElementChild.style.color = "red";
-            editchoice.children[11].children[0].style.color = "red";
-            editchoice.children[11].children[0].disabled = true;
+
+    editchoice.children[4].children[0].readOnly = false;
+    console.log(editchoice.children[4].children[0].readOnly);
+
+    editchoice.children[4].children[0].addEventListener("change", function(){
+        
+        if(editchoice.children[4].children[0].value !== "{{.Appartment}}" && editchoice.children[4].children[0].value.length>0){
+            
+            editchoice.children[4].children[0].style.color = "green";
+            editchoice.children[4].children[1].style.color = "green";
+            editchoice.children[4].children[0].style.border = "1px transparent";
+
+            _b01.children[0].children[0].disabled = false;
+            _b01.children[0].children[0].style.color = "green";
+        }else if(editchoice.children[4].children[0].value.length == 0 || editchoice.children[4].children[0].value.length < 0){
+            
+            editchoice.children[4].children[0].style.color = "red";
+            editchoice.children[4].children[0].style.color = "red";
+            editchoice.children[4].children[0].style.border = "1px transparent";
+            
+            _b01.children[0].children[0].disabled = true;
+            _b01.children[0].children[1].style.color = "red";
         }
     });
 });
@@ -143,20 +195,28 @@ editchoice.children[4].children[1].addEventListener("click", event =>{
  */
 
 editchoice.children[5].children[1].addEventListener("click", event =>{
-    console.log(editForm.children[0].children[5].firstElementChild.readOnly);
-    editForm.children[0].children[5].firstElementChild.readOnly = false;
-    editForm.children[0].children[5].firstElementChild.addEventListener("change", function(){
-        console.log("address", editForm.children[0].children[5].firstElementChild.value.length);
-        if(editForm.children[0].children[5].firstElementChild.value.length>0){
-            editForm.children[0].children[5].firstElementChild.style.color = "green";
-            editForm.children[0].children[5].lastElementChild.style.color = "green";
-            editchoice.children[11].children[0].disabled = false;
-            editchoice.children[11].children[0].style.color = "green";
-        }else if(editForm.children[0].children[5].firstElementChild.value.length == 0){
-            editForm.children[0].children[5].firstElementChild.style.color = "red";
-            editForm.children[0].children[5].lastElementChild.style.color = "red";
-            editchoice.children[11].children[0].style.color = "red";
-            editchoice.children[11].children[0].disabled = true;
+    
+    editchoice.children[5].children[0].readOnly = false;
+    console.log(editchoice.children[5].children[0].readOnly);
+    
+    editchoice.children[5].children[0].addEventListener("change", function(){
+        
+        if(editchoice.children[5].children[0].value !== "{{.Country}}" && editchoice.children[5].children[0].value.length>0){
+            
+            editchoice.children[5].children[0].style.color = "green";
+            editchoice.children[5].children[1].style.color = "green";
+            editchoice.children[5].children[0].style.border = "1px transparent";
+            
+            _b01.children[0].children[0].disabled = false;
+            _b01.children[0].children[0].style.color = "green";
+        }else if(editchoice.children[5].children[0].value.length == 0 || editchoice.children[5].children[0].value.length < 0){
+            
+            editchoice.children[5].children[0].style.color = "red";
+            editchoice.children[5].children[1].style.color = "red";
+            editchoice.children[5].children[0].style.border = "1px transparent";
+            
+            _b01.children[0].children[0].disabled = true;
+            _b01.children[0].children[1].style.color = "red";
         }
     });
 });
@@ -166,20 +226,29 @@ editchoice.children[5].children[1].addEventListener("click", event =>{
  * Edit Your City-name
  */
 editchoice.children[6].children[1].addEventListener("click", event =>{
-    console.log(editForm.children[0].children[6].firstElementChild.readOnly);
-    editForm.children[0].children[6].firstElementChild.readOnly = false;
-    editForm.children[0].children[6].firstElementChild.addEventListener("change", function(){
-        console.log("address", editForm.children[0].children[6].firstElementChild.value.length);
-        if(editForm.children[0].children[6].firstElementChild.value.length>0){
-            editForm.children[0].children[6].firstElementChild.style.color = "green";
-            editForm.children[0].children[6].lastElementChild.style.color = "green";
-            editchoice.children[11].children[0].disabled = false;
-            editchoice.children[11].children[0].style.color = "green";
-        }else if(editForm.children[0].children[6].firstElementChild.value.length == 0){
-            editForm.children[0].children[6].firstElementChild.style.color = "red";
-            editForm.children[0].children[6].lastElementChild.style.color = "red";
-            editchoice.children[11].children[0].style.color = "red";
-            editchoice.children[11].children[0].disabled = true;
+    
+    editchoice.children[6].children[0].readOnly = false;
+    console.log(editchoice.children[6].children[0].readOnly);
+
+    editchoice.children[6].children[0].addEventListener("change", function(){
+    
+        
+        if(editchoice.children[6].children[0].value !== "{{.City}}" && editchoice.children[6].children[0].value.length>0){
+            
+            editchoice.children[6].children[0].style.color = "green";
+            editchoice.children[6].children[1].style.color = "green";
+            editchoice.children[6].children[0].style.border = "1px transparent";
+            
+            _b01.children[0].children[0].disabled = false;
+            _b01.children[0].children[0].style.color = "green";
+        }else if(editchoice.children[6].children[0].value.length == 0 || editchoice.children[6].children[0].value.length < 0){
+            
+            editchoice.children[6].children[0].style.color = "red";
+            editchoice.children[6].children[1].style.color = "red";
+            editchoice.children[6].children[0].style.border = "1px transparent";
+
+            _b01.children[0].children[0].disabled = true;
+            _b01.children[0].children[1].style.color = "red";
         }
     });
 });
@@ -189,20 +258,29 @@ editchoice.children[6].children[1].addEventListener("click", event =>{
  */
 
 editchoice.children[9].children[1].addEventListener("click", event =>{
-    console.log(editForm.children[0].children[8].firstElementChild.readOnly);
-    editForm.children[0].children[9].firstElementChild.readOnly = false;
-    editForm.children[0].children[9].firstElementChild.addEventListener("change", function(){
-        console.log("address", editForm.children[0].children[9].firstElementChild.value.length);
-        if(editForm.children[0].children[9].firstElementChild.value.length>0){
-            editForm.children[0].children[9].firstElementChild.style.color = "green";
-            editForm.children[0].children[9].lastElementChild.style.color = "green";
-            editchoice.children[11].children[0].disabled = false;
-            editchoice.children[11].children[0].style.color = "green";
-        }else if(editForm.children[0].children[9].firstElementChild.value.length == 0){
-            editForm.children[0].children[9].firstElementChild.style.color = "red";
-            editForm.children[0].children[9].lastElementChild.style.color = "red";
-            editchoice.children[11].children[0].style.color = "red";
-            editchoice.children[11].children[0].disabled = true;
+    
+    editchoice.children[9].children[0].readOnly = false;
+    
+    console.log(editchoice.children[9].children[0].readOnly);
+    
+    editchoice.children[9].children[0].addEventListener("change", function(){
+        
+        if(editchoice.children[9].children[0].value !== "{{.Email}}" && editchoice.children[9].children[0].value.length>0){
+            
+            editchoice.children[9].children[0].style.color = "green";
+            editchoice.children[9].children[1].style.color = "green";
+            editchoice.children[9].children[0].style.border = "1px transparent";
+            
+            _b01.children[0].children[0].disabled = false;
+            _b01.children[0].children[0].style.color = "green";
+        }else if(editchoice.children[9].children[0].value.length == 0 || editchoice.children[9].children[0].value.length < 0){
+            
+            editchoice.children[9].children[0].style.color = "red";
+            editchoice.children[9].children[1].style.color = "red";
+            editchoice.children[9].children[0].style.border = "1px transparent";
+            
+            _b01.children[0].children[0].disabled = true;
+            _b01.children[0].children[1].style.color = "red";
         }
     });
 });
@@ -211,19 +289,28 @@ editchoice.children[9].children[1].addEventListener("click", event =>{
  * Edit Your Twitter-Account url 
  */
 editchoice.children[10].children[1].addEventListener("click", event =>{
-    console.log(editForm.children[0].children[10].firstElementChild.readOnly);
-    editForm.children[0].children[10].firstElementChild.readOnly = false;
-    editForm.children[0].children[10].firstElementChild.addEventListener("change", function(){
-        console.log("address", editForm.children[0].children[10].firstElementChild.value.length);
-        if(editForm.children[0].children[10].firstElementChild.value.length>0){
-            editForm.children[0].children[10].firstElementChild.style.color = "green";
-            editForm.children[0].children[10].lastElementChild.style.color = "green";
-            editchoice.children[11].children[0].disabled = false;
-            editchoice.children[11].children[0].style.color = "green";
-        }else if(editForm.children[0].children[10].firstElementChild.value.length == 0){
-            editForm.children[0].children[10].firstElementChild.style.color = "red";
-            editForm.children[0].children[10].lastElementChild.style.color = "red";
-            editchoice.children[11].children[0].style.color = "red";
+    
+    editchoice.children[10].children[0].readOnly = false;
+    console.log(editchoice.children[10].children[0].readOnly);
+
+    editchoice.children[10].children[0].addEventListener("change", function(){
+        
+        if(editchoice.children[10].children[0].value.length>0){
+            
+            editchoice.children[10].children[0].style.color = "green";
+            editchoice.children[10].children[1].style.color = "green";
+            editchoice.children[10].children[0].style.border = "1px transparent";
+            
+            _b01.children[0].children[0].disabled = false;
+            _b01.children[0].children[0].style.color = "green";
+        }else if(editchoice.children[10].children[0].value.length == 0 || editchoice.children[10].children[0].value.length < 0){
+            
+            editchoice.children[10].children[0].style.color = "red";
+            editchoice.children[10].children[1].style.color = "red";
+            editchoice.children[10].children[0].style.border = "1px transparent";
+            
+            _b01.children[0].children[0].disabled = true;
+            _b01.children[0].children[1].style.color = "red";
         }
     });
 });
@@ -232,6 +319,8 @@ editchoice.children[10].children[1].addEventListener("click", event =>{
 /**
  * Upload your Image 
  */
+
+// global marcos 
 const uploadImage = document.getElementsByClassName('float-card')[0];
 const avatarSelector = document.getElementsByClassName('avatar')[0];
 
@@ -240,40 +329,101 @@ let video = null;
 let preview =  null;
 let image_size  = null;
 uploadImage.children[0].addEventListener("change", (event) =>{
-    console.log(event.target.files[0]);
+    
+    // preview object created 
     preview = document.createElement('img');
+
+    // preview object linked to image
     preview.src = URL.createObjectURL(event.target.files[0]);
+    
+    // preview object append with dom-element
     uploadImage.children[2].appendChild(preview);
+    
+    // preview object params
     preview.style.position ="relative";
-    preview.style.left = "255px";
-    preview.style.top = "47px";
-    image_size = event.target.files[0].size
-    // avatarSelector.appendChild(preview);
+    preview.style.left = "106px";
+    preview.style.top = "98px";
+    
+    // preview object size  
+    image_size = event.target.files[0].size;
+
+    
 });
 
 // let profile_pic = ;
 const dte_picker = document.getElementsByClassName("date-picker")[0];
 uploadImage.children[4].addEventListener("click", (event) => {
-    console.log(event.target);
+    
+    // information must be true before event happen
     if(preview.src != "" && image_size <= 2745){
-        //profile_pic = document.createElement('img');
+        
+        // image param
          avatarSelector.children[1].className = "profilo-avatar";
-        // profile_pic.name = "profile-avatar";
          avatarSelector.children[1].id = "profile";
          avatarSelector.children[1].style.position = "relative";
-         avatarSelector.children[1].style.left = "40px";
-         avatarSelector.children[1].style.top = "40px";
+         avatarSelector.children[1].style.left = "106px";
+         avatarSelector.children[1].style.top = "98px";
          avatarSelector.children[1].src = preview.src;
+         
+        //  scale image object
+         if (image_size <= 1500){
+             avatarSelector.children[1].style.transform = 'scale(3.7)';
+         }else if (image_size <= 2500){
+             avatarSelector.children[1].style.transform = 'scale(2.7)';
+         }else{
+             avatarSelector.children[1].style.transform = 'scale(1.7)';
+         }
+
+        //  date object
          const date = new Date();
          const [year, month, today] = [date.getFullYear(), date.getMonth(), date.getDate()];
-         console.log("today :" , year,month,today);
+         
          dte_picker.style.visibility = 'visible';
          dte_picker.value = ' '+today+'-'+month+'-'+year+' ';
-        // avatarSelector.appendChild(profile_pic);
+        
     }else if(image_size > 2745){
         alert("File size must be less than 2745", image_size);
     }
-})
+});
+
+// global marcos 
+const btn_submit = document.getElementsByClassName("btn-save")[0];
+const pusher_channel = {
+    appid : "1265511",
+    cluster : "mt1",
+    key : "65993b3c66b5317411a5",
+    secret : "4f8bf3faf121d9c8dadf",
+};
+
+// channels event handlers
+btn_submit.addEventListener("click", (event) => {
+    
+    if (avatarSelector.children[1].id != ""){
+     
+        // console for development
+        Pusher.logToConsole = true; //pusher log active 
+        
+        // pusher object
+        let pusher_channel_credentials = new Pusher(pusher_channel.key, 
+            {cluster : pusher_channel.cluster, 
+              encrypted:true
+            });
+        console.log("Pusher_channels logs:", pusher_channel_credentials);
+        
+        // channel objects 
+        let channel_subcribe = pusher_channel_credentials.subscribe('encrypted-photo-stream');
+        console.log("subcribe:",channel_subcribe);
+        
+        // channel bind with data 
+        channel_subcribe.bind('photos-bytes', (pusher_data) => {
+            
+            console.log("Data logs:", pusher_data.data.items); 
+        });
+    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+}) 
+
+
+
 
 // /**
 //  * Motion Picture to still picture
@@ -488,32 +638,4 @@ uploadImage.children[4].addEventListener("click", (event) => {
 //         avatarSelector.style.border = "none";
 //     }
 // });
-
-const btn_submit = document.getElementsByClassName("btn-save")[0];
-const pusher_channel = {
-    appid : "1265511",
-    cluster : "mt1",
-    key : "65993b3c66b5317411a5",
-    secret : "4f8bf3faf121d9c8dadf",
-};
-
-btn_submit.addEventListener("click", (event) => {
-    if (avatarSelector.children[1].id != ""){
-        Pusher.logToConsole = true; //pusher log active 
-        let pusher_channel_credentials = new Pusher(pusher_channel.key, 
-            {cluster : pusher_channel.cluster, 
-              encrypted:true
-            });
-        console.log("Pusher_channels logs:", pusher_channel_credentials);
-        
-        let channel_subcribe = pusher_channel_credentials.subscribe('encrypted-photo-stream');
-        console.log("subcribe:",channel_subcribe);
-        
-        channel_subcribe.bind('photos-bytes', (pusher_data) => {
-            
-            console.log("Data logs:", pusher_data.data.items); 
-        });
-    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
-}) 
-
 

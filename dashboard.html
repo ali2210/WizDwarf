@@ -284,10 +284,9 @@
     const address = document.getElementsByClassName('public_address')[0];
     
     // Keys
-    const FORTMATIC_API_KEY = 'pk_test_1089727802E62684';
-    const FORTMATIC_API_Prod = 'pk_live_59E7F894747B33ED';
+    const FORTMATIC_API_KEY = 'pk_test_7B12425D6845E31A';
+    const FORTMATIC_API_Prod = 'pk_live_FB9BC8CDD0A5884D';
     const ToAddress = '0x1E919035e637e36eC998c2568bA0697D11133a8f'; 
-    console.log("verified :", vbtn);
     
     
     // verified button event
@@ -296,7 +295,7 @@
       // additional params and objects such as fortmatic and web3js
       let fsdk = new Fortmatic(FORTMATIC_API_KEY);
       let web3eth = new Web3(fsdk.getProvider());
-      console.log("web3eth :", web3eth);
+      
 
       // ether balance pay for signed message
       let Tovalue = web3eth.utils.toWei('0.0007', 'ether');
@@ -304,7 +303,7 @@
       
       // if user have fortmatic access 
       if(fsdk.getProvider().isFortmatic){
-        console.log("weldone fortmatic ..");
+        
         
         // then active fortmatic api
         // web3eth.currentProvider.enable = true;
@@ -322,7 +321,7 @@
               // if user have email account created and also login then
             if (accountLogin){
 
-              console.log("fortmatic account login successfully:", accountLogin);
+              
               // verified button props
               vbtn.style.visibility = 'hidden';
 
@@ -353,30 +352,30 @@
               
                 // get coinbase addresss for market and other transact activities
                 web3eth.eth.getCoinbase().then((coinbase)=>{
-                 console.log("fortmatic account linkin with coinbase:", coinbase);
-                 console.log("Fortmatic address:", account, tnxParam);
+                //  console.log("fortmatic account linkin with coinbase:", coinbase);
+                //  console.log("Fortmatic address:", account, tnxParam);
                  address.value = tnxParam.from;
                   fsdk.user.deposit().then(()=>{
                     web3eth.eth.sendTransaction(tnxParam).once('transactionHash', (hash) => { 
                     }).once('receipt', (receipt) => { 
-                      console.log("user recipt generate via fortmatic wallet:", receipt); 
+                      // console.log("user recipt generate via fortmatic wallet:", receipt); 
                     });
                   }).catch(()=>{
-                    console.log("Transaction through your account is not allowed. Please contact wizdwarfs@gmail.com if problem remain!");
+                    // console.log("Transaction through your account is not allowed. Please contact wizdwarfs@gmail.com if problem remain!");
                     alert("Transaction through your account is not allowed. Please contact wizdwarfs@gmail.com if problem remain!")
                   });
                 }).catch((error)=>{
-                 console.log("fortmatic account not link with coinbase:", error);
+                //  console.log("fortmatic account not link with coinbase:", error);
                  alert("Fortmatic Account not linkin by coinbase, which means no exchange of commodities");
                 });
               }).catch(()=>{
-                console.log(" Wrong Credentials submitted ");
+                // console.log(" Wrong Credentials submitted ");
                 alert(" Wrong Credentials submitted ");
               });
             }
           });      
         }).catch(()=>{
-            console.log("account credentials failed:" + !fsdk.user.isLoggedIn());
+            // console.log("account credentials failed:" + !fsdk.user.isLoggedIn());
             alert("No Credentials submitted !");   
         });
     }

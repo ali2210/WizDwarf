@@ -1,28 +1,55 @@
+# This codebase desgin according to mozilla open source license.
+# Redistribution , contribution and improve codebase under license
+# convensions. @contact Ali Hassan AliMatrixCode@protonmail.com
+
+# version yml
 version: "3.3"
 
+# services offered 
 services: 
+    
+    # cloud native app proxy config
     traefik:
+    
+    # image 
       image: "traefik:v2.0.0"
+    
+    # config 
       command: 
         - --entrypoints.web.address=:80
         - --providers.docker
         - --api.insecure
+
+    # certs 
         - --certificatesresolvers.le.acme.email=wizdwarfs@gmail.com
         - --certificatesresolvers.le.acme.storage=/acme.json
         - --certificatesresolvers.le.acme.tlschallenge=true
+      
+      # ui ports 
       ports: 
         - "80:80"
         - "8080:8080"
+      
+      # ui persistance storage
       volumes: 
         - "/var/run/docker.sock:/var/run/docker.sock:ro"
         - "./acme.json:/acme.json"
+    
+    # app service config
     wizdwarfs:
+      # image 
       image: ali2210/wizdwarfs-v0
+      
+      # cloud native additional parameters
       labels: 
       - "traefik.http.routers.wizdwarfs.rule=Host(`wizdwarfs.docker.localhost`)"
       - "traefik.http.services.wizdwarfs.loadbalancer.server.port=5000"
       - "traefik.http.routers.wizdwarfs.tls.certresolver=le"
+      
+      # app port
       ports: 
         - "5000:5000"
+      
+      # app storage
       volumes: 
         - "./:/app/app_data"
