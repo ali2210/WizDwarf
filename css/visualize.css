@@ -236,6 +236,7 @@
     color:#fff;
     border: 1px dotted snow;
     box-shadow:5px 5px whitesmoke;
+    visibility: hidden;
   }
   
   .process:hover{

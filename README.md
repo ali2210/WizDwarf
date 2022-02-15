@@ -11,7 +11,7 @@
             Before running wizdwarfs locally fork the [![:alien:](ali2210/WizDwarfs)]
                a .Docker local build image
                      1. Without detach image
-                        cmd : $ docker run --hostname=wizdwarfs -p 5000:5000 -v app:/app/app_data -it ali2210/wiz-dwarfs
+                        cmd : $ docker run --hostname=wizdwarfs -p 127.0.0.1:5000:5000 -v app:/app/app_data -it ali2210/wiz-dwarfs
                      2. Browser Testing
                         Open Browser, 
                         press ctrl+ T,

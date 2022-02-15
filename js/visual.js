@@ -45,12 +45,19 @@ function run() {
 
 }
 run();
-
+const processBtn = document.getElementsByClassName('process')[0];
 const progress = document.querySelector('.progress-done');
 setTimeout(() => {
   progress.style.opacity = 1;
   progress.style.width = progress.getAttribute('data-done') + '%';
+  if (progress.style.width !== '100%') {
+    processBtn.style.visibility = "hidden";
+  }
 }, 200);
+
+setTimeout(() => {
+  processBtn.style.visibility = "visible";
+}, 10000 * 2.5);
 
 
 

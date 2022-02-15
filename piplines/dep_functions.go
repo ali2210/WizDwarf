@@ -1090,7 +1090,7 @@ func Mounted(w http.ResponseWriter, r *http.Request, openReadFile string) (strin
 		return "", err
 	}
 
-	fmt.Println("File name:"+handler.Filename, "Size:", handler.Size)
+	fmt.Println("File name:"+handler.Filename)
 
 	if _, err := os.Stat(handler.Filename); os.IsExist(err) {
 		log.Fatal("[Fail] Already have  this file ", err)
@@ -1140,11 +1140,11 @@ func Mounted(w http.ResponseWriter, r *http.Request, openReadFile string) (strin
 		log.Fatal("[Fail] File Reading Permission   ", err)
 		return "", err
 	}
-	n, err := upldFile.Write(bytesFile)
+	_, err = upldFile.Write(bytesFile)
 	if err != nil {
 		return "", err
 	}
-	log.Println("[Result] = File added on server", upldFile.Name(), "Size:", n)
+	log.Println("[Result] = File added on server", upldFile.Name())
 	return openReadFile, nil
 
 }
