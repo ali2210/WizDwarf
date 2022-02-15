@@ -33,17 +33,24 @@
       2. Zika
       3. Flavi Dengue
       4. Ebola
-      5. Mers
+      5. Merrs
        
 ## Features: 
 
       1. Alien-code Detection 
-      2. Geonavigation  
+      2. Get 1x Geonavigation   
       3. Uv-index generate through geonavigation
-      4. One-time Service
-      5. Log your Application 
-      6. Genetic File upload
-      7. Encrypted-Files mount on disk
+      4. Genetic File upload
+      5. Encrypted-Files mount on disk
+      6. Molecules Report generate in JSON
+      7. Content store in decentralize web. Means Within Application your content is accessible.
+      8. Proteins Visualization between Symbols and Number of occurances
+      9. Double Helix Code to amino chain 
+      10. Codon Information
+      11. Missing Codon cause any genetic mutation
+      12. For Schema, Protocol Buffer is 2x faster than yml and Json
+      13. Pusher Channels is used between client and server that will reduce network latency
+      
 
 ## Links:
  
@@ -59,19 +66,16 @@
 
 <a href="https://codeclimate.com/github/ali2210/WizDwarf/maintainability"><img src="https://api.codeclimate.com/v1/badges/b1a8e6c05b3ec74b3074/maintainability" /></a>
 
-[![CircleCI](https://circleci.com/gh/ali2210/WizDwarf/tree/master.svg?style=svg)](https://circleci.com/gh/ali2210/WizDwarf/tree/master)
+ [![CircleCI](https://circleci.com/gh/ali2210/WizDwarf/tree/master.svg?style=svg)](https://circleci.com/gh/ali2210/WizDwarf/tree/master)
 
-      2. [Contributor](https://github.com/ali2210/WizDwarf/wiki)
+<!--       2. [Contributor](https://github.com/ali2210/WizDwarf/wiki) -->
 
       3. [ElephantClock](https://upload.wikimedia.org/wikipedia/commons/7/76/Al-jazari_elephant_clock.png)
 
 ## Support and Contribute
 
-      <!-- <a href='https://ko-fi.com/T6T25CVYQ' target='_blank'> -->
-        <!-- <img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi4.png?v=3' border='0'      alt='Buy Me a Coffee at ko-fi.com' /></a>-->
-
             
- [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/T6T25CVYQ)
+<!--  [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/T6T25CVYQ)
    
       ### Opencollective 
    
@@ -80,7 +84,7 @@
    
  <a href="https://opencollective.com/wizdwarfs/contribute/love-and-support-29623"> <img src="https://opencollective.com/wizdwarfs/tiers/love-and-support.svg?avatarHeight=36"/></a>
    
- <a href='https://opencollective.com/wizdwarfs/contribute/love-and-support-29623' target='blank'><img alt="open collective badge" src="https://opencollective.com/wizdwarfs/tiers/love-and-support/badge.svg?label=Love%26Support&color=brightgreen" /></a>
+ <a href='https://opencollective.com/wizdwarfs/contribute/love-and-support-29623' target='blank'><img alt="open collective badge" src="https://opencollective.com/wizdwarfs/tiers/love-and-support/badge.svg?label=Love%26Support&color=brightgreen" /></a> -->
    
 ## Discusion
      
