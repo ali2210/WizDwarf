@@ -15,7 +15,7 @@
                      2. Browser Testing
                         Open Browser, 
                         press ctrl+ T,
-                        type localhost:5000/
+                        type localhost:5000/ or 127.0.0.1:5000/
       ### Production
                1. Provision Configuration for Linux
                $  curl #[link]  or IPFS #[image]
@@ -37,24 +37,22 @@
        
 ## Features: 
 
-      1. Alien-code Detection 
-      2. Get 1x Geonavigation   
-      3. Uv-index generate through geonavigation
-      4. Genetic File upload
-      5. Encrypted-Files mount on disk
-      6. Molecules Report generate in JSON
+      1. Alien-code Detection. 
+      2. Get Geonavigation 1x improved.   
+      3. Uv-index generate through geonavigation 1x improved.
+      4. Genetic Sequence File upload. 
+      5. Encrypted-Files mount on disk.
+      6. Molecules Report generate in JSON.
       7. Content store in decentralize web. Means Within Application your content is accessible.
-      8. Proteins Visualization between Symbols and Number of occurances
-      9. Double Helix Code to amino chain 
-      10. Codon Information
-      11. Missing Codon cause any genetic mutation
+      8. Proteins Visualization through readable charts.
+      9.  Calculate trace portion of alien code 2x faster.
+      10. Three pair codons information renderer on the user request
+      11. If any missing codon or mutate wrong what will happen at celluar level. 
       12. For Schema, Protocol Buffer is 2x faster than yml and Json
       13. Pusher Channels is used between client and server that will reduce network latency
       
 
-## Links:
- 
-      1. [Docker](https://hub.docker.com/repository/docker/ali2210/wiz-dwarfs)   
+## Badges:   
 [![Docker](https://github.com/ali2210/WizDwarf/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/ali2210/WizDwarf/actions/workflows/docker-publish.yml)
 
 [![Go](https://github.com/ali2210/WizDwarf/actions/workflows/go.yml/badge.svg)](https://github.com/ali2210/WizDwarf/actions/workflows/go.yml)         
@@ -68,11 +66,7 @@
 
  [![CircleCI](https://circleci.com/gh/ali2210/WizDwarf/tree/master.svg?style=svg)](https://circleci.com/gh/ali2210/WizDwarf/tree/master)
 
-<!--       2. [Contributor](https://github.com/ali2210/WizDwarf/wiki) -->
-
-      3. [ElephantClock](https://upload.wikimedia.org/wikipedia/commons/7/76/Al-jazari_elephant_clock.png)
-
-## Support and Contribute
+<!-- ## Support and Contribute -->
 
             
 <!--  [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/T6T25CVYQ)
@@ -86,17 +80,57 @@
    
  <a href='https://opencollective.com/wizdwarfs/contribute/love-and-support-29623' target='blank'><img alt="open collective badge" src="https://opencollective.com/wizdwarfs/tiers/love-and-support/badge.svg?label=Love%26Support&color=brightgreen" /></a> -->
    
+## API
+
+   ### [GET]
+        
+       "/home"               Home Page
+	      "/signup"            Signup User
+	      "/login"             Login User
+	      "/dashboard"         User Dashboard
+       "/dashboard/profile" User Profile
+       "/logout"            Logout the user account 
+       "/phenylalanine"     Phenylalanine protein
+       "/leucine"           Leucine protein
+       "/isoleucine"        Isoleucine protein
+       "/methionine"        Methionine protein
+       "/valine"            Valine protein
+       "/serine"            Serine protein
+       "/proline"           Proline protein
+       "/threonine"         Threonine protein
+       "/alanine"           Alanine protein
+       "/tyrosine"          Tyrosine protein
+       "/histidine"         Histidine protein
+       "/glutamine"         Glutamine protein
+       "/asparagine"        Asparagine protein
+       "/lysine"            Lysine protein
+       "/aspartic"          Aspartic protein
+       "/glutamic"          Glutamic protein
+       "/cysteine"          Cysteine protein
+       "/tryptophan"        Tryptophan protein
+       "/arginine"          Arginine protein
+       "/glycine"           Glycine protein
+       "/stop"              Stop Codon
+    
+   ### [POST]
+       
+       "/home"                HOME Page
+	      "/signup"              Signup user
+	      "/login"               Login User
+	      "/dashboard"           User Dashboard
+       "/dashboard/profile"   User Profile
+       "/logout"              Logout the user account
+       
+       
 ## Discusion
      
      ### Slack
             
             https://app.slack.com/client/T02AQ62EHHR/C02ALUWQ4LV/93ae0ff54319133c57487e772c8e0f1045690945
 
- <object><a href='https://app.element.io/#/room/!XdCqKpBpqSSgLLcNPI:matrix.org' target='blank'>Element</a></object>
-            
- <a href='https://www.reddit.com/r/wizdwarfs/a'> wizdwarfs_reddit
-
- [![Gitter](https://badges.gitter.im/wizdwarfs/futuristic-tech-dev.svg)](https://gitter.im/wizdwarfs/futuristic-tech-dev?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+<object><a href='https://app.element.io/#/room/!XdCqKpBpqSSgLLcNPI:matrix.org' target='blank'>Element</a></object>            
+<a href='https://www.reddit.com/r/wizdwarfs/a'> wizdwarfs_reddit
+[![Gitter](https://badges.gitter.im/wizdwarfs/futuristic-tech-dev.svg)](https://gitter.im/wizdwarfs/futuristic-tech-dev?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 
  [![GitNFT](https://img.shields.io/badge/%F0%9F%94%AE-Open%20in%20GitNFT-darkviolet?style=social)](https://gitnft.quine.sh/app/commits/list/repo/WizDwarf)
