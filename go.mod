@@ -10,17 +10,15 @@ require (
 	github.com/agnivade/levenshtein v1.1.0
 	github.com/biogo/biogo v1.0.2
 	github.com/briandowns/openweathermap v0.16.0
-	github.com/ethereum/go-ethereum v1.10.7
+	github.com/ethereum/go-ethereum v1.10.10
 	github.com/fogleman/ribbon v0.0.0-20191101191537-568057efb726
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/goombaio/namegenerator v0.0.0-20181006234301-989e774b106e
-	github.com/gorilla/mux v1.7.4
+	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/sessions v1.2.0
 	github.com/ipfs/go-cid v0.1.0
 	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
 	github.com/logpacker/PayPal-Go-SDK v2.0.5+incompatible
-	github.com/mattn/go-colorable v0.1.4 // indirect
-	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/multiformats/go-base32 v0.0.4 // indirect
 	github.com/multiformats/go-multihash v0.0.16
 	github.com/onsi/ginkgo v1.16.4

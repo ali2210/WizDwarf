@@ -1,4 +1,4 @@
-// Copyright 2020 The go-ethereum Authors
+// Copyright 2021 The go-ethereum Authors
 // This file is part of the go-ethereum library.
 //
 // The go-ethereum library is free software: you can redistribute it and/or modify
@@ -14,11 +14,19 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
 
-//go:build ios || js
-// +build ios js
+package types
 
-package metrics
+import (
+	"math/big"
 
-// ReadCPUStats retrieves the current CPU stats. Internally this uses `gosigar`,
-// which is not supported on the platforms in this file.
-func ReadCPUStats(stats *CPUStats) {}
+	"github.com/ethereum/go-ethereum/common"
+)
+
+// StateAccount is the Ethereum consensus representation of accounts.
+// These objects are stored in the main account trie.
+type StateAccount struct {
+	Nonce    uint64
+	Balance  *big.Int
+	Root     common.Hash // merkle root of the storage trie
+	CodeHash []byte
+}
