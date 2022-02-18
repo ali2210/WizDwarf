@@ -1,0 +1,59 @@
+/* This codebase desgin according to mozilla open source license.
+Redistribution , contribution and improve codebase under license
+convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
+
+
+// protos version 
+syntax = "proto3";
+
+// require package
+package proto;
+
+
+option go_package = "github.com/ali2210/wizdwarf/other/bucket/proto";
+
+import "other/proteins/binary/binary.proto";
+
+// message Object hold File_Object or File_Descriptor
+message Object {
+    string name = 1;
+    string types = 2;
+    repeated binary.Micromolecule content = 3;
+}
+
+// either object return ok_trait or object return error
+enum Object_Status{
+    OK = 0;
+    ERROR = 1;
+}
+
+
+message IObject{
+    Object iobject = 1;
+    Object_Status istatus = 2;
+}
+
+
+// byname is the common waay to iterator document
+message Query{
+    string ByName = 1;
+}
+
+enum QStatus{
+    Ok = 0;
+    Err = 1;
+}
+
+// either query return something or none
+message QState{
+    QStatus qstatus = 1;
+}
+
+
+
+// GBucket hold New pr preview object state
+service GBucket {
+    rpc New_Bucket(Object) returns (IObject);
+    rpc Preview(Query) returns (QState);
+    rpc Download(Query) returns (QState);
+}

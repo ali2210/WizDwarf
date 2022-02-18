@@ -1,0 +1,23 @@
+
+/* This codebase desgin according to mozilla open source license.
+Redistribution , contribution and improve codebase under license
+convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
+
+syntax = "proto3";
+
+package jsonledit;
+
+// import other message file 
+import "other/proteins/binary/binary.proto";
+
+// protos language
+option go_package = "github.com/ali2210/wizdwarf/other/jsonledit";
+
+
+// FILE Descriptor store json file param 
+message FileDescriptor{
+    string Names = 1;
+    string Types = 2;
+    repeated binary.Micromolecule molecule =3;
+    int64 Occurance = 4;
+}

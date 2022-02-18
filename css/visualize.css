@@ -103,6 +103,7 @@
     align-items: center;
     box-shadow: 0 3px 3px -5px #f2709c, 0 2px 5px #f2709c;
     transition: 30s ease;
+    box-shadow: 10px 10px whitesmoke;
   }
 
   /* .btn-success{
@@ -174,6 +175,13 @@
      display: flex;
      justify-content: flex-start;
      top: 5px;
+     flex-direction: row-reverse;
+ }
+ .uvindex{
+   position: absolute;
+   top: 35px;
+   visibility: hidden;
+   flex-direction: row-reverse;
  }
 
  .line{
@@ -184,7 +192,7 @@
 
   .risk-div{
     position: relative;
-    top: 9px;
+    top: 20px;
   }
 
   .description{
@@ -227,6 +235,7 @@
     left: -5px;
     color:#fff;
     border: 1px dotted snow;
+    box-shadow:5px 5px whitesmoke;
   }
   
   .process:hover{
@@ -255,4 +264,5 @@
   .list-groups{
     position: relative;
     top: 24px;
+    box-shadow: 5px 5px whitesmoke;
   }

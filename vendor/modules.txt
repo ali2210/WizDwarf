@@ -97,6 +97,9 @@ github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
 # github.com/googleapis/gax-go/v2 v2.0.5
 github.com/googleapis/gax-go/v2
+# github.com/goombaio/namegenerator v0.0.0-20181006234301-989e774b106e
+## explicit
+github.com/goombaio/namegenerator
 # github.com/gorilla/mux v1.7.4
 ## explicit
 github.com/gorilla/mux

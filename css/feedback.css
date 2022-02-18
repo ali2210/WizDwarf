@@ -1,0 +1,156 @@
+.choice{
+	width: 50%;
+	height: 150px;
+	position: relative;
+	top: 100px;
+	left: 149px;
+	border-radius: 25px;
+	box-shadow:5px 5px whitesmoke;
+	z-index: 2;
+}
+
+.main-dashboard-div {
+  background-color:#f9f9f9;
+  font-family: 'Lato', sans-serif;
+  height: 100vh;
+}
+
+.icon-light {
+  color: black;
+  margin-right: 5px;
+}
+
+.dropdown-menu {
+  left: 30px;
+}
+
+.h4 {
+  margin: 20px 0px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 20px;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  height: 60px;
+}
+
+.custom-navbar {
+  background-color: #ededed;
+}
+
+
+.heading-text{
+  margin-top: 70px;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin-right: 18px;
+}
+
+.useract{
+   display: flex;
+   position: absolute;
+   top: 181px;
+   left: 186px;
+}
+
+.card{
+  display: flex;
+  position: absolute;
+  border-radius: 20px;
+}
+
+.card-text{
+  display: flex;
+  position: relative;
+  left: 21px;
+}
+
+.card-title{
+  display: flex;
+  position: relative;
+  left: 20px;
+}
+
+.btn-star0, .btn-star1, .btn-star2, .btn-star3, .btn-star4{
+  position: relative;
+  left: 13px;
+  border-radius: 20px;
+  border:none;
+  box-shadow: 1px 1px whitesmoke;
+  cursor: pointer;
+}
+
+.btn-edit{
+  display:flex;
+  position: relative;
+  left:176px;
+  border: none;
+  border-radius: 20px;
+  top: 3px;
+  cursor:progress;
+}
+.btn-download{
+  display:flex;
+  position: relative;
+  border: none;
+  border-radius: 20px;
+  top: 3px;
+  cursor: pointer;
+  left:110px;
+}
+
+.like{
+  display: flex;
+  position: relative;
+  width: 276px;
+  border-radius: 20px;
+  box-shadow:5px 5px whitesmoke;
+  left: 31px;
+  top:7px;
+}
+
+.improve{
+  display: flex;
+  position: relative;
+  width: 303px;
+  border-radius: 20px;
+  box-shadow:5px 5px whitesmoke;
+  left: -6px;
+  top:27px;
+}
+
+.recommend{
+  display: flex;
+  position: relative;
+  width: 276px;
+  border-radius: 20px;
+  box-shadow:5px 5px whitesmoke;
+  left:39px;
+  top:49px;
+}
+
+.list-group-item{
+  height: 161px;
+}
+
+.list-group{
+  visibility: hidden;
+  height: 26px;
+}
+
+.review{
+  display: flex;
+  position: absolute;
+  border:none;
+  top: 175px;
+  left:160px;
+  border-radius: 10px;
+  color:green;
+}

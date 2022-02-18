@@ -13,20 +13,28 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
 
 	"cloud.google.com/go/firestore"
-	// "github.com/ali2210/wizdwarf/db"
+	binaries "github.com/ali2210/wizdwarf/other/genetic/binary"
 
 	// CloudWallet "github.com/ali2210/wizdwarf/db/cloudwalletclass"
 	// DBModel "github.com/ali2210/wizdwarf/db/model"
 	structs "github.com/ali2210/wizdwarf/other"
 	bio "github.com/ali2210/wizdwarf/other/bioinformatics"
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
+	"github.com/ali2210/wizdwarf/other/bucket"
+	"github.com/ali2210/wizdwarf/other/bucket/proto"
+	cryptos "github.com/ali2210/wizdwarf/other/crypto"
 	genetics "github.com/ali2210/wizdwarf/other/genetic"
 	genome "github.com/ali2210/wizdwarf/other/genetic/binary"
+	"github.com/ali2210/wizdwarf/other/jsonpb"
+	"github.com/ali2210/wizdwarf/other/jsonpb/jsonledit"
+	"github.com/ali2210/wizdwarf/other/proteins"
+	"github.com/ali2210/wizdwarf/other/proteins/binary"
 	"github.com/ali2210/wizdwarf/piplines"
 
 	// Shop "github.com/ali2210/wizdwarf/other/cart"
@@ -70,6 +78,8 @@ var (
 	accountKey        string                    = " "
 	accountVisitEmail string                    = " "
 	signed_msg        string                    = " "
+	address_wallet    string                    = " "
+	File              string                    = ""
 	// checkout          Shop.Shopping             = Shop.Shopping{
 	// 	Price:         "",
 	// 	TypeofService: "",
@@ -182,7 +192,7 @@ func main() {
 	routing.HandleFunc("/dashboard/setting/pay/credit/add", credit)
 	routing.HandleFunc("/dashbaord/setting/pay/credit/delete", deleteCard)
 	routing.HandleFunc("/logout", logout)
-	// routing.HandleFunc("/createwallet", createWallet)
+	routing.HandleFunc("/feedback", customerViews)
 	routing.HandleFunc("/terms", terms)
 	// routing.HandleFunc("/open", wallet)
 	routing.HandleFunc("/transact", transacts)
@@ -952,10 +962,13 @@ func multicluster(w http.ResponseWriter, r *http.Request) {
 // }
 
 func visualize(w http.ResponseWriter, r *http.Request) {
+
 	temp := template.Must(template.ParseFiles("visualize.html"))
+
 	log.Println("Report percentage", visualizeReport.Percentage)
 	log.Println("Report uv ", visualizeReport.UVinfo)
 	// fmt.Println("Profile:", profiler)
+
 	userProfile, err := Cloud.GetDocumentById(AppName, *profiler)
 	if err != nil && userProfile != nil {
 		log.Fatal("[Fail] No info  ", err)
@@ -967,6 +980,7 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("query return un handle data  ", err.Error())
 		return
 	}
+
 	err = json.Unmarshal(query_json, &profiler)
 	if err != nil {
 		log.Fatal("query return un structure data", err.Error())
@@ -979,14 +993,143 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Method:" + r.Method)
 		// visualizeReport.Process = 1
 		// visualizeReport.SeenBy = profiler.Name
+
+		// firestore credentials
 		genetics.Client = piplines.Firestore_Reference()
-		genetics.Pkk = piplines.PKK255(profiler.Id)
+
+		// generate ed25519 key
+		cdr, _ := cryptos.PKK25519(profiler.Id)
+		genetics.Pkk = fmt.Sprintf("%x", cdr)
+
+		// genetics object
 		rece_gen := genetics.New()
+
 		life := genome.Lifecode{}
+
+		// genetics data string
 		life.Genes = strings.Join(piplines.GetGenes(), "")
 		life.Pkk = genetics.Pkk
+
+		// create trust object ... trust verified whom that content .
+		ok, err, key := piplines.TrustRequest(life.Pkk, address_wallet, signed_msg)
+		if !ok && err != nil {
+			log.Printf(" cryptographic trust failed %v:", err.Error())
+			return
+		}
+
+		// genetics database
 		status := rece_gen.AddCode(context.Background(), &life)
-		log.Println("data published", status)
+		if status.ErrorCode == binaries.Errors_Error {
+			log.Printf(" bad request: %v", status)
+			return
+		}
+
+		// get all proteins symbols
+		listProteinsName := piplines.Active_Proteins(life.Genes)
+
+		// get all amino table
+		listProteins := piplines.AminoChains(life.Genes)
+		ribbon := make(map[string]map[string]proteins.Aminochain)
+
+		// read map values
+		iterate := reflect.ValueOf(listProteinsName).MapRange()
+
+		// create new marcomolecules which hold molecule state for a while
+		// chains := binary.Micromolecule_List{}
+		aminochain := make([]*binary.Micromolecule, len(life.Genes))
+		//chains.Peplide = make([]*binary.Micromolecule, len(life.Genes))
+
+		// iterate over map values
+		for iterate.Next() {
+
+			// store map value in other map
+			ribbon[listProteinsName[iterate.Value().String()]] = listProteins
+
+			// get polypeptide information in structured data
+			extraction := piplines.Genome_Extract(ribbon, listProteinsName, iterate.Value().String())
+
+			// if the information return void space or empty field then discard , otherwise hold that state
+			if piplines.GetMoleculesState(extraction) && piplines.GetCompositionState(extraction) {
+				aminochain = append(aminochain, extraction)
+			}
+
+		}
+
+		var Ckk string = ""
+
+		// compare provided key hold key state and they key is also generated by machine
+		if !reflect.DeepEqual(key.Public(), " ") && len(key.Seed()) == 32 {
+			Ckk = fmt.Sprintf("%x", key.Public())
+		}
+
+		s := make([]string, len(life.Genes))
+		for j := range aminochain {
+			if str := piplines.Make_string(aminochain[j]); str != " " {
+				s = append(s, str)
+			}
+		}
+
+		var sumof int64 = 0
+
+		// iterate_over aminochain
+		for i := range aminochain {
+
+			// check aminochain have execpted type
+			if piplines.Molecular(aminochain[i]) && s[i] != " " {
+				abundance, syms := piplines.Abundance(aminochain[i], strings.Join(s, ""), i)
+				if reflect.DeepEqual(aminochain[i].Symbol, syms) {
+					aminochain[i].Abundance = int64(abundance)
+				}
+
+				// marshal the protos message
+				data, err := jsonpb.ProtojsonMarshaler(aminochain[i])
+				if err != nil {
+					log.Printf(" Error marshalling protos %v", err.Error())
+					return
+				}
+
+				// unmarhal the protos message
+				err = jsonpb.ProtojsonUnmarshaler(data, aminochain[i])
+				if err != nil {
+					log.Printf(" Error Un-marshalling protos %v", err.Error())
+					return
+				}
+
+				// which protein exist in abudance
+				sumof = sumof + proteins.Total_chain_filter(aminochain[i].Abundance)
+			}
+		}
+
+		// This param either contribute in file processing or file content that want to be store in batch mode
+		jsonFile := &jsonledit.FileDescriptor{}
+		jsonFile.Types = ".json"
+		jsonFile.Names = piplines.Generator()
+		jsonFile.Molecule = aminochain
+		jsonFile.Occurance = sumof
+
+		// create a new .json file with these parameters and write data stream in file
+		proteins.CreateNewJSONFile(jsonFile)
+
+		// additional param
+		context := context.Background()
+		client := bucket.New_Client(&context)
+		bucket.Client = piplines.Firestore_Reference()
+
+		// each transaction param before storing in physical database.
+		bucket.Key = profiler.Id
+		bucket.Composite = Ckk
+
+		// creating decentalize & dynamic links of the content
+		iobject := client.New_Bucket(&proto.Object{Name: jsonFile.Names, Types: jsonFile.Types, Content: jsonFile.Molecule})
+		if iobject.Istatus == proto.Object_Status_ERROR {
+			log.Printf(" Error in generating link %v", iobject.Istatus)
+			return
+		}
+
+		File = jsonFile.Names + jsonFile.Types
+		//prev_object := client.Preview(&proto.Query{ByName: file})
+		//log.Println("prev_object:", prev_object)
+
 		temp.Execute(w, visualizeReport)
 	}
 
@@ -1024,8 +1167,8 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		}
 
 		choose := r.FormValue("choose")
-		msg := r.FormValue("status")
-		log.Println("signed msg:", msg)
+		signed_msg = r.FormValue("status")
+		address_wallet = r.FormValue("address")
 		coordinates := r.FormValue("geo-marker")
 		var longitude_parse float64 = 0.0
 		var latitude_parse float64 = 0.0
@@ -1221,138 +1364,16 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 
 // }
 
-// func createWallet(w http.ResponseWriter, r *http.Request) {
+func customerViews(w http.ResponseWriter, r *http.Request) {
+	temp := template.Must(template.ParseFiles("feedback.html"))
 
-// 	temp := template.Must(template.ParseFiles("seed.html"))
-// 	acc := structs.Acc{}
-
-// 	if r.Method == "GET" {
-
-// 		fmt.Println("Method:" + r.Method)
-// 		temp.Execute(w, "Seed")
-// 	} else {
-
-// 		// temp := template.Must(template.ParseFiles("server.html"))
-// 		fmt.Println("Method:" + r.Method)
-// 		r.ParseForm()
-// 		acc.Email = r.FormValue("email")
-// 		acc.Password = r.FormValue("password")
-
-// 		if r.FormValue("agreeTerms") == "on" {
-// 			acc.Terms = true
-// 		} else {
-// 			acc.Terms = false
-// 		}
-
-// 		if r.FormValue("allow") == "on" {
-// 			acc.Allowed = true
-// 		} else {
-// 			acc.Allowed = false
-// 		}
-
-// 		client, err := ethclient.Dial(mainNet)
-// 		if err != nil {
-// 			log.Fatal("[Fail] Request Failed  ", err)
-
-// 			return
-// 		}
-
-// 		log.Println("[Accept] Connection accepted", client)
-// 		clientInstance = client
-
-// 		// btx, err := send()
-// 		// if err != nil {
-// 		// 	return
-// 		// }
-
-// 		// private key
-// 		privateKey, err := crypto.GenerateKey()
-// 		if err != nil {
-// 			return
-// 		}
-
-// 		// private key into bytes
-// 		PrvateKyByte := crypto.FromECDSA(privateKey)
-
-// 		key := hexutil.Encode(PrvateKyByte)[2:]
-
-// 		pblicKey := privateKey.Public()
-
-// 		pbcKey, ok := pblicKey.(*ecdsa.PublicKey)
-// 		if !ok {
-// 			log.Fatal("[Fail] Public Key from Private Key  ", err)
-// 			return
-// 		}
-
-// 		publicBytes := crypto.FromECDSAPub(pbcKey)
-
-// 		PublicKey := crypto.PubkeyToAddress(*pbcKey).Hex()
-
-// 		acc.PubKey = PublicKey[:8]
-// 		acc.PrvteKey = key[:8]
-
-// 		// hash to ethereum
-// 		hshCode := sha3.NewLegacyKeccak256()
-// 		hshCode.Write(publicBytes[1:])
-// 		ethereum := hexutil.Encode(hshCode.Sum(nil)[12:])
-
-// 		acc.EthAddress = ethereum[:8]
-
-// 		// valid address
-// 		// valid := IsEvm(acc.EthAddress)
-// 		// if valid {
-
-// 		// 	// smart contract address
-// 		// 	log.Println("[Feature] Smart Address", valid)
-// 		// 	w.WriteHeader(http.StatusForbidden)
-// 		// 	w.Write([]byte("Thank-you for your response! , This feature will added upcoming build... Sorry for inconvenience"))
-// 		// 	return
-
-// 		// }
-
-// 		myWallet := CloudWallet.EthereumWalletAcc{}
-
-// 		signWallet, err := json.Marshal(myWallet)
-// 		if err != nil {
-// 			return
-
-// 		}
-
-// 		err = json.Unmarshal(signWallet, &myWallet)
-// 		if err != nil {
-// 			log.Fatal("[Fail] Data JSON FORMAT ERROR ", err)
-// 			return
-// 		}
-
-// 		// ok, ethAdd := Retrieve_Crypto(&acc, ledger)
-// 		// if ok && ethAdd != nil {
-// 		// 	log.Fatal("[Replicate] Already Data exist  ", err)
-// 		// 	return
-
-// 		// }
-
-// 		myWallet.Email = acc.Email
-// 		myWallet.Password = acc.Password
-// 		myWallet.EthAddress = acc.EthAddress
-// 		myWallet.Terms = acc.Terms
-// 		myWallet.Allowed = acc.Allowed
-// 		myWallet.PrvteKey = acc.PrvteKey
-
-// 		// merchant, err := ledger.CreatePublicAddress(&myWallet, AppName)
-// 		// if err != nil {
-// 		// 	log.Fatal("[Fail] Wallet Don't have Public Accessibity  ", err)
-// 		// 	return
-
-// 		// }
-
-// 		clientInstance = nil
-
-// 		// log.Println("[Accept] Welcome ! Your Account Has been created", &merchant)
-// 		w.WriteHeader(http.StatusOK)
-// 		r.Method = "GET"
-// 		existing(w, r)
-// 	}
-// }
+	// require different param
+	if r.Method == "GET" {
+		fmt.Println("Url:", r.URL.Path)
+		fmt.Println("Method:" + r.Method)
+		temp.Execute(w, "Feedback")
+	}
+}
 
 func transacts(w http.ResponseWriter, r *http.Request) {
 

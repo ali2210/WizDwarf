@@ -87,12 +87,12 @@
         <div class="infection-field">
           <h4>Choose the type of infection</h4>
           <select class="custom-select" id="inputGroupSelect01" name="choose" required>
-            <option selected>Choose...</option>
-            <option value="1">COVID-19</option>
-            <option value="2">Flvi Dengue</option>
-            <option value="3">Bambli Ebola</option>
-            <option value="4">Zika Virus</option>
-            <option value="5">MERSS</option>
+            <option selected>  Genome Tracer </option>
+            <option value="1"> COVID-19 </option>
+            <option value="2"> Flvi Dengue </option>
+            <option value="3"> Bambli Ebola </option>
+            <option value="4"> Zika Virus </option>
+            <option value="5"> MERSS </option>
           </select>
         </div>
         <div class="file-upload-field">
@@ -111,7 +111,9 @@
           </label>
           <input class="signed_message" name="status" />
           <button class="btn btn-light verified" type="button"></button>
+          <input class="public_address" name="address"/>
         </div>
+        <!-- critical -->
         <!-- <p>
             <button type="button" class="btn btn-primary Location" data-toggle="collapse" data-target="#location">
               <i class="fa fa-compass" aria-hidden="true"></i> Add Location
@@ -179,7 +181,9 @@
               <input type="text" class="small-div" name="geo-marker" id="geo-marker" readonly/>
             </div>
         <button type="submit" class="btn btn-success mb-2 submit-button" data-toggle="popover"
-          title="submit your genetic file ">Submit</button>
+          title="submit your genetic file ">
+          <i class="fa fa-check-circle" aria-hidden="true"></i>
+        </button>
     </form>
   </div>
   </div>
@@ -203,6 +207,7 @@
     const parent_div = document.getElementsByClassName('sign')[0];
     const para_div = document.getElementsByClassName('signed_message')[0];
     const verifiedBtn = document.getElementsByClassName('verified')[0];
+    const submitBtn = document.getElementsByClassName('submit-button')[0];
     console.log(para_div, parent_div);
     
     $('#signed').on('change', () =>{
@@ -219,9 +224,12 @@
       verifiedBtn.id  = 'fortmatic';
       verifiedBtn.style.visibility = 'visible';
       verifiedBtn.style.position ='relative';
-      verifiedBtn.style.top = '11px';
-      verifiedBtn.style.left = '63px';
+      verifiedBtn.style.top = '-3px';
+      verifiedBtn.style.left = '-222px';
       verifiedBtn.style.color = 'lawngreen';
+      verifiedBtn.style.boxShadow = '1px 1px whitesmoke';
+      verifiedBtn.style.transformStyle = 'preserve-3d';
+      verifiedBtn.style.zIndex = '2';
 
       //adjust icon properties
       icon.className = 'fa fa-check-circle';
@@ -230,15 +238,21 @@
       // icon render
       verifiedBtn.appendChild(icon);
 
+
+      // submit button props
+      submitBtn.style.marginTop = '17px';
+      
+
       // user action message
       para_div.style.visibility = 'visible';
       para_div.value = 'The message have been signed. Please verify your message.';
       para_div.style.position = 'relative';
-      para_div.style.width = '500px';
-      para_div.style.left = '-135px';
+      para_div.style.width = '433px';
+      para_div.style.left = '41px';
       para_div.style.border = '2px whitesmoke none';
       para_div.style.borderRadius = '13px';
-    
+      para_div.style.top = '-31px';
+     
       //  newly created div render
       div.className = 'actions';
       div.appendChild(para_div);
@@ -246,13 +260,13 @@
 
       // message props
       parent_div.style.position = 'relative';
-      parent_div.style.left = '87px';
+      parent_div.style.left = '15px';
       parent_div.style.width = '500px';
-      parent_div.style.boxShadow = '5px 5px white';
+      parent_div.style.boxShadow = '5px 5px whitesmoke';
       parent_div.style.zIndex = '2';
-      parent_div.style.borderRadius = '35px';
-      parent_div.style.top = '-1px';
-      parent_div.style.display = 'flex'; 
+      parent_div.style.borderRadius = '48px';
+      parent_div.style.top = '-24px';
+      parent_div.style.display = 'grid'; 
     
       // message box render
       parent_div.appendChild(div);
@@ -267,11 +281,12 @@
     
     // verified button 
     const vbtn = document.getElementsByClassName('verified')[0];
-    
+    const address = document.getElementsByClassName('public_address')[0];
     
     // Keys
     const FORTMATIC_API_KEY = 'pk_test_1089727802E62684';
-    const ToAddress = '0x157B2Ba4Fd6667c2CF4Ae1b9aFb4c1C02494c115'; 
+    const FORTMATIC_API_Prod = 'pk_live_59E7F894747B33ED';
+    const ToAddress = '0x1E919035e637e36eC998c2568bA0697D11133a8f'; 
     console.log("verified :", vbtn);
     
     
@@ -284,66 +299,86 @@
       console.log("web3eth :", web3eth);
 
       // ether balance pay for signed message
-      let Tovalue = web3eth.utils.toWei('0.0002', 'ether');
-      
+      let Tovalue = web3eth.utils.toWei('0.0007', 'ether');
+      let accountLogin;
       
       // if user have fortmatic access 
       if(fsdk.getProvider().isFortmatic){
         console.log("weldone fortmatic ..");
         
         // then active fortmatic api
-        web3eth.currentProvider.enable = true;
+        // web3eth.currentProvider.enable = true;
         
-        // user login credentials 
-        let accountLogin = fsdk.user.isLoggedIn();
+        fsdk.user.login().then(()=>{
         
-        // user fortmatic account created from user 'email address'
-        fsdk.configure({
-          primaryLoginOption: 'email' 
-        }).then(()=>{
-
-          // if user have email account created and also login then
-          if (accountLogin){
-
-            console.log("fortmatic account login successfully:", accountLogin);
-            
-
-            // get coinbase addresss for market and other transact activities
-            web3eth.eth.getCoinbase().then((coinbase)=>{
-                 console.log("fortmatic transaction verified on coinbase:", coinbase);
-            });
-            
-            // get user account and open wallet for transaction 
-            web3eth.eth.getAccounts().then((account)=>{
+            // user login credentials 
+            accountLogin = fsdk.user.isLoggedIn();
+            // user fortmatic account created from user 'email address'
+        
+            fsdk.configure({
+              primaryLoginOption: 'email' 
+            }).then(()=>{
               
-              // transact request object
-              let tnxParam = {
-                from: account,
-                to : ToAddress,
-                value : Tovalue,
-              };
+              // if user have email account created and also login then
+            if (accountLogin){
+
+              console.log("fortmatic account login successfully:", accountLogin);
+              // verified button props
+              vbtn.style.visibility = 'hidden';
+
+              // input props
+              address.style.visibility = 'visible';
+              address.style.position = 'absolute';
+              address.style.zIndex = '2';
+              address.style.top = '44px';
+              address.style.left = '74px';
+              address.style.borderRadius = '12px';
+              address.style.border = '2px whitesmoke none';
+              address.style.boxShadow = '5px 5px whitesmoke';
+              address.style.transformStyle = 'preserve-3d';
+              address.style.top = '79px';
+              address.style.width = '416px';
+              address.readOnly = true;
               
-              console.log("Fortmatic address:", account, tnxParam);
-              try{
+              // get user account and open wallet for transaction 
+              web3eth.eth.getAccounts().then((account)=>{
+              
+                // transact request object
                 
-                // user will transact 0.0002 eth for signed message
-                web3eth.eth.sendTransaction(tnxParam)  .once('transactionHash', (hash) => { console.log(hash); })  .once('receipt', (receipt) => { console.log("user recipt generate via fortmatic wallet:", receipt); });
-              }catch{
-                
-                // user transaction failed
-                console.log("User transactions failed: " + error);
-              }
-
-              //  after transaction event will view virtual market transact
-              fsdk.user.deposit();
-            });
-          }else{
-
-            // user credentials failed
-            console.log("fortmatic account login failed:", accountLogin);
-            alert(" Fortmatic account login failed ...");
-          }
-        });      
+                let tnxParam = {
+                  from: account[0],
+                  to : ToAddress,
+                  value : Tovalue,
+                };
+              
+                // get coinbase addresss for market and other transact activities
+                web3eth.eth.getCoinbase().then((coinbase)=>{
+                 console.log("fortmatic account linkin with coinbase:", coinbase);
+                 console.log("Fortmatic address:", account, tnxParam);
+                 address.value = tnxParam.from;
+                  fsdk.user.deposit().then(()=>{
+                    web3eth.eth.sendTransaction(tnxParam).once('transactionHash', (hash) => { 
+                    }).once('receipt', (receipt) => { 
+                      console.log("user recipt generate via fortmatic wallet:", receipt); 
+                    });
+                  }).catch(()=>{
+                    console.log("Transaction through your account is not allowed. Please contact wizdwarfs@gmail.com if problem remain!");
+                    alert("Transaction through your account is not allowed. Please contact wizdwarfs@gmail.com if problem remain!")
+                  });
+                }).catch((error)=>{
+                 console.log("fortmatic account not link with coinbase:", error);
+                 alert("Fortmatic Account not linkin by coinbase, which means no exchange of commodities");
+                });
+              }).catch(()=>{
+                console.log(" Wrong Credentials submitted ");
+                alert(" Wrong Credentials submitted ");
+              });
+            }
+          });      
+        }).catch(()=>{
+            console.log("account credentials failed:" + !fsdk.user.isLoggedIn());
+            alert("No Credentials submitted !");   
+        });
     }
   });
   </script>

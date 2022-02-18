@@ -1,41 +1,122 @@
-.div-box{
-	display: flex;
-	justify-content: center;
-	margin-top: 20px;
-	margin-right: 20px;
-	margin-left: 40px;
-}
+.main-dashboard-div {
+    background-color:#f9f9f9;
+    font-family: 'Lato', sans-serif;
+    height: 100vh;
+  }
+  
+  .icon-light {
+    color: black;
+    margin-right: 5px;
+  }
+  
+  .dropdown-menu {
+    left: 30px;
+  }
+  
+  .h4 {
+    margin: 20px 0px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 20px;
+  }
+  
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .logo {
+    height: 60px;
+  }
+  
+  .custom-navbar {
+    background-color: #ededed;
+  }
+  
 
-.div-headline{
-	position: initial;
-	margin-block-start : auto;
-	margin-block-end:auto;
-	margin-inline-start: inherit;
-	margin-inline-end:inherit;
-}
+  .heading-text{
+	  margin-top: 70px;
+      display: flex;
+   	  justify-content: center;
+	  position: relative;
+	  margin-right: 18px;
+  }
+  
+  .container-fluid{
+    display: flex;
+    position: relative;
+    justify-content: center;
+    top: -418px;
+    text-rendering: geometricPrecision;
+    color: gray;
+  }
 
-.h4{
-	font-style: inherit;
-	font-size: 24px;
-}
+  .locate-cont{
+    position: relative;
+    display: flex;
+    top: 186px;
+    justify-content: flex-start;
+    flex-direction: row-reverse;
+    left:-95px;
+    font-weight: bold;
+  }
 
-.div-t1{
-	margin-top: 10px;
-	font-size: 16px;
-}
+  .rowfluid{
+    display: flex;
+    position: relative;
+    left: 50px;
+  }
 
-.div-t2{
-	margin-top: 10px;
-	font-size: 16px;
-}
+  .line-2{
+    color: whitesmoke;
+    background-color: black;
+    margin-top: 20px;
+  }
+  
+  .foot-mark{
+    display: flex;
+    position: relative;
+    justify-content: center;
+    margin-top: -135px;
+    background-color: black;
+    color: whitesmoke;
+  }
+  
+  .channel{
+    position: absolute;
+    display: flex;
+    top: -21px;
+    left:190px;
+  }
+  
+  .insta{
+    position : absolute;
+    display: flex;
+    left: 27px;
+  }
 
+  .tweet{
+    position : absolute;
+    display: flex;
+    left: 53px;
+  }
 
-.btn-accept{
-	display: flex;
-	justify-content: center;
-	margin-left: 170px;
-}
-.btn-agree{
-	background-color: green;
-	color: white;
-}
+  .reddit{
+    position : absolute;
+    display: flex;
+    left: 77px;
+  }
+  
+
+  .buymecoffee{
+    display: flex;
+    position : absolute;
+    left: 47px;
+  }
+
+  .col{
+    display: flex;
+    position: relative;
+    margin-top: 20px;
+  }
+  

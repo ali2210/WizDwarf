@@ -13,6 +13,7 @@ require (
 	github.com/ethereum/go-ethereum v1.10.7
 	github.com/fogleman/ribbon v0.0.0-20191101191537-568057efb726
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
+	github.com/goombaio/namegenerator v0.0.0-20181006234301-989e774b106e
 	github.com/gorilla/mux v1.7.4
 	github.com/gorilla/sessions v1.2.0
 	github.com/ipfs/go-cid v0.1.0

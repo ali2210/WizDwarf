@@ -12,12 +12,13 @@ import (
 	"crypto/elliptic"
 	"crypto/rand"
 	"crypto/sha256"
-	"crypto/sha512"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/big"
 	rdn "math/rand"
 	"net/http"
 	"os"
@@ -34,12 +35,19 @@ import (
 	skynet "github.com/SkynetLabs/go-skynet/v2"
 	structs "github.com/ali2210/wizdwarf/other"
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
+	"github.com/ali2210/wizdwarf/other/bucket"
+	"github.com/ali2210/wizdwarf/other/bucket/proto"
 	"github.com/ali2210/wizdwarf/other/collection"
+	"github.com/ali2210/wizdwarf/other/crypto"
+	cryptos "github.com/ali2210/wizdwarf/other/crypto"
+	"github.com/ali2210/wizdwarf/other/proteins"
 	biosubtypes "github.com/ali2210/wizdwarf/other/proteins"
+	"github.com/ali2210/wizdwarf/other/proteins/binary"
 	"github.com/ali2210/wizdwarf/other/users"
 	"github.com/biogo/biogo/alphabet"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/goombaio/namegenerator"
 	"github.com/gorilla/sessions"
 	linkcid "github.com/ipfs/go-cid"
 	multihash "github.com/multiformats/go-multihash"
@@ -67,7 +75,6 @@ type Point struct {
 
 var cdr map[string]string = make(map[string]string, 1)
 var genes []string
-var unlock_key ed25519.PrivateKey
 
 const Errors = "Operation Failed"
 
@@ -366,13 +373,216 @@ func Location(str string) Point {
 	return location
 }
 
+func Download_Content_ownership(File string, client bucket.Bucket_Service) *proto.QState {
+
+	return client.Download(&proto.Query{ByName: File})
+
+}
+
+// genome function return  maromolecules props .
+//  this function written in fp style . In a single line of code dozen of functions depend on one another
+func Genome_Extract(m map[string]map[string]proteins.Aminochain, n map[string]string, key string) *binary.Micromolecule {
+
+	// *************** declaration of props *************
+	molecules := binary.Micromolecule{}
+	var molecules_traits_a string = ""
+	var molecules_traits_b string = ""
+	var molecule_magnetic string = ""
+	var carbonAtom int64 = 0
+	var hydroAtom int64 = 0
+	var sulphurAtom int64 = 0
+	var oxygenAtom int64 = 0
+	var nitrogenAtom int64 = 0
+	// ***************************************************
+
+	// iterate over map of map with specialized keys
+	iterate := reflect.ValueOf(m[n[key]]).MapRange()
+	for iterate.Next() {
+
+		// hold molecules symbol
+		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") {
+			molecules.Symbol = iterate.Value().FieldByName("Symbol").String()
+		}
+
+		// hold molecules mass
+		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
+			molecules.Mass = iterate.Value().FieldByName("Mass").Float()
+		}
+
+		// hold molecules acidity level
+		if !strings.Contains(iterate.Value().FieldByName("Acidity_a").String(), "undefined") && !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
+			molecules_traits_a = iterate.Value().FieldByName("Acidity_a").String()
+		}
+
+		if !strings.Contains(iterate.Value().FieldByName("Acidity_b").String(), "undefined") && !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
+			molecules_traits_b = iterate.Value().FieldByName("Acidity_b").String()
+		}
+
+		// hold molecule magnetic fields level
+		if !strings.Contains(iterate.Value().FieldByName("Magnetic").String(), "undefined") && !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
+			molecule_magnetic = iterate.Value().FieldByName("Magnetic").String()
+		}
+
+		// hold molecules carbon state
+		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
+			carbonAtom = iterate.Value().FieldByName("Carbon").Int()
+		}
+
+		// hold molecules hydrogen state
+		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
+			hydroAtom = iterate.Value().FieldByName("Hydrogen").Int()
+		}
+
+		// hold molecules nitrogen state
+		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
+			nitrogenAtom = iterate.Value().FieldByName("Nitrogen").Int()
+		}
+
+		// hold molecules sulphur state
+		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
+			sulphurAtom = iterate.Value().FieldByName("Sulphur").Int()
+		}
+
+		// hold molecule oxygen state
+		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
+			oxygenAtom = iterate.Value().FieldByName("Oxygen").Int()
+		}
+
+		molecules.Composition = &binary.Element{C: carbonAtom, H: hydroAtom, N: nitrogenAtom, O: oxygenAtom, S: sulphurAtom}
+		molecules.Molecule = &binary.Traits{A: molecules_traits_a, B: molecules_traits_b, Magnetic_Field: molecule_magnetic}
+		//log.Println("molecules:", molecules)
+	}
+	return &molecules
+}
+
+func GetMoleculesState(molecule *binary.Micromolecule) bool {
+
+	// check protocol message traits .
+	return !strings.Contains(molecule.Symbol, " ") && !reflect.DeepEqual(molecule.Molecule, &binary.Traits{})
+}
+
+func GetCompositionState(molecule *binary.Micromolecule) bool {
+
+	// check element traits
+	return !strings.Contains(molecule.Symbol, " ") && !reflect.DeepEqual(molecule.Composition, &binary.Element{})
+}
+
+func Molecular(p *binary.Micromolecule) bool {
+
+	// check whether chain have proper type and the molecule have some information
+	if reflect.ValueOf(p).Elem().Kind() == reflect.Struct {
+		return !reflect.DeepEqual(reflect.ValueOf(p).Elem(), &binary.Micromolecule{})
+	}
+	// return false state
+	return false
+}
+
+func special_proteins(str string) bool {
+
+	// check molecule codon have start or end codon
+	if strings.Contains(str, "!") {
+		return false
+	} else if strings.Contains(str, "!*") {
+		return false
+	} else if strings.Contains(str, "!**") {
+		return false
+	}
+	// this is a valid codon
+	return true
+}
+
+func Abundance(molecule *binary.Micromolecule, str string, iter int) (int, string) {
+
+	count := 0
+	// if molecule have valid type and that molecule exist more than once
+	if reflect.ValueOf(molecule).Elem().Kind() == reflect.Struct {
+		count = strings.Count(str, reflect.ValueOf(molecule).Elem().Field(3).String())
+	}
+	return count, reflect.ValueOf(molecule).Elem().Field(3).String()
+}
+
+func Make_string(chain *binary.Micromolecule) string {
+
+	symbols := ""
+	if reflect.ValueOf(chain).Elem().Kind() == reflect.Struct {
+		symbols = reflect.ValueOf(chain).Elem().Field(3).String()
+	}
+	return symbols
+}
+
+func Generator() string {
+	left, err := rand.Int(rand.Reader, big.NewInt(55))
+	if err != nil {
+		log.Printf(" Error name generator failed to generate good name for left side%v", err.Error())
+		return ""
+	}
+
+	right, err := rand.Int(rand.Reader, big.NewInt(52))
+	if err != nil {
+		log.Printf(" Error name generator failed to generate good name for right side%v", err.Error())
+		return ""
+	}
+
+	leftGen := namegenerator.NewNameGenerator(left.Int64())
+	rightGen := namegenerator.NewNameGenerator(right.Int64())
+
+	return rightGen.Generate() + "_" + leftGen.Generate()
+}
+
 func UpdateProfileInfo(member *users.Visitors) bool {
 	err := cloud.UpdateUserDetails(GetDBClientRef(), *member)
 	if err != nil {
-		log.Fatal(" Bash Processing Error ", err.Error())
+		log.Printf(" Bash Processing Error %v", err.Error())
 		return false
 	}
 	return true
+}
+
+func TrustRequest(message, verifier, request string) (bool, error, *ed25519.PrivateKey) {
+
+	// contain check whether request have pass-key ,
+	// address contain address of trusted user wallet
+	//  & message must not be empty
+
+	if strings.Contains(request, "signed") && !strings.Contains(verifier, " ") && !strings.Contains(message, " ") {
+
+		// generate keys for message
+		BbKey, AleKey := cryptos.PKK25519(message)
+
+		// bind keys with message
+		bind_message, err := crypto.ASED25519(message, AleKey)
+		if err != nil {
+			log.Printf(" Error message binding fail %v", err.Error())
+			return false, err, &AleKey
+		}
+
+		// key signature verified
+		if verified := cryptos.AVED25519(message, bind_message, AleKey, BbKey); verified {
+			return verified, nil, &AleKey
+		}
+
+		// key verification failed.
+		return false, errors.New("verification failed"), &AleKey
+	} else {
+
+		// generate keys
+		BbKey, AleKey, err := cryptos.BKED25519()
+		if err != nil {
+			log.Printf(" Error generating key: %v", err.Error())
+			return false, err, &AleKey
+		}
+
+		// bind message with your public key
+		bindMessage := cryptos.BSED25519(message)
+
+		// bind message verification against key
+		if verify := cryptos.BVED25519(BbKey, bindMessage, []byte(message)); verify {
+			return verify, nil, &AleKey
+		}
+
+		// bind message verification failed
+		return false, errors.New("error verification error"), &AleKey
+	}
 }
 
 func Active_Proteins(str string) map[string]string {
@@ -396,26 +606,38 @@ func Active_Proteins(str string) map[string]string {
 	return chain
 }
 
-func PKK255(message string) string {
+func AminoChains(str string) map[string]biosubtypes.Aminochain {
 
-	// according ed25519 key must ahve sized in this case key 32 length ok
-	seed := sha512.Sum512([]byte(message))
+	// initalization & declaration of local attributes
+	chain := make(map[string]biosubtypes.Aminochain, len(str))
+	i, j := 0, 3
 
-	// generate private key
-	private := ed25519.NewKeyFromSeed(seed[32:])
+	// get amino map chain
+	for u := 0; u <= len(str); u++ {
 
-	// private key store in memory location 0xffaa2
-	SetKey(private)
+		if strings.Contains(str, str[i:j]) && u != len(str) {
 
-	// generate public key with the existing private key
-	return fmt.Sprintf("%x", GetKey().Public())
+			// in case amino chain return protein symbol and store back to the local attribute
+			if !strings.Contains(biosubtypes.GetAmino(str, i, j).Symbol, " ") && threepairs(str, i) {
+				chain[str[i:j]] = biosubtypes.GetAmino(str, i, j)
+			}
+
+			// protein patterns
+			i = i + 3
+			j = j + 3
+
+			// "j" indicator make sure that iteration won't panic
+			if j >= len(str) {
+				break
+			}
+		}
+	}
+	return chain
 }
 
-func SetKey(key ed25519.PrivateKey) {
-	unlock_key = key
+func threepairs(str string, i int) bool {
+	return !strings.Contains(str[i:i+1], " ") && !strings.Contains(str[i+1:i+2], " ") && !strings.Contains(str[i+2:i+3], " ")
 }
-
-func GetKey() ed25519.PrivateKey { return unlock_key }
 
 func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member users.Visitors) (*users.Visitors, error) {
 
@@ -1003,12 +1225,3 @@ func Open_SFiles(path, filename string) (*os.File, error) {
 	defer file.Close()
 	return file, nil
 }
-
-// func getValuesFromStruct(parser interface{}) []reflect.Value {
-// 	y := reflect.ValueOf(parser).Elem()
-// 	x := make([]reflect.Value, y.NumField())
-// 	for i := 0; i < y.NumField(); i++ {
-// 		x[i] = y.Field(i)
-// 	}
-// 	return x
-// }

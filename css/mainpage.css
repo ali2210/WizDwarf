@@ -1,7 +1,9 @@
 .company-logo-image{
     display: flex;
-    justify-content: center;
-    margin-top: 200px;
+    position: absolute;
+    top: 394px;
+    left: 236px;
+    color: purple;
 }
 .zoom {
     padding: 50px;
@@ -39,17 +41,17 @@
   
   .container-text{
     display: flex;
+    position: absolute;
+    top: 233px;
     justify-content: center;
-    margin-top: auto;
-    margin-left: -250px;
-    margin-bottom: 1px;
   }
 
   .link{
     color: purple;
-    letter-spacing: .2em;
-    white-space: .2em;
-    margin-top: 2px;
+    margin-top: 65px;
+    display: flex;
+    position: relative;
+    left: -137px;
   }
   /* The typing effect */
   @keyframes typing {
@@ -61,4 +63,36 @@
   @keyframes blink-caret {
     from, to { border-color: transparent }
     50% { border-color: orange }
+  }
+
+  .versions{
+    display: flex;
+    position: absolute;
+    top: 100px;
+    left: 6px;
+  }
+
+  .credit{
+    display: flex;
+    position: absolute;
+    top:3px;
+    left:236px;
+  }
+  
+  .version{
+    display: flex;
+    position: relative;
+    top: 103px;
+    left: -98px;
+    color:purple;
+  }
+  
+  .init{
+    display: flex;
+    position: absolute;
+    top: 12px;
+    left: -3px;
+    color: purple;
+    font-family:fantasy;
+    font-weight:bolder;
   }

@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" type="text/css" href="/css/feedback.css">
+
+  <title>WizDwarfs</title>
+</head>
+
+<body>
+  <div class='main-dashboard-div'>
+		<nav class="navbar navbar-expand-md navbar-light custom-navbar">
+		  <a class="navbar-brand" href="#">
+			<img src="/images/logo.png" alt="Logo" class="logo">
+		  </a>
+		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
+			<span class="navbar-toggler-icon"></span>
+		  </button>
+		  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+			<ul class="navbar-nav">
+			  <li class="nav-item active pl-3">
+				<a class="nav-link" href="/home">
+				  <i class="fa fa-home icon-light" aria-hidden="true"></i>
+				  Home
+				</a>
+			  </li>
+			  <li class="nav-item dropdown pl-3">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+				  aria-haspopup="true" aria-expanded="false">
+				  <i class="fa fa-handshake-o" aria-hidden="true"></i>
+				  Business
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				  <!-- <a class="dropdown-item active" href="/open"><i class="fa fa-handshake-o " aria-hidden="true"></i> Premium </a>
+				  <a class="dropdown-item" href="/"> <i class="fa fa-briefcase" aria-hidden="true"> Service </i>
+				  </a>-->
+				  <div class="card" style="width: 19rem;height: 22rem;position: relative;">
+					<img class="images"
+					  src="https://physicsworld.com/wp-content/uploads/2019/08/Quantum-teleportation.jpg"
+					  alt="paint_the_world">
+					<div class="card-body card-body-text">
+					  <h5 class="card-title"> Paint the World </h5>
+					  <p class="card-text"> 
+						  "Beause the onces who are crazy enough to think that they can change the world, are the ones who do."
+					  </p>
+					</div>
+				  </div>
+				</div>
+			  </li>
+			  <li class="nav-item dropdown pl-3">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+				  aria-haspopup="true" aria-expanded="false">
+				  <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+				  Admin
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				  <a class="dropdown-item" href="/dashboard/profile"><i class="fa fa-sliders" aria-hidden="true"></i>
+					Edit-Profile </a>
+				  <a class="dropdown-item" href="/logout"><i class="fa fa-sign-out icon icon-light"
+					  aria-hidden="true"></i>Logout</a>
+					  
+				  <div class="card" style="width: 25rem; height: 23rem; position: relative;">
+					<img class="img-class"
+					  src="https://6lli539m39y3hpkelqsm3c2fg-wpengine.netdna-ssl.com/wp-content/uploads/2019/01/tech-abstract_shutterstock-1191298288_700x-675x380.jpg"
+					  alt="Chase dreams">
+					<div class="card-body description">
+					  <h5 class="card-title"> Masterpiece  </h5>
+					  <p class="card-text"> The smallest feline is a masterpiece </p>
+					</div>
+				  </div>
+			  </li>
+			</ul>
+		  </div>
+		</nav>
+  </div>
+  
+  <div class="useract">
+    <div class="card" style="width: 25rem;">
+      <div class="card-body ux">
+        <h5 class="card-title"> Customer feedback </h5>
+        <p class="card-text">
+            <button type="button" class="btn-star0">
+              <i class="fa fa-star-o" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="btn-star1">
+              <i class="fa fa-star-o" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="btn-star2">
+              <i class="fa fa-star-o" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="btn-star3">
+              <i class="fa fa-star-o" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="btn-star4">
+              <i class="fa fa-star-o" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="btn-edit">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+			<button type="button" class="btn-download">
+				<i class="fa fa-cloud-download" aria-hidden="true"></i>
+			</button>
+        </p>
+		<ul class="list-group">
+			<li class="list-group-item">
+				<form class="feedback-form" method="post" action="">
+					<input type="text" name="liked" class="like"  placeholder="which features do you like in the app?"/>
+					<input type="text" name="improved" class="improve" placeholder="which features do improved in the app?"/>
+					<input type="text" name="recommend" class="recommend" placeholder="which features you will recommend?"/>
+					<button type="submit" class="review">
+						<i class="fa fa-spinner" aria-hidden="true"></i>
+					</button>
+				</form>
+			</li>
+		</ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <script>
+    
+	const btn_low = document.getElementsByClassName('btn-star0')[0];
+	const btn_medium = document.getElementsByClassName('btn-star1')[0];
+	const btn_medium_low = document.getElementsByClassName('btn-star2')[0];
+	const btn_medium_high = document.getElementsByClassName('btn-star3')[0];
+	const btn_high = document.getElementsByClassName('btn-star4')[0];
+	const btn_editor = document.getElementsByClassName('btn-edit')[0];
+	const btn_download = document.getElementsByClassName('btn-download')[0];
+	const editor = document.getElementsByClassName('list-group')[0];
+	const card = document.getElementsByClassName('ux')[0];
+
+	btn_low.addEventListener('click',(event)=>{
+		btn_low.children[0].style.color = 'lawngreen';
+		btn_low.style.backgroundColor = 'white';
+	});
+	btn_medium.addEventListener('click',(event)=>{
+		btn_low.children[0].style.color = 'lawngreen';
+		btn_low.style.backgroundColor = 'white';
+		btn_medium.children[0].style.color = 'lightgreen';
+		btn_medium.style.backgroundColor = 'white';
+	});
+	btn_medium_high.addEventListener('click',(event)=>{
+		btn_low.children[0].style.color = 'lawngreen';
+		btn_low.style.backgroundColor = 'white';
+		btn_medium.children[0].style.color = 'lightgreen';
+		btn_medium.style.backgroundColor = 'white';
+		btn_medium_low.children[0].style.color = 'darkgreen';
+		btn_medium_low.style.backgroundColor = 'white';
+	});
+	btn_medium_high.addEventListener('click',(event)=>{
+		btn_low.children[0].style.color = 'lawngreen';
+		btn_low.style.backgroundColor = 'white';
+		btn_medium.children[0].style.color = 'lightgreen';
+		btn_medium.style.backgroundColor = 'white';
+		btn_medium_low.children[0].style.color = 'darkgreen';
+		btn_medium_low.style.backgroundColor = 'white';
+		btn_medium_high.children[0].style.color = 'darkolivegreen';
+		btn_medium_high.style.backgroundColor = 'white';
+	});
+	btn_high.children[0].addEventListener('click', (event)=>{
+		btn_low.children[0].style.color = 'lawngreen';
+		btn_low.style.backgroundColor = 'white';
+		btn_medium.children[0].style.color = 'lightgreen';
+		btn_medium.style.backgroundColor = 'white';
+		btn_medium_low.style.backgroundColor = 'white';
+		btn_medium_low.children[0].style.color = 'darkgreen';
+		btn_medium_high.style.backgroundColor = 'white';
+		btn_medium_high.children[0].style.color = 'darkolivegreen';
+		btn_high.children[0].style.color = 'forestgreen';
+		btn_high.style.backgroundColor = 'white';
+	});
+	btn_editor.addEventListener('click', ()=>{
+		btn_editor.children[0].style.color = 'forestgreen';
+		editor.style.height = '161px';
+		card.style.height = '300px';
+		editor.style.visibility = 'visible';
+		console.log("card", card);
+	});
+	btn_download.addEventListener('click',(event)=>{
+		btn_download.children[0].style.color = 'darkgreen';
+	})
+
+  </script>
+</body>
+
+</html>
