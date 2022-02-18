@@ -34,6 +34,7 @@ const options = {
   // channel state changed
   pusher.connection.bind('state_change', (state) =>{
     console.log("pusher channel status:", state.current);
+    _sp01.innerHTML = "Reload the webpage " + (new Date().getTime() / 1000000000000 );
   });
 
   // channel subcribe error 
@@ -43,6 +44,19 @@ const options = {
       alert("Channel disconnected", status);
     }
   });
+
+  function reloadPage() {
+    var currentDocumentTimestamp = new Date(performance.timing.domLoading).getTime();
+    // Current Time //
+    var now = Date.now();
+    // Total Process Lenght as Minutes //
+    var tenSec = 10 * 1000;
+    // End Time of Process //
+    var plusTenSec = currentDocumentTimestamp + tenSec;
+    if (now > plusTenSec) {
+        location.reload();
+    }
+  }
 
   // read stream from channel
   channel.bind("molecule", (data) => {
@@ -92,11 +106,13 @@ _m01.addEventListener('click', (event) => {
   let getY_value = [];
     
   // read local-cache and sore back 
-    for (let index = 0; index < 100; index++) {
+    for (let index = 0; index < 300; index++) {
       if(!JSON.parse(web_local.getItem(index) <= 0)){
         getY_value.push(JSON.parse(web_local.getItem(index)));
       }
     }
+
+    _sp01.style.visibility = 'hidden';
 
   // create new chart with channel data 
   new Chart(context2d, {
@@ -104,7 +120,7 @@ _m01.addEventListener('click', (event) => {
     data: {
       labels: ['F', 'L', 'I', 'M', 'V', 'S', 'P', 'T','A', 'Y','!','!*','H','Q','N','K','D','E','C','!**','R','G',],
       datasets: [{
-          label : 'protein per aminochain',
+          label : 'amino acid per protein',
           data: [...getY_value],
           backgroundColor: [
               'rgba(255, 99, 132, 0.2)',

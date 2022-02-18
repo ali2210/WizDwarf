@@ -19,9 +19,26 @@ services:
         - --entrypoints.web.address=:80
         - --providers.docker
         - --api.insecure
+        - --accesslog=true
+        - --accesslog.filepath=/path/to/access.log
+        - --accesslog.format=json
+        - --accesslog.filters.statuscodes=200,300-302
+        - --accesslog.filters.retryattempts
+        - --accesslog.filters.minduration=10ms
+        - --accesslog.fields.defaultmode=keep
+        - --accesslog.fields.names.ClientUsername=drop
+        - --accesslog.fields.headers.defaultmode=keep
+        - --accesslog.fields.headers.names.User-Agent=redact
+        - --accesslog.fields.headers.names.Authorization=drop
+        - --accesslog.fields.headers.names.Content-Type=keep
+        - --metrics.statsd=true
+        - --metrics.statsd.address=localhost:8125
+        - --metrics.statsd.addEntryPointsLabels=true
+        - --metrics.statsd.addServicesLabels=true
+        - --metrics.statsd.pushInterval=10s
 
     # certs 
-        - --certificatesresolvers.le.acme.email=wizdwarfs@gmail.com
+        - --certificatesresolvers.le.acme.email=AliMatrixCode@protonmail.com
         - --certificatesresolvers.le.acme.storage=/acme.json
         - --certificatesresolvers.le.acme.tlschallenge=true
       
@@ -35,10 +52,21 @@ services:
         - "/var/run/docker.sock:/var/run/docker.sock:ro"
         - "./acme.json:/acme.json"
     
+    # statsd config
+    statsd:
+        image : graphiteapp/graphite-statsd
+        ports :
+          - "2003:2003"
+          - "2004:2004"
+          - "2023:2023"
+          - "2024:2024"
+          - "8125:8125"
+          - "8126:8126"
+    
     # app service config
     wizdwarfs:
       # image 
-      image: ali2210/wizdwarfs-v0
+      image: wizdwarfs/mainv0.0.1
       
       # cloud native additional parameters
       labels: 

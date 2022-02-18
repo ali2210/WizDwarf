@@ -57,7 +57,7 @@ setTimeout(() => {
 
 setTimeout(() => {
   processBtn.style.visibility = "visible";
-}, 10000 * 2.5);
+}, 10000 * 3.0);
 
 
 

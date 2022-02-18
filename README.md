@@ -18,12 +18,10 @@
                         type localhost:5000/ or 127.0.0.1:5000/
       ### Production
                1. Provision Configuration for Linux
-               $  curl #[link]  or IPFS #[image]
-                     $ docker network wizdwarfs
+               $  [ipfs] https://ipfs.io/ipfs/QmdNSzEMRevaThbo9K4a9YhdrVM2PTqcQSCBnR4jLJFGYH?filename=docker-compose.yml
                      $ docker compose up
                2. Mac/Windows 
-                  curl #[link] or IPFS #[image]
-                  $ docker network wizdwarfs
+                  curl #[link] or [ipfs] https://ipfs.io/ipfs/QmdNSzEMRevaThbo9K4a9YhdrVM2PTqcQSCBnR4jLJFGYH?filename=docker-compose.yml
                   $ docker compose up -d 
                3. Cloud
                      In Future, user will run application on public & private cloud.
@@ -50,7 +48,7 @@
       11. If any missing codon or mutate wrong what will happen at celluar level. 
       12. For Schema, Protocol Buffer is 2x faster than yml and Json
       13. Pusher Channels is used between client and server that will reduce network latency
-      
+      14. This code is "IAC" which means all the data managed by the software
 
 ## Badges:   
 [![Docker](https://github.com/ali2210/WizDwarf/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/ali2210/WizDwarf/actions/workflows/docker-publish.yml)
@@ -120,7 +118,9 @@
 	      "/dashboard"           User Dashboard
        "/dashboard/profile"   User Profile
        "/logout"              Logout the user account
-       
+
+  ### [CID]
+      QmdNSzEMRevaThbo9K4a9YhdrVM2PTqcQSCBnR4jLJFGYH
        
 ## Discusion
      

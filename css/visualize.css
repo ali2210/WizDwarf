@@ -179,9 +179,11 @@
  }
  .uvindex{
    position: absolute;
-   top: 35px;
+   top: 5px;
    visibility: hidden;
    flex-direction: row-reverse;
+   right:740px;
+   color : darkgrey
  }
 
  .line{
