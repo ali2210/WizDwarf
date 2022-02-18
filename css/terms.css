@@ -86,7 +86,8 @@
     position: absolute;
     display: flex;
     top: -21px;
-    left:190px;
+    left:632px;
+    border-radius: 11px;
   }
   
   .insta{

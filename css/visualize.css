@@ -179,9 +179,11 @@
  }
  .uvindex{
    position: absolute;
-   top: 35px;
+   top: 5px;
    visibility: hidden;
    flex-direction: row-reverse;
+   right:740px;
+   color : darkgrey
  }
 
  .line{
@@ -236,6 +238,7 @@
     color:#fff;
     border: 1px dotted snow;
     box-shadow:5px 5px whitesmoke;
+    visibility: hidden;
   }
   
   .process:hover{

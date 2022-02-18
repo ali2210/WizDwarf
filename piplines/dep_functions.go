@@ -94,20 +94,20 @@ func Pictures_Stream(r *http.Request, user_id string) {
 
 	// Image file accessible to application
 	if _, err := os.Stat(fileHandle.Filename); os.IsExist(err) {
-		log.Println(" Error directory exists :", err.Error())
+		log.Printf(" Error directory exists :%v", err.Error())
 		return
 	}
 
 	// application store user picture in the app_data directory
 	path, err := os.Stat("app_data/")
 	if err != nil {
-		log.Println(" Error stat :", err.Error())
+		log.Println(" Error file properties:", err.Error())
 		return
 	}
 
 	// Application storage path
 	if !path.IsDir() {
-		log.Fatalln("[Error] Reading File", err.Error())
+		log.Fatalln("Error file in directory:", err.Error())
 		return
 	}
 
@@ -122,18 +122,18 @@ func Pictures_Stream(r *http.Request, user_id string) {
 	// Read data from image-file
 	readBytes, err := ioutil.ReadAll(file)
 	if err != nil {
-		log.Println("Error reading image file", err.Error())
+		log.Println("Error opening file:", err.Error())
 		return
 	}
 
 	// In case of error all proceding stop, otherwise file content copy into new file
 	if _, err := imageFile.Write(readBytes); err != nil {
-		log.Println("Error writing image file", err.Error())
+		log.Println("Error writing file:", err.Error())
 		return
 	}
 
 	// User image file returned name
-	log.Println("Image file created: ", imageFile.Name())
+	// log.Println("Image file created: ", imageFile.Name())
 
 	// Get today year, month and date . This help to generate image metadata which is helpful when images store in the collections.
 	// Get Date from html Form
@@ -145,7 +145,7 @@ func Pictures_Stream(r *http.Request, user_id string) {
 	month := Month(str)
 	year := Year(str)
 
-	//log.Println("Today:", date, month, year)
+	// log.Println("Today:", date, month, year)
 
 	// parse format in string format but the typo of year format is integer
 	yrs, err := strconv.Atoi(year)
@@ -153,7 +153,7 @@ func Pictures_Stream(r *http.Request, user_id string) {
 		log.Println("Error year parsing:", err.Error())
 		return
 	}
-	//log.Println("Year: ", yrs)
+	// log.Println("Year: ", yrs)
 
 	// parse format in string format but the typo of month format is integer
 	mnths, err := strconv.Atoi(month)
@@ -162,7 +162,7 @@ func Pictures_Stream(r *http.Request, user_id string) {
 		return
 	}
 
-	//log.Println("months:", mnths)
+	// log.Println("months:", mnths)
 
 	// parse format in string format but the typo of date format is integer
 	dtes, err := strconv.Atoi(date)
@@ -171,7 +171,7 @@ func Pictures_Stream(r *http.Request, user_id string) {
 		return
 	}
 
-	//log.Println("date:", dtes)
+	// log.Println("date:", dtes)
 
 	// calendar have time typo for encoding data (data serialization) , data typo must be string
 	calendar = GetToday(yrs, time.Month(mnths), dtes).String()
@@ -183,7 +183,7 @@ func Pictures_Stream(r *http.Request, user_id string) {
 	// So that i slice american time format and then parse the string
 	hr, err := strconv.Atoi(time_utc[11:13])
 	if err != nil {
-		log.Println("Error parsing hr", err.Error())
+		log.Printf("Error parsing hour %v:", err.Error())
 		return
 	}
 
@@ -191,14 +191,14 @@ func Pictures_Stream(r *http.Request, user_id string) {
 
 	mns, err := strconv.Atoi(time_utc[14:16])
 	if err != nil {
-		log.Println("Error parsing min", err.Error())
+		log.Printf("Error parsing minutes  %v:", err.Error())
 		return
 	}
 	//log.Println("min", mns)
 
 	// convert according to asian time format
 	create_pic_time := fmt.Sprintf("%d:%d", (hr), (mns))
-	fmt.Println("image load :", create_pic_time)
+	fmt.Println(" timestamp :", create_pic_time)
 
 	// metainformation about picture
 	pic_src = fileHandle.Filename
@@ -220,7 +220,8 @@ func Pictures_Stream(r *http.Request, user_id string) {
 		}
 	}
 
-	// encrypted stream channel calling
+	// encrypted stream channel return status about content.
+	// here it's not necessary
 	Encrypted_Stream_Channel(imageFile.Name())
 
 }
@@ -290,13 +291,13 @@ func SiaObjectStorage(client skynet.SkynetClient, file string) bool {
 	// application store user picture in the app_data directory
 	path, err := os.Stat("app_data/")
 	if err != nil {
-		log.Println(" Error stat :", err.Error())
+		log.Println(" Error File Properties :", err.Error())
 		return false
 	}
 
 	// Application storage path
 	if !path.IsDir() {
-		log.Fatalln("[Error] Reading File", err.Error())
+		log.Fatalln("[Error] File in Directory :", err.Error())
 		return false
 	}
 
@@ -308,7 +309,7 @@ func SiaObjectStorage(client skynet.SkynetClient, file string) bool {
 	// upload file to storage
 	sia_object_url, err := client.UploadFile(file, options)
 	if err != nil {
-		log.Printf("Error uploading %v:", err.Error())
+		log.Printf("Error Upload Content %v:", err.Error())
 		return false
 	}
 
@@ -321,7 +322,7 @@ func SiaObjectStorage(client skynet.SkynetClient, file string) bool {
 	// encoded string in hex format which mus be decode as string in hex format
 	decoder, err := hex.DecodeString(hex.EncodeToString(hash_data[:]))
 	if err != nil {
-		log.Printf("Decode : %v", err.Error())
+		log.Printf("Encode information : %v", err.Error())
 		return false
 	}
 
@@ -329,7 +330,7 @@ func SiaObjectStorage(client skynet.SkynetClient, file string) bool {
 	// with x11 breakable signature into unbreakable
 	encodetype, err := multihash.EncodeName(decoder, "x11")
 	if err != nil {
-		log.Printf("Error encode protocol : %v", err.Error())
+		log.Printf("Error Signature : %v", err.Error())
 		return false
 	}
 
@@ -337,17 +338,17 @@ func SiaObjectStorage(client skynet.SkynetClient, file string) bool {
 	// multihash hex string apply on encoded string in hex format.
 	encodex11, err := multihash.FromHexString(hex.EncodeToString(encodetype))
 	if err != nil {
-		log.Printf("Error encoding hex string: %v", err.Error())
+		log.Printf("Error Encoding : %v", err.Error())
 		return false
 	}
-	log.Printf("proof of work succeeded\t %v:", encodex11.B58String())
+	
 
 	// generate new cid.. The specification of this function require two parameters (codeType & other one is hash algorithm)
 	// merkel tree (dag) data serilaization (protocol buffer [https://en.wikipedia.org/wiki/Protocol_Buffers])
 	// & hash algorithm
 
 	cid := linkcid.NewCidV1(linkcid.DagProtobuf, encodex11)
-	log.Printf("cid protobuf \t %v:", cid)
+	
 
 	// check whether cid version is 0. For this application cid version must be 1
 	if version := cid.Version(); version != 1 {
@@ -499,6 +500,101 @@ func Abundance(molecule *binary.Micromolecule, str string, iter int) (int, strin
 		count = strings.Count(str, reflect.ValueOf(molecule).Elem().Field(3).String())
 	}
 	return count, reflect.ValueOf(molecule).Elem().Field(3).String()
+}
+
+
+func predictwithvaribles(molecule *binary.Micromolecule)(float64){
+	
+	productOf := 1.0
+
+	if reflect.ValueOf(molecule).Elem().Kind() == reflect.Struct {
+			productOf = ((reflect.ValueOf(molecule).Elem().Field(4).Float()) * float64(reflect.ValueOf(molecule).Elem().Field(7).Int()))
+	}
+
+	return productOf
+}
+
+func Symbol(molecule *binary.Micromolecule) string{
+	
+	symbol := ""
+	if reflect.ValueOf(molecule).Elem().Kind() == reflect.Struct {
+	
+		symbol = reflect.ValueOf(molecule).Elem().Field(3).String()
+	}
+	return symbol
+}
+
+func Mass(molecule *binary.Micromolecule) float64{
+
+	mass := 0.00
+	if reflect.ValueOf(molecule).Elem().Kind() == reflect.Struct {	
+		mass = reflect.ValueOf(molecule).Elem().Field(4).Float()
+	}
+	return mass
+}
+
+func Occurance(molecule *binary.Micromolecule) int64{
+	
+	var occ int64 = 0
+
+	if reflect.ValueOf(molecule).Elem().Kind() == reflect.Struct {
+		occ = reflect.ValueOf(molecule).Elem().Field(7).Int()
+	}
+	return occ
+}
+
+func GetStructsFields(molecule *binary.Micromolecule, fields int, name string) reflect.Value {
+
+	if reflect.ValueOf(molecule).Elem().Kind() == reflect.Struct{
+
+		switch name {
+			case "Symbol": return reflect.ValueOf(molecule).Elem().Field(fields)	
+			case "Mass": return reflect.ValueOf(molecule).Elem().Field(fields) 
+			case "Abundance": return reflect.ValueOf(molecule).Elem().Field(fields)
+		}
+	}
+	return reflect.ValueOf(molecule)
+}
+
+func Mapper(stream map[string]interface{}, key string) interface{} {
+
+	var occ interface{}
+	it := reflect.ValueOf(stream).MapRange()
+	for it.Next(){
+				occ = stream[key]
+	}
+	return occ
+}
+
+func DashboardAnalytics(amino []*binary.Micromolecule, sum int64) ([]map[string]interface{}){
+
+	model := make([]map[string]interface{}, len(amino))
+	//predict := make([]float64, len(amino))
+	
+	for i := range amino {
+		
+		refVal := GetStructsFields(amino[i], 3, "Symbol")
+		refMass	 := GetStructsFields(amino[i], 4, "Mass")
+		refOccu := GetStructsFields(amino[i],7, "Abundance")
+		// predict = append(predict, predictwithvaribles(amino[i]))
+		
+		if !(strings.Contains(refVal.String(), " ")) && !(reflect.DeepEqual(refVal, reflect.ValueOf(amino[i]))){
+			if !(reflect.DeepEqual(refMass, reflect.ValueOf(amino[i]))){
+				if !(reflect.DeepEqual(refOccu , reflect.ValueOf(amino[i]))){
+
+					model = append(model, map[string]interface{}{
+						"Symbol" : refVal.String(),
+						"Mass" : refMass.Float(),
+						"Occurance" : refOccu.Int(),
+						// "Predict" : predict[i],
+						"Max" : sum,
+					 })
+				}
+			}
+		}
+	}
+
+	return model
 }
 
 func Make_string(chain *binary.Micromolecule) string {
@@ -994,7 +1090,7 @@ func Mounted(w http.ResponseWriter, r *http.Request, openReadFile string) (strin
 		return "", err
 	}
 
-	fmt.Println("File name:"+handler.Filename, "Size:", handler.Size)
+	fmt.Println("File name:"+handler.Filename)
 
 	if _, err := os.Stat(handler.Filename); os.IsExist(err) {
 		log.Fatal("[Fail] Already have  this file ", err)
@@ -1044,11 +1140,11 @@ func Mounted(w http.ResponseWriter, r *http.Request, openReadFile string) (strin
 		log.Fatal("[Fail] File Reading Permission   ", err)
 		return "", err
 	}
-	n, err := upldFile.Write(bytesFile)
+	_, err = upldFile.Write(bytesFile)
 	if err != nil {
 		return "", err
 	}
-	log.Println("[Result] = File added on server", upldFile.Name(), "Size:", n)
+	log.Println("[Result] = File added on server", upldFile.Name())
 	return openReadFile, nil
 
 }
@@ -1057,7 +1153,7 @@ func Mounted(w http.ResponseWriter, r *http.Request, openReadFile string) (strin
 *  To keep user privacy , Encrypted-Channels accept stream of data.
 *  Onces the data transfer complete this path completely closed.
  */
-func Encrypted_Stream_Channel(file string) {
+func Encrypted_Stream_Channel(file string) bool {
 
 	/*
 	* Create serialized message object [@Protocol-Buffers is used here].
@@ -1083,7 +1179,7 @@ func Encrypted_Stream_Channel(file string) {
 			Secure:  true,
 		}
 
-		log.Printf("CDR value: %v", cdr)
+		
 		// picture metadata
 		storage := &collection.Pictures{}
 		storage.PicTime = pic_time
@@ -1096,13 +1192,11 @@ func Encrypted_Stream_Channel(file string) {
 		storage.CDR = cdr
 
 		firestore_collection := gallery_firestore_object.NewPictures(context.Background(), storage)
-		fmt.Println("content:", firestore_collection)
-
-		log.Println("storage cdr:", storage.GetCDR())
 
 		pusher_credentials.Trigger("encrypted-photo-stream", "encrypted-pic", firestore_collection)
+		return true
 	}
-	fmt.Println("File stored successfully")
+	return false
 }
 
 func ReadAllow(serverFile *os.File, userFile os.FileInfo) ([]string, []string, error) {

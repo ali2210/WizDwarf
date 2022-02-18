@@ -12,10 +12,13 @@ import (
 var unlock_key ed25519.PrivateKey
 var Borrow_key ed25519.PublicKey
 
+// set private key
 func SetKey(key ed25519.PrivateKey) { unlock_key = key }
 
+// get private key
 func GetKey() ed25519.PrivateKey { return unlock_key }
 
+// curve-25519 generates specialized key
 func PKK25519(message string) (crypto.PublicKey, ed25519.PrivateKey) {
 
 	// according ed25519 key must have sized in this case key 42 length ok

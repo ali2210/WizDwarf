@@ -1,28 +1,83 @@
+# This codebase desgin according to mozilla open source license.
+# Redistribution , contribution and improve codebase under license
+# convensions. @contact Ali Hassan AliMatrixCode@protonmail.com
+
+# version yml
 version: "3.3"
 
+# services offered 
 services: 
+    
+    # cloud native app proxy config
     traefik:
+    
+    # image 
       image: "traefik:v2.0.0"
+    
+    # config 
       command: 
         - --entrypoints.web.address=:80
         - --providers.docker
         - --api.insecure
-        - --certificatesresolvers.le.acme.email=wizdwarfs@gmail.com
+        - --accesslog=true
+        - --accesslog.filepath=/path/to/access.log
+        - --accesslog.format=json
+        - --accesslog.filters.statuscodes=200,300-302
+        - --accesslog.filters.retryattempts
+        - --accesslog.filters.minduration=10ms
+        - --accesslog.fields.defaultmode=keep
+        - --accesslog.fields.names.ClientUsername=drop
+        - --accesslog.fields.headers.defaultmode=keep
+        - --accesslog.fields.headers.names.User-Agent=redact
+        - --accesslog.fields.headers.names.Authorization=drop
+        - --accesslog.fields.headers.names.Content-Type=keep
+        - --metrics.statsd=true
+        - --metrics.statsd.address=localhost:8125
+        - --metrics.statsd.addEntryPointsLabels=true
+        - --metrics.statsd.addServicesLabels=true
+        - --metrics.statsd.pushInterval=10s
+
+    # certs 
+        - --certificatesresolvers.le.acme.email=AliMatrixCode@protonmail.com
         - --certificatesresolvers.le.acme.storage=/acme.json
         - --certificatesresolvers.le.acme.tlschallenge=true
+      
+      # ui ports 
       ports: 
         - "80:80"
         - "8080:8080"
+      
+      # ui persistance storage
       volumes: 
         - "/var/run/docker.sock:/var/run/docker.sock:ro"
         - "./acme.json:/acme.json"
+    
+    # statsd config
+    statsd:
+        image : graphiteapp/graphite-statsd
+        ports :
+          - "2003:2003"
+          - "2004:2004"
+          - "2023:2023"
+          - "2024:2024"
+          - "8125:8125"
+          - "8126:8126"
+    
+    # app service config
     wizdwarfs:
-      image: ali2210/wizdwarfs-v0
+      # image 
+      image: wizdwarfs/mainv0.0.1
+      
+      # cloud native additional parameters
       labels: 
       - "traefik.http.routers.wizdwarfs.rule=Host(`wizdwarfs.docker.localhost`)"
       - "traefik.http.services.wizdwarfs.loadbalancer.server.port=5000"
       - "traefik.http.routers.wizdwarfs.tls.certresolver=le"
+      
+      # app port
       ports: 
         - "5000:5000"
+      
+      # app storage
       volumes: 
         - "./:/app/app_data"

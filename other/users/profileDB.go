@@ -83,7 +83,7 @@ func (*FirestoreClient) GetDocumentById(client *firestore.Client, member Visitor
 
 		// store document results
 		result_profile = docsnaps.Data()
-		log.Println("Results:", result_profile)
+		
 	}
 	return result_profile, nil
 }
@@ -111,7 +111,7 @@ func (*FirestoreClient) SearchUser(client *firestore.Client, member Visitors) (m
 		}
 		// store document results
 		profile_search = docsnaps.Data()
-		log.Println("Results:", profile_search)
+		
 	}
 	return profile_search, nil
 }
@@ -147,7 +147,8 @@ func (*FirestoreClient) UpdateUserDetails(client *firestore.Client, member Visit
 			log.Println("Error updating member: ", err.Error())
 			return err
 		}
-		log.Println("Result:", result)
+		
+		log.Println("Document created ", result)
 	}
 	return nil
 }
