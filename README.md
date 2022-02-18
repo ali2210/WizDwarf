@@ -21,7 +21,7 @@
                $  [ipfs] https://ipfs.io/ipfs/QmdNSzEMRevaThbo9K4a9YhdrVM2PTqcQSCBnR4jLJFGYH?filename=docker-compose.yml
                      $ docker compose up
                2. Mac/Windows 
-                  curl #[link] or [ipfs] https://ipfs.io/ipfs/QmdNSzEMRevaThbo9K4a9YhdrVM2PTqcQSCBnR4jLJFGYH?filename=docker-compose.yml
+                  [ipfs] https://ipfs.io/ipfs/QmdNSzEMRevaThbo9K4a9YhdrVM2PTqcQSCBnR4jLJFGYH?filename=docker-compose.yml
                   $ docker compose up -d 
                3. Cloud
                      In Future, user will run application on public & private cloud.
