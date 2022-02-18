@@ -29,7 +29,7 @@ resource "docker_container" "traefik" {
   }
 }
 
-resource "docker_container" "wizdwarf" {
+resource "docker_container" "wizdwarfs" {
   name  = "wizdwarfs"
   image = var.golang_dock
   ports {
