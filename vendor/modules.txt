@@ -47,7 +47,7 @@ github.com/briandowns/openweathermap
 github.com/btcsuite/btcd/btcec
 # github.com/deckarep/golang-set v0.0.0-20180603214616-504e848d77ea
 github.com/deckarep/golang-set
-# github.com/ethereum/go-ethereum v1.10.7
+# github.com/ethereum/go-ethereum v1.10.10
 ## explicit
 github.com/ethereum/go-ethereum
 github.com/ethereum/go-ethereum/common
@@ -100,7 +100,7 @@ github.com/googleapis/gax-go/v2
 # github.com/goombaio/namegenerator v0.0.0-20181006234301-989e774b106e
 ## explicit
 github.com/goombaio/namegenerator
-# github.com/gorilla/mux v1.7.4
+# github.com/gorilla/mux v1.8.0
 ## explicit
 github.com/gorilla/mux
 # github.com/gorilla/securecookie v1.1.1
@@ -123,10 +123,6 @@ github.com/klauspost/cpuid/v2
 # github.com/logpacker/PayPal-Go-SDK v2.0.5+incompatible
 ## explicit
 github.com/logpacker/PayPal-Go-SDK
-# github.com/mattn/go-colorable v0.1.4
-## explicit
-# github.com/mattn/go-isatty v0.0.12
-## explicit
 # github.com/minio/blake2b-simd v0.0.0-20160723061019-3f5f724cb5b1
 github.com/minio/blake2b-simd
 # github.com/minio/sha256-simd v1.0.0
