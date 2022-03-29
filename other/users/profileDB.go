@@ -8,6 +8,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"reflect"
 
 	"cloud.google.com/go/firestore"
 	"google.golang.org/api/iterator"
@@ -69,7 +70,7 @@ func (*FirestoreClient) GetDocumentById(client *firestore.Client, member Visitor
 		//query return documents then go forward
 		doc, err := query.Next()
 
-		// if query return empty documednt then terminate
+		// if query return empty document then terminate
 		if err == iterator.Done {
 			break
 		}
@@ -83,7 +84,7 @@ func (*FirestoreClient) GetDocumentById(client *firestore.Client, member Visitor
 
 		// store document results
 		result_profile = docsnaps.Data()
-		
+
 	}
 	return result_profile, nil
 }
@@ -109,9 +110,14 @@ func (*FirestoreClient) SearchUser(client *firestore.Client, member Visitors) (m
 			log.Printf(" Error searching ... %v", err.Error())
 			return profile_search, err
 		}
+
+		if reflect.DeepEqual(docsnaps, profile_search){
+			return profile_search, err
+		}
+		
 		// store document results
 		profile_search = docsnaps.Data()
-		
+
 	}
 	return profile_search, nil
 }
@@ -147,7 +153,7 @@ func (*FirestoreClient) UpdateUserDetails(client *firestore.Client, member Visit
 			log.Println("Error updating member: ", err.Error())
 			return err
 		}
-		
+
 		log.Println("Document created ", result)
 	}
 	return nil

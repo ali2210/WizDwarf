@@ -5,8 +5,6 @@ convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
 package piplines
 
 import (
-	"bytes"
-	contxt "context"
 	"crypto/ecdsa"
 	"crypto/ed25519"
 	"crypto/elliptic"
@@ -18,13 +16,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"math/big"
 	rdn "math/rand"
 	"net/http"
 	"os"
 	"path/filepath"
 	"reflect"
-	"regexp"
 	"strconv"
 	"strings"
 	"text/template"
@@ -33,21 +29,17 @@ import (
 	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
 	skynet "github.com/SkynetLabs/go-skynet/v2"
-	structs "github.com/ali2210/wizdwarf/other"
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
 	"github.com/ali2210/wizdwarf/other/bucket"
 	"github.com/ali2210/wizdwarf/other/bucket/proto"
 	"github.com/ali2210/wizdwarf/other/collection"
 	"github.com/ali2210/wizdwarf/other/crypto"
 	cryptos "github.com/ali2210/wizdwarf/other/crypto"
-	"github.com/ali2210/wizdwarf/other/proteins"
+	datetime "github.com/ali2210/wizdwarf/other/date_time"
+	"github.com/ali2210/wizdwarf/other/parser"
 	biosubtypes "github.com/ali2210/wizdwarf/other/proteins"
-	"github.com/ali2210/wizdwarf/other/proteins/binary"
 	"github.com/ali2210/wizdwarf/other/users"
 	"github.com/biogo/biogo/alphabet"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/goombaio/namegenerator"
 	"github.com/gorilla/sessions"
 	linkcid "github.com/ipfs/go-cid"
 	multihash "github.com/multiformats/go-multihash"
@@ -68,13 +60,14 @@ var (
 	chain        map[string]string
 )
 
-type Point struct {
-	Latituide_Division string
-	Longitude_Division string
-}
-
 var cdr map[string]string = make(map[string]string, 1)
 var genes []string
+
+type SignedKey struct {
+	Reader string
+	Signed string
+	Tx     *ecdsa.PrivateKey
+}
 
 const Errors = "Operation Failed"
 
@@ -87,34 +80,29 @@ func Pictures_Stream(r *http.Request, user_id string) {
 	file, fileHandle, err := r.FormFile("profile-input")
 
 	if err != nil {
-		log.Printf("Error parsing avatars: %v", err.Error())
 		return
 	}
 	defer file.Close()
 
 	// Image file accessible to application
 	if _, err := os.Stat(fileHandle.Filename); os.IsExist(err) {
-		log.Printf(" Error directory exists :%v", err.Error())
 		return
 	}
 
 	// application store user picture in the app_data directory
 	path, err := os.Stat("app_data/")
 	if err != nil {
-		log.Println(" Error file properties:", err.Error())
 		return
 	}
 
 	// Application storage path
 	if !path.IsDir() {
-		log.Fatalln("Error file in directory:", err.Error())
 		return
 	}
 
 	// Store user-picture file in the storage directory
 	imageFile, err := ioutil.TempFile(filepath.Dir("app_data/"), "img-*-"+fileHandle.Filename)
 	if err != nil {
-		log.Printf("Error creating temporary image file: %v", err.Error())
 		return
 	}
 	defer imageFile.Close()
@@ -122,18 +110,13 @@ func Pictures_Stream(r *http.Request, user_id string) {
 	// Read data from image-file
 	readBytes, err := ioutil.ReadAll(file)
 	if err != nil {
-		log.Println("Error opening file:", err.Error())
 		return
 	}
 
 	// In case of error all proceding stop, otherwise file content copy into new file
 	if _, err := imageFile.Write(readBytes); err != nil {
-		log.Println("Error writing file:", err.Error())
 		return
 	}
-
-	// User image file returned name
-	// log.Println("Image file created: ", imageFile.Name())
 
 	// Get today year, month and date . This help to generate image metadata which is helpful when images store in the collections.
 	// Get Date from html Form
@@ -141,40 +124,30 @@ func Pictures_Stream(r *http.Request, user_id string) {
 	str := strings.Trim(today, " ")
 
 	// Parse calendar format
-	date := Date(str)
-	month := Month(str)
-	year := Year(str)
-
-	// log.Println("Today:", date, month, year)
+	date := datetime.Date(str)
+	month := datetime.Month(str)
+	year := datetime.Year(str)
 
 	// parse format in string format but the typo of year format is integer
 	yrs, err := strconv.Atoi(year)
 	if err != nil {
-		log.Println("Error year parsing:", err.Error())
 		return
 	}
-	// log.Println("Year: ", yrs)
 
 	// parse format in string format but the typo of month format is integer
 	mnths, err := strconv.Atoi(month)
 	if err != nil {
-		log.Println("Error month parsing:", err.Error())
 		return
 	}
-
-	// log.Println("months:", mnths)
 
 	// parse format in string format but the typo of date format is integer
 	dtes, err := strconv.Atoi(date)
 	if err != nil {
-		log.Println("Error date parsing:", err.Error())
 		return
 	}
 
-	// log.Println("date:", dtes)
-
 	// calendar have time typo for encoding data (data serialization) , data typo must be string
-	calendar = GetToday(yrs, time.Month(mnths), dtes).String()
+	calendar = datetime.GetToday(yrs, time.Month(mnths), dtes).String()
 
 	// Now Time format according american time format and some metainformation which i discarded by using [Trim func]
 	time_utc := strings.Trim(calendar, "+0000 UTC")
@@ -183,22 +156,16 @@ func Pictures_Stream(r *http.Request, user_id string) {
 	// So that i slice american time format and then parse the string
 	hr, err := strconv.Atoi(time_utc[11:13])
 	if err != nil {
-		log.Printf("Error parsing hour %v:", err.Error())
 		return
 	}
-
-	//log.Println("Hour:", hr)
 
 	mns, err := strconv.Atoi(time_utc[14:16])
 	if err != nil {
-		log.Printf("Error parsing minutes  %v:", err.Error())
 		return
 	}
-	//log.Println("min", mns)
 
 	// convert according to asian time format
 	create_pic_time := fmt.Sprintf("%d:%d", (hr), (mns))
-	fmt.Println(" timestamp :", create_pic_time)
 
 	// metainformation about picture
 	pic_src = fileHandle.Filename
@@ -213,7 +180,7 @@ func Pictures_Stream(r *http.Request, user_id string) {
 
 	parse_num := strconv.Itoa(rdn.Intn(512))
 
-	if str := strings.Join(ParseTags(fileHandle.Filename), " "); str != "" {
+	if str := strings.Join(parser.ParseTags(fileHandle.Filename), " "); str != "" {
 		if n := strings.Compare(str, " "); n != -1 {
 			pic_tags = str
 			pic_id = str + "-" + parse_num
@@ -226,78 +193,16 @@ func Pictures_Stream(r *http.Request, user_id string) {
 
 }
 
-// DATE PARSE
-func Date(s string) string {
-	var d string
-	if (s[2:3]) == "-" {
-		d = s[0:2]
-	} else if s[1:2] == "-" {
-		d = s[0:1]
-	}
-	return d
-}
-
-// MONTH PARSE
-func Month(s string) string {
-	var m string
-	fmt.Println("month-1", s[2:4], "month-2", s[3:5])
-	if s[2:3] == "-" {
-		m = s[3:4]
-	} else {
-		m = s[3:5]
-	}
-	return m
-}
-
-// YEAR PARSE
-func Year(s string) string {
-	var y string
-	if len(s) == 10 {
-		y = s[6:10]
-	} else if len(s) == 9 {
-		y = s[5:9]
-	}
-	return y
-}
-
-func GetToday(year int, month time.Month, date int) time.Time {
-	now := time.Now()
-	return time.Date(year, month, date, now.Hour(), now.Minute(), now.Second(), now.Nanosecond(), time.UTC)
-}
-
-func ParseTags(s string) []string {
-	var tags = make([]string, len(s))
-
-	// get picture file name without extension
-	// png, gif, tif , img, jpeg
-	if strings.Contains(s, ".png") {
-		tags = strings.Split(s, ".png")
-	} else if strings.Contains(s, ".jpeg") {
-		tags = strings.Split(s, ".jpeg")
-	} else if strings.Contains(s, ".img") {
-		tags = strings.Split(s, ".img")
-	} else if strings.Contains(s, ".gif") {
-		tags = strings.Split(s, ".gif")
-	} else if strings.Contains(s, ".tif") {
-		tags = strings.Split(s, ".tif")
-	} else {
-		tags = append(tags, " ")
-	}
-	return tags
-}
-
 func SiaObjectStorage(client skynet.SkynetClient, file string) bool {
 
 	// application store user picture in the app_data directory
 	path, err := os.Stat("app_data/")
 	if err != nil {
-		log.Println(" Error File Properties :", err.Error())
 		return false
 	}
 
 	// Application storage path
 	if !path.IsDir() {
-		log.Fatalln("[Error] File in Directory :", err.Error())
 		return false
 	}
 
@@ -309,7 +214,6 @@ func SiaObjectStorage(client skynet.SkynetClient, file string) bool {
 	// upload file to storage
 	sia_object_url, err := client.UploadFile(file, options)
 	if err != nil {
-		log.Printf("Error Upload Content %v:", err.Error())
 		return false
 	}
 
@@ -322,7 +226,6 @@ func SiaObjectStorage(client skynet.SkynetClient, file string) bool {
 	// encoded string in hex format which mus be decode as string in hex format
 	decoder, err := hex.DecodeString(hex.EncodeToString(hash_data[:]))
 	if err != nil {
-		log.Printf("Encode information : %v", err.Error())
 		return false
 	}
 
@@ -338,21 +241,17 @@ func SiaObjectStorage(client skynet.SkynetClient, file string) bool {
 	// multihash hex string apply on encoded string in hex format.
 	encodex11, err := multihash.FromHexString(hex.EncodeToString(encodetype))
 	if err != nil {
-		log.Printf("Error Encoding : %v", err.Error())
 		return false
 	}
-	
 
 	// generate new cid.. The specification of this function require two parameters (codeType & other one is hash algorithm)
 	// merkel tree (dag) data serilaization (protocol buffer [https://en.wikipedia.org/wiki/Protocol_Buffers])
 	// & hash algorithm
 
 	cid := linkcid.NewCidV1(linkcid.DagProtobuf, encodex11)
-	
 
 	// check whether cid version is 0. For this application cid version must be 1
 	if version := cid.Version(); version != 1 {
-		log.Printf("cid version not supported:%v", version)
 		return false
 	}
 
@@ -365,276 +264,31 @@ func SiaObjectStorage(client skynet.SkynetClient, file string) bool {
 	return true
 }
 
-func Location(str string) Point {
-	current_nav := make(chan Point)
-	go func() {
-		current_nav <- Point{Longitude_Division: str[0:5], Latituide_Division: str[13:18]}
-	}()
-	location := <-current_nav
-	return location
-}
-
 func Download_Content_ownership(File string, client bucket.Bucket_Service) *proto.QState {
 
 	return client.Download(&proto.Query{ByName: File})
 
 }
 
-// genome function return  maromolecules props .
-//  this function written in fp style . In a single line of code dozen of functions depend on one another
-func Genome_Extract(m map[string]map[string]proteins.Aminochain, n map[string]string, key string) *binary.Micromolecule {
-
-	// *************** declaration of props *************
-	molecules := binary.Micromolecule{}
-	var molecules_traits_a string = ""
-	var molecules_traits_b string = ""
-	var molecule_magnetic string = ""
-	var carbonAtom int64 = 0
-	var hydroAtom int64 = 0
-	var sulphurAtom int64 = 0
-	var oxygenAtom int64 = 0
-	var nitrogenAtom int64 = 0
-	// ***************************************************
-
-	// iterate over map of map with specialized keys
-	iterate := reflect.ValueOf(m[n[key]]).MapRange()
-	for iterate.Next() {
-
-		// hold molecules symbol
-		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") {
-			molecules.Symbol = iterate.Value().FieldByName("Symbol").String()
-		}
-
-		// hold molecules mass
-		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
-			molecules.Mass = iterate.Value().FieldByName("Mass").Float()
-		}
-
-		// hold molecules acidity level
-		if !strings.Contains(iterate.Value().FieldByName("Acidity_a").String(), "undefined") && !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
-			molecules_traits_a = iterate.Value().FieldByName("Acidity_a").String()
-		}
-
-		if !strings.Contains(iterate.Value().FieldByName("Acidity_b").String(), "undefined") && !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
-			molecules_traits_b = iterate.Value().FieldByName("Acidity_b").String()
-		}
-
-		// hold molecule magnetic fields level
-		if !strings.Contains(iterate.Value().FieldByName("Magnetic").String(), "undefined") && !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
-			molecule_magnetic = iterate.Value().FieldByName("Magnetic").String()
-		}
-
-		// hold molecules carbon state
-		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
-			carbonAtom = iterate.Value().FieldByName("Carbon").Int()
-		}
-
-		// hold molecules hydrogen state
-		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
-			hydroAtom = iterate.Value().FieldByName("Hydrogen").Int()
-		}
-
-		// hold molecules nitrogen state
-		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
-			nitrogenAtom = iterate.Value().FieldByName("Nitrogen").Int()
-		}
-
-		// hold molecules sulphur state
-		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
-			sulphurAtom = iterate.Value().FieldByName("Sulphur").Int()
-		}
-
-		// hold molecule oxygen state
-		if !strings.Contains(iterate.Value().FieldByName("Symbol").String(), " ") && special_proteins(iterate.Value().FieldByName("Symbol").String()) {
-			oxygenAtom = iterate.Value().FieldByName("Oxygen").Int()
-		}
-
-		molecules.Composition = &binary.Element{C: carbonAtom, H: hydroAtom, N: nitrogenAtom, O: oxygenAtom, S: sulphurAtom}
-		molecules.Molecule = &binary.Traits{A: molecules_traits_a, B: molecules_traits_b, Magnetic_Field: molecule_magnetic}
-		//log.Println("molecules:", molecules)
-	}
-	return &molecules
-}
-
-func GetMoleculesState(molecule *binary.Micromolecule) bool {
-
-	// check protocol message traits .
-	return !strings.Contains(molecule.Symbol, " ") && !reflect.DeepEqual(molecule.Molecule, &binary.Traits{})
-}
-
-func GetCompositionState(molecule *binary.Micromolecule) bool {
-
-	// check element traits
-	return !strings.Contains(molecule.Symbol, " ") && !reflect.DeepEqual(molecule.Composition, &binary.Element{})
-}
-
-func Molecular(p *binary.Micromolecule) bool {
-
-	// check whether chain have proper type and the molecule have some information
-	if reflect.ValueOf(p).Elem().Kind() == reflect.Struct {
-		return !reflect.DeepEqual(reflect.ValueOf(p).Elem(), &binary.Micromolecule{})
-	}
-	// return false state
-	return false
-}
-
-func special_proteins(str string) bool {
-
-	// check molecule codon have start or end codon
-	if strings.Contains(str, "!") {
-		return false
-	} else if strings.Contains(str, "!*") {
-		return false
-	} else if strings.Contains(str, "!**") {
-		return false
-	}
-	// this is a valid codon
-	return true
-}
-
-func Abundance(molecule *binary.Micromolecule, str string, iter int) (int, string) {
-
-	count := 0
-	// if molecule have valid type and that molecule exist more than once
-	if reflect.ValueOf(molecule).Elem().Kind() == reflect.Struct {
-		count = strings.Count(str, reflect.ValueOf(molecule).Elem().Field(3).String())
-	}
-	return count, reflect.ValueOf(molecule).Elem().Field(3).String()
-}
-
-
-func predictwithvaribles(molecule *binary.Micromolecule)(float64){
-	
-	productOf := 1.0
-
-	if reflect.ValueOf(molecule).Elem().Kind() == reflect.Struct {
-			productOf = ((reflect.ValueOf(molecule).Elem().Field(4).Float()) * float64(reflect.ValueOf(molecule).Elem().Field(7).Int()))
-	}
-
-	return productOf
-}
-
-func Symbol(molecule *binary.Micromolecule) string{
-	
-	symbol := ""
-	if reflect.ValueOf(molecule).Elem().Kind() == reflect.Struct {
-	
-		symbol = reflect.ValueOf(molecule).Elem().Field(3).String()
-	}
-	return symbol
-}
-
-func Mass(molecule *binary.Micromolecule) float64{
-
-	mass := 0.00
-	if reflect.ValueOf(molecule).Elem().Kind() == reflect.Struct {	
-		mass = reflect.ValueOf(molecule).Elem().Field(4).Float()
-	}
-	return mass
-}
-
-func Occurance(molecule *binary.Micromolecule) int64{
-	
-	var occ int64 = 0
-
-	if reflect.ValueOf(molecule).Elem().Kind() == reflect.Struct {
-		occ = reflect.ValueOf(molecule).Elem().Field(7).Int()
-	}
-	return occ
-}
-
-func GetStructsFields(molecule *binary.Micromolecule, fields int, name string) reflect.Value {
-
-	if reflect.ValueOf(molecule).Elem().Kind() == reflect.Struct{
-
-		switch name {
-			case "Symbol": return reflect.ValueOf(molecule).Elem().Field(fields)	
-			case "Mass": return reflect.ValueOf(molecule).Elem().Field(fields) 
-			case "Abundance": return reflect.ValueOf(molecule).Elem().Field(fields)
-		}
-	}
-	return reflect.ValueOf(molecule)
-}
-
 func Mapper(stream map[string]interface{}, key string) interface{} {
 
 	var occ interface{}
 	it := reflect.ValueOf(stream).MapRange()
-	for it.Next(){
-				occ = stream[key]
+	for it.Next() {
+		occ = stream[key]
 	}
 	return occ
-}
-
-func DashboardAnalytics(amino []*binary.Micromolecule, sum int64) ([]map[string]interface{}){
-
-	model := make([]map[string]interface{}, len(amino))
-	//predict := make([]float64, len(amino))
-	
-	for i := range amino {
-		
-		refVal := GetStructsFields(amino[i], 3, "Symbol")
-		refMass	 := GetStructsFields(amino[i], 4, "Mass")
-		refOccu := GetStructsFields(amino[i],7, "Abundance")
-		// predict = append(predict, predictwithvaribles(amino[i]))
-		
-		if !(strings.Contains(refVal.String(), " ")) && !(reflect.DeepEqual(refVal, reflect.ValueOf(amino[i]))){
-			if !(reflect.DeepEqual(refMass, reflect.ValueOf(amino[i]))){
-				if !(reflect.DeepEqual(refOccu , reflect.ValueOf(amino[i]))){
-
-					model = append(model, map[string]interface{}{
-						"Symbol" : refVal.String(),
-						"Mass" : refMass.Float(),
-						"Occurance" : refOccu.Int(),
-						// "Predict" : predict[i],
-						"Max" : sum,
-					 })
-				}
-			}
-		}
-	}
-
-	return model
-}
-
-func Make_string(chain *binary.Micromolecule) string {
-
-	symbols := ""
-	if reflect.ValueOf(chain).Elem().Kind() == reflect.Struct {
-		symbols = reflect.ValueOf(chain).Elem().Field(3).String()
-	}
-	return symbols
-}
-
-func Generator() string {
-	left, err := rand.Int(rand.Reader, big.NewInt(55))
-	if err != nil {
-		log.Printf(" Error name generator failed to generate good name for left side%v", err.Error())
-		return ""
-	}
-
-	right, err := rand.Int(rand.Reader, big.NewInt(52))
-	if err != nil {
-		log.Printf(" Error name generator failed to generate good name for right side%v", err.Error())
-		return ""
-	}
-
-	leftGen := namegenerator.NewNameGenerator(left.Int64())
-	rightGen := namegenerator.NewNameGenerator(right.Int64())
-
-	return rightGen.Generate() + "_" + leftGen.Generate()
 }
 
 func UpdateProfileInfo(member *users.Visitors) bool {
 	err := cloud.UpdateUserDetails(GetDBClientRef(), *member)
 	if err != nil {
-		log.Printf(" Bash Processing Error %v", err.Error())
 		return false
 	}
 	return true
 }
 
-func TrustRequest(message, verifier, request string) (bool, error, *ed25519.PrivateKey) {
+func TrustRequest(message, verifier, request string) (bool, *ed25519.PrivateKey, error) {
 
 	// contain check whether request have pass-key ,
 	// address contain address of trusted user wallet
@@ -649,23 +303,23 @@ func TrustRequest(message, verifier, request string) (bool, error, *ed25519.Priv
 		bind_message, err := crypto.ASED25519(message, AleKey)
 		if err != nil {
 			log.Printf(" Error message binding fail %v", err.Error())
-			return false, err, &AleKey
+			return false, &AleKey, err
 		}
 
 		// key signature verified
 		if verified := cryptos.AVED25519(message, bind_message, AleKey, BbKey); verified {
-			return verified, nil, &AleKey
+			return verified, &AleKey, nil
 		}
 
 		// key verification failed.
-		return false, errors.New("verification failed"), &AleKey
+		return false, &AleKey, errors.New("verification failed")
 	} else {
 
 		// generate keys
 		BbKey, AleKey, err := cryptos.BKED25519()
 		if err != nil {
 			log.Printf(" Error generating key: %v", err.Error())
-			return false, err, &AleKey
+			return false, &AleKey, err
 		}
 
 		// bind message with your public key
@@ -673,11 +327,11 @@ func TrustRequest(message, verifier, request string) (bool, error, *ed25519.Priv
 
 		// bind message verification against key
 		if verify := cryptos.BVED25519(BbKey, bindMessage, []byte(message)); verify {
-			return verify, nil, &AleKey
+			return verify, &AleKey, nil
 		}
 
 		// bind message verification failed
-		return false, errors.New("error verification error"), &AleKey
+		return false, &AleKey, errors.New("error verification error")
 	}
 }
 
@@ -737,124 +391,48 @@ func threepairs(str string, i int) bool {
 
 func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member users.Visitors) (*users.Visitors, error) {
 
+	var mapper map[string]interface{}
+	var profile users.Visitors
 	data, err := cloud.SearchUser(GetDBClientRef(), member)
-	if err != nil && data != nil {
-		log.Fatal("[Fail] No info ", err)
-		return &users.Visitors{}, err
+	if reflect.DeepEqual(data, mapper) && err != nil {
+		log.Println("no account on our server")
+		return &profile, errors.New("no account on our server")
 	}
-
-	fmt.Println("search data :", data)
 
 	query, err := json.Marshal(data)
 	if err != nil {
-		log.Fatal("marshall encode :", err.Error())
-		return &users.Visitors{}, err
+		return &profile, err
 	}
 
-	var profile users.Visitors
 	err = json.Unmarshal(query, &profile)
 	if err != nil {
-		log.Fatal("unmarshal error:  ", err.Error())
-		return &users.Visitors{}, err
+		return &profile, err
 	}
-	fmt.Println("Profile:", profile)
 	return &profile, nil
 }
-
-// func getVistorData(response http.ResponseWriter, request *http.Request) {
-// 	response.Header().Set("Content-Type", "application/json")
-// 	visitor, err := cloud.FindAllData(appName)
-// 	if err != nil {
-// 		response.WriteHeader(http.StatusInternalServerError)
-// 		response.Write([]byte(`{"error" :"Error getting visitor result"}`))
-// 		return
-// 	}
-// 	fmt.Printf("Vistors array%v", visitor)
-//
-// 	// response.WriteHeader(http.StatusOK)
-// 	json.NewEncoder(response).Encode(visitor)
-//
-// }
-
-// func UpdateProfile(w http.ResponseWriter, r *http.Request, user users.Visitors) (*users.Visitors, error) {
-
-// 	var member users.Visitors
-// 	request_member, err := json.Marshal(member)
-// 	if err != nil {
-// 		log.Println("Error marshalling", err.Error())
-// 		return &member, err
-// 	}
-
-// 	if err = json.Unmarshal(request_member, &member); err != nil {
-// 		log.Println("Error unmarshalling", err.Error())
-// 		return &member, err
-// 	}
-// 	fire_gateway, err := Firebase_Gatekeeper(w, r, user)
-// 	if err != nil {
-// 		log.Println("Error data request", err.Error())
-// 		return &member, err
-// 	}
-
-// 	if !reflect.DeepEqual(fire_gateway, request_member) {
-// 		doc, result, err := cloud.AddUser(GetDBClientRef(), user)
-// 		if err != nil {
-// 			log.Println("Error update user", err.Error())
-// 			return &member, err
-// 		}
-
-// 		fmt.Println("Document:", doc, "Result:", result)
-// 		json_firebase_user, err := cloud.SearchUser(GetDBClientRef(), user)
-// 		if err != nil {
-// 			log.Println("Error search user", err.Error())
-// 			return &member, err
-// 		}
-// 		data, err := json.Marshal(json_firebase_user)
-// 		if err != nil {
-// 			log.Println("Error marshal user", err.Error())
-// 			return &member, err
-// 		}
-// 		if err = json.Unmarshal(data, &member); err != nil {
-// 			log.Println("Error unmarshal user", err.Error())
-// 			return &member, err
-// 		}
-// 		log.Println("Data:", string(data))
-// 	} else {
-// 		log.Println("Error when updating user", err.Error())
-// 		return &member, err
-// 	}
-// 	return fire_gateway, nil
-// }
 
 func AddNewProfile(response http.ResponseWriter, request *http.Request, user users.Visitors, im string) (*firestore.DocumentRef, bool, error) {
 
 	var member users.Visitors
 	var replicate *firestore.DocumentRef
 
-	fmt.Println("Member:", member, "exuser:", user)
-
 	// user data accrording to json schema
 	data, err := json.Marshal(user)
 	if err != nil {
-		log.Fatal(" marshal data ", err.Error())
-		return &firestore.DocumentRef{}, false, err
+		return replicate, false, err
 	}
-
-	fmt.Println("json_data:", string(data))
 
 	err = json.Unmarshal(data, &user)
 	if err != nil {
-		log.Fatal(" unmarshal data ", err)
-		return &firestore.DocumentRef{}, false, err
+		return replicate, false, err
 	}
 
 	// search data if there is
 	candidate, err := Firebase_Gatekeeper(response, request, user)
 	if err != nil {
-		log.Fatal("[Fail] Iterator Terminate :  ", err)
-		return &firestore.DocumentRef{}, false, err
-	}
+		return replicate, false, err
 
-	fmt.Println("Existing record :", candidate)
+	}
 
 	// search data doesn't exist
 	if reflect.DeepEqual(candidate, &member) {
@@ -878,17 +456,12 @@ func AddNewProfile(response http.ResponseWriter, request *http.Request, user use
 		// add user data in your dataabse
 		document, _, err := cloud.AddUser(GetDBClientRef(), member)
 		if err != nil {
-			log.Fatal(" Bash Processing Error ", err.Error())
-			return &firestore.DocumentRef{}, false, err
+			return replicate, false, err
 		}
 
 		replicate = document
-
-		fmt.Println("record created:", document, replicate)
 		return document, true, nil
 	} else {
-		// database record replication
-		log.Println("Replicate :", replicate)
 		return replicate, false, err
 	}
 }
@@ -897,21 +470,18 @@ func Firestore_Reference() *firestore.Client {
 
 	_, err := os.Stat("config/" + GetKeyFile())
 	if os.IsExist(err) {
-		fmt.Println("File Doesn't exist...", err)
-		return nil
+		return &firestore.Client{}
 	}
 
 	Firestore_Rf = "config/" + GetKeyFile()
 
 	firebase_connect, err := firebase.NewApp(context.Background(), &firebase.Config{ProjectID: GetProjectID()}, option.WithCredentialsFile(Firestore_Rf))
 	if err != nil {
-		fmt.Println("Connection reject", err.Error())
 		return &firestore.Client{}
 	}
 
 	client, err := firebase_connect.Firestore(context.Background())
 	if err != nil {
-		fmt.Println("Connection busy", err.Error())
 		return &firestore.Client{}
 	}
 	return client
@@ -922,90 +492,26 @@ func StringInt(s string) (int, error) {
 
 	i, err := strconv.Atoi(s)
 	if err != nil {
-		log.Fatalln("[Fail] Conversion", err)
 		return 0, err
 	}
 	return i, nil
 
 }
 
-// func GetBalance(account *structs.Static) *big.Int {
+// func IsEvm(hash, addressexp string, clientInstance *ethclient.Client) bool {
 
-// 	wallet := common.HexToAddress(account.Eth)
-// 	balnce, err := clientInstance.BalanceAt(context.Background(), wallet, nil)
+// 	expression := regexp.MustCompile(addressexp)
+// 	v := expression.MatchString(hash)
+
+// 	address := common.HexToAddress(hash)
+// 	bytecode, err := clientInstance.CodeAt(contxt.Background(), address, nil)
 // 	if err != nil {
-// 		log.Fatalln("[Fail] Balance reading issue/ connectivity issue")
-// 		return nil
+// 		return
 // 	}
-// 	account.Balance = balnce
-// 	return account.Balance
+
+// 	contract := len(bytecode) > 0
+// 	return contract
 // }
-
-// func ReadBalanceFromBlock(acc *structs.Block) *big.Int {
-// 	wallet := common.HexToAddress(acc.TxRec)
-// 	balnce, err := clientInstance.BalanceAt(context.Background(), wallet, nil)
-// 	if err != nil {
-// 		log.Fatalln("[Fail] Connectivity issue", err)
-// 		return nil
-// 	}
-// 	acc.Balance = balnce
-// 	return acc.Balance
-
-// }
-
-// func Retrieve_Crypto(w *structs.Acc, ledger db.PublicLedger) (bool, *cloudWallet.EthereumWalletAcc) {
-
-// 	ethAcc, err := ledger.FindMyPublicAddress(w, GetDBClientRef())
-// 	if err != nil {
-// 		log.Fatalln("[Fail] Ledger ahve no Information / internal issue ", err)
-// 		return false, nil
-// 	}
-// 	if ethAcc != nil {
-// 		return false, nil
-// 	}
-// 	return true, ethAcc
-
-// }
-
-// func MyEthAddress(w *structs.Acc, ledge db.PublicLedger) (*cloudWallet.EthereumWalletAcc, bool) {
-
-// 	acc, err := ledge.FindMyAddressByEmail(w, GetDBClientRef())
-// 	if err != nil {
-// 		log.Fatalln("[Fail] Configuration issue", err)
-// 		return nil, false
-// 	}
-// 	if acc == nil {
-// 		return nil, false
-// 	}
-// 	return acc, true
-// }
-
-// func FindEthWallet(w *structs.Acc, ledge db.PublicLedger) (*cloudWallet.EthereumWalletAcc, bool) {
-
-// 	acc, err := ledge.FindMyPublicAddress(w, GetDBClientRef())
-// 	if err != nil {
-// 		log.Fatalln("[Fail] Configuration issue", err)
-// 		return nil, false
-// 	}
-// 	return acc, true
-// }
-
-func IsEvm(hash, addressexp string, clientInstance *ethclient.Client) bool {
-
-	expression := regexp.MustCompile(addressexp)
-	v := expression.MatchString(hash)
-
-	address := common.HexToAddress(hash)
-	bytecode, err := clientInstance.CodeAt(contxt.Background(), address, nil)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return false
-	}
-
-	contract := len(bytecode) > 0
-	log.Println("[Accept] Contract Address: ", contract, "Result:", v)
-	return contract
-}
 
 func Web_Token(unique string) *sessions.CookieStore {
 	return sessions.NewCookieStore([]byte(unique))
@@ -1014,15 +520,12 @@ func Web_Token(unique string) *sessions.CookieStore {
 func MountDisk(w http.ResponseWriter, r *http.Request, filename string) os.FileInfo {
 	f, err := os.OpenFile(filename+".txt", os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
-		log.Fatal("[Fail] No File Exist  ", err)
 		return nil
 	}
 
 	finfo, err := f.Stat()
 	if err != nil {
-		log.Fatal("[Fail] Application Access   ", err)
 		return nil
-
 	}
 	return finfo
 }
@@ -1031,8 +534,7 @@ func Signx(w http.ResponseWriter, r *http.Request, h1, h2 string) (string, strin
 
 	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 	if err != nil {
-		log.Fatal("[Fail] Key generate   ", err)
-		return "", "", privateKey
+		return "", "", &ecdsa.PrivateKey{}
 	}
 
 	// 0x40fa6d8c32594a971b692c44c0c56b19c32613deb1c6200c26ea4fe33d34a5fd
@@ -1046,10 +548,7 @@ func Signx(w http.ResponseWriter, r *http.Request, h1, h2 string) (string, strin
 
 	reader, s, err := ecdsa.Sign(rand.Reader, privateKey, hash[:])
 	if err != nil {
-
-		log.Fatal("[Fail] Key signed   ", err)
-		return "", "", privateKey
-
+		return "", "", &ecdsa.PrivateKey{}
 	}
 
 	return fmt.Sprintf("0x%x", reader), fmt.Sprintf("0x%x", s), privateKey
@@ -1057,94 +556,90 @@ func Signx(w http.ResponseWriter, r *http.Request, h1, h2 string) (string, strin
 }
 
 func RFiles(filename string) ([]byte, error) {
+
 	body, err := ioutil.ReadFile(filename)
+
 	if err != nil {
-		log.Fatalln("[Fail] File  Access ", err)
-		return nil, err
+		return []byte{}, err
 	}
+
 	return []byte(body), nil
 }
 
-func Presence(w http.ResponseWriter, r *http.Request, regexp_emal, regexp_pss bool, user users.Visitors) (bool, *structs.SignedKey) {
-	code := structs.SignedKey{}
+func Presence(w http.ResponseWriter, r *http.Request, regexp_emal, regexp_pss bool, user users.Visitors) (bool, *SignedKey) {
+
+	code := SignedKey{}
+
 	if !regexp_emal && !regexp_pss {
-		return false, &structs.SignedKey{}
+		return false, &SignedKey{}
 	}
+
 	code.Reader, code.Signed, code.Tx = Signx(w, r, hex.EncodeToString([]byte(user.Email)), hex.EncodeToString([]byte(user.Password)))
 	return true, &code
 }
 
-func Mounted(w http.ResponseWriter, r *http.Request, openReadFile string) (string, error) {
+func Mounted(w http.ResponseWriter, r *http.Request) (string, error) {
 	r.ParseMultipartForm(10 << 50)
 
 	var upldFile *os.File = nil
 	file, handler, err := r.FormFile("fileSeq")
 	if err != nil {
-		log.Fatal("[Fail] Error in upload   ", err)
 		return "", err
 	}
 	defer file.Close()
 
 	if handler.Size >= (500000 * 1024) {
-		log.Fatalln((500000 * 1024) - handler.Size)
 		return "", err
 	}
 
-	fmt.Println("File name:"+handler.Filename)
-
 	if _, err := os.Stat(handler.Filename); os.IsExist(err) {
-		log.Fatal("[Fail] Already have  this file ", err)
 		return "", err
-
 	}
 
 	path, err := os.Stat("app_data/")
 	if err != nil {
-		log.Fatalln("[Error] In directory", err)
 		return "", err
 	}
 
 	if !path.IsDir() {
-		log.Fatalln("[Error] Reading File", err)
 		return "", err
 	}
 
 	path, err = os.Stat("app_data/")
+
 	if err != nil {
-		log.Fatalln("[Error] In directory", err)
 		return "", err
 	}
+
 	if !path.IsDir() {
-		log.Fatalln("[Error] Reading File", err)
 		return "", err
 	}
+
 	// upload file by user...
 	upldFile, err = ioutil.TempFile(filepath.Dir("app_data/"), "apps-"+"*.txt")
 	if err != nil {
-		log.Fatal("[Fail] Temporary File ", err)
 		return "", err
-
 	}
 	defer upldFile.Close()
+
 	_, err = upldFile.Stat()
 	if err != nil {
-		log.Fatalln("[Fail] File Stats", err)
 		return "", err
 	}
 
-	openReadFile = upldFile.Name()
+	openReadFile := upldFile.Name()
 
 	// file convert into bytes
 	bytesFile, err := ioutil.ReadAll(file)
 	if err != nil {
-		log.Fatal("[Fail] File Reading Permission   ", err)
 		return "", err
 	}
+
 	_, err = upldFile.Write(bytesFile)
 	if err != nil {
 		return "", err
 	}
-	log.Println("[Result] = File added on server", upldFile.Name())
+
 	return openReadFile, nil
 
 }
@@ -1179,7 +674,6 @@ func Encrypted_Stream_Channel(file string) bool {
 			Secure:  true,
 		}
 
-		
 		// picture metadata
 		storage := &collection.Pictures{}
 		storage.PicTime = pic_time
@@ -1203,8 +697,7 @@ func ReadAllow(serverFile *os.File, userFile os.FileInfo) ([]string, []string, e
 
 	seq, err := RFiles(userFile.Name())
 	if err != nil {
-		println("Error in rsead file", err)
-		return nil, nil, err
+		return []string{}, []string{}, err
 	}
 
 	var gen []string
@@ -1219,7 +712,7 @@ func ReadAllow(serverFile *os.File, userFile os.FileInfo) ([]string, []string, e
 	pathogen, err := RFiles(serverFile.Name())
 	if err != nil {
 		println("Error in read file", err)
-		return nil, nil, err
+		return []string{}, []string{}, err
 	}
 
 	var genV []string
@@ -1243,16 +736,15 @@ func ToRunes(seq byte) string {
 	return string(alphabet.Letter(seq))
 }
 
-func blockSession(id int) *sessions.CookieStore {
+// func blockSession(id int) *sessions.CookieStore {
 
-	return sessions.NewCookieStore([]byte(strconv.Itoa(id)))
-}
+// 	return sessions.NewCookieStore([]byte(strconv.Itoa(id)))
+// }
 
 func Data_Predicition(w http.ResponseWriter, r *http.Request, fname, choose string, file *os.File, algo info.Levenshtein) error {
 
 	i, err := strconv.Atoi(choose)
 	if err != nil {
-		log.Fatalln("[Fail] Sorry there is some issue report!", err)
 		return err
 	}
 	if (i > 0 && i < 6) && (fname != " ") {
@@ -1263,7 +755,6 @@ func Data_Predicition(w http.ResponseWriter, r *http.Request, fname, choose stri
 		// read document and convert into managable format for processing
 		Usr, Virus, err := ReadAllow(file, svrFile)
 		if err != nil {
-			log.Fatalln("Sequence data file error", err)
 			return err
 		}
 
@@ -1292,18 +783,8 @@ func SetGenes(gene []string) {
 // get genes
 func GetGenes() []string { return genes }
 
-func Card_Verification(s1, s2 string) bool {
-
-	m, n := []byte(s1), []byte(s2)
-	res := bytes.Compare(m, n)
-	if res == 0 {
-		return true
-	}
-	return false
-
-}
-
 func Open_SFiles(path, filename string) (*os.File, error) {
+
 	fileinfo, err := os.Stat(path)
 	if err != nil {
 		return nil, err

@@ -5,28 +5,27 @@ go 1.14
 require (
 	cloud.google.com/go/firestore v1.3.0
 	firebase.google.com/go v3.13.0+incompatible
-	github.com/PuerkitoBio/goquery v1.6.1
 	github.com/SkynetLabs/go-skynet/v2 v2.0.2
 	github.com/agnivade/levenshtein v1.1.0
+	github.com/allegro/bigcache v1.2.1
 	github.com/biogo/biogo v1.0.2
 	github.com/briandowns/openweathermap v0.16.0
-	github.com/ethereum/go-ethereum v1.10.7
 	github.com/fogleman/ribbon v0.0.0-20191101191537-568057efb726
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/goombaio/namegenerator v0.0.0-20181006234301-989e774b106e
 	github.com/gorilla/mux v1.7.4
 	github.com/gorilla/sessions v1.2.0
+	github.com/gyozatech/noodlog v0.0.0-20211006161024-c2cd168c8400
 	github.com/ipfs/go-cid v0.1.0
 	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
 	github.com/logpacker/PayPal-Go-SDK v2.0.5+incompatible
-	github.com/mattn/go-colorable v0.1.4 // indirect
-	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/multiformats/go-base32 v0.0.4 // indirect
 	github.com/multiformats/go-multihash v0.0.16
 	github.com/onsi/ginkgo v1.16.4
 	github.com/onsi/gomega v1.16.0
 	github.com/plutov/paypal v2.0.5+incompatible // indirect
 	github.com/pusher/pusher-http-go v4.0.1+incompatible
+	github.com/stretchr/testify v1.7.0 // indirect
 	gitlab.com/NebulousLabs/errors v0.0.0-20200929122200-06c536cf6975 // indirect
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect
 	golang.org/x/net v0.0.0-20210813160813-60bc85c4be6d

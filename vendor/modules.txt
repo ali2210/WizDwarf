@@ -23,19 +23,16 @@ firebase.google.com/go/iid
 firebase.google.com/go/internal
 firebase.google.com/go/messaging
 firebase.google.com/go/storage
-# github.com/PuerkitoBio/goquery v1.6.1
-## explicit
-github.com/PuerkitoBio/goquery
 # github.com/SkynetLabs/go-skynet/v2 v2.0.2
 ## explicit
 github.com/SkynetLabs/go-skynet/v2
-# github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6
-github.com/StackExchange/wmi
 # github.com/agnivade/levenshtein v1.1.0
 ## explicit
 github.com/agnivade/levenshtein
-# github.com/andybalholm/cascadia v1.1.0
-github.com/andybalholm/cascadia
+# github.com/allegro/bigcache v1.2.1
+## explicit
+github.com/allegro/bigcache
+github.com/allegro/bigcache/queue
 # github.com/biogo/biogo v1.0.2
 ## explicit
 github.com/biogo/biogo/alphabet
@@ -43,41 +40,12 @@ github.com/biogo/biogo/feat
 # github.com/briandowns/openweathermap v0.16.0
 ## explicit
 github.com/briandowns/openweathermap
-# github.com/btcsuite/btcd v0.20.1-beta
-github.com/btcsuite/btcd/btcec
-# github.com/deckarep/golang-set v0.0.0-20180603214616-504e848d77ea
-github.com/deckarep/golang-set
-# github.com/ethereum/go-ethereum v1.10.7
-## explicit
-github.com/ethereum/go-ethereum
-github.com/ethereum/go-ethereum/common
-github.com/ethereum/go-ethereum/common/hexutil
-github.com/ethereum/go-ethereum/common/math
-github.com/ethereum/go-ethereum/common/mclock
-github.com/ethereum/go-ethereum/core/types
-github.com/ethereum/go-ethereum/crypto
-github.com/ethereum/go-ethereum/crypto/secp256k1
-github.com/ethereum/go-ethereum/crypto/secp256k1/libsecp256k1/include
-github.com/ethereum/go-ethereum/crypto/secp256k1/libsecp256k1/src
-github.com/ethereum/go-ethereum/crypto/secp256k1/libsecp256k1/src/modules/recovery
-github.com/ethereum/go-ethereum/ethclient
-github.com/ethereum/go-ethereum/log
-github.com/ethereum/go-ethereum/metrics
-github.com/ethereum/go-ethereum/p2p/netutil
-github.com/ethereum/go-ethereum/params
-github.com/ethereum/go-ethereum/rlp
-github.com/ethereum/go-ethereum/rpc
 # github.com/fogleman/ribbon v0.0.0-20191101191537-568057efb726
 ## explicit
 github.com/fogleman/ribbon/pdb
 # github.com/fsnotify/fsnotify v1.5.1
 ## explicit
 github.com/fsnotify/fsnotify
-# github.com/go-ole/go-ole v1.2.1
-github.com/go-ole/go-ole
-github.com/go-ole/go-ole/oleutil
-# github.com/go-stack/stack v1.8.0
-github.com/go-stack/stack
 # github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e
 github.com/golang/groupcache/lru
 # github.com/golang/protobuf v1.5.2
@@ -108,8 +76,9 @@ github.com/gorilla/securecookie
 # github.com/gorilla/sessions v1.2.0
 ## explicit
 github.com/gorilla/sessions
-# github.com/gorilla/websocket v1.4.2
-github.com/gorilla/websocket
+# github.com/gyozatech/noodlog v0.0.0-20211006161024-c2cd168c8400
+## explicit
+github.com/gyozatech/noodlog
 # github.com/ipfs/go-cid v0.1.0
 ## explicit
 github.com/ipfs/go-cid
@@ -123,10 +92,6 @@ github.com/klauspost/cpuid/v2
 # github.com/logpacker/PayPal-Go-SDK v2.0.5+incompatible
 ## explicit
 github.com/logpacker/PayPal-Go-SDK
-# github.com/mattn/go-colorable v0.1.4
-## explicit
-# github.com/mattn/go-isatty v0.0.12
-## explicit
 # github.com/minio/blake2b-simd v0.0.0-20160723061019-3f5f724cb5b1
 github.com/minio/blake2b-simd
 # github.com/minio/sha256-simd v1.0.0
@@ -194,13 +159,8 @@ github.com/onsi/gomega/types
 # github.com/pusher/pusher-http-go v4.0.1+incompatible
 ## explicit
 github.com/pusher/pusher-http-go
-# github.com/shirou/gopsutil v3.21.4-0.20210419000835-c7a38de76ee5+incompatible
-github.com/shirou/gopsutil/cpu
-github.com/shirou/gopsutil/internal/common
-# github.com/tklauser/go-sysconf v0.3.5
-github.com/tklauser/go-sysconf
-# github.com/tklauser/numcpus v0.2.2
-github.com/tklauser/numcpus
+# github.com/stretchr/testify v1.7.0
+## explicit
 # gitlab.com/NebulousLabs/errors v0.0.0-20200929122200-06c536cf6975
 ## explicit
 gitlab.com/NebulousLabs/errors
@@ -262,7 +222,6 @@ golang.org/x/sys/cpu
 golang.org/x/sys/execabs
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
-golang.org/x/sys/windows
 # golang.org/x/text v0.3.6
 golang.org/x/text/encoding
 golang.org/x/text/encoding/charmap
@@ -440,8 +399,6 @@ google.golang.org/protobuf/types/known/structpb
 google.golang.org/protobuf/types/known/timestamppb
 google.golang.org/protobuf/types/known/wrapperspb
 google.golang.org/protobuf/types/pluginpb
-# gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce
-gopkg.in/natefinch/npipe.v2
 # gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7
 gopkg.in/tomb.v1
 # gopkg.in/yaml.v2 v2.4.0

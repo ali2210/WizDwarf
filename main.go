@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"html/template"
 	"log"
-	"net"
 	"net/http"
 	"os"
 	"reflect"
@@ -19,12 +18,13 @@ import (
 	"strings"
 
 	"cloud.google.com/go/firestore"
+	logcache "github.com/ali2210/wizdwarf/other/cache_logs"
 	binaries "github.com/ali2210/wizdwarf/other/genetic/binary"
+	"github.com/ali2210/wizdwarf/other/logformatter"
+	"github.com/ali2210/wizdwarf/other/parser"
+	websession "github.com/ali2210/wizdwarf/other/session"
+	"github.com/ali2210/wizdwarf/piplines"
 
-	// CloudWallet "github.com/ali2210/wizdwarf/db/cloudwalletclass"
-	// DBModel "github.com/ali2210/wizdwarf/db/model"
-	structs "github.com/ali2210/wizdwarf/other"
-	bio "github.com/ali2210/wizdwarf/other/bioinformatics"
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
 	"github.com/ali2210/wizdwarf/other/bucket"
 	"github.com/ali2210/wizdwarf/other/bucket/proto"
@@ -33,47 +33,30 @@ import (
 	genome "github.com/ali2210/wizdwarf/other/genetic/binary"
 	"github.com/ali2210/wizdwarf/other/jsonpb"
 	"github.com/ali2210/wizdwarf/other/jsonpb/jsonledit"
+	"github.com/ali2210/wizdwarf/other/molecules"
 	"github.com/ali2210/wizdwarf/other/proteins"
 	"github.com/ali2210/wizdwarf/other/proteins/binary"
-	"github.com/ali2210/wizdwarf/piplines"
 
-	// Shop "github.com/ali2210/wizdwarf/other/cart"
-	// coin "github.com/ali2210/wizdwarf/other/coinbaseApi"
+	"github.com/ali2210/wizdwarf/other/geo"
 	weather "github.com/ali2210/wizdwarf/other/openweather"
-	"github.com/ali2210/wizdwarf/other/paypal/handler"
 	"github.com/pusher/pusher-http-go"
 
-
-	// wizSdk "github.com/ali2210/wizdwarf/other/transaction"
-
 	"github.com/ali2210/wizdwarf/other/users"
-	. "github.com/ali2210/wizdwarf/piplines"
-	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
-	pay "github.com/logpacker/PayPal-Go-SDK"
 )
 
 // Variables
 
 var (
-	emailexp    string               = "([A-Z][a-z]|[0-9])*[@][a-z]*"
-	passexp     string               = "([A-Z][a-z]*[0-9])*"
-	addressexp  string               = "(^0x[0-9a-fA-F]{40}$)"
-	AppName     *firestore.Client    = SetDBClientRef()
-	Cloud       users.DBFirestore    = SetDBCollect()
-	digitalCode users.CreditCardInfo = users.NewClient()
-	// vault          DBModel.Private           = DBModel.New()
-	// ledger         db.PublicLedger           = db.NewCollectionInstance()
-	paypalMini     handler.PaypalClientLevel = handler.PaypalClientGo()
-	userSessions   *sessions.CookieStore     = nil //user level
-	clientInstance *ethclient.Client         = nil
-	ledgerPubcKeys string                    = ""
-	ledgerBits     string                    = ""
-	// Firestore_Rf      string                    = ""
-	openReadFile      string         = ""
-	publicAddress     string         = ""
-	edit              bio.LevenTable = SetEditParameters()
+	emailexp     string                = "([A-Z][a-z]|[0-9])*[@][a-z]*"
+	passexp      string                = "([A-Z][a-z]*[0-9])*"
+	addressexp   string                = "(^0x[0-9a-fA-F]{40}$)"
+	AppName      *firestore.Client     = piplines.SetDBClientRef()
+	Cloud        users.DBFirestore     = piplines.SetDBCollect()
+	userSessions *sessions.CookieStore = nil //user level
+	// publicAddress     string                = ""
+	// edit              bio.LevenTable        = SetEditParameters()
 	algo              info.Levenshtein
 	visualizeReport   weather.DataVisualization = weather.DataVisualization{}
 	accountID         string                    = " "
@@ -82,44 +65,51 @@ var (
 	signed_msg        string                    = " "
 	address_wallet    string                    = " "
 	File              string                    = ""
-	sumof int64 = 0
-	sb []string
-	mss []float64
-	occ []int64
-	count int = 0
-	aminochain []*binary.Micromolecule	
-	transactWeb structs.ParserObject = structs.ParserObject{}
-	profiler    *users.Visitors      = &users.Visitors{}
+	sumof             int64                     = 0
+	sb                []string
+	mss               []float64
+	occ               []int64
+	count             int = 0
+	aminochain        []*binary.Micromolecule
+	profiler          *users.Visitors = &users.Visitors{}
 )
 
 // Constants
 
 const (
-	//ProjectID      string = "htickets-cb4d0"
-	// mainNet       string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
-	// rinkebyClient string = "https://rinkeby.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
-	GEO_Index_KEY    string = "7efdb33c59a74e09352479b21657aee8"
-	APP_CHANNEL_KEY string 				   = "65993b3c66b5317411a5"
-	APP_CHANNEL_ID string = "1265511"
-	APP_CHANNEL_SCRECT string = "4f8bf3faf121d9c8dadf"
-	APP_CHANNEL_CLUSTER_ID string = "mt1"
+//ProjectID      string = "htickets-cb4d0"
+// mainNet       string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
+// rinkebyClient string = "https://rinkeby.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
+)
+
+var (
+	GEO_Index_KEY          string = ""
+	APP_CHANNEL_KEY        string = " "
+	APP_CHANNEL_ID         string = " "
+	APP_CHANNEL_SCRECT     string = " "
+	APP_CHANNEL_CLUSTER_ID string = " "
+	cacheObject                   = logcache.New(logcache.GetBigcached_config())
+	logformat                     = logformatter.New()
 )
 
 func main() {
 
 	// Server
-	
+
 	host := os.Getenv("HOST")
 	port := os.Getenv("PORT")
 	wizDir := os.Getenv("WIZ_VOLUME_DIR")
-	
-	
+	GEO_Index_KEY = os.Getenv("GEOCOORDINATE")
+	APP_CHANNEL_KEY = os.Getenv("Registry_PUSHER_KEY")
+	APP_CHANNEL_ID = os.Getenv("Registry_CHANNEL_ID")
+	APP_CHANNEL_SCRECT = os.Getenv("Registry_CHANNEL_SCRECT")
+	APP_CHANNEL_CLUSTER_ID = os.Getenv("Registry_CHANNEL_CLUSTER_ID")
 
 	// allocate port and host
 	if host == "" {
 
-		if port == " " && wizDir == " "{
-			
+		if port == " " && wizDir == " " {
+
 			fmt.Println(" Firebase Configuration complete ... [wel-done]")
 			fmt.Println(" Static IP-Address Configuration ... [FAIL]")
 			fmt.Println(" Protocol-Buffer v3 Configuration complete ... [wel-done]")
@@ -129,7 +119,7 @@ func main() {
 			fmt.Println(" Application Persistance Storage Configuration completed ...  [FAIL]")
 			log.Fatalln("Make sure volume mount")
 			panic("Application fail to started because no port is specified and we do not have writing permission on your disk ")
-		} 
+		}
 	} else {
 		fmt.Println(" Firebase Configuration complete ... [wel-done]")
 		fmt.Println(" Static IP-Address Configuration complete ... [wel-done]")
@@ -139,17 +129,17 @@ func main() {
 		fmt.Println(" UI Webboard Configuration complete ... [wel-done]")
 		fmt.Println(" Application started ... [wel-done](All process have completed)")
 		fmt.Println(" Application Persistance Storage Configuration completed ...  [wel-done]")
-		
-		if (port != "127.0.0.1:5000"){
+
+		if port != "127.0.0.1:5000" {
 			fmt.Println(" Application IP Address generated. The webboard started with this address at ", port)
 		}
 		fmt.Println(" Application Default IP-Address Allocate ... Default IP-Address allow user to access UI Webboard on your browser. The webboard started with this address 127.0.0.1:5000/ [wel-done]")
-		fmt.Println(" ***************************************************************************************")                                                                                 
-  		fmt.Println("  @@@  @@@  @@@ @@@ @@@@@@@@ @@@@@@@  @@@  @@@  @@@  @@@@@@  @@@@@@@  @@@@@@@@  @@@@@@ ") 
+		fmt.Println(" ***************************************************************************************")
+		fmt.Println("  @@@  @@@  @@@ @@@ @@@@@@@@ @@@@@@@  @@@  @@@  @@@  @@@@@@  @@@@@@@  @@@@@@@@  @@@@@@ ")
 		fmt.Println("   @@!  @@!  @@! @@!      @@! @@!  @@@ @@!  @@!  @@! @@!  @@@ @@!  @@@ @@!      !@@     ")
 		fmt.Println("   @!!  !!@  @!@ !!@    @!!   @!@  !@! @!!  !!@  @!@ @!@!@!@! @!@!!@!  @!!!:!    !@@!!  ")
 		fmt.Println("    !:  !!:  !!  !!:  !!:     !!:  !!!  !:  !!:  !!  !!:  !!! !!: :!!  !!:          !:! ")
-		fmt.Println("    ::.:  :::   :   :.::.: : :: :  :    ::.:  :::    :   : :  :   : :  :       ::.: :  ") 
+		fmt.Println("    ::.:  :::   :   :.::.: : :: :  :    ::.:  :::    :   : :  :   : :  :       ::.: :  ")
 		fmt.Println(" ****************************************************************************************")
 	}
 
@@ -161,10 +151,17 @@ func main() {
 
 		temp := template.Must(template.ParseFiles("initial.html"))
 
-		
-
 		if arg2.Method == "GET" {
-			log.Println("[OK] URL :", arg2.URL.Path)
+
+			cacheObject.Set_Key("Route_Path:", "%"+arg2.URL.Path+"%"+arg2.Method)
+
+			value, err := cacheObject.Get_Key("Route_Path:")
+			if err != nil {
+				return
+			}
+
+			logformat.Trace(value)
+
 			temp.Execute(arg1, "MainPage")
 		}
 
@@ -176,13 +173,9 @@ func main() {
 	routing.HandleFunc("/dashboard", dashboard)
 	routing.HandleFunc("/dashbaord/setting", setting)
 	routing.HandleFunc("/dashboard/profile", profile)
-	routing.HandleFunc("/dashboard/setting/pay/credit/add", credit)
-	routing.HandleFunc("/dashbaord/setting/pay/credit/delete", deleteCard)
 	routing.HandleFunc("/logout", logout)
 	routing.HandleFunc("/feedback", customerViews)
 	routing.HandleFunc("/terms", terms)
-	// routing.HandleFunc("/open", wallet)
-	routing.HandleFunc("/transact", transacts)
 	routing.HandleFunc("/treasure", treasure)
 	routing.HandleFunc("/phenylalanine", phenylalanine)
 	routing.HandleFunc("/leucine", leucine)
@@ -217,10 +210,17 @@ func main() {
 	routing.PathPrefix("/js/").Handler(js)
 
 	// tcp connection
-	err := http.ListenAndServe(net.JoinHostPort(host, port), routing)
+	err := http.ListenAndServe(":5000", routing)
 	if err != nil {
-		log.Println("Listening Error: ", err)
-		panic(err)
+		cacheObject.Set_Key("Internal:", err.Error())
+
+		value, err := cacheObject.Get_Key("Internal:")
+		if err != nil {
+			return
+		}
+
+		logformat.Error(value)
+		return
 	}
 
 }
@@ -228,10 +228,10 @@ func main() {
 // Routes Handle
 
 func home(w http.ResponseWriter, r *http.Request) {
-	
+
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	// webpage route
@@ -239,22 +239,37 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 	// route actions
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
+		cacheObject.Set_Key("Route_Path:", r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			cacheObject.Set_Key("Internal:", err.Error())
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
+			return
+		}
+
+		logformat.Trace(value)
 		temp.Execute(w, "home")
 	}
 
 }
 
 func newUser(w http.ResponseWriter, r *http.Request) {
-	
+
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
-	
+
 	// webpage route
 	temp := template.Must(template.ParseFiles("register.html"))
-	
+
 	// user query interface
 	user := users.Visitors{
 		Name:       "",
@@ -273,13 +288,17 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 
 	// route actions
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		temp.Execute(w, "Regsiter")
 	} else if r.Method == "POST" {
 		r.ParseForm()
-
-		fmt.Println("Url:", r.URL.Path)
-		fmt.Println("Method:" + r.Method)
 
 		// html form
 		user.Name = r.FormValue("uname")
@@ -300,44 +319,57 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 		// user email and email pattern both are same, means email created according to email rule.
 		regex_Email, err := regexp.MatchString(emailexp, user.Email)
 		if err != nil {
-			log.Fatal("[Fail] Auto email pattern  ", err)
+			cacheObject.Set_Key("Internal:", err.Error())
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
 			return
 		}
 
-		// fmt.Println("Regex:", regex_Email)
 		// user password and password pattern both are same, means password created according to password rule.
 		regex_Pass, err := regexp.MatchString(passexp, user.Password)
 		if err != nil {
-			log.Fatal("[Fail] Password is very week ", err)
+			cacheObject.Set_Key("Internal:", err.Error())
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
 			return
 		}
-
-		// fmt.Println("Regex:", regex_Pass)
 
 		// encrypted user information
-		hash, encrypted := Presence(w, r, regex_Email, regex_Pass, user)
+		hash, encrypted := piplines.Presence(w, r, regex_Email, regex_Pass, user)
 		if !hash {
-			log.Fatal("[Fail] Week encryption", hash)
-			return
+			cacheObject.Set_Key("Internal:", err.Error())
 
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
+			return
 		}
 
-		// fmt.Println("Hash:", hash, "encrypted:", encrypted)
-		// fmt.Println("Profile:", user)
 		// in case your account have been created ....
-		if docs, ok, err := AddNewProfile(w, r, user, encrypted.Reader); ok && err == nil {
-			log.Println("account created successfully", docs)
-			
+		if _, ok, err := piplines.AddNewProfile(w, r, user, encrypted.Reader); ok && err == nil {
+
 			// route return Ok callback
 			w.WriteHeader(http.StatusOK)
 			r.Method = "GET"
 			existing(w, r)
 		} else {
 
-			log.Println("account failed ")
-			
 			// route return BAD callback
 			w.WriteHeader(http.StatusBadRequest)
+			return
 		}
 	}
 }
@@ -346,78 +378,106 @@ func existing(w http.ResponseWriter, r *http.Request) {
 
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
-
 
 	// webpage route
 	temp := template.Must(template.ParseFiles("login.html"))
-	
+
 	// initalization of user interface
 	user := users.Visitors{}
-	
+
 	// route actions
 	if r.Method == "GET" {
-		
-		fmt.Println("Method:" + r.Method)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		temp.Execute(w, "Login")
 	} else if r.Method == "POST" {
 
 		// user query parameters
 		r.ParseForm()
-		fmt.Println("Method:", r.Method)
 
 		user.Email = r.FormValue("email")
 		user.Password = r.FormValue("password")
-
-		log.Println("Email:", user.Email, "Password:", user.Password)
 
 		// match email patten with email addresss
 		exp := regexp.MustCompile(emailexp)
 		ok := exp.MatchString(user.Email)
 		if !ok {
-			log.Fatal("[Fail] Mismatch ", ok)
+			cacheObject.Set_Key("Internal:", "Internal Server Error")
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
 			return
 		}
 
 		// match password pattern against password
 		reg := regexp.MustCompile(passexp)
 		okx := reg.MatchString(user.Password)
-		if !okx {
-			log.Fatal("[Fail] Mismatch ", !okx)
+		if !okx && len(user.Password) >= 7 {
+
+			cacheObject.Set_Key("Credentials", "authorization_code return error")
+
+			value, err := cacheObject.Get_Key("Credentials")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
 			return
 		}
 
 		// Search Data in DB
-		data, err := Firebase_Gatekeeper(w, r, user)
-		if err != nil && data == nil {
-			log.Fatal("[Result]: No Match Found  ", err)
+		data, err := piplines.Firebase_Gatekeeper(w, r, user)
+		if reflect.DeepEqual(data, &users.Visitors{Eve: false}) && err == nil {
+			cacheObject.Set_Key("DB connection:", "No information about user")
+
+			value, err := cacheObject.Get_Key("DB connection:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
 			return
 		}
-		accountID = data.Id
 
-		// fmt.Printf("Search Data:%v", data.Id)
+		accountID = data.Id
 
 		accountVisitEmail = data.Email
 		accountKey = data.Password
 		profiler = data
 
-		// fmt.Println("Profile:", profiler)
-		
-		// account interface 
-		act := structs.RouteParameter{}
+		// account interface
+		act := websession.Cookies{}
 
-		// create user session for user 
+		// create user session for user
 		if userSessions == nil {
-			
+
 			// initialize the web session
-			userSessions = Web_Token(data.Id)
+			userSessions = piplines.Web_Token(data.Id)
 
 			// valid the session data
 			act.SetContextSession(userSessions, w, r)
 			err := act.NewToken()
 			if err != nil {
-				log.Fatal("[FAIL] No Token generate .. Review logs", err)
+				cacheObject.Set_Key("Token:", "Web token are not created")
+
+				value, err := cacheObject.Get_Key("Token:")
+				if err != nil {
+					return
+				}
+
+				logformat.Error(value)
 				return
 			}
 		}
@@ -432,55 +492,81 @@ func existing(w http.ResponseWriter, r *http.Request) {
 func profile(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-    w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	// short live variable called visitor
 	var member users.Visitors
 
 	// page renderer
 	temp := template.Must(template.ParseFiles("profile.html"))
-	
+
 	// to find app have information
 	visit, err := Cloud.GetDocumentById(AppName, *profiler)
 	if err != nil {
-		log.Printf("Database query failed: %v", err.Error())
+		cacheObject.Set_Key("Internal:", err.Error())
+
+		value, err := cacheObject.Get_Key("Internal:")
+		if err != nil {
+			return
+		}
+
+		logformat.Error(value)
 		return
 	}
 
 	// encode information with json schema
 	data, err := json.Marshal(visit)
 	if err != nil {
-		log.Printf("json marshal: %v", err.Error())
+		cacheObject.Set_Key("Internal:", err.Error())
+
+		value, err := cacheObject.Get_Key("Internal:")
+		if err != nil {
+			return
+		}
+
+		logformat.Error(value)
 		return
 	}
 
 	// proper encoding over data streams
 	err = json.Unmarshal(data, &member)
 	if err != nil {
-		log.Printf("json unmarshal: %v", err.Error())
+		cacheObject.Set_Key("Internal:", err.Error())
+
+		value, err := cacheObject.Get_Key("Internal:")
+		if err != nil {
+			return
+		}
+
+		logformat.Error(value)
+		return
 	}
 
-	
 	// web request "get"
 	if r.Method == "GET" {
-		log.Println("Method:", r.Method)
-		log.Println("URL:", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		temp.Execute(w, member)
 	} else if r.Method == "POST" {
 
 		// user add profile picture resolution must be less 2kb
-		Pictures_Stream(r, member.Id)
+		piplines.Pictures_Stream(r, member.Id)
 
 		// update users information
 		user := users.Visitors{}
 
-		// users information hold 
+		// users information hold
 		user.Id = member.Id
 		user.Password = member.Password
 		user.Email = member.Email
 
-		
 		if strings.Contains(r.FormValue("name"), " ") {
 			user.Name = member.Name
 		} else {
@@ -535,8 +621,8 @@ func profile(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// user information completed and store in database
-		if status_profile := UpdateProfileInfo(&user); status_profile {
-			
+		if status_profile := piplines.UpdateProfileInfo(&user); status_profile {
+
 			w.WriteHeader(http.StatusOK)
 			return
 		}
@@ -544,256 +630,163 @@ func profile(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
-
 
 func success(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("modal-success.html"))
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-                    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-                    w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	if r.Method == "GET" {
-		log.Println("[Accept]", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		temp.Execute(w, "success")
 	}
 }
-
-func deleteCard(w http.ResponseWriter, r *http.Request) {
-	temp := template.Must(template.ParseFiles("delete.html"))
-
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-                    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-                    w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
-
-	if r.Method == "GET" {
-
-		log.Println("[Accept]", r.URL.Path)
-		temp.Execute(w, "DeleteForm")
-	} else {
-
-		log.Println("[Accept]", r.URL.Path)
-		log.Println("Method:" + r.Method)
-
-		r.ParseForm()
-
-		accountNum := r.FormValue("account")
-
-		client, err := paypalMini.NewClient()
-		if err != nil {
-			log.Fatalln("[Fail] Client Operation:", err)
-			return
-		}
-
-		token, err := paypalMini.Token(client)
-		if err != nil {
-			log.Fatalln("[Fail]Token Operation:", err)
-			return
-		}
-
-		ret, err := paypalMini.RetrieveCreditCardInfo(digitalCode.GetAuthorizeStoreID(), client)
-		if err != nil {
-			log.Fatalln("[Fail] CreditCard Info Operation:", err)
-			return
-		}
-
-		if accountNum != "" && Card_Verification(accountNum, ret.Number) {
-			err := paypalMini.RemoveCard(ret.ID, client)
-			if err != nil {
-				log.Fatalln("[Fail] Remove card operation", err)
-				return
-			}
-
-			log.Println("[Accept:]", client, token)
-			temp.Execute(w, "Complete")
-			w.WriteHeader(http.StatusOK)
-			r.Method = "GET"
-			success(w, r)
-		} else {
-			w.WriteHeader(http.StatusBadRequest)
-			r.Method = "GET"
-			deleteCard(w, r)
-		}
-	}
-
-}
-
-
 
 func setting(w http.ResponseWriter, r *http.Request) {
 
 	temp := template.Must(template.ParseFiles("settings.html"))
 
 	if r.Method == "GET" {
-		log.Println("[Accept]", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		temp.Execute(w, "setting")
 	}
 }
 
-
-
-func credit(w http.ResponseWriter, r *http.Request) {
-	temp := template.Must(template.ParseFiles("credit.html"))
-	if r.Method == "GET" {
-		log.Println("[Accept] Path :", r.URL.Path)
-		log.Println("Method :", r.Method)
-		temp.Execute(w, "Credit")
-	} else {
-		log.Println("[Accept ]Path :", r.URL.Path)
-		log.Println("Method :", r.Method)
-		r.ParseForm()
-		calender := r.FormValue("expire")
-		sliceByte := []byte(calender)
-		year := string(sliceByte[:04])
-		month := string(sliceByte[5:])
-
-		card := pay.CreditCard{
-			ID:                 accountID,
-			PayerID:            "",
-			ExternalCustomerID: "",
-			Number:             r.FormValue("cardNo"),
-			Type:               r.FormValue("cardtype"),
-			ExpireMonth:        month,
-			ExpireYear:         year,
-			CVV2:               r.FormValue("cvv"),
-			FirstName:          r.FormValue("fholder"),
-			LastName:           r.FormValue("surename"),
-			BillingAddress:     &pay.Address{},
-			State:              "",
-			ValidUntil:         "",
-		}
-
-		// store credit card information.
-		client, err := paypalMini.NewClient()
-		if err != nil {
-			log.Fatalln("[Fail] Client Operation:", err)
-			return
-		}
-
-		token, err := paypalMini.Token(client)
-		if err != nil {
-			log.Fatalln("[Fail] Token Operation:", err)
-			return
-		}
-
-		store, err := paypalMini.StoreCreditCardInfo(card, client)
-		if err != nil {
-			log.Fatalln("[Fail] CreditCard Operation:", err, card)
-			return
-		}
-
-		digitalCode.SetAuthorizeStoreID(store.ID)
-
-		ret, err := paypalMini.RetrieveCreditCardInfo(digitalCode.GetAuthorizeStoreID(), client)
-		if err != nil {
-			log.Fatalln("[Fail] Retrieve Card info Operation:", err)
-			return
-		}
-
-		log.Println("[Accept] Token issue:", token, "retInfo:", ret)
-		w.WriteHeader(http.StatusOK)
-		r.Method = "GET"
-		success(w, r)
-
-	}
-
-}
-
-
-
 func treasure(w http.ResponseWriter, r *http.Request) {
-	
+
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
-	
+
 	webpage := template.Must(template.ParseFiles("treasure.html"))
-	
-	
+
 	// analysis data results
 	algo.SetProbParameter(visualizeReport.Percentage)
-	if r.Method == "GET" && algo.GetProbParameter() < 101{
-		
-		log.Println("[Path]:", r.URL.Path)
-		log.Println("[Method]:", r.Method)
+	if r.Method == "GET" && algo.GetProbParameter() < 101 {
 
-		// client param
-		pusherClient := pusher.Client{
-					AppID : APP_CHANNEL_ID,
-					Key : APP_CHANNEL_KEY,
-					Secret : APP_CHANNEL_SCRECT,
-					Cluster : APP_CHANNEL_CLUSTER_ID,
-					Secure : true,
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
 		}
 
-		chain := piplines.DashboardAnalytics(aminochain, sumof)
+		logformat.Trace(value)
+		// client param
+		pusherClient := pusher.Client{
+			AppID:   APP_CHANNEL_ID,
+			Key:     APP_CHANNEL_KEY,
+			Secret:  APP_CHANNEL_SCRECT,
+			Cluster: APP_CHANNEL_CLUSTER_ID,
+			Secure:  true,
+		}
 
-		// log.Println("chain: ", chain)
+		chain := molecules.DashboardAnalytics(aminochain, sumof)
 
 		analytics_amino := make([]map[string]interface{}, len(chain))
 
 		for i := range chain {
-			
-			if !reflect.DeepEqual(reflect.ValueOf(chain[i]).Interface(),chain[0]){
-					analytics_amino = append(analytics_amino,map[string]interface{}{
-						"key" : piplines.Mapper(chain[i],"Symbol").(string),
-						"values" : piplines.Mapper(chain[i],"Occurance").(int64),
-					})
+
+			if !reflect.DeepEqual(reflect.ValueOf(chain[i]).Interface(), chain[0]) {
+				analytics_amino = append(analytics_amino, map[string]interface{}{
+					"key":    piplines.Mapper(chain[i], "Symbol").(string),
+					"values": piplines.Mapper(chain[i], "Occurance").(int64),
+				})
 			}
-			
+
 		}
 
-		//log.Println("whole data:", analytics_amino[len(analytics_amino)-count:])
-		data := analytics_amino[len(analytics_amino)-count:]	
-		err  := pusherClient.TriggerMulti([]string{"protein"},"molecule", data)
+		data := analytics_amino[len(analytics_amino)-count:]
+		err = pusherClient.TriggerMulti([]string{"protein"}, "molecule", data)
 		if err != nil {
-			log.Println("Error trigger event:", err.Error())
+			cacheObject.Set_Key("Internal:", err.Error())
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-
-		//w.WriteHeader(http.StatusOK)
 
 		webpage.Execute(w, visualizeReport)
 	}
 }
 
-
 func visualize(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	temp := template.Must(template.ParseFiles("visualize.html"))
 
-	// log.Println("Report percentage", visualizeReport.Percentage)
-	// log.Println("Report uv ", visualizeReport.UVinfo)
-	// fmt.Println("Profile:", profiler)
-
 	userProfile, err := Cloud.GetDocumentById(AppName, *profiler)
 	if err != nil && userProfile != nil {
-		log.Fatal("[Fail] No info  ", err)
+		cacheObject.Set_Key("Internal:", err.Error())
+
+		value, err := cacheObject.Get_Key("Internal:")
+		if err != nil {
+			return
+		}
+
+		logformat.Error(value)
 		return
 	}
 
 	query_json, err := json.Marshal(userProfile)
 	if err != nil {
-		log.Fatal("query return un handle data  ", err.Error())
+		cacheObject.Set_Key("Internal:", err.Error())
+
+		value, err := cacheObject.Get_Key("Internal:")
+		if err != nil {
+			return
+		}
+
+		logformat.Error(value)
 		return
 	}
 
 	err = json.Unmarshal(query_json, &profiler)
 	if err != nil {
-		log.Fatal("query return un structure data", err.Error())
+		cacheObject.Set_Key("Internal:", err.Error())
+
+		value, err := cacheObject.Get_Key("Internal:")
+		if err != nil {
+			return
+		}
+
+		logformat.Error(value)
 		return
 	}
 
-	// algo.SetProbParameter(visualizeReport.Percentage)
 	if r.Method == "GET" {
-		fmt.Println("Url:", r.URL.Path)
-		fmt.Println("Method:" + r.Method)
-		// visualizeReport.Process = 1
-		// visualizeReport.SeenBy = profiler.Name
+
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 
 		// firestore credentials
 		genetics.Client = piplines.Firestore_Reference()
@@ -812,16 +805,30 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		life.Pkk = genetics.Pkk
 
 		// create trust object ... trust verified whom that content .
-		ok, err, key := piplines.TrustRequest(life.Pkk, address_wallet, signed_msg)
+		ok, key, err := piplines.TrustRequest(life.Pkk, address_wallet, signed_msg)
 		if !ok && err != nil {
-			log.Printf(" cryptographic trust failed %v:", err.Error())
+			cacheObject.Set_Key("Internal:", err.Error())
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
 			return
 		}
 
 		// genetics database
 		status := rece_gen.AddCode(context.Background(), &life)
 		if status.ErrorCode == binaries.Errors_Error {
-			log.Printf(" bad request: %v", status)
+			cacheObject.Set_Key("Internal:", status.ErrorCode.String())
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
 			return
 		}
 
@@ -836,9 +843,8 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		iterate := reflect.ValueOf(listProteinsName).MapRange()
 
 		// create new marcomolecules which hold molecule state for a while
-		// chains := binary.Micromolecule_List{}
+
 		aminochain = make([]*binary.Micromolecule, len(life.Genes))
-		//chains.Peplide = make([]*binary.Micromolecule, len(life.Genes))
 
 		// iterate over map values
 		for iterate.Next() {
@@ -847,10 +853,10 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 			ribbon[listProteinsName[iterate.Value().String()]] = listProteins
 
 			// get polypeptide information in structured data
-			extraction := piplines.Genome_Extract(ribbon, listProteinsName, iterate.Value().String())
+			extraction := molecules.Genome_Extract(ribbon, listProteinsName, iterate.Value().String())
 
 			// if the information return void space or empty field then discard , otherwise hold that state
-			if piplines.GetMoleculesState(extraction) && piplines.GetCompositionState(extraction) {
+			if molecules.GetMoleculesState(extraction) && molecules.GetCompositionState(extraction) {
 				aminochain = append(aminochain, extraction)
 			}
 
@@ -865,12 +871,11 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 
 		s := make([]string, len(life.Genes))
 		for j := range aminochain {
-			if str := piplines.Make_string(aminochain[j]); str != " " {
+			if str := molecules.Make_string(aminochain[j]); str != " " {
 				s = append(s, str)
 			}
 		}
 
-		
 		sb = make([]string, len(aminochain))
 		occ = make([]int64, len(aminochain))
 		mss = make([]float64, len(aminochain))
@@ -879,31 +884,42 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		for i := range aminochain {
 
 			// check aminochain have execpted type
-			if piplines.Molecular(aminochain[i]) && s[i] != " " {
-				abundance, syms := piplines.Abundance(aminochain[i], strings.Join(s, ""), i)
+			if molecules.Molecular(aminochain[i]) && s[i] != " " {
+				abundance, syms := molecules.Abundance(aminochain[i], strings.Join(s, ""), i)
 				if reflect.DeepEqual(aminochain[i].Symbol, syms) {
 					aminochain[i].Abundance = int64(abundance)
 					count += 1
 				}
 
-				
-				
-				sb = append(sb, piplines.Symbol(aminochain[i]))
-				mss = append(mss, piplines.Mass(aminochain[i]))
-				occ = append(occ, piplines.Occurance(aminochain[i]))
-				
+				sb = append(sb, molecules.Symbol(aminochain[i]))
+				mss = append(mss, molecules.Mass(aminochain[i]))
+				occ = append(occ, molecules.Occurance(aminochain[i]))
 
 				// marshal the protos message
 				data, err := jsonpb.ProtojsonMarshaler(aminochain[i])
 				if err != nil {
-					log.Printf(" Error marshalling protos %v", err.Error())
+					cacheObject.Set_Key("Internal:", err.Error())
+
+					value, err := cacheObject.Get_Key("Internal:")
+					if err != nil {
+						return
+					}
+
+					logformat.Error(value)
 					return
 				}
 
 				// unmarhal the protos message
 				err = jsonpb.ProtojsonUnmarshaler(data, aminochain[i])
 				if err != nil {
-					log.Printf(" Error Un-marshalling protos %v", err.Error())
+					cacheObject.Set_Key("Internal:", err.Error())
+
+					value, err := cacheObject.Get_Key("Internal:")
+					if err != nil {
+						return
+					}
+
+					logformat.Error(value)
 					return
 				}
 
@@ -915,7 +931,7 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		// This param either contribute in file processing or file content that want to be store in batch mode
 		jsonFile := &jsonledit.FileDescriptor{}
 		jsonFile.Types = ".json"
-		jsonFile.Names = piplines.Generator()
+		jsonFile.Names = parser.Generator()
 		jsonFile.Molecule = aminochain
 		jsonFile.Occurance = sumof
 
@@ -934,56 +950,84 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		// creating decentalize & dynamic links of the content
 		iobject := client.New_Bucket(&proto.Object{Name: jsonFile.Names, Types: jsonFile.Types, Content: jsonFile.Molecule})
 		if iobject.Istatus == proto.Object_Status_ERROR {
-			log.Printf(" Error in generating link %v", iobject.Istatus)
+			cacheObject.Set_Key("Internal:", iobject.Istatus.String())
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
 			return
 		}
 
 		File = jsonFile.Names + jsonFile.Types
 
-		
-		
 		//prev_object := client.Preview(&proto.Query{ByName: file})
 		//log.Println("prev_object:", prev_object)
 
-		//w.WriteHeader(http.StatusOK)		
+		//w.WriteHeader(http.StatusOK)
 
 		temp.Execute(w, visualizeReport)
-	}else if r.Method != "POST" {
-		fmt.Println("Url:", r.URL.Path)
-		fmt.Println("Method:" + r.Method)
-		return
+	} else if r.Method != "POST" {
+		cacheObject.Set_Key("Internal:", err.Error())
+
+		value, err := cacheObject.Get_Key("Internal:")
+		if err != nil {
+			return
+		}
+
+		logformat.Error(value)
+		panic("method not supported")
 	}
 
 }
-
-
 
 func dashboard(w http.ResponseWriter, r *http.Request) {
 
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
-	
+
 	// webpage route
 	RouteWebpage := template.Must(template.ParseFiles("dashboard.html"))
-	
+
 	// route actions
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Url:", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		RouteWebpage.Execute(w, "Dashboard")
 	} else if r.Method == "POST" {
 
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		// user query parameters
 		r.ParseForm()
-		fmt.Println("Url:", r.URL.Path)
-		fmt.Println("Method:" + r.Method)
 
 		// Digitalize the contents
-		fname, err := Mounted(w, r, openReadFile)
+		fname, err := piplines.Mounted(w, r)
 		if err != nil {
-			log.Fatalln("[File]:", err)
+			cacheObject.Set_Key("Internal:", err.Error())
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
 			return
 		}
 
@@ -995,16 +1039,31 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		var latitude_parse float64 = 0.0
 
 		// compute user geostationary points
-		location := Location(coordinates[0:19])
+		location := geo.Location(coordinates[0:19])
 		longitude_parse, err = strconv.ParseFloat(location.Longitude_Division, 64)
 		if err != nil {
-			log.Printf("Error parsing longitude : %v", err.Error())
+			cacheObject.Set_Key("Internal:", err.Error())
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
 			return
 		}
 
 		latitude_parse, err = strconv.ParseFloat(location.Latituide_Division, 64)
 		if err != nil {
-			log.Printf("Error parsing latitude : %v", err.Error())
+			cacheObject.Set_Key("Internal:", err.Error())
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
+
 			return
 		}
 
@@ -1013,7 +1072,14 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 
 		weatherapi, err := clientapi.OpenWeather(GEO_Index_KEY)
 		if err != nil {
-			log.Fatalln("weather api-key :", err.Error())
+			cacheObject.Set_Key("Internal:", err.Error())
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Trace(value)
 			return
 		}
 
@@ -1022,34 +1088,50 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			Latitude:  latitude_parse,
 		})
 
-		// fmt.Println("@marker:", marker_location)
-
 		err = clientapi.UVCoodinates(marker_location, weatherapi)
 		if err != nil {
-			log.Fatalln("city weather coordinates:", err.Error())
+			cacheObject.Set_Key("Internal:", err.Error())
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
 			return
 		}
-
 
 		// compute city uv level
 		uvinfo, err := clientapi.UVCompleteInfo(weatherapi)
 		if err != nil {
-			log.Fatalln("city uv tracks:", err.Error())
+			cacheObject.Set_Key("Internal:", err.Error())
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
 			return
 		}
-
-		// fmt.Println("@uv:", uvinfo)
 
 		visualizeReport.UVinfo = uvinfo
 
 		// compute sequence matching probabilities
-		data, err := Open_SFiles("app_data/", fname)
+		data, err := piplines.Open_SFiles("app_data/", fname)
 		if err != nil {
-			log.Fatalln("[No File]:", err)
+			cacheObject.Set_Key("Internal:", err.Error())
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
 			return
 		}
 
-		// following outbreak wave  
+		// following outbreak wave
 		switch choose {
 		case "0":
 			fmt.Fprintf(w, "Please choose any option ...")
@@ -1059,12 +1141,20 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			var name string = "Covid-19"
 
 			// compute predication
-			err := Data_Predicition(w, r, name, choose, data, algo)
+			err := piplines.Data_Predicition(w, r, name, choose, data, algo)
 			if err != nil {
+				cacheObject.Set_Key("Internal:", err.Error())
+
+				value, err := cacheObject.Get_Key("Internal:")
+				if err != nil {
+					return
+				}
+
+				logformat.Error(value)
 				return
 			}
 
-			pattern_analysis := GetBioAlgoParameters()
+			pattern_analysis := piplines.GetBioAlgoParameters()
 
 			visualizeReport.Percentage = pattern_analysis.Percentage
 
@@ -1075,11 +1165,19 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 
 		case "2":
 			var name string = "FlaviDengue"
-			err := Data_Predicition(w, r, name, choose, data, algo)
+			err := piplines.Data_Predicition(w, r, name, choose, data, algo)
 			if err != nil {
+				cacheObject.Set_Key("Internal:", err.Error())
+
+				value, err := cacheObject.Get_Key("Internal:")
+				if err != nil {
+					return
+				}
+
+				logformat.Error(value)
 				return
 			}
-			pattern_analysis := GetBioAlgoParameters()
+			pattern_analysis := piplines.GetBioAlgoParameters()
 			visualizeReport.Percentage = pattern_analysis.Percentage
 			w.WriteHeader(http.StatusOK)
 
@@ -1087,11 +1185,19 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			visualize(w, r)
 		case "3":
 			var name string = "KenyaEbola"
-			err := Data_Predicition(w, r, name, choose, data, algo)
+			err := piplines.Data_Predicition(w, r, name, choose, data, algo)
 			if err != nil {
+				cacheObject.Set_Key("Internal:", err.Error())
+
+				value, err := cacheObject.Get_Key("Internal:")
+				if err != nil {
+					return
+				}
+
+				logformat.Error(value)
 				return
 			}
-			pattern_analysis := GetBioAlgoParameters()
+			pattern_analysis := piplines.GetBioAlgoParameters()
 			visualizeReport.Percentage = pattern_analysis.Percentage
 
 			w.WriteHeader(http.StatusOK)
@@ -1099,11 +1205,19 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			visualize(w, r)
 		case "4":
 			var name string = "ZikaVirusBrazil"
-			err := Data_Predicition(w, r, name, choose, data, algo)
+			err := piplines.Data_Predicition(w, r, name, choose, data, algo)
 			if err != nil {
+				cacheObject.Set_Key("Internal:", err.Error())
+
+				value, err := cacheObject.Get_Key("Internal:")
+				if err != nil {
+					return
+				}
+
+				logformat.Error(value)
 				return
 			}
-			pattern_analysis := GetBioAlgoParameters()
+			pattern_analysis := piplines.GetBioAlgoParameters()
 			visualizeReport.Percentage = pattern_analysis.Percentage
 
 			w.WriteHeader(http.StatusOK)
@@ -1111,11 +1225,19 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			visualize(w, r)
 		case "5":
 			var name string = "MersSaudiaArabia"
-			err := Data_Predicition(w, r, name, choose, data, algo)
+			err := piplines.Data_Predicition(w, r, name, choose, data, algo)
 			if err != nil {
+				cacheObject.Set_Key("Internal:", err.Error())
+
+				value, err := cacheObject.Get_Key("Internal:")
+				if err != nil {
+					return
+				}
+
+				logformat.Error(value)
 				return
 			}
-			pattern_analysis := GetBioAlgoParameters()
+			pattern_analysis := piplines.GetBioAlgoParameters()
 			visualizeReport.Percentage = pattern_analysis.Percentage
 			w.WriteHeader(http.StatusOK)
 
@@ -1129,14 +1251,19 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 
 }
 
-
 func customerViews(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("feedback.html"))
 
 	// require different param
 	if r.Method == "GET" {
-		fmt.Println("Url:", r.URL.Path)
-		fmt.Println("Method:" + r.Method)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		temp.Execute(w, "Feedback")
 	}
 }
@@ -1147,34 +1274,53 @@ func terms(w http.ResponseWriter, r *http.Request) {
 
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	// route actions
 	if r.Method == "GET" {
-		fmt.Println("Url:", r.URL.Path)
-		fmt.Println("Method:" + r.Method)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		temp.Execute(w, "Terms")
 	}
 }
-
 
 func logout(w http.ResponseWriter, r *http.Request) {
 
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
-	// route actions 
+	// route actions
 	if r.Method == "GET" {
-		act := structs.RouteParameter{}
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
 
-		log.Println("[Access] ", r.URL.Path)
-		act.SetContextSession(userSessions, w, r)
-		err := act.ExpireToken()
+		value, err := cacheObject.Get_Key("Route_Path:")
 		if err != nil {
-			log.Fatal("[Fail] No Token Expire  ", err)
+			return
+		}
+
+		logformat.Trace(value)
+		act := websession.Cookies{}
+
+		act.SetContextSession(userSessions, w, r)
+		err = act.ExpireToken()
+		if err != nil {
+			cacheObject.Set_Key("Internal:", err.Error())
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
 			return
 		}
 		existing(w, r)
@@ -1182,81 +1328,111 @@ func logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func stop_codon(w http.ResponseWriter, r *http.Request) {
-	
+
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
-	
+
 	// webpage route
 	webpge := template.Must(template.ParseFiles("codons.html"))
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Path: ", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		webpge.Execute(w, "codons")
 	}
 }
 
 func phenylalanine(w http.ResponseWriter, r *http.Request) {
-	
+
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
-	
+
 	// webpage route
 	webpge := template.Must(template.ParseFiles("phenylalanine.html"))
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Path: ", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		webpge.Execute(w, "phenylalanine")
 	}
 }
 
 func leucine(w http.ResponseWriter, r *http.Request) {
-	
+
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	// webpage route
 	webpge := template.Must(template.ParseFiles("leucine.html"))
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Path: ", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		webpge.Execute(w, "leucine")
 	}
 }
 
 func isoleucine(w http.ResponseWriter, r *http.Request) {
-	
+
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
-	
-	// webpage route  
+
+	// webpage route
 	webpge := template.Must(template.ParseFiles("isoleucine.html"))
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Path: ", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		webpge.Execute(w, "isoleucine")
 	}
 }
 
 func methionine(w http.ResponseWriter, r *http.Request) {
-	
+
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
-	
+
 	// webpage route
 	webpge := template.Must(template.ParseFiles("methionine.html"))
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Path: ", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		webpge.Execute(w, "methionine")
 	}
 }
@@ -1265,278 +1441,352 @@ func valine(w http.ResponseWriter, r *http.Request) {
 
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	// webpage route
 	webpge := template.Must(template.ParseFiles("valine.html"))
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Path: ", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		webpge.Execute(w, "valine")
 	}
 }
 
 func serine(w http.ResponseWriter, r *http.Request) {
-	
+
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	// webpage route
 	webpge := template.Must(template.ParseFiles("serine.html"))
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Path: ", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		webpge.Execute(w, "serine")
 	}
 }
 
 func proline(w http.ResponseWriter, r *http.Request) {
-	
+
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	// webpage route
 	webpge := template.Must(template.ParseFiles("proline.html"))
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Path: ", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		webpge.Execute(w, "proline")
 	}
 }
 
 func threonine(w http.ResponseWriter, r *http.Request) {
-	
+
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	// webpage route
 	webpge := template.Must(template.ParseFiles("threonine.html"))
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Path: ", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		webpge.Execute(w, "threonine")
 	}
 }
 
 func alanine(w http.ResponseWriter, r *http.Request) {
-	
+
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	// webpage route
 	webpge := template.Must(template.ParseFiles("alanine.html"))
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Path: ", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		webpge.Execute(w, "alanine")
 	}
 }
 
 func tyrosine(w http.ResponseWriter, r *http.Request) {
-	
+
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	// webpage route
 	webpge := template.Must(template.ParseFiles("tyrosine.html"))
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Path: ", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		webpge.Execute(w, "tyrosine")
 	}
 }
 
 func histidine(w http.ResponseWriter, r *http.Request) {
-	
+
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	// webpage route
 	webpge := template.Must(template.ParseFiles("histidine.html"))
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Path: ", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		webpge.Execute(w, "histidine")
 	}
 }
 func glutamine(w http.ResponseWriter, r *http.Request) {
-	
+
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	// webpage route
 	webpge := template.Must(template.ParseFiles("glutamine.html"))
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Path: ", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		webpge.Execute(w, "glutamine")
 	}
 }
 
 func asparagine(w http.ResponseWriter, r *http.Request) {
-	
+
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	// webpage route
 	webpge := template.Must(template.ParseFiles("asparagine.html"))
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Path: ", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		webpge.Execute(w, "asparagine")
 	}
 }
 
 func lysine(w http.ResponseWriter, r *http.Request) {
-	
+
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	// webpage route
 	webpge := template.Must(template.ParseFiles("lysine.html"))
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Path: ", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		webpge.Execute(w, "lysine")
 	}
 }
 
 func aspartic(w http.ResponseWriter, r *http.Request) {
-	
+
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	// webpage route
 	webpge := template.Must(template.ParseFiles("aspartic.html"))
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Path: ", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		webpge.Execute(w, "aspartic")
 	}
 }
 
 func glutamic(w http.ResponseWriter, r *http.Request) {
-	
+
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	// webpage route
 	webpge := template.Must(template.ParseFiles("glutamic.html"))
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Path: ", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		webpge.Execute(w, "glutamic")
 	}
 }
 
 func cysteine(w http.ResponseWriter, r *http.Request) {
-	
+
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	// webpage route
 	webpge := template.Must(template.ParseFiles("cysteine.html"))
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Path: ", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		webpge.Execute(w, "cysteine")
 	}
 }
 
 func tryptophan(w http.ResponseWriter, r *http.Request) {
-	
+
 	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
-	// webpage route 
+	// webpage route
 	webpge := template.Must(template.ParseFiles("tryptophan.html"))
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Path: ", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		webpge.Execute(w, "tryptophan")
 	}
 }
 
 func arginine(w http.ResponseWriter, r *http.Request) {
-	
-	// user request headers 
+
+	// user request headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
-	// page route 
+	// page route
 	webpge := template.Must(template.ParseFiles("arginine.html"))
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Path: ", r.URL.Path)
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
 		webpge.Execute(w, "arginine")
 	}
 }
 
 func glycine(w http.ResponseWriter, r *http.Request) {
-	
-	// User requests headers 
+
+	// User requests headers
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
-	// gylcine route 
+	// gylcine route
 
 	webpge := template.Must(template.ParseFiles("glycine.html"))
-	
+
 	// methods against route
 	if r.Method == "GET" {
-		fmt.Println("Method:" + r.Method)
-		fmt.Println("Path: ", r.URL.Path)
-		webpge.Execute(w, "glycine")
-	}
-}
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
 
-func transacts(w http.ResponseWriter, r *http.Request) {
-
-	temp := template.Must(template.ParseFiles("transact.html"))
-	if r.Method == "GET" {
-		fmt.Println("Url:", r.URL.Path)
-		fmt.Println("Method:" + r.Method)
-		temp.Execute(w, "Transacts")
-	} else {
-		fmt.Println("Url:", r.URL.Path)
-		fmt.Println("Method:" + r.Method)
-		r.ParseForm()
-		doc, err := transactWeb.ReadContent("transact.html")
+		value, err := cacheObject.Get_Key("Route_Path:")
 		if err != nil {
-			fmt.Println("Fail:", err)
 			return
 		}
-		fmt.Print("@oaram:", &doc)
-		w.WriteHeader(http.StatusForbidden)
-		w.Write([]byte("Thank-you for your response! , This feature will added upcoming build... Sorry for inconvenience"))
+
+		logformat.Trace(value)
+		webpge.Execute(w, "glycine")
 	}
 }

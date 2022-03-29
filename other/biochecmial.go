@@ -67,17 +67,3 @@ func SequenceStructure(st2 string) MolecularBio {
 
 	return molecule
 }
-
-// func Proteins(s []string) []amino.AminoClass {
-
-// 	bases := []string{}
-// 	for i := range s {
-// 		bases = append(bases, s[i])
-// 	}
-
-// 	proteins := amino.AminoClass{}
-
-// 	ls := proteins.Bases(bases)
-
-// 	return ls
-// }
