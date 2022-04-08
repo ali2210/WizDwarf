@@ -1,0 +1,68 @@
+.logo{
+    width: 30%;
+    margin-bottom: 10px ;
+}
+
+.custom-navbar {
+    background-color: #ededed;
+  }
+
+  .main-dashboard-div {
+    background-color:#f9f9f9;
+    font-family: 'Lato', sans-serif;
+    height: 100vh;
+  }
+  
+  .icon-light {
+    color: black;
+    margin-right: 5px;
+  }
+  
+  .dropdown-menu {
+    left: 30px;
+  }
+  
+  .h4 {
+    margin: 20px 0px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 20px;
+  }
+  
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .linebar{
+    animation: scanners 20s infinite alternate;
+  }
+
+  @keyframes scanners {
+    5%{
+      width: 10pc;
+      top: 8pc;
+      left: 8pc;
+    }
+    10%{
+      width: 12pc;top: 10pc;left: 7.3pc;
+    }
+    20%{
+      width: 12pc;top: 12pc;left: 7.3pc;
+    }
+    40%{
+      width: 15pc;top: 14pc;left: 6pc;
+    }
+    60%{
+      width: 15pc;top: 16pc;left: 6pc;
+    }
+    80%{
+      width: 11pc;top: 18pc;left: 8pc;
+    }
+    90%{
+      width: 7pc;top: 20pc;left: 10pc;
+    }
+    100%{
+      width: 1.3pc;top: 22pc;left: 12pc;
+    }
+  }
