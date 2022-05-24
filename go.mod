@@ -10,7 +10,7 @@ require (
 	github.com/agnivade/levenshtein v1.1.0
 	github.com/biogo/biogo v1.0.2
 	github.com/briandowns/openweathermap v0.16.0
-	github.com/ethereum/go-ethereum v1.10.10
+	github.com/ethereum/go-ethereum v1.10.17
 	github.com/fogleman/ribbon v0.0.0-20191101191537-568057efb726
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/goombaio/namegenerator v0.0.0-20181006234301-989e774b106e
@@ -34,5 +34,4 @@ require (
 	google.golang.org/genproto v0.0.0-20210602131652-f16073e35f0c // indirect
 	google.golang.org/grpc v1.39.0 // indirect
 	google.golang.org/protobuf v1.26.0
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )

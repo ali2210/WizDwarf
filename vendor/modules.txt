@@ -43,11 +43,15 @@ github.com/biogo/biogo/feat
 # github.com/briandowns/openweathermap v0.16.0
 ## explicit
 github.com/briandowns/openweathermap
-# github.com/btcsuite/btcd v0.20.1-beta
-github.com/btcsuite/btcd/btcec
-# github.com/deckarep/golang-set v0.0.0-20180603214616-504e848d77ea
+# github.com/btcsuite/btcd/btcec/v2 v2.1.2
+github.com/btcsuite/btcd/btcec/v2
+github.com/btcsuite/btcd/btcec/v2/ecdsa
+# github.com/deckarep/golang-set v1.8.0
 github.com/deckarep/golang-set
-# github.com/ethereum/go-ethereum v1.10.10
+# github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1
+github.com/decred/dcrd/dcrec/secp256k1/v4
+github.com/decred/dcrd/dcrec/secp256k1/v4/ecdsa
+# github.com/ethereum/go-ethereum v1.10.17
 ## explicit
 github.com/ethereum/go-ethereum
 github.com/ethereum/go-ethereum/common
@@ -66,6 +70,7 @@ github.com/ethereum/go-ethereum/metrics
 github.com/ethereum/go-ethereum/p2p/netutil
 github.com/ethereum/go-ethereum/params
 github.com/ethereum/go-ethereum/rlp
+github.com/ethereum/go-ethereum/rlp/internal/rlpstruct
 github.com/ethereum/go-ethereum/rpc
 # github.com/fogleman/ribbon v0.0.0-20191101191537-568057efb726
 ## explicit
@@ -259,7 +264,7 @@ golang.org/x/sys/execabs
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 golang.org/x/sys/windows
-# golang.org/x/text v0.3.6
+# golang.org/x/text v0.3.7
 golang.org/x/text/encoding
 golang.org/x/text/encoding/charmap
 golang.org/x/text/encoding/htmlindex
@@ -442,5 +447,3 @@ gopkg.in/natefinch/npipe.v2
 gopkg.in/tomb.v1
 # gopkg.in/yaml.v2 v2.4.0
 gopkg.in/yaml.v2
-# gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
-## explicit
