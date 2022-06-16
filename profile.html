@@ -66,7 +66,7 @@
   <div class="profile-image-form">
     <form class="profile-form" action="/dashboard/profile" enctype="multipart/form-data" method="post">
       <div class="avatar" name="avato-pic" id="avato-pics">
-        <div class="photo">
+        <div class="photoBtn" style=" position: absolute;top: 267px ;left: 92px;transform: scale(1.7);">
           <p>
             <button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapsePhoto" aria-expanded="false" aria-controls="collapsePhoto" title="upload your profile picture">
               <i class="fa fa-picture-o" aria-hidden="true"></i>
@@ -95,7 +95,7 @@
                   </button>
                   <input type="number" placeholder="0000" class="aspect-ratio" name="aspect-ratio" value="0" id="aspect-ratio" readOnly="true" style="position: relative;top: -210px;left: 189px;transform: scale(0.6);width: 5pc;color: silver;border-radius: 10px;border: none;font-size: x-large;">
                   <input class="date-picker" name="date" type="date" style="visibility: visible;">
-                  <img name="profile-avatar" class="avatar"/>
+                  <img name="profile-avatar" class="avatars"/>
                 </div>
             </div>
           </div>  
@@ -116,17 +116,21 @@
     // dom Elements attribues
     const _b01 = document.getElementsByClassName('zoomin')[0];
     const _b02 = document.getElementsByClassName('zoomout')[0];
+    const _b03 = document.getElementsByClassName('uploads')[0];
+    const _b04 = document.getElementsByClassName('btns-links')[0];
+    const _b05 = document.getElementsByClassName('photoBtn')[0];
     
 
     const _d01 = document.getElementsByClassName('float-card')[0];
     const _d02 = document.getElementsByClassName('line')[0];
     const _d03 = document.getElementsByClassName('avatar')[0];
+    
 
     const _pp01 = document.getElementsByClassName('photo-preview')[0];
 
     const _i01 = document.getElementsByClassName('aspect-ratio')[0];
     const _i02 = document.getElementsByClassName('myphotos')[0];
-
+    const _bx00 = document.getElementsByClassName('date-picker')[0];
     
     // global parameters
     let counter = 0;  // counter return zoom level
@@ -211,8 +215,22 @@
       // check whether conditions are satisfied then clear the animation and return control
 
       if (pi_wave === end){
-        
+       
+        // adjust few design tweeks after user will shared picture 
         _d03.append(preview);
+        
+        _pp01.style.visibility = 'hidden';
+       
+        _d01.style.top = '16pc';
+        _d01.style.left = '-3pc';
+
+        _b05.style.visibility = 'hidden';
+        
+        _bx00.style.top = '77px';
+        _bx00.style.left = '86px';
+        _bx00.style.width = '23pc';
+
+        _d03.append(_d01);  
         
         clearInterval(waveform);
 
@@ -223,7 +241,10 @@
       
     }
 
-    
+    // _b04 allow you to add filter in your picture frame
+    _b04.addEventListener('click', ()=>{
+        alert(' Filter Option is not enabled. Please wait for upcoming update');
+    });
 
   </script>
 </body>

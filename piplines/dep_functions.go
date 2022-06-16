@@ -14,6 +14,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"image/png"
 	"io/ioutil"
 	"log"
 	rdn "math/rand"
@@ -30,7 +31,6 @@ import (
 	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
 	skynet "github.com/SkynetLabs/go-skynet/v2"
-	imglibs "github.com/WisdomEnigma/PixelsZoom/zoom_pixels"
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
 	"github.com/ali2210/wizdwarf/other/bucket"
 	"github.com/ali2210/wizdwarf/other/bucket/proto"
@@ -208,9 +208,16 @@ func AvatarUpload(r *http.Request, user_id string) {
 
 		fmt.Println(" Document :", _temp_avatar.Name())
 
-		_vec_pixels := imglib.RGBA_Vec()
+		// _vec_pixels := imglib.RGBA_Vec()
 
-		imglibs.ZoomPicture(_temp_avatar, imglib.Pixels_Vec(_vec_pixels))
+		// imglibs.ZoomPicture(_temp_avatar, imglib.Pixels_Vec(_vec_pixels))
+
+		err := png.Encode(_temp_avatar, imglib.GetImageDecoder())
+		if err != nil {
+
+			log.Fatalln("Error encoding image:", err)
+			return
+		}
 
 		// zp.SetImage(imglib.GetImageDecoder())
 

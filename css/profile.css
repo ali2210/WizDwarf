@@ -59,12 +59,9 @@ convensions. @contact Ali Hassan AliMatrixCode@protonmail.com   */
   border: 5px #c0c0c0 dotted;
 }
 
-.photo{
-  position: absolute;
-  top: 267px ;
-  left: 92px;
-  transform: scale(1.7);
-}
+/* .photoBtn{
+
+} */
 
 .description{
   position: absolute;
