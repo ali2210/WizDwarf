@@ -12,204 +12,95 @@
   <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" type="text/css" media="screen" href="/css/profile.css">
+  <link rel="stylesheet" type="text/css" href="/css/profile.css">
   <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 </head>
 
 <body>
   <div class='main-dashboard-div'>
-    <nav class="navbar navbar-expand-md navbar-light custom-navbar">
-      <a class="navbar-brand" href="#">
-        <img src="/images/logo.png" alt="Logo" class="logo">
-      </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav">
-          <li class="nav-item active pl-3">
-            <a class="nav-link" href="/home">
-              <i class="fa fa-home icon-light" aria-hidden="true"></i>
-              Home
-            </a>
-          </li>
-          <li class="nav-item dropdown pl-3">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">
-              <i class="fa fa-handshake-o" aria-hidden="true"></i>
-              Business
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <!-- <a class="dropdown-item active" href="/open"><i class="fa fa-handshake-o " aria-hidden="true"></i> Premium </a>
-              <a class="dropdown-item" href="/"> <i class="fa fa-briefcase" aria-hidden="true"> Service </i>
-              </a>-->
-              <div class="card" style="width: 19rem;height: 22rem;position: relative;">
-                <img class="images"
-                src="https://physicsworld.com/wp-content/uploads/2019/08/Quantum-teleportation.jpg"
-                  alt="Destination">
-                <div class="card-body card-body-text">
-                  <h5 class="card-title"> Destination </h5>
-                  <p class="card-text"> 
-                    “To know each other we must reach beyond the sphere of our sense perceptions.”
-                  </p>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li class="nav-item dropdown pl-3">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">
-              <i class="fa fa-user-circle-o" aria-hidden="true"></i>
-              Admin
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="/dashboard/profile"><i class="fa fa-sliders" aria-hidden="true"></i>
-                Edit-Profile </a>
-              <a class="dropdown-item" href="/logout"><i class="fa fa-sign-out icon icon-light"
-                  aria-hidden="true"></i>Logout</a>
-                  
-              <div class="card" style="width: 25rem; height: 23rem; position: relative;">
-                <img class="img-class"
-                src="https://6lli539m39y3hpkelqsm3c2fg-wpengine.netdna-ssl.com/wp-content/uploads/2019/01/tech-abstract_shutterstock-1191298288_700x-675x380.jpg"
-                alt="Magic">
-                <div class="card-body description">
-                  <h5 class="card-title"> Magic  </h5>
-                  <p class="card-text"> Engineering is the closest thing to magic that exist in the world. </p>
-                </div>
-              </div>
-          </li>
-        </ul>
-      </div>
-    </nav>
+		<nav class="navbar navbar-expand-md navbar-light custom-navbar" style=" background-color: #ededed;display: flex;">
+		  <a class="navbar-brand" href="#">
+			<img src="/images/logo.png" alt="Logo" class="logo">
+		  </a>
+		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
+			<span class="navbar-toggler-icon"></span>
+		  </button>
+		  <div class="collapse navbar-collapse" id="navbarNavDropdown" style="position: absolute;left: 37pc;">
+			<ul class="navbar-nav">
+			  <li class="nav-item active pl-3">
+				<a class="nav-link" href="/">
+				  <i class="fa fa-home icon-light" aria-hidden="true"></i>
+				</a>
+			  </li>
+			  <li class="nav-item dropdown pl-3">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+				  aria-haspopup="true" aria-expanded="false">
+				  <i class="fa fa-envelope" aria-hidden="true"></i>
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				  <a class="dropdown-item active" href="#" title="Private.  These message will dispear after few seconds."><i class="fa fa-envelope-o" aria-hidden="true"></i> Private </a>
+				  <a class="dropdown-item" href="#" title="Gossips"> <i class="fa fa-comments-o" aria-hidden="true"></i> Public </a>
+				</div>
+			  </li>
+			  <li class="nav-item dropdown pl-3">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+				  aria-haspopup="true" aria-expanded="false">
+				  <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				  <a class="dropdown-item active" href="/dashboard/profile" title="User will edit any information in the profile"><i class="fa fa-sliders" aria-hidden="true"></i>
+					Edit Your Profile
+          </a>
+          <a class="dropdown-item" href="#" title="User Preferences "><i class="fa fa-cogs" aria-hidden="true"></i>
+          Preferences
+          </a>
+				  <a class="dropdown-item" href="/logout" title="Lock the account"><i class="fa fa-sign-out icon icon-light"
+					  aria-hidden="true"></i>Logout</a>
+				  </div>
+			  </li>
+			</ul>
+		  </div>
+	</nav>
   </div>
-  <form class="profile-form" action="/dashboard/profile" enctype="multipart/form-data" method="post">
-    <div class="avatar" name="avato-pic" id="avato-pics">
-      <div class="photo">
-        <p>
-          <button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapsePhoto" aria-expanded="false" aria-controls="collapsePhoto" title="upload your profile picture">
-            <i class="fa fa-picture-o" aria-hidden="true"></i>
-          </button>
-        </p>
-        <div class="collapse" id="collapsePhoto">
-          <div class="card card-body" style="position: absolute; top: 40px; left: -207px; border-radius:35px; box-shadow: 5px 5px whitesmoke; height:325px; overflow: auto; width: 38rem;">
-              <h5 class="card-title"></h5>
-              <div class="float-card">
-                <input type="file" class="myphotos" accept="images/*" name="profile-input">
-                <div class="line">
-                </div>
-                <div class="photo-preview"></div>
-                <a href="http://" class="btn btn-success btns-links">
-                  <i class="fa fa-video-camera" aria-hidden="true">
-                  </i>
-                </a>
-                <btn class="btn btn-light uploads" type="button">
-                  <i class="fa fa-check-square" aria-hidden="true"></i>
-                </btn>
-              </div>
-              <input class="date-picker" name="date" type="text" readonly>
-            </div>
-        </div>
-      </div>
-      <img name="profile-avatar"/>
-      </div>
-      <div class="_ed01">
-        <div class="edit">
-          <div class="col">
-            <div class="row">
-              <input type="text" placeholder="Name" class="name-field" name="name" value="{{.Name}}" readonly required>
-              <button class="btn btn-light btn-user" type="button">
-                <i class="fa fa-user-o" aria-hidden="true"></i>
-              </button>
-              </div>
-              <div class="row">
-                <input type="text" placeholder="Lastname" class="last-field" name="lastname" value="{{.LastName}}" readonly required>
-                <button class="btn btn-light btn-users" type="button">
-                  <i class="fa fa-users" aria-hidden="true"></i>
-                </button>
-              </div>
-              <div class="row">
-                <div class="adam">
-                    <button class="btn btn-light btn-male" type="button" name="gender" aria-required="true">
-                      <i class="fa fa-male" aria-hidden="true"></i>
-                    </button>
-                </div>
-                <div class="eve">
-                  <button class="btn btn-light btn-female" type="button" name="gender" aria-required="true">
-                    <i class="fa fa-female" aria-hidden="true"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="row">
-                <input class="address-field" type="text" placeholder="Address" name="address" value="{{.Address}}" readonly required>
-                <button class="btn btn-light btn-home" type="button">
-                  <i class="fa fa-home" aria-hidden="true"></i>
-                </button>
-              </div>
-              <div class="row">
-                <input class="apartment-field" type="text" placeholder="Aparatment" name="appartment" value="{{.Appartment}}" readonly required>
-                <button class="btn btn-light btn-apartment" type="button">
-                  <i class="fa fa-bed" aria-hidden="true"></i>
-                </button>
-              </div>
-              <div class="row">
-                <input class="country-field" type="text" placeholder="Country" name="country" value="{{.Country}}" readonly required>
-                <button class="btn btn-light btn-country" type="button">
-                  <i class="fa fa-globe" aria-hidden="true"></i>
-                </button>
-              </div>
-              <div class="row">
-                <input class="city-field" type="text" placeholder="City" name="city" value="{{.City}}" readonly required>
-                <button class="btn btn-light btn-city" type="button">
-                  <i class="fa fa-map-marker" aria-hidden="true"></i>
-                </button>
-              </div>
-              <div class="row">
-                <input class="email-field" type="text" name="email" placeholder="Email" value="{{.Email}}" readonly>
-                <span class="span-email">
-                  <i class="fa fa-check-circle-o" aria-hidden="true"></i>
-                </span>
-                <span class="span-email-unchecked">
-                  <i class="fa fa-times-circle-o" aria-hidden="true"></i>
-                </span>
-              </div>
-              <div class="row">
-                <input class="phone-field" type="tel" name="phone" placeholder="Phone">
-                <span class="span-phone">
-                  <i class="fa fa-check-circle-o" aria-hidden="true"></i>
-                </span>
-                <span class="span-phone-unchecked">
-                  <i class="fa fa-times-circle-o" aria-hidden="true"></i>
-                </span>                
-              </div>
-              <div class="row">
-                <input class="zip-field" type="number" name="zip" placeholder="ZIP" readonly required>
-                <button class="btn btn-light btn-zip" type="button">
-                  <i class="fa fa-map-pin" aria-hidden="true"></i>
-                </button>
-              </div>
-              <div class="row">
-                <input class="tweet-field" type="text" name="tweet" placeholder="Tweet" readonly required>
-                <button class="btn btn-light btn-tweet" type="button">
-                  <i class="fa fa-twitter-square" aria-hidden="true"></i>
-                </button>
-            </div>
-      </div>
-        </div>
-        <div class="btn-mycontainer">
-         <div class="btn-save">
-          <button type="submit" class="btn btn-success btn-cloud" title="Upload information" disabled>
-            <i class="fa fa-cloud" aria-hidden="true"></i>
-          </button>
-          <div class="container-btn">
-            <a href="/dashboard" class="btn btn-danger revert" title="Previous page">      
-              <i class="fa fa-chevron-circle-left" aria-hidden="true" style="position: absolute; display:flex; left: 70px;"></i>
-            </a>
-          </div>
-          </div>
-        </div>
-      </div>
-  </form>
 
+  <div class="profile-image-form">
+    <form class="profile-form" action="/dashboard/profile" enctype="multipart/form-data" method="post">
+      <div class="avatar" name="avato-pic" id="avato-pics">
+        <div class="photo">
+          <p>
+            <button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapsePhoto" aria-expanded="false" aria-controls="collapsePhoto" title="upload your profile picture">
+              <i class="fa fa-picture-o" aria-hidden="true"></i>
+            </button>
+          </p>
+          <div class="collapse" id="collapsePhoto">
+            <div class="card card-body" style="position: absolute; top: 40px; left: -207px; border-radius:35px; box-shadow: 5px 5px whitesmoke; height:325px; overflow: auto; width: 38rem; display: flex;">
+              <h5 class="card-title"></h5>
+                <div class="float-card">
+                  <input type="file" class="myphotos" name="profile-input" accept="images/*">
+                  <div class="line"></div>
+                  <div class="photo-preview">
+                    
+                  </div>
+                  <button type="button" class="btn btn-light btns-links" title="Avatar Filters">
+                    <i class="fa fa-filter" aria-hidden="true" style="color: slategray;"></i>
+                  </button>
+                  <button type="submit" class="btn btn-light uploads" title="avatar">
+                    <i class="fa fa-check-square" aria-hidden="true" style="color: slategray;"></i>
+                  </button>
+                  <button class="btn btn-light zoomin" type="button" title="Zoom in" style="position: relative;top: -215px;left: 241px;transform: scale(0.6);">
+                    <i class="fa fa-plus" aria-hidden="true" style="color: slategray;"></i>
+                  </button>
+                  <button class="btn btn-light zoomout" type="button" title="Zoom out" style="position: relative;top: -215px;left: 295px;transform: scale(0.6);">
+                    <i class="fa fa-minus" aria-hidden="true" style="color: slategray;"></i>
+                  </button>
+                  <input type="number" placeholder="0000" class="aspect-ratio" name="aspect-ratio" value="0" id="aspect-ratio" readOnly="true" style="position: relative;top: -210px;left: 189px;transform: scale(0.6);width: 5pc;color: silver;border-radius: 10px;border: none;font-size: x-large;">
+                  <input class="date-picker" name="date" type="date" style="visibility: visible;">
+                  <img name="profile-avatar" class="avatar"/>
+                </div>
+            </div>
+          </div>  
+    </form>
+  </div>
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
     </script>
@@ -219,7 +110,122 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
     </script>
-  <script src="/js/profile.js"></script>
+  <!-- <script src="/js/profile.js"></script> -->
+  <script>
+
+    // dom Elements attribues
+    const _b01 = document.getElementsByClassName('zoomin')[0];
+    const _b02 = document.getElementsByClassName('zoomout')[0];
+    
+
+    const _d01 = document.getElementsByClassName('float-card')[0];
+    const _d02 = document.getElementsByClassName('line')[0];
+    const _d03 = document.getElementsByClassName('avatar')[0];
+
+    const _pp01 = document.getElementsByClassName('photo-preview')[0];
+
+    const _i01 = document.getElementsByClassName('aspect-ratio')[0];
+    const _i02 = document.getElementsByClassName('myphotos')[0];
+
+    
+    // global parameters
+    let counter = 0;  // counter return zoom level
+    let preview = null;   // preview return upload image as preview object
+    let waveform = null; // waveform return sine & cosine waveform equation
+    let pi_wave = 1;   // pi wave animation starting value
+    let end = 360;      // end return animation terminate value
+
+    // clear the interval for waveforms animation
+    clearInterval(waveform);
+    
+    // image will be upload
+    _i02.addEventListener('change', (event)=>{
+
+      // if image dimensions is quite large then discard the image
+      if (event.target.files[0].size >= 45327){
+        alert('Image size is quite large'); return 
+      }
+
+      // start waveform animation for 20 sec;
+      waveform = setInterval(animateLineEffect, 20);
+
+      // get uplaoded image and translate into web url
+      preview = document.createElement('img');
+      preview.src = URL.createObjectURL(event.target.files[0]);
+      preview.width = 200;
+      preview.height = 200;
+
+      preview.style.position = 'absolute';
+      preview.style.top = '20px';
+      preview.style.left = '19px';
+      preview.style.borderRadius = '48px';
+      
+      _d01.children[2].appendChild(preview);
+      
+    });
+
+    // Zoom Level postive
+    _b01.addEventListener('click', ()=>{
+     
+        if (counter !== 20){
+          
+            counter+=2;
+          _i01.value = String(counter);
+
+          
+        }else{
+          alert('Zoom in value should be less than 20');
+        }
+
+    });
+
+    // Zoom Level Negative
+    _b02.addEventListener('click', () => {
+
+        if (counter !== 0){
+          
+          counter-= 1;
+          _i01.value = String(counter);
+
+        }else{
+          
+          alert('Zoom out value should be greater than 0');
+
+        }
+    });
+
+
+    // Animate Line Effect
+    function animateLineEffect(){
+
+      // if waveform at sine peek or cosine low frequency
+      if (Math.sin(pi_wave) > 0.5){
+      
+        _d02.style.background = 'slategray';
+
+      }else if (Math.cos(pi_wave) < 0.5){
+        
+        _d02.style.background = 'transparent';
+      }
+
+      // check whether conditions are satisfied then clear the animation and return control
+
+      if (pi_wave === end){
+        
+        _d03.append(preview);
+        
+        clearInterval(waveform);
+
+      }
+
+      // create animate timeline for animation
+      pi_wave ++;
+      
+    }
+
+    
+
+  </script>
 </body>
 
 </html>

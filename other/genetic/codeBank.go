@@ -29,7 +29,7 @@ const genetictopice = "genome"
 func New() Lifecode_Plugin { return &LifeCode{} }
 func (l *LifeCode) AddCode(context context.Context, code *binary.Lifecode) *binary.Lifecode_Status {
 
-	doc, result, err := Client.Collection(genetictopice).Add(context, map[string]interface{}{
+	_, _, err := Client.Collection(genetictopice).Add(context, map[string]interface{}{
 		"genes": code.Genes,
 		"pk":    code.Pkk,
 	})
@@ -37,7 +37,7 @@ func (l *LifeCode) AddCode(context context.Context, code *binary.Lifecode) *bina
 		log.Printf("Error creating genetictopice%v", err.Error())
 		return &binary.Lifecode_Status{Status: false, Error: err.Error(), ErrorCode: binary.Errors_Error}
 	}
-	log.Println("Document created @", doc, "Result:", result)
+	// log.Println("Document created @", doc, "Result:", result)
 	return &binary.Lifecode_Status{Status: true, Error: "", ErrorCode: binary.Errors_OK}
 }
 

@@ -92,6 +92,8 @@ var (
 	logformat                     = logformatter.New()
 )
 
+// var igress_route_name [5]string = [5]string{"messages"}
+
 func main() {
 
 	// Server
@@ -174,7 +176,8 @@ func main() {
 	routing.HandleFunc("/dashbaord/setting", setting)
 	routing.HandleFunc("/dashboard/profile", profile)
 	routing.HandleFunc("/logout", logout)
-	routing.HandleFunc("/feedback", customerViews)
+	routing.HandleFunc("/messages", messages)
+	// routing.HandleFunc("/feedback", customerViews)
 	routing.HandleFunc("/terms", terms)
 	routing.HandleFunc("/treasure", treasure)
 	routing.HandleFunc("/phenylalanine", phenylalanine)
@@ -199,7 +202,7 @@ func main() {
 	routing.HandleFunc("/glycine", glycine)
 	routing.HandleFunc("/stop", stop_codon)
 	routing.HandleFunc("/visualize", visualize)
-	routing.HandleFunc("/modal/success", success)
+	// routing.HandleFunc("/modal/success", success)
 
 	// Static Files
 	images := http.StripPrefix("/images/", http.FileServer(http.Dir("./images")))
@@ -557,7 +560,7 @@ func profile(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == "POST" {
 
 		// user add profile picture resolution must be less 2kb
-		piplines.Pictures_Stream(r, member.Id)
+		piplines.AvatarUpload(r, member.Id)
 
 		// update users information
 		user := users.Visitors{}
@@ -631,6 +634,26 @@ func profile(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func messages(w http.ResponseWriter, r *http.Request) {
+
+	temp := template.Must(template.ParseFiles("messages.html"))
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
+
+	if r.Method == "GET" {
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
+		temp.Execute(w, "chat page render")
+	}
+}
+
 func success(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("modal-success.html"))
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -674,6 +697,8 @@ func treasure(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	webpage := template.Must(template.ParseFiles("treasure.html"))
+
+	log.Println("analysis data :", visualizeReport.Percentage)
 
 	// analysis data results
 	algo.SetProbParameter(visualizeReport.Percentage)

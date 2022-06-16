@@ -24,14 +24,34 @@ message Collection {
     repeated Pictures gallery = 1;
 }
 
+// compressed message require hash of avatar
+message Compressed{
+    string User_agent_id = 1;
+    string Pic_id = 2;
+}
+
+// metadata file contain few pictures properties
+message Metadata_File{
+    string Pic_src = 1;
+    string CDR =2;
+    string User_agent_id = 3;
+}
+
+// content route required hash of avatar object and who will share it
+message ContentRoute{
+    string User_agent_id = 1;
+    bool IsP2PAddress = 2;
+}
+
 //  stream services 
 service StreamService {
     // store new picture as collection
     rpc NewPictures (Pictures) returns (Collection);
 
-    // search pictures in the collection
-    // rpc SearchPictures (Pictures) returns (Collection);
+    // with search picture functionality ; user will allow to get avatar information
+    rpc SearchPictures (Compressed) returns (ContentRoute);
 
-    // display picture from collection
-    // rpc DisplayPictures (Pictures) returns (Collection);
+    // avatar online allow user to reused avatar
+    rpc GetMetadata (Compressed) returns (Metadata_File);
 }
+

@@ -1,42 +1,131 @@
 package date_time
 
 import (
-	"fmt"
+	"errors"
+	"log"
+	"regexp"
+	"strconv"
 	"time"
 )
 
+type Months int
+type Dates int
+
+const (
+	January Months = iota << 1
+	February
+	March
+	Apirl
+	May
+	June
+	July
+	August
+	September
+	October
+	November
+	December
+	AfterDecember
+)
+
+const CURRENT_YEAR int = 2022
+const INTRL_ERROR string = "internal error"
+
+const (
+	One Dates = iota << 1
+	Two
+	Three
+	Four
+	Five
+	Six
+	Seven
+	Eight
+	Nine
+	Ten
+	Eleven
+	Twelve
+	Thirteen
+	Forteen
+	Fifteen
+	Sixteen
+	Seventeen
+	Eighteen
+	Nineeen
+	Twenty
+	Twenty_One
+	Twenty_Two
+	Twenty_Three
+	Twenty_Four
+	Twenty_Five
+	Twenty_Six
+	Twenty_Seven
+	Twenty_Eight
+	Twenty_Nine
+	Thirty
+	Thirty_One
+	Thirty_Two
+)
+
 // DATE PARSE
-func Date(s string) string {
-	var d string
-	if (s[2:3]) == "-" {
-		d = s[0:2]
-	} else if s[1:2] == "-" {
-		d = s[0:1]
+func Date(s string) (int, error) {
+
+	if ok, err := regexp.MatchString("[0-9]+", s[8:9]); err == nil && !ok {
+
+		log.Fatalln(" Error date is not a valid", s[8:9])
+		return -1, err
 	}
-	return d
+
+	if date, err := strconv.Atoi(s[8:10]); err == nil && date < int(One) {
+		log.Fatalln(" Error month is not a valid", s[8:10])
+		return -1, err
+	}
+
+	date, _ := strconv.Atoi(s[8:10])
+
+	if date >= int(One) && date < int(Thirty_Two) {
+		return date, nil
+	}
+
+	return -1, errors.New(INTRL_ERROR)
 }
 
 // MONTH PARSE
-func Month(s string) string {
-	var m string
-	fmt.Println("month-1", s[2:4], "month-2", s[3:5])
-	if s[2:3] == "-" {
-		m = s[3:4]
-	} else {
-		m = s[3:5]
+func Month(s string) (int, error) {
+
+	if ok, err := regexp.MatchString("[0-9]+", s[5:7]); err == nil && !ok {
+		log.Fatalln(" Error month is not a valid", s[5:7])
+		return -1, err
 	}
-	return m
+
+	if month, err := strconv.Atoi(s[5:7]); err == nil && month < int(January) {
+		log.Fatalln(" Error month is not a valid", s[5:7])
+		return -1, err
+	}
+
+	month, _ := strconv.Atoi(s[5:7])
+
+	if month >= int(January) && month < int(AfterDecember) {
+		return month, nil
+	}
+
+	return -1, errors.New(INTRL_ERROR)
+
 }
 
 // YEAR PARSE
-func Year(s string) string {
-	var y string
-	if len(s) == 10 {
-		y = s[6:10]
-	} else if len(s) == 9 {
-		y = s[5:9]
+func Year(s string) (int, error) {
+
+	if ok, err := regexp.MatchString("[0-9]+", s[0:4]); err == nil && !ok {
+		log.Fatalln(" Error year is not a valid", s[0:4])
+		return -1, err
 	}
-	return y
+
+	if year, err := strconv.Atoi(s[0:4]); err == nil && year < CURRENT_YEAR {
+		log.Fatalln(" Error year had been passed", s[0:4])
+		return -1, err
+	}
+
+	year, _ := strconv.Atoi(s[0:4])
+	return year, nil
 }
 
 func GetToday(year int, month time.Month, date int) time.Time {

@@ -2,14 +2,19 @@ package parser
 
 import (
 	"crypto/rand"
+	"io/ioutil"
 	"math/big"
+	"mime/multipart"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/goombaio/namegenerator"
 )
 
-// get picture file name without extension
-// png, gif, tif , img, jpeg
+const INTERNAL_PATH string = "app_data/"
+
+// Read File and extracts type format. File supported these formats "png, tif, jpeg, gif"
 func ParseTags(s string) []string {
 	var tags = make([]string, len(s))
 
@@ -29,7 +34,9 @@ func ParseTags(s string) []string {
 	return tags
 }
 
+// Generator returns File name
 func Generator() string {
+
 	left, err := rand.Int(rand.Reader, big.NewInt(55))
 	if err != nil {
 		panic(err.Error())
@@ -44,4 +51,35 @@ func Generator() string {
 	rightGen := namegenerator.NewNameGenerator(right.Int64())
 
 	return rightGen.Generate() + "_" + leftGen.Generate()
+}
+
+func CreateFile(fileHeader *multipart.FileHeader, file *multipart.File) (*os.File, error) {
+
+	if _, err := os.Stat(fileHeader.Filename); os.IsExist(err) {
+		return &os.File{}, err
+	}
+
+	paths, err := os.Stat(INTERNAL_PATH)
+	if err != nil {
+		return &os.File{}, err
+	}
+
+	// Application storage path
+	if !paths.IsDir() {
+		return &os.File{}, err
+	}
+
+	src_image := "Avatar-*-" + fileHeader.Filename
+
+	// Store user-picture file in the storage directory
+	_contentFile, err := ioutil.TempFile(filepath.Dir(INTERNAL_PATH), src_image)
+	// _contentFile, err := os.OpenFile(src_image, os.O_RDWR|os.O_CREATE, 0755)
+
+	if err != nil {
+		return &os.File{}, err
+	}
+
+	// defer _contentFile.Close()
+
+	return _contentFile, nil
 }

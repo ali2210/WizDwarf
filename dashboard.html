@@ -39,7 +39,6 @@
 				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 				  <a class="dropdown-item active" href="#" title="Private.  These message will dispear after few seconds."><i class="fa fa-envelope-o" aria-hidden="true"></i> Private </a>
 				  <a class="dropdown-item" href="#" title="Gossips"> <i class="fa fa-comments-o" aria-hidden="true"></i> Public </a>
-          <a class="dropdown-item" href="#" title="Peers. All your peers address store here "> <i class="fa fa-address-book-o"> Peers </i></a>
 				</div>
 			  </li>
 			  <li class="nav-item dropdown pl-3">
@@ -94,77 +93,24 @@
           <button class="btn btn-light verified" type="button"></button>
           <input class="public_address" name="address"/>
         </div>
-        <!-- critical -->
-        <!-- <p>
-            <button type="button" class="btn btn-primary Location" data-toggle="collapse" data-target="#location">
-              <i class="fa fa-compass" aria-hidden="true"></i> Add Location
+          <div class="location-div">
+            <button class="btn btn-light" type="button" title="press marker if you want to activate your current location">
+              <i class="fa fa-map-marker" aria-hidden="true"></i>
             </button>
-        </p>
-            <div class="collapse" id="location">
-              <div class="card card-body">
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend mr-2">
-                    <span><i class="fa fa-check d-none verified-icon" aria-hidden="true"></i></span>
-                    <span><i class="fa fa-times d-none unveriied-icon" aria-hidden="true"></i></span>
-                  </div>
-                  <input type="text" name="country" placeholder="Country" id="homeland">
-                  <button type="button" class="btn btn-primary ml-2" id="Homeland" onclick="VerifyCountryStatus()"/>Verify
-                </div>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend mr-2">
-                    <span><i class="fa fa-check d-none verified-icon" aria-hidden="true"></i></span>
-                    <span><i class="fa fa-times d-none unveriied-icon" aria-hidden="true"></i></span>
-                  </div>
-                  <input type="text" name="city" placeholder="City" id="mytown">
-                  <button type="button" class="btn btn-primary ml-2" id="Hometown" onclick="VerifyCityStatus()"/>Verify
-                </div>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend mr-2">
-                    <span><i class="fa fa-check d-none verified-icon" aria-hidden="true"></i></span>
-                    <span><i class="fa fa-times d-none unveriied-icon" aria-hidden="true"></i></span>
-                  </div>
-                  <input type="text" name="postal" placeholder="Postal" id="area">
-                  <button type="button" class="btn btn-primary ml-2" id="buttonTown" onclick="PostalStatus()"/>Verify
-                </div>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend mr-2">
-                    <span><i class="fa fa-check d-none verified-icon" aria-hidden="true"></i></span>
-                    <span><i class="fa fa-times d-none unveriied-icon" aria-hidden="true"></i></span>
-                  </div>
-                  <input type="text" name="street" placeholder="Street Address" id="address">
-                  <button type="button" class="btn btn-primary ml-2" id="streetAddress" onclick="StreetStatus()"/>Verify
-                </div>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend mr-2">
-                    <span><i class="fa fa-check d-none verified-icon" aria-hidden="true"></i></span>
-                    <span><i class="fa fa-times d-none unveriied-icon" aria-hidden="true"></i></span>
-                  </div>
-                  <input type="number" name="route" placeholder="Street Number (115)" id="snum">
-                  <button type="button" class="btn btn-primary ml-2" id="snumButton" onclick="NumStatus()"/>Verify
-                </div>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend mr-2">
-                    <span><i class="fa fa-check d-none verified-icon" aria-hidden="true"></i></span>
-                    <span><i class="fa fa-times d-none unveriied-icon" aria-hidden="true"></i></span>
-                  </div>
-                  <input type="text" name="state" placeholder="State" id="state">
-                  <button type="button" class="btn btn-primary ml-2" id="stateButton" onclick="StateStatus()"/>Verify
-                </div>
-                  <div class="input-group mb-3">
-                    <button type="button" class="btn btn-primary ml-4" id="saveButton" onclick="SaveLocation()"/>Save Location
-                  </div>
-              </div>
-            </div> -->
-            <div class="location-div">
-              <button class="btn btn-light" type="button" title="press marker if you want to activate your current location">
-                <i class="fa fa-map-marker" aria-hidden="true"></i>
-              </button>
-              <input type="text" class="small-div" name="geo-marker" id="geo-marker" readonly/>
-            </div>
+            <input type="text" class="small-div" name="geo-marker" id="geo-marker" readonly/>
+          </div>
         <button type="submit" class="btn btn-success mb-2 submit-button" data-toggle="popover"
           title="submit your genetic file ">
           <i class="fa fa-check-circle" aria-hidden="true"></i>
         </button>
+    </form>
+  </div>
+  <div class="search-container" style="display: flex;position: absolute;top: 6pc;left: 68pc;">
+    <form class="search-form" id="search-form" action="" method="post">
+      <button type="submit" class="searched" style="position: absolute;left: 9pc;border: none;background: transparent;color: slategray;z-index: 2;visibility: hidden;">
+        <i class="fa fa-check"></i>
+      </button>
+      <input type="text" placeholder="Search..." id="searched" autocomplete="on" class="peers" style="position: inherit;border: none;border-radius: 10pc;color: slategray;">
     </form>
   </div>
   </div>
@@ -361,6 +307,14 @@
         });
     }
   });
+  </script>
+  <script>
+    const _p01 = document.getElementsByClassName('search-container')[0];
+    const _b01 = document.getElementsByClassName('searched')[0];
+
+    _p01.addEventListener('change', (event)=>{
+      _b01.style.visibility = 'visible';
+    });
   </script>
 </body>
 

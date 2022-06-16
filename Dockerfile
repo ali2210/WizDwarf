@@ -3,7 +3,7 @@
 # convensions. @contact Ali Hassan AliMatrixCode@protonmail.com
 
 # base image 
-FROM golang:1.17.7-alpine3.15
+FROM golang:1.19beta1-alpine3.15
 
 # environment params  
 ENV CGO_ENABLED=0
@@ -19,6 +19,7 @@ ENV Registry_PUSHER_KEY="65993b3c66b5317411a5"
 ENV Registry_CHANNEL_ID="1265511" 
 ENV Registry_CHANNEL_SCRECT="4f8bf3faf121d9c8dadf"
 ENV Registry_CHANNEL_CLUSTER_ID="mt1"
+
 
 # app workspace
 

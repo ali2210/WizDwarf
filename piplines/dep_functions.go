@@ -21,6 +21,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"regexp"
 	"strconv"
 	"strings"
 	"text/template"
@@ -29,25 +30,28 @@ import (
 	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
 	skynet "github.com/SkynetLabs/go-skynet/v2"
+	imglibs "github.com/WisdomEnigma/PixelsZoom/zoom_pixels"
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
 	"github.com/ali2210/wizdwarf/other/bucket"
 	"github.com/ali2210/wizdwarf/other/bucket/proto"
 	"github.com/ali2210/wizdwarf/other/collection"
 	"github.com/ali2210/wizdwarf/other/crypto"
 	cryptos "github.com/ali2210/wizdwarf/other/crypto"
-	datetime "github.com/ali2210/wizdwarf/other/date_time"
+	wizdate "github.com/ali2210/wizdwarf/other/date_time"
 	"github.com/ali2210/wizdwarf/other/parser"
+	imglib "github.com/ali2210/wizdwarf/other/parser/parse_image"
 	biosubtypes "github.com/ali2210/wizdwarf/other/proteins"
 	"github.com/ali2210/wizdwarf/other/users"
 	"github.com/biogo/biogo/alphabet"
 	"github.com/gorilla/sessions"
 	linkcid "github.com/ipfs/go-cid"
 	multihash "github.com/multiformats/go-multihash"
-	pusher "github.com/pusher/pusher-http-go"
 	"golang.org/x/net/context"
 	"google.golang.org/api/option"
 )
 
+// global variables. These variables are used to ensure valid state during execution
+// declaration of global variables
 var (
 	Firestore_Rf string
 	calendar     string
@@ -63,15 +67,19 @@ var (
 var cdr map[string]string = make(map[string]string, 1)
 var genes []string
 
+// Signed key hold paticular state of an object called lock
 type SignedKey struct {
 	Reader string
 	Signed string
 	Tx     *ecdsa.PrivateKey
 }
 
+// wrap error message
 const Errors = "Operation Failed"
 
-func Pictures_Stream(r *http.Request, user_id string) {
+// Avatar Upload is a special function which provide different operations on your profile avatars.
+
+func AvatarUpload(r *http.Request, user_id string) {
 
 	//  Set the buffer size for the picture file contents
 	r.ParseMultipartForm(10 << 50)
@@ -80,105 +88,68 @@ func Pictures_Stream(r *http.Request, user_id string) {
 	file, fileHandle, err := r.FormFile("profile-input")
 
 	if err != nil {
+		log.Fatalln("Error File Handle :", err)
 		return
 	}
 	defer file.Close()
 
-	// Image file accessible to application
-	if _, err := os.Stat(fileHandle.Filename); os.IsExist(err) {
-		return
-	}
-
-	// application store user picture in the app_data directory
-	path, err := os.Stat("app_data/")
-	if err != nil {
-		return
-	}
-
-	// Application storage path
-	if !path.IsDir() {
-		return
-	}
-
-	// Store user-picture file in the storage directory
-	imageFile, err := ioutil.TempFile(filepath.Dir("app_data/"), "img-*-"+fileHandle.Filename)
-	if err != nil {
-		return
-	}
-	defer imageFile.Close()
-
-	// Read data from image-file
-	readBytes, err := ioutil.ReadAll(file)
-	if err != nil {
-		return
-	}
-
-	// In case of error all proceding stop, otherwise file content copy into new file
-	if _, err := imageFile.Write(readBytes); err != nil {
-		return
-	}
-
 	// Get today year, month and date . This help to generate image metadata which is helpful when images store in the collections.
 	// Get Date from html Form
 	today := r.FormValue("date")
-	str := strings.Trim(today, " ")
 
 	// Parse calendar format
-	date := datetime.Date(str)
-	month := datetime.Month(str)
-	year := datetime.Year(str)
-
-	// parse format in string format but the typo of year format is integer
-	yrs, err := strconv.Atoi(year)
+	year, err := wizdate.Year(today)
 	if err != nil {
+		log.Println("Error parsing year: ", err)
 		return
 	}
 
-	// parse format in string format but the typo of month format is integer
-	mnths, err := strconv.Atoi(month)
+	month, err := wizdate.Month(today)
 	if err != nil {
+		log.Println("Error parsing month: ", err)
 		return
 	}
 
-	// parse format in string format but the typo of date format is integer
-	dtes, err := strconv.Atoi(date)
+	date, err := wizdate.Date(today)
 	if err != nil {
+		log.Println("Error parsing date: ", err)
 		return
 	}
 
-	// calendar have time typo for encoding data (data serialization) , data typo must be string
-	calendar = datetime.GetToday(yrs, time.Month(mnths), dtes).String()
+	// Calendar Get Today function hold information about picture such when will last avatar changed
+	calendar = wizdate.GetToday(year, time.Month(month), date).String()
 
-	// Now Time format according american time format and some metainformation which i discarded by using [Trim func]
+	// All avatars craeted according to utc timezone
 	time_utc := strings.Trim(calendar, "+0000 UTC")
 
-	// After parsing American Format and remove some metainformation. We get hr and minutes. These variable again in american or international format.
-	// So that i slice american time format and then parse the string
+	// As calendar return date, month, year, timezone and time (hour, second & minute). Avatars created in unqiue timespace
 	hr, err := strconv.Atoi(time_utc[11:13])
 	if err != nil {
+		log.Fatalln("Error parsing hr: ", err)
 		return
 	}
 
 	mns, err := strconv.Atoi(time_utc[14:16])
 	if err != nil {
+		log.Fatalln("Error parsing mns: ", err)
 		return
 	}
 
-	// convert according to asian time format
+	// store avatars timespace instance
 	create_pic_time := fmt.Sprintf("%d:%d", (hr), (mns))
 
-	// metainformation about picture
+	// meta-information about picture
 	pic_src = fileHandle.Filename
 	parse_date = calendar
 	user_Id = user_id
 	pic_time = create_pic_time
 
-	// parse file name which user shared. (Remove image file format which access to shared images namespace)
-	// This arose a new problem that is namespace in array object and there may be at most 2% probability that
-	// file don't have any file format. Compare shared resources namespace must not be empty
-	rdn.Seed(1024)
+	// Seed is an upper bound on the number of timeframes available for a avatar
+	rdn.Seed(time.Now().UnixNano())
 
 	parse_num := strconv.Itoa(rdn.Intn(512))
+
+	log.Println("Num:", parse_num)
 
 	if str := strings.Join(parser.ParseTags(fileHandle.Filename), " "); str != "" {
 		if n := strings.Compare(str, " "); n != -1 {
@@ -189,8 +160,146 @@ func Pictures_Stream(r *http.Request, user_id string) {
 
 	// encrypted stream channel return status about content.
 	// here it's not necessary
-	Encrypted_Stream_Channel(imageFile.Name())
+	// Encrypted_Stream_Channel(imageFile.Name())
 
+	// decode content based on type system; there may be possible that type system is not supported or recognized
+	hash_color := ""
+	var result interface{}
+	var status int
+	var _temp_avatar *os.File
+
+	ok, err := regexp.MatchString(".[a-z]+", fileHandle.Filename)
+	if err != nil {
+		log.Fatalln("Error File name :", err)
+		return
+	}
+
+	kvalue := r.FormValue("aspect-ratio")
+
+	value, err := strconv.Atoi(kvalue)
+	if err != nil {
+		log.Fatalf("poor data format: %v", err)
+		return
+	}
+
+	log.Println("Scale Image:", value)
+
+	if strings.Contains(fileHandle.Filename, ".png") && ok {
+
+		result, status = imglib.GetMetadata(hash_color, user_id, Firestore_Reference())
+		if !reflect.DeepEqual(status, bucket.Err) {
+			log.Fatalln(" Replicate Avatar is not allowed ")
+			return
+		}
+
+		var null_interface interface{}
+		if reflect.DeepEqual(result, null_interface) {
+			log.Fatalln(" This content already in your bucket! ")
+			return
+		}
+
+		hash_color = imglib.PNG_Color_Hash(&file)
+
+		_temp_avatar, err = parser.CreateFile(fileHandle, &file)
+		if err != nil {
+			log.Fatalln("Error create file:", err)
+			return
+		}
+
+		fmt.Println(" Document :", _temp_avatar.Name())
+
+		_vec_pixels := imglib.RGBA_Vec()
+
+		imglibs.ZoomPicture(_temp_avatar, imglib.Pixels_Vec(_vec_pixels))
+
+		// zp.SetImage(imglib.GetImageDecoder())
+
+		// zp.Zoom_KTime(value, _temp_avatar)
+
+		// generator := imglib.Metadata(fileHandle.Filename, hash_color, user_id, Firestore_Reference())
+
+		// if reflect.DeepEqual(generator, bucket.Err) {
+
+		// 	log.Fatalln(" Error metadata is not created for image")
+		// 	return
+		// }
+
+		// result, status = imglib.GetMetadata(hash_color, user_id, Firestore_Reference())
+
+	}
+	// else if strings.Contains(fileHandle.Filename, ".jpeg") && ok {
+
+	// 	result, status = imglib.GetMetadata(hash_color, user_id, Firestore_Reference())
+	// 	if reflect.DeepEqual(status, bucket.Err) {
+
+	// 		log.Fatalln(" Error get metadata:")
+	// 		return
+	// 	}
+
+	// 	var null_interface interface{}
+	// 	if !reflect.DeepEqual(result, null_interface) {
+
+	// 		log.Fatalln(" Replicate Avatar is not allowed ")
+	// 		return
+	// 	}
+
+	// 	hash_color = imglib.JPEG_Color_Hash(file)
+
+	// 	generator := imglib.Metadata(fileHandle.Filename, hash_color, user_id, Firestore_Reference())
+
+	// 	if reflect.DeepEqual(generator, bucket.Err) {
+
+	// 		log.Fatalln(" Error metadata is not created for image")
+	// 		return
+	// 	}
+
+	// 	result, status = imglib.GetMetadata(hash_color, user_id, Firestore_Reference())
+
+	// } else if strings.Contains(fileHandle.Filename, ".gif") && ok {
+
+	// 	result, status = imglib.GetMetadata(hash_color, user_id, Firestore_Reference())
+	// 	if reflect.DeepEqual(status, bucket.Err) {
+
+	// 		log.Fatalln(" Error get metadata:")
+	// 		return
+	// 	}
+
+	// 	var null_interface interface{}
+	// 	if !reflect.DeepEqual(result, null_interface) {
+
+	// 		log.Fatalln(" Replicate Avatar is not allowed ")
+	// 		return
+	// 	}
+
+	// 	hash_color = imglib.GIF_Color_Hash(file)
+
+	// 	generator := imglib.Metadata(fileHandle.Filename, hash_color, user_id, Firestore_Reference())
+
+	// 	if reflect.DeepEqual(generator, bucket.Err) {
+
+	// 		log.Fatalln(" Error metadata is not created for image")
+	// 		return
+	// 	}
+
+	// 	result, status = imglib.GetMetadata(hash_color, user_id, Firestore_Reference())
+
+	// } else {
+
+	// 	log.Fatalln(" Error image format is not supported:")
+	// 	return
+	// }
+
+	// null := func() interface{} {
+	// 	var nulify interface{}
+	// 	return nulify
+	// }
+
+	// if reflect.DeepEqual(result, null()) && reflect.DeepEqual(status, bucket.Err) {
+	// 	log.Fatalln(" Error getting metadata")
+	// 	return
+	// }
+
+	defer _temp_avatar.Close()
 }
 
 func SiaObjectStorage(client skynet.SkynetClient, file string) bool {
@@ -260,7 +369,10 @@ func SiaObjectStorage(client skynet.SkynetClient, file string) bool {
 	// value should be cdr link
 
 	cdr = make(map[string]string, 1)
+
 	cdr[cid.String()] = sia_object_url
+	Set_cdr(cid.String())
+
 	return true
 }
 
@@ -287,6 +399,12 @@ func UpdateProfileInfo(member *users.Visitors) bool {
 	}
 	return true
 }
+
+var CDRL string
+
+func Set_cdr(c string) { CDRL = c }
+
+func Get_cdr() string { return CDRL }
 
 func TrustRequest(message, verifier, request string) (bool, *ed25519.PrivateKey, error) {
 
@@ -666,13 +784,6 @@ func Encrypted_Stream_Channel(file string) bool {
 
 	// Store user-picture file in the storage directory
 	if ok := SiaObjectStorage(client, file); ok {
-		pusher_credentials := pusher.Client{
-			AppID:   "1265511",
-			Key:     "65993b3c66b5317411a5",
-			Secret:  "4f8bf3faf121d9c8dadf",
-			Cluster: "mt1",
-			Secure:  true,
-		}
 
 		// picture metadata
 		storage := &collection.Pictures{}
@@ -685,9 +796,17 @@ func Encrypted_Stream_Channel(file string) bool {
 		storage.CDR = make(map[string]string, 1)
 		storage.CDR = cdr
 
-		firestore_collection := gallery_firestore_object.NewPictures(context.Background(), storage)
+		// encrypt image and allocate space in ledger
+		_ = gallery_firestore_object.NewPictures(context.Background(), storage)
 
-		pusher_credentials.Trigger("encrypted-photo-stream", "encrypted-pic", firestore_collection)
+		// proof of content in ledger
+		search := gallery_firestore_object.SearchPictures(context.Background(), &collection.Compressed{UserAgentId: storage.UserAgentId, PicId: storage.PicId})
+
+		// proof returns status about the object. If the object has not already existed then throw an error
+		if !search.IsP2PAddress {
+			return !search.IsP2PAddress
+		}
+
 		return true
 	}
 	return false
@@ -760,6 +879,9 @@ func Data_Predicition(w http.ResponseWriter, r *http.Request, fname, choose stri
 
 		// Gene store in the memory
 		SetGenes(Usr)
+
+		// attributes properties
+		SetEditParameters()
 
 		// calculate matching probability
 		distance := GetEditParameters().EditDistanceStrings(Virus, Usr)
