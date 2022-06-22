@@ -3,7 +3,6 @@ package parse_image
 import (
 	"context"
 	"image"
-	"image/color"
 	"image/gif"
 	"image/jpeg"
 	"image/png"
@@ -87,25 +86,32 @@ func image_signature(_upload_content image.Image) string {
 	return strings.Join(scanner_prints, " ")[:]
 }
 
+// Metadata function return file description information
 func Metadata(filename, key, ownership string, client *firestore.Client) int {
+
+	if reflect.DeepEqual(ownership, "") {
+
+		log.Fatalln("Empty ownership:", ownership)
+		return bucket.Err
+	}
 
 	if strings.Contains(filename, ".png") {
 
 		datasource := bucket.NewClient(client, context.TODO(), ownership, key)
 
-		return datasource.GenerateFingersprints(decodeRawImage)
+		return datasource.GenerateFingersprints(GetImageDecoder())
 
 	} else if strings.Contains(filename, ".jpeg") {
 
 		datasource := bucket.NewClient(client, context.TODO(), ownership, key)
 
-		return datasource.GenerateFingersprints(decodeRawImage)
+		return datasource.GenerateFingersprints(GetImageDecoder())
 
 	} else if strings.Contains(filename, ".gif") {
 
 		datasource := bucket.NewClient(client, context.TODO(), ownership, key)
 
-		return datasource.GenerateFingersprints(decodeRawImage)
+		return datasource.GenerateFingersprints(GetImageDecoder())
 
 	} else {
 		log.Fatalln("FORMAT NOT SUPORTED")
@@ -114,72 +120,18 @@ func Metadata(filename, key, ownership string, client *firestore.Client) int {
 
 }
 
+// Get Image Decode function is a special function that returns image pixels in vec form
 func GetImageDecoder() image.Image {
 	return decodeRawImage
 }
 
+// GetMetadata instance is an bridge object. If user provide certain parameters then it will return metadata of the shared data
 func GetMetadata(key, ownership string, client *firestore.Client) (interface{}, int) {
 
-	return bucket.NewClient(client, context.TODO(), ownership, key).AnalyzeFingersprints(decodeRawImage)
+	return bucket.NewClient(client, context.TODO(), ownership, key).AnalyzeFingersprints(GetImageDecoder())
 }
 
+// Pixels Value hold RGBA value
 type PixelsValue struct {
 	R, G, B, A uint32
-}
-
-var width, height int = 200, 200
-var count int64 = 0
-
-func EncodePixels(value []PixelsValue) *image.Paletted {
-
-	avatar := make([]color.Color, decodeRawImage.Bounds().Max.X)
-	for i := range value {
-
-		// if reflect.DeepEqual(value[i].R, 0) && reflect.DeepEqual(value[i].G, 0) && reflect.DeepEqual(value[i].B, 0) && reflect.DeepEqual(value[i].A, 0) {
-		// 	continue
-		// }
-
-		if reflect.DeepEqual(value[i], nil) {
-			continue
-		}
-		// pixels_vec :=
-
-		avatar = append(avatar, []color.Color{
-			color.RGBA64{uint16(value[i].R), uint16(value[i].G), uint16(value[i].B), uint16(value[i].A)},
-		}...)
-
-		if reflect.DeepEqual(avatar[i], nil) {
-			count += 1
-			continue
-		}
-
-	}
-
-	return image.NewPaletted(image.Rect(0, 0, width, height), avatar[count:])
-}
-
-func RGBA_Vec() []PixelsValue {
-
-	encodeAvatar := make([]PixelsValue, decodeRawImage.Bounds().Max.X)
-
-	for i := 0; i < GetImageDecoder().Bounds().Max.X; i++ {
-		for j := 0; j < GetImageDecoder().Bounds().Max.Y; j++ {
-
-			r, g, b, a := GetImageDecoder().At(i, j).RGBA()
-
-			if reflect.DeepEqual(r, uint32(0)) && reflect.DeepEqual(g, uint32(0)) && reflect.DeepEqual(b, uint32(0)) && reflect.DeepEqual(a, uint32(0)) {
-				continue
-			}
-
-			encodeAvatar[i].R, encodeAvatar[i].G, encodeAvatar[i].B, encodeAvatar[i].A = decodeRawImage.At(i, j).RGBA()
-
-		}
-	}
-
-	return encodeAvatar
-}
-
-func Pixels_Vec(value []PixelsValue) *image.Paletted {
-
-	return EncodePixels(value)
 }

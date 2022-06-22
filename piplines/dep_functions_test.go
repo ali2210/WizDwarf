@@ -43,7 +43,7 @@ var _ = Describe(date_describe, func() {
 	// decentralize content storage
 	Context(skynet_protocol, func() {
 		It(skynet_object, func() {
-			Expect(SiaObjectStorage(skynet.New(), "mickymouse.jpeg")).Should(BeFalse())
+			Expect(SkyDataCenter(skynet.New(), "mickymouse.jpeg")).Should(BeFalse())
 		})
 	})
 	Context(anscitest, func() {

@@ -30,6 +30,7 @@ require (
 	github.com/logpacker/PayPal-Go-SDK v2.0.5+incompatible
 	github.com/multiformats/go-base32 v0.0.4 // indirect
 	github.com/multiformats/go-multihash v0.0.16
+	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.19.0

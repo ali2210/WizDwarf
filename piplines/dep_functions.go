@@ -14,9 +14,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"image/gif"
+	"image/jpeg"
 	"image/png"
 	"io/ioutil"
 	"log"
+	"math"
 	rdn "math/rand"
 	"net/http"
 	"os"
@@ -46,25 +49,37 @@ import (
 	"github.com/gorilla/sessions"
 	linkcid "github.com/ipfs/go-cid"
 	multihash "github.com/multiformats/go-multihash"
+	"github.com/nfnt/resize"
 	"golang.org/x/net/context"
 	"google.golang.org/api/option"
 )
 
-// global variables. These variables are used to ensure valid state during execution
-// declaration of global variables
-var (
-	Firestore_Rf string
-	calendar     string
-	parse_date   string
-	user_Id      string
-	pic_src      string
-	pic_time     string
-	pic_tags     string
-	pic_id       string
-	chain        map[string]string
-)
+// Error message
+const Errors = "Operation Failed"
 
+// These attributes are used to controle execution of processes
+
+// Firestore_Reference hold database refernece
+var Firestore_Rf string
+
+// Calendar hold Today time
+var calendar string
+
+// Parse_Date Today date
+var parse_date string
+
+//  User ID whom will get logged in
+var user_Id string
+
+// Meta-picture information
+var pic_src string
+var pic_time string
+var pic_tags string
+var pic_id string
+var chain map[string]string
 var cdr map[string]string = make(map[string]string, 1)
+
+//  Molecular data; hold genomes sequence value
 var genes []string
 
 // Signed key hold paticular state of an object called lock
@@ -74,10 +89,10 @@ type SignedKey struct {
 	Tx     *ecdsa.PrivateKey
 }
 
-// wrap error message
-const Errors = "Operation Failed"
+// User will add their profile picture on the profile. User shared picture have different parameters such as upload time ; resize image etc.
+// User currently add jpeg, png and gif to the profile picture. Profile store on private blockchain. Each Shared Picture key attached to the keys;
 
-// Avatar Upload is a special function which provide different operations on your profile avatars.
+// Keys are generated one time; All the keys store in your account meta-wallet .
 
 func AvatarUpload(r *http.Request, user_id string) {
 
@@ -149,8 +164,6 @@ func AvatarUpload(r *http.Request, user_id string) {
 
 	parse_num := strconv.Itoa(rdn.Intn(512))
 
-	log.Println("Num:", parse_num)
-
 	if str := strings.Join(parser.ParseTags(fileHandle.Filename), " "); str != "" {
 		if n := strings.Compare(str, " "); n != -1 {
 			pic_tags = str
@@ -158,158 +171,225 @@ func AvatarUpload(r *http.Request, user_id string) {
 		}
 	}
 
-	// encrypted stream channel return status about content.
-	// here it's not necessary
-	// Encrypted_Stream_Channel(imageFile.Name())
-
-	// decode content based on type system; there may be possible that type system is not supported or recognized
 	hash_color := ""
 	var result interface{}
 	var status int
 	var _temp_avatar *os.File
+	var width, height int = 200, 200
 
+	// shared document have typesystem or discard shared data
 	ok, err := regexp.MatchString(".[a-z]+", fileHandle.Filename)
 	if err != nil {
+
 		log.Fatalln("Error File name :", err)
 		return
 	}
 
+	// scale-up level (SUL); how much scale is needed for shared content
 	kvalue := r.FormValue("aspect-ratio")
 
 	value, err := strconv.Atoi(kvalue)
 	if err != nil {
+
 		log.Fatalf("poor data format: %v", err)
 		return
 	}
 
-	log.Println("Scale Image:", value)
-
 	if strings.Contains(fileHandle.Filename, ".png") && ok {
 
-		result, status = imglib.GetMetadata(hash_color, user_id, Firestore_Reference())
-		if !reflect.DeepEqual(status, bucket.Err) {
-			log.Fatalln(" Replicate Avatar is not allowed ")
-			return
-		}
-
-		var null_interface interface{}
-		if reflect.DeepEqual(result, null_interface) {
-			log.Fatalln(" This content already in your bucket! ")
-			return
-		}
-
+		// unique digital print for shared resources
 		hash_color = imglib.PNG_Color_Hash(&file)
 
+		// store contents in memory
 		_temp_avatar, err = parser.CreateFile(fileHandle, &file)
 		if err != nil {
+
 			log.Fatalln("Error create file:", err)
 			return
 		}
 
-		fmt.Println(" Document :", _temp_avatar.Name())
-
-		// _vec_pixels := imglib.RGBA_Vec()
-
-		// imglibs.ZoomPicture(_temp_avatar, imglib.Pixels_Vec(_vec_pixels))
-
-		err := png.Encode(_temp_avatar, imglib.GetImageDecoder())
+		// re-create the avatar
+		encoder := png.Encoder{CompressionLevel: png.BestCompression}
+		err := encoder.Encode(_temp_avatar, imglib.GetImageDecoder())
 		if err != nil {
 
 			log.Fatalln("Error encoding image:", err)
 			return
 		}
 
-		// zp.SetImage(imglib.GetImageDecoder())
+		// resize avatar image
+		resizer := resize.Resize(uint(width+value), uint(height+value), imglib.GetImageDecoder(), resize.Lanczos3)
 
-		// zp.Zoom_KTime(value, _temp_avatar)
+		encoder = png.Encoder{CompressionLevel: png.BestCompression}
+		err = encoder.Encode(_temp_avatar, resizer)
+		if err != nil {
 
-		// generator := imglib.Metadata(fileHandle.Filename, hash_color, user_id, Firestore_Reference())
+			log.Fatalln("Error encoding image:", err)
+			return
+		}
 
-		// if reflect.DeepEqual(generator, bucket.Err) {
+		// check whether application have user sessions credentials
+		if reflect.DeepEqual(user_id, "") {
 
-		// 	log.Fatalln(" Error metadata is not created for image")
-		// 	return
-		// }
+			log.Fatalln("User information is not accessible:", user_id)
+			return
+		}
 
-		// result, status = imglib.GetMetadata(hash_color, user_id, Firestore_Reference())
+		// store in ledger
+		generator := imglib.Metadata(_temp_avatar.Name(), hash_color, user_id, Firestore_Reference())
 
+		if reflect.DeepEqual(generator, bucket.Err) {
+
+			log.Fatalln(" Error metadata is not created for image")
+			return
+		}
+
+		// read document from ledger
+		result, status = imglib.GetMetadata(hash_color, user_id, Firestore_Reference())
+
+		var null_interface interface{}
+		if reflect.DeepEqual(result, null_interface) {
+
+			log.Fatalln(" This content already in your bucket! ")
+			return
+		}
+
+		if !reflect.DeepEqual(result, null_interface) && status == 1 {
+
+			log.Fatalln(" Your Avatar metadata is already created", status)
+			return
+		}
+
+	} else if strings.Contains(fileHandle.Filename, ".jpeg") && ok {
+
+		hash_color = imglib.JPEG_Color_Hash(file)
+
+		_temp_avatar, err = parser.CreateFile(fileHandle, &file)
+		if err != nil {
+
+			log.Fatalln("Error create file:", err)
+			return
+		}
+
+		op1 := float64(value)
+
+		err = jpeg.Encode(_temp_avatar, imglib.GetImageDecoder(), &jpeg.Options{Quality: int(math.Mod(op1, jpeg.DefaultQuality))})
+		if err != nil {
+
+			log.Fatalln("Error encoding image:", err)
+			return
+		}
+
+		resizer := resize.Resize(uint(width+value), uint(height+value), imglib.GetImageDecoder(), resize.Lanczos3)
+
+		err = jpeg.Encode(_temp_avatar, resizer, &jpeg.Options{Quality: int(math.Mod(op1, jpeg.DefaultQuality))})
+		if err != nil {
+
+			log.Fatalln("Error resolution image:", err)
+			return
+		}
+
+		if reflect.DeepEqual(user_id, "") {
+
+			log.Fatalln("User:", user_id)
+			return
+		}
+
+		generator := imglib.Metadata(_temp_avatar.Name(), hash_color, user_id, Firestore_Reference())
+
+		if reflect.DeepEqual(generator, bucket.Err) {
+
+			log.Fatalln(" Error metadata is not created for image")
+			return
+		}
+
+		result, status = imglib.GetMetadata(hash_color, user_id, Firestore_Reference())
+
+		var null_interface interface{}
+		if reflect.DeepEqual(result, null_interface) {
+
+			log.Fatalln(" This content already in your bucket! ")
+			return
+		}
+
+		if !reflect.DeepEqual(result, null_interface) && status == 1 {
+
+			log.Fatalln(" Your Avatar metadata is already created", status)
+			return
+		}
+
+	} else if strings.Contains(fileHandle.Filename, ".gif") && ok {
+
+		hash_color = imglib.GIF_Color_Hash(file)
+
+		_temp_avatar, err = parser.CreateFile(fileHandle, &file)
+		if err != nil {
+
+			log.Fatalln("Error create file:", err)
+			return
+		}
+
+		err = gif.Encode(_temp_avatar, imglib.GetImageDecoder(), &gif.Options{NumColors: 256, Quantizer: nil, Drawer: nil})
+		if err != nil {
+
+			log.Fatalln("Error encoding image:", err)
+			return
+		}
+
+		resizer := resize.Resize(uint(width+value), uint(height+value), imglib.GetImageDecoder(), resize.Lanczos3)
+
+		err = gif.Encode(_temp_avatar, resizer, &gif.Options{NumColors: 256, Quantizer: nil, Drawer: nil})
+		if err != nil {
+
+			log.Fatalln("Error resolution image:", err)
+			return
+		}
+
+		if reflect.DeepEqual(user_id, "") {
+
+			log.Fatalln("User:", user_id)
+			return
+		}
+
+		generator := imglib.Metadata(_temp_avatar.Name(), hash_color, user_id, Firestore_Reference())
+
+		if reflect.DeepEqual(generator, bucket.Err) {
+
+			log.Fatalln(" Error metadata is not created for image")
+			return
+		}
+
+		result, status = imglib.GetMetadata(hash_color, user_id, Firestore_Reference())
+
+		var null_interface interface{}
+		if reflect.DeepEqual(result, null_interface) {
+
+			log.Fatalln(" This content already in your bucket! ")
+			return
+		}
+
+		if !reflect.DeepEqual(result, null_interface) && status == 1 {
+
+			log.Fatalln(" Your Avatar metadata is already created", status)
+			return
+		}
+
+	} else {
+
+		log.Fatalln(" Error image format is not supported:")
+		return
 	}
-	// else if strings.Contains(fileHandle.Filename, ".jpeg") && ok {
 
-	// 	result, status = imglib.GetMetadata(hash_color, user_id, Firestore_Reference())
-	// 	if reflect.DeepEqual(status, bucket.Err) {
-
-	// 		log.Fatalln(" Error get metadata:")
-	// 		return
-	// 	}
-
-	// 	var null_interface interface{}
-	// 	if !reflect.DeepEqual(result, null_interface) {
-
-	// 		log.Fatalln(" Replicate Avatar is not allowed ")
-	// 		return
-	// 	}
-
-	// 	hash_color = imglib.JPEG_Color_Hash(file)
-
-	// 	generator := imglib.Metadata(fileHandle.Filename, hash_color, user_id, Firestore_Reference())
-
-	// 	if reflect.DeepEqual(generator, bucket.Err) {
-
-	// 		log.Fatalln(" Error metadata is not created for image")
-	// 		return
-	// 	}
-
-	// 	result, status = imglib.GetMetadata(hash_color, user_id, Firestore_Reference())
-
-	// } else if strings.Contains(fileHandle.Filename, ".gif") && ok {
-
-	// 	result, status = imglib.GetMetadata(hash_color, user_id, Firestore_Reference())
-	// 	if reflect.DeepEqual(status, bucket.Err) {
-
-	// 		log.Fatalln(" Error get metadata:")
-	// 		return
-	// 	}
-
-	// 	var null_interface interface{}
-	// 	if !reflect.DeepEqual(result, null_interface) {
-
-	// 		log.Fatalln(" Replicate Avatar is not allowed ")
-	// 		return
-	// 	}
-
-	// 	hash_color = imglib.GIF_Color_Hash(file)
-
-	// 	generator := imglib.Metadata(fileHandle.Filename, hash_color, user_id, Firestore_Reference())
-
-	// 	if reflect.DeepEqual(generator, bucket.Err) {
-
-	// 		log.Fatalln(" Error metadata is not created for image")
-	// 		return
-	// 	}
-
-	// 	result, status = imglib.GetMetadata(hash_color, user_id, Firestore_Reference())
-
-	// } else {
-
-	// 	log.Fatalln(" Error image format is not supported:")
-	// 	return
-	// }
-
-	// null := func() interface{} {
-	// 	var nulify interface{}
-	// 	return nulify
-	// }
-
-	// if reflect.DeepEqual(result, null()) && reflect.DeepEqual(status, bucket.Err) {
-	// 	log.Fatalln(" Error getting metadata")
-	// 	return
-	// }
+	OpenSkyChain(_temp_avatar.Name())
 
 	defer _temp_avatar.Close()
 }
 
-func SiaObjectStorage(client skynet.SkynetClient, file string) bool {
+// Sky Data Center have following properties. It's provide best solution for Decentralize Content storage ; just like ipfs & pinta;
+// Each content store in public ledger which means every content access through key signature called CDR-link.
+// CDR_Link is similar to URL , however cdr-link generated based on content that user want to located
+
+func SkyDataCenter(client skynet.SkynetClient, file string) bool {
 
 	// application store user picture in the app_data directory
 	path, err := os.Stat("app_data/")
@@ -383,15 +463,28 @@ func SiaObjectStorage(client skynet.SkynetClient, file string) bool {
 	return true
 }
 
+// Download Content is a special function that downloads shared resources
 func Download_Content_ownership(File string, client bucket.Bucket_Service) *proto.QState {
 
 	return client.Download(&proto.Query{ByName: File})
 
 }
 
+// Mapper take stream as interface , key is used to decode the kv value.
+
+/* MapRange
+	* iter := reflect.ValueOf(m).MapRange()
+	*	for iter.Next() {
+	* k := iter.Key()
+	* v := iter.Value()
+	* ...
+    * }
+*/
+
 func Mapper(stream map[string]interface{}, key string) interface{} {
 
 	var occ interface{}
+
 	it := reflect.ValueOf(stream).MapRange()
 	for it.Next() {
 		occ = stream[key]
@@ -399,7 +492,9 @@ func Mapper(stream map[string]interface{}, key string) interface{} {
 	return occ
 }
 
+// Update Profile Information will update user profile .
 func UpdateProfileInfo(member *users.Visitors) bool {
+
 	err := cloud.UpdateUserDetails(GetDBClientRef(), *member)
 	if err != nil {
 		return false
@@ -407,12 +502,14 @@ func UpdateProfileInfo(member *users.Visitors) bool {
 	return true
 }
 
-var CDRL string
+var CDRL string = ""
 
+// CDR_Link
 func Set_cdr(c string) { CDRL = c }
 
 func Get_cdr() string { return CDRL }
 
+// Trust Request is digital contract signature certificate
 func TrustRequest(message, verifier, request string) (bool, *ed25519.PrivateKey, error) {
 
 	// contain check whether request have pass-key ,
@@ -773,7 +870,7 @@ func Mounted(w http.ResponseWriter, r *http.Request) (string, error) {
 *  To keep user privacy , Encrypted-Channels accept stream of data.
 *  Onces the data transfer complete this path completely closed.
  */
-func Encrypted_Stream_Channel(file string) bool {
+func OpenSkyChain(file string) bool {
 
 	/*
 	* Create serialized message object [@Protocol-Buffers is used here].
@@ -790,7 +887,7 @@ func Encrypted_Stream_Channel(file string) bool {
 	client := skynet.New()
 
 	// Store user-picture file in the storage directory
-	if ok := SiaObjectStorage(client, file); ok {
+	if ok := SkyDataCenter(client, file); ok {
 
 		// picture metadata
 		storage := &collection.Pictures{}

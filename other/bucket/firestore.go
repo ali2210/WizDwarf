@@ -114,7 +114,7 @@ func (h *__Firestore) GenerateFingersprints(img image.Image) int {
 	// add information in the database
 	_, _, err := h.Client.Collection(schema_name).Add(h.Ctx, map[string]interface{}{
 		"OwnerID":         h.User_agent_id,
-		"Image_Signature": h.Hash_Color,
+		"Image_Signature": h.Hash_Color[64:128],
 		"Decoder":         h.Image_Deoder,
 	})
 
