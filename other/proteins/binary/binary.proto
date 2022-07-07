@@ -1,6 +1,20 @@
-/* This codebase desgin according to mozilla open source license.
-Redistribution , contribution and improve codebase under license
-convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
+/*
+    This is a proto file .
+
+    Protocol Buffer is open source and free software. Protocol Buffer serialize data structure. 
+    This structure used during communication over network. 
+
+    https://developers.google.com/protocol-buffers/docs/proto3
+
+    Version = 3
+
+    Licence = BSD
+
+    Anybody use our source code under Mozilla license. 
+
+    https://github.com/ali2210/WizDwarf/blob/master/LICENSE
+
+*/
 
 syntax = "proto3";
 

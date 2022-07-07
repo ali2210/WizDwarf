@@ -1,0 +1,44 @@
+
+/*
+    This is a proto file .
+
+    Protocol Buffer is open source and free software. Protocol Buffer serialize data structure. 
+    This structure used during communication over network. 
+
+    https://developers.google.com/protocol-buffers/docs/proto3
+
+    Version = 3
+
+    Licence = BSD
+
+    Anybody use our source code under Mozilla license. 
+
+    https://github.com/ali2210/WizDwarf/blob/master/LICENSE
+
+*/
+
+
+syntax = "proto3";
+
+package protos;
+
+option go_package = "github.com/ali2210/wizdwarf/piplines/protos";
+
+
+// Pricing_Call_Request is a simple message with one binary message field called request
+message Pricing_Call_Request {
+
+    int64 CRequest = 1;
+}
+
+message Zero{}
+
+//  Pricing Call_Request Service provide incement method 
+service Pricing_Call_Request_Service {
+    
+    rpc Inc(Zero) returns (Pricing_Call_Request);
+
+    rpc Initial (Pricing_Call_Request) returns (Zero);
+
+}
+

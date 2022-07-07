@@ -112,6 +112,9 @@ github.com/envoyproxy/go-control-plane/envoy/type/v3
 # github.com/envoyproxy/protoc-gen-validate v0.6.2
 ## explicit
 github.com/envoyproxy/protoc-gen-validate/validate
+# github.com/fauna/faunadb-go/v4 v4.2.0
+## explicit
+github.com/fauna/faunadb-go/v4/faunadb
 # github.com/fogleman/ribbon v0.0.0-20191101191537-568057efb726
 ## explicit
 github.com/fogleman/ribbon/pdb
@@ -267,7 +270,7 @@ golang.org/x/crypto/internal/subtle
 golang.org/x/crypto/nacl/secretbox
 golang.org/x/crypto/salsa20/salsa
 golang.org/x/crypto/sha3
-# golang.org/x/net v0.0.0-20220526153639-5463443f8c37
+# golang.org/x/net v0.0.0-20220630215102-69896b714898
 ## explicit
 golang.org/x/net/context
 golang.org/x/net/context/ctxhttp
@@ -456,7 +459,7 @@ google.golang.org/grpc/xds/internal/xdsclient/bootstrap
 google.golang.org/grpc/xds/internal/xdsclient/load
 google.golang.org/grpc/xds/internal/xdsclient/v2
 google.golang.org/grpc/xds/internal/xdsclient/v3
-# google.golang.org/protobuf v1.27.1
+# google.golang.org/protobuf v1.28.0
 ## explicit
 google.golang.org/protobuf/encoding/protojson
 google.golang.org/protobuf/encoding/prototext

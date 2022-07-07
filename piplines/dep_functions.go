@@ -41,10 +41,13 @@ import (
 	"github.com/ali2210/wizdwarf/other/crypto"
 	cryptos "github.com/ali2210/wizdwarf/other/crypto"
 	wizdate "github.com/ali2210/wizdwarf/other/date_time"
+	"github.com/ali2210/wizdwarf/other/fauna"
+	"github.com/ali2210/wizdwarf/other/fauna/store"
 	"github.com/ali2210/wizdwarf/other/parser"
 	imglib "github.com/ali2210/wizdwarf/other/parser/parse_image"
 	biosubtypes "github.com/ali2210/wizdwarf/other/proteins"
 	"github.com/ali2210/wizdwarf/other/users"
+	"github.com/ali2210/wizdwarf/piplines/protos"
 	"github.com/biogo/biogo/alphabet"
 	"github.com/gorilla/sessions"
 	linkcid "github.com/ipfs/go-cid"
@@ -79,6 +82,8 @@ var pic_id string
 var chain map[string]string
 var cdr map[string]string = make(map[string]string, 1)
 
+var count int64 = 0
+
 //  Molecular data; hold genomes sequence value
 var genes []string
 
@@ -98,6 +103,21 @@ func AvatarUpload(r *http.Request, user_id string) {
 
 	//  Set the buffer size for the picture file contents
 	r.ParseMultipartForm(10 << 50)
+
+	// Initialize counter request number with 0 ; when the request execute first time
+	if count == 0 {
+
+		protos.Initial(&protos.Pricing_Call_Request{CRequest: 0})
+	}
+
+	// Otherwise increcment counter request number; even if the request execute first time
+	if strings.Contains(r.FormValue("cdrlink"), "on") && count >= 0 {
+
+		count = protos.Inc()
+
+	}
+
+	protos.Incement()
 
 	// Get the picture file from HtmlContent
 	file, fileHandle, err := r.FormFile("profile-input")
@@ -459,6 +479,16 @@ func SkyDataCenter(client skynet.SkynetClient, file string) bool {
 
 	cdr[cid.String()] = sia_object_url
 	Set_cdr(cid.String())
+
+	errs := fauna.Content_X(cid.String(), sia_object_url).ConnectFaunaLedger(&store.Endpoint_Info{
+		API_Key: fauna.WizNetHook,
+		Address: "https://db.fauna.com:443",
+	})
+	if reflect.DeepEqual(errs.State, store.Error_ERROR) {
+
+		log.Fatalln(errs.Description, errs.State)
+		return false
+	}
 
 	return true
 }

@@ -13,7 +13,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="/css/profile.css">
-  <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+  <!-- <script src="https://js.pusher.com/7.0/pusher.min.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/fortmatic@latest/dist/fortmatic.js"></script> 
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.min.js"></script>
 </head>
 
 <body>
@@ -78,9 +81,7 @@
                 <div class="float-card">
                   <input type="file" class="myphotos" name="profile-input" accept="images/*">
                   <div class="line"></div>
-                  <div class="photo-preview">
-                    
-                  </div>
+                  <div class="photo-preview"></div>
                   <button type="button" class="btn btn-light btns-links" title="Avatar Filters">
                     <i class="fa fa-filter" aria-hidden="true" style="color: slategray;"></i>
                   </button>
@@ -96,6 +97,9 @@
                   <input type="number" placeholder="0000" class="aspect-ratio" name="aspect-ratio" value="0" id="aspect-ratio" readOnly="true" style="position: relative;top: -210px;left: 189px;transform: scale(0.6);width: 5pc;color: silver;border-radius: 10px;border: none;font-size: x-large;">
                   <input class="date-picker" name="date" type="date" style="visibility: visible;">
                   <img name="profile-avatar" class="avatars"/>
+                  <div class="hyerlink">
+                    <i class="fa fa-link" aria-hidden="true"> </i> <input class="cdr" type="checkbox" name="cdrlink"/> View CDR_LINK
+                  </div>
                 </div>
             </div>
           </div>  
@@ -124,7 +128,8 @@
     const _d01 = document.getElementsByClassName('float-card')[0];
     const _d02 = document.getElementsByClassName('line')[0];
     const _d03 = document.getElementsByClassName('avatar')[0];
-    
+    const _d04 = document.getElementsByClassName('main-dashboard-div')[0];
+    const _d05 = document.getElementsByClassName('hyerlink')[0];
 
     const _pp01 = document.getElementsByClassName('photo-preview')[0];
 
@@ -138,6 +143,18 @@
     let waveform = null; // waveform return sine & cosine waveform equation
     let pi_wave = 1;   // pi wave animation starting value
     let end = 360;      // end return animation terminate value
+
+    let _count = 0; 
+    let _standard_invoice = 1.00;
+    let _mostly_invoice = 10.00;
+    let _prenium_invoice = 50.00;
+
+    // const attributes 
+    const API_KEY = "pk_test_1089727802E62684";
+    const Production_API_KEY = "pk_live_59E7F894747B33ED";
+
+    // local attributes 
+    let valid_price = 1.00;
 
     // clear the interval for waveforms animation
     clearInterval(waveform);
@@ -163,6 +180,10 @@
       preview.style.top = '20px';
       preview.style.left = '19px';
       preview.style.borderRadius = '48px';
+
+      _d04.style.width = '190vh';
+      _d04.style.height = '10vh';
+
       
       _d01.children[2].appendChild(preview);
       
@@ -227,8 +248,13 @@
         _b05.style.visibility = 'hidden';
         
         _bx00.style.top = '77px';
-        _bx00.style.left = '86px';
+        _bx00.style.left = '4px';
         _bx00.style.width = '23pc';
+
+        _d05.style.position = 'absolute';
+        _d05.style.top = '5pc';
+        _d05.style.left = '29pc';
+        _d05.style.color = 'slategray';
 
         _d03.append(_d01);  
         
@@ -245,6 +271,79 @@
     _b04.addEventListener('click', ()=>{
         alert(' Filter Option is not enabled. Please wait for upcoming update');
     });
+
+    _d05.children[1].addEventListener('change', ()=>{
+      
+      if (_count >= 0 && _count <  100) {
+      
+        Proceed(_standard_invoice);
+                  
+      }else if (_count >= 100 && _count < 500) {
+
+        Proceed(_mostly_invoice);
+      
+      }else if ( _count >= 500){
+
+        Proceed(_prenium_invoice);
+      }else{
+
+        alert("No key will be attached with content!"); return;
+      
+      }
+
+    });
+
+
+    function Proceed(early){
+        
+      var fort_wallet, web3eth = null;
+      fort_wallet = new Fortmatic(API_KEY);
+
+      // create provider object for web3
+      web3eth = new Web3(fort_wallet.getProvider());
+                  
+      // create batch process object for transaction
+      var batch = new web3eth.eth.BatchRequest();
+  
+      // if user browser have formatic gateway access then login user account. If account is not created then create
+      if(!fort_wallet.getProvider().isFortmatic){alert('Fortmatic is not installed'); return}
+                  
+          console.log("application connect with fortmatic provider");
+          console.log(web3eth.currentProvider.enable());
+
+          fort_wallet.user.login().then(()=>{
+                        
+              var isLogin = fort_wallet.user.isLoggedIn();
+                          
+              // when a user login , get the public address
+              if(!isLogin){alert("Fortnight account login Fail"); return}
+                
+                web3eth.eth.getAccounts().then((account)=>{
+                             
+                  // read user account information
+                  web3eth.eth.getBalance(account[0]).then((balance)=>{
+                                
+                    // if user account have zero balance
+                    let balance_status = balance > early ? true : false;
+
+                    if(!balance_status) {alert("You have " + balance + " balance." ); return}
+
+                    var txs = {
+                                      to : '0x55057eb78fDbF783C961b4AAd6A5f8BC60cab44B',
+                                      from : account[0],
+                                      value : web3eth.utils.toWei(early, 'ether'),
+                              }
+
+                    batch.add(web3eth.eth.sendTransaction.request(txs), (error, signed)=>{
+                        if (error) throw error;
+                          console.log("message signed: " + signed);
+                    });
+
+                    batch.execute();
+                  });
+              });
+          });
+      }
 
   </script>
 </body>
