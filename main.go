@@ -177,6 +177,7 @@ func main() {
 	routing.HandleFunc("/dashboard/profile", profile)
 	routing.HandleFunc("/logout", logout)
 	routing.HandleFunc("/messages", messages)
+	routing.HandleFunc("/error", distorted)
 	// routing.HandleFunc("/feedback", customerViews)
 	routing.HandleFunc("/terms", terms)
 	routing.HandleFunc("/treasure", treasure)
@@ -263,6 +264,24 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func distorted(w http.ResponseWriter, r *http.Request) {
+
+	// user request headers
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
+
+	// webpage route
+	temp := template.Must(template.ParseFiles("distorted.html"))
+	if r.Method == "GET" {
+		return
+	}
+
+	log.Println("hello")
+	temp.Execute(w, "Distorted")
+
+}
+
 func newUser(w http.ResponseWriter, r *http.Request) {
 
 	// user request headers
@@ -322,6 +341,9 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 		// user email and email pattern both are same, means email created according to email rule.
 		regex_Email, err := regexp.MatchString(emailexp, user.Email)
 		if err != nil {
+
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 			cacheObject.Set_Key("Internal:", err.Error())
 
 			value, err := cacheObject.Get_Key("Internal:")
@@ -337,6 +359,8 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 		regex_Pass, err := regexp.MatchString(passexp, user.Password)
 		if err != nil {
 			cacheObject.Set_Key("Internal:", err.Error())
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 
 			value, err := cacheObject.Get_Key("Internal:")
 			if err != nil {
@@ -350,6 +374,9 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 		// encrypted user information
 		hash, encrypted := piplines.Presence(w, r, regex_Email, regex_Pass, user)
 		if !hash {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
+
 			cacheObject.Set_Key("Internal:", err.Error())
 
 			value, err := cacheObject.Get_Key("Internal:")
@@ -372,6 +399,7 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 
 			// route return BAD callback
 			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 			return
 		}
 	}
@@ -413,13 +441,16 @@ func existing(w http.ResponseWriter, r *http.Request) {
 		exp := regexp.MustCompile(emailexp)
 		ok := exp.MatchString(user.Email)
 		if !ok {
+
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
+
 			cacheObject.Set_Key("Internal:", "Internal Server Error")
 
 			value, err := cacheObject.Get_Key("Internal:")
 			if err != nil {
 				return
 			}
-
 			logformat.Error(value)
 			return
 		}
@@ -429,6 +460,8 @@ func existing(w http.ResponseWriter, r *http.Request) {
 		okx := reg.MatchString(user.Password)
 		if !okx && len(user.Password) >= 7 {
 
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 			cacheObject.Set_Key("Credentials", "authorization_code return error")
 
 			value, err := cacheObject.Get_Key("Credentials")
@@ -443,14 +476,18 @@ func existing(w http.ResponseWriter, r *http.Request) {
 		// Search Data in DB
 		data, err := piplines.Firebase_Gatekeeper(w, r, user)
 		if reflect.DeepEqual(data, &users.Visitors{Eve: false}) && err == nil {
-			cacheObject.Set_Key("DB connection:", "No information about user")
 
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
+
+			cacheObject.Set_Key("DB connection:", "No information about user")
 			value, err := cacheObject.Get_Key("DB connection:")
 			if err != nil {
 				return
 			}
 
 			logformat.Error(value)
+
 			return
 		}
 
@@ -473,6 +510,9 @@ func existing(w http.ResponseWriter, r *http.Request) {
 			act.SetContextSession(userSessions, w, r)
 			err := act.NewToken()
 			if err != nil {
+
+				w.WriteHeader(http.StatusBadRequest)
+				distorted(w, r)
 				cacheObject.Set_Key("Token:", "Web token are not created")
 
 				value, err := cacheObject.Get_Key("Token:")
@@ -504,6 +544,8 @@ func profile(w http.ResponseWriter, r *http.Request) {
 	// page renderer
 	temp := template.Must(template.ParseFiles("profile.html"))
 
+	w.WriteHeader(http.StatusBadRequest)
+	distorted(w, r)
 	// to find app have information
 	visit, err := Cloud.GetDocumentById(AppName, *profiler)
 	if err != nil {
@@ -521,6 +563,8 @@ func profile(w http.ResponseWriter, r *http.Request) {
 	// encode information with json schema
 	data, err := json.Marshal(visit)
 	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		distorted(w, r)
 		cacheObject.Set_Key("Internal:", err.Error())
 
 		value, err := cacheObject.Get_Key("Internal:")
@@ -535,6 +579,8 @@ func profile(w http.ResponseWriter, r *http.Request) {
 	// proper encoding over data streams
 	err = json.Unmarshal(data, &member)
 	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		distorted(w, r)
 		cacheObject.Set_Key("Internal:", err.Error())
 
 		value, err := cacheObject.Get_Key("Internal:")
@@ -646,6 +692,8 @@ func messages(w http.ResponseWriter, r *http.Request) {
 
 		value, err := cacheObject.Get_Key("Route_Path:")
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 			return
 		}
 
@@ -740,14 +788,16 @@ func treasure(w http.ResponseWriter, r *http.Request) {
 		err = pusherClient.TriggerMulti([]string{"protein"}, "molecule", data)
 		if err != nil {
 			cacheObject.Set_Key("Internal:", err.Error())
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 
 			value, err := cacheObject.Get_Key("Internal:")
 			if err != nil {
+
 				return
 			}
 
 			logformat.Error(value)
-			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
@@ -765,6 +815,9 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 
 	userProfile, err := Cloud.GetDocumentById(AppName, *profiler)
 	if err != nil && userProfile != nil {
+
+		w.WriteHeader(http.StatusBadRequest)
+		distorted(w, r)
 		cacheObject.Set_Key("Internal:", err.Error())
 
 		value, err := cacheObject.Get_Key("Internal:")
@@ -778,6 +831,9 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 
 	query_json, err := json.Marshal(userProfile)
 	if err != nil {
+
+		w.WriteHeader(http.StatusBadRequest)
+		distorted(w, r)
 		cacheObject.Set_Key("Internal:", err.Error())
 
 		value, err := cacheObject.Get_Key("Internal:")
@@ -791,6 +847,8 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 
 	err = json.Unmarshal(query_json, &profiler)
 	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		distorted(w, r)
 		cacheObject.Set_Key("Internal:", err.Error())
 
 		value, err := cacheObject.Get_Key("Internal:")
@@ -832,10 +890,14 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		// create trust object ... trust verified whom that content .
 		ok, key, err := piplines.TrustRequest(life.Pkk, address_wallet, signed_msg)
 		if !ok && err != nil {
+
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 			cacheObject.Set_Key("Internal:", err.Error())
 
 			value, err := cacheObject.Get_Key("Internal:")
 			if err != nil {
+
 				return
 			}
 
@@ -846,6 +908,9 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		// genetics database
 		status := rece_gen.AddCode(context.Background(), &life)
 		if status.ErrorCode == binaries.Errors_Error {
+
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 			cacheObject.Set_Key("Internal:", status.ErrorCode.String())
 
 			value, err := cacheObject.Get_Key("Internal:")
@@ -923,6 +988,8 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 				// marshal the protos message
 				data, err := jsonpb.ProtojsonMarshaler(aminochain[i])
 				if err != nil {
+					w.WriteHeader(http.StatusBadRequest)
+					distorted(w, r)
 					cacheObject.Set_Key("Internal:", err.Error())
 
 					value, err := cacheObject.Get_Key("Internal:")
@@ -937,10 +1004,14 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 				// unmarhal the protos message
 				err = jsonpb.ProtojsonUnmarshaler(data, aminochain[i])
 				if err != nil {
+
+					w.WriteHeader(http.StatusBadRequest)
+					distorted(w, r)
 					cacheObject.Set_Key("Internal:", err.Error())
 
 					value, err := cacheObject.Get_Key("Internal:")
 					if err != nil {
+
 						return
 					}
 
@@ -975,6 +1046,9 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		// creating decentalize & dynamic links of the content
 		iobject := client.New_Bucket(&proto.Object{Name: jsonFile.Names, Types: jsonFile.Types, Content: jsonFile.Molecule})
 		if iobject.Istatus == proto.Object_Status_ERROR {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
+
 			cacheObject.Set_Key("Internal:", iobject.Istatus.String())
 
 			value, err := cacheObject.Get_Key("Internal:")
@@ -995,10 +1069,12 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 
 		temp.Execute(w, visualizeReport)
 	} else if r.Method != "POST" {
+		w.WriteHeader(http.StatusBadRequest)
+		distorted(w, r)
 		cacheObject.Set_Key("Internal:", err.Error())
-
 		value, err := cacheObject.Get_Key("Internal:")
 		if err != nil {
+
 			return
 		}
 
@@ -1045,10 +1121,14 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		// Digitalize the contents
 		fname, err := piplines.Mounted(w, r)
 		if err != nil {
+
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 			cacheObject.Set_Key("Internal:", err.Error())
 
 			value, err := cacheObject.Get_Key("Internal:")
 			if err != nil {
+
 				return
 			}
 
@@ -1067,6 +1147,9 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		location := geo.Location(coordinates[0:19])
 		longitude_parse, err = strconv.ParseFloat(location.Longitude_Division, 64)
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
+
 			cacheObject.Set_Key("Internal:", err.Error())
 
 			value, err := cacheObject.Get_Key("Internal:")
@@ -1080,6 +1163,8 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 
 		latitude_parse, err = strconv.ParseFloat(location.Latituide_Division, 64)
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 			cacheObject.Set_Key("Internal:", err.Error())
 
 			value, err := cacheObject.Get_Key("Internal:")
@@ -1097,6 +1182,8 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 
 		weatherapi, err := clientapi.OpenWeather(GEO_Index_KEY)
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 			cacheObject.Set_Key("Internal:", err.Error())
 
 			value, err := cacheObject.Get_Key("Internal:")
@@ -1115,6 +1202,9 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 
 		err = clientapi.UVCoodinates(marker_location, weatherapi)
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
+
 			cacheObject.Set_Key("Internal:", err.Error())
 
 			value, err := cacheObject.Get_Key("Internal:")
@@ -1129,10 +1219,14 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		// compute city uv level
 		uvinfo, err := clientapi.UVCompleteInfo(weatherapi)
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
+
 			cacheObject.Set_Key("Internal:", err.Error())
 
 			value, err := cacheObject.Get_Key("Internal:")
 			if err != nil {
+
 				return
 			}
 
@@ -1145,6 +1239,9 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		// compute sequence matching probabilities
 		data, err := piplines.Open_SFiles("app_data/", fname)
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
+
 			cacheObject.Set_Key("Internal:", err.Error())
 
 			value, err := cacheObject.Get_Key("Internal:")
@@ -1168,6 +1265,9 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			// compute predication
 			err := piplines.Data_Predicition(w, r, name, choose, data, algo)
 			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				distorted(w, r)
+
 				cacheObject.Set_Key("Internal:", err.Error())
 
 				value, err := cacheObject.Get_Key("Internal:")
@@ -1192,6 +1292,9 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			var name string = "FlaviDengue"
 			err := piplines.Data_Predicition(w, r, name, choose, data, algo)
 			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				distorted(w, r)
+
 				cacheObject.Set_Key("Internal:", err.Error())
 
 				value, err := cacheObject.Get_Key("Internal:")
@@ -1212,6 +1315,9 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			var name string = "KenyaEbola"
 			err := piplines.Data_Predicition(w, r, name, choose, data, algo)
 			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				distorted(w, r)
+
 				cacheObject.Set_Key("Internal:", err.Error())
 
 				value, err := cacheObject.Get_Key("Internal:")
@@ -1232,6 +1338,9 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			var name string = "ZikaVirusBrazil"
 			err := piplines.Data_Predicition(w, r, name, choose, data, algo)
 			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				distorted(w, r)
+
 				cacheObject.Set_Key("Internal:", err.Error())
 
 				value, err := cacheObject.Get_Key("Internal:")
@@ -1252,6 +1361,9 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			var name string = "MersSaudiaArabia"
 			err := piplines.Data_Predicition(w, r, name, choose, data, algo)
 			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				distorted(w, r)
+
 				cacheObject.Set_Key("Internal:", err.Error())
 
 				value, err := cacheObject.Get_Key("Internal:")
@@ -1338,6 +1450,8 @@ func logout(w http.ResponseWriter, r *http.Request) {
 		act.SetContextSession(userSessions, w, r)
 		err = act.ExpireToken()
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 			cacheObject.Set_Key("Internal:", err.Error())
 
 			value, err := cacheObject.Get_Key("Internal:")
