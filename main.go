@@ -16,26 +16,28 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"cloud.google.com/go/firestore"
-	logcache "github.com/ali2210/wizdwarf/other/cache_logs"
-	binaries "github.com/ali2210/wizdwarf/other/genetic/binary"
-	"github.com/ali2210/wizdwarf/other/logformatter"
-	"github.com/ali2210/wizdwarf/other/parser"
-	websession "github.com/ali2210/wizdwarf/other/session"
-	"github.com/ali2210/wizdwarf/piplines"
-
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
 	"github.com/ali2210/wizdwarf/other/bucket"
 	"github.com/ali2210/wizdwarf/other/bucket/proto"
+	logcache "github.com/ali2210/wizdwarf/other/cache_logs"
 	cryptos "github.com/ali2210/wizdwarf/other/crypto"
+	timer "github.com/ali2210/wizdwarf/other/date_time"
 	genetics "github.com/ali2210/wizdwarf/other/genetic"
 	genome "github.com/ali2210/wizdwarf/other/genetic/binary"
 	"github.com/ali2210/wizdwarf/other/jsonpb"
 	"github.com/ali2210/wizdwarf/other/jsonpb/jsonledit"
+	"github.com/ali2210/wizdwarf/other/logformatter"
 	"github.com/ali2210/wizdwarf/other/molecules"
+	"github.com/ali2210/wizdwarf/other/parser"
 	"github.com/ali2210/wizdwarf/other/proteins"
 	"github.com/ali2210/wizdwarf/other/proteins/binary"
+	websession "github.com/ali2210/wizdwarf/other/session"
+	"github.com/ali2210/wizdwarf/piplines"
+	connection "github.com/alimasyhur/is-connect"
+	"github.com/briandowns/openweathermap"
 
 	"github.com/ali2210/wizdwarf/other/geo"
 	weather "github.com/ali2210/wizdwarf/other/openweather"
@@ -52,44 +54,38 @@ var (
 	emailexp     string                = "([A-Z][a-z]|[0-9])*[@][a-z]*"
 	passexp      string                = "([A-Z][a-z]*[0-9])*"
 	addressexp   string                = "(^0x[0-9a-fA-F]{40}$)"
-	AppName      *firestore.Client     = piplines.SetDBClientRef()
-	Cloud        users.DBFirestore     = piplines.SetDBCollect()
 	userSessions *sessions.CookieStore = nil //user level
 	// publicAddress     string                = ""
 	// edit              bio.LevenTable        = SetEditParameters()
-	algo              info.Levenshtein
-	visualizeReport   weather.DataVisualization = weather.DataVisualization{}
-	accountID         string                    = " "
-	accountKey        string                    = " "
-	accountVisitEmail string                    = " "
-	signed_msg        string                    = " "
-	address_wallet    string                    = " "
-	File              string                    = ""
-	sumof             int64                     = 0
-	sb                []string
-	mss               []float64
-	occ               []int64
-	count             int = 0
-	aminochain        []*binary.Micromolecule
-	profiler          *users.Visitors = &users.Visitors{}
-)
-
-// Constants
-
-const (
-//ProjectID      string = "htickets-cb4d0"
-// mainNet       string = "https://mainnet.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
-// rinkebyClient string = "https://rinkeby.infura.io/v3/95d9986e9c8f46c788fba46a2f513e0a"
+	algo                   info.Levenshtein
+	visualizeReport        weather.DataVisualization = weather.DataVisualization{}
+	accountID              string                    = " "
+	accountKey             string                    = " "
+	accountVisitEmail      string                    = " "
+	signed_msg             string                    = " "
+	address_wallet         string                    = " "
+	File                   string                    = ""
+	sumof                  int64                     = 0
+	sb                     []string
+	mss                    []float64
+	occ                    []int64
+	count                  int = 0
+	aminochain             []*binary.Micromolecule
+	profiler               *users.Visitors = &users.Visitors{}
+	GEO_Index_KEY          string          = ""
+	APP_CHANNEL_KEY        string          = " "
+	APP_CHANNEL_ID         string          = " "
+	APP_CHANNEL_SCRECT     string          = " "
+	APP_CHANNEL_CLUSTER_ID string          = " "
+	_start                 time.Time
+	CONNECTIVITY           string = ""
 )
 
 var (
-	GEO_Index_KEY          string = ""
-	APP_CHANNEL_KEY        string = " "
-	APP_CHANNEL_ID         string = " "
-	APP_CHANNEL_SCRECT     string = " "
-	APP_CHANNEL_CLUSTER_ID string = " "
 	cacheObject                   = logcache.New(logcache.GetBigcached_config())
 	logformat                     = logformatter.New()
+	AppName     *firestore.Client = piplines.SetDBClientRef()
+	Cloud       users.DBFirestore = piplines.SetDBCollect()
 )
 
 // var igress_route_name [5]string = [5]string{"messages"}
@@ -107,35 +103,43 @@ func main() {
 	APP_CHANNEL_SCRECT = os.Getenv("Registry_CHANNEL_SCRECT")
 	APP_CHANNEL_CLUSTER_ID = os.Getenv("Registry_CHANNEL_CLUSTER_ID")
 
-	// allocate port and host
+	// Makesure application will connect with internet
+	if reflect.DeepEqual(connection.IsOnline(), false) {
+		CONNECTIVITY = "OFFLINE"
+	} else {
+		CONNECTIVITY = "ONLINE"
+	}
+
+	// whether port or host will be empty.
 	if host == "" {
 
 		if port == " " && wizDir == " " {
-
-			fmt.Println(" Firebase Configuration complete ... [wel-done]")
-			fmt.Println(" Static IP-Address Configuration ... [FAIL]")
-			fmt.Println(" Protocol-Buffer v3 Configuration complete ... [wel-done]")
-			fmt.Println(" UI Webboard Configuration ... [FAIL]")
-			fmt.Println(" Application Configuration ... [FAIL]")
-			fmt.Println(" Application Default IP-Address Allocate ... [FAIL]")
-			fmt.Println(" Application Persistance Storage Configuration completed ...  [FAIL]")
+			log.Fatalln("Internet Status:", CONNECTIVITY)
+			log.Fatalln(" Firebase Configuration complete ... [well-done]")
+			log.Fatalln(" Private IP-Address Configuration ... [fail]")
+			log.Fatalln(" Protocol-Buffer v3 Configuration complete ... [well-done]")
+			log.Fatalln(" UI Webboard Configuration ... [fail]")
+			log.Fatalln(" Application Configuration ... [fail]")
+			log.Fatalln(" Application Default IP-Address Allocate ... [fail]")
+			log.Fatalln(" Application Persistance Storage Configuration completed ...  [fail]")
 			log.Fatalln("Make sure volume mount")
 			panic("Application fail to started because no port is specified and we do not have writing permission on your disk ")
 		}
 	} else {
-		fmt.Println(" Firebase Configuration complete ... [wel-done]")
-		fmt.Println(" Static IP-Address Configuration complete ... [wel-done]")
-		fmt.Println(" Protocol-Buffer v3 Configuration complete ... [wel-done]")
-		fmt.Println(" Channel communication Configuration complete ... [wel-done]")
-		fmt.Println(" Data Events are encrypted. All the user choices secure with mathematical functions  ... ")
-		fmt.Println(" UI Webboard Configuration complete ... [wel-done]")
-		fmt.Println(" Application started ... [wel-done](All process have completed)")
-		fmt.Println(" Application Persistance Storage Configuration completed ...  [wel-done]")
+		fmt.Println("Internet Status:", CONNECTIVITY)
+		fmt.Println(" Firebase Configuration complete ... [well-done]")
+		fmt.Println(" Private IP-Address Configuration complete ... [well-done]")
+		fmt.Println(" Protocol-Buffer v3 Configuration complete ... [well-done]")
+		fmt.Println(" FAUNA DB Connected ... [well-done]")
+		fmt.Println(" Channel communication Configuration complete ... [well-done]")
+		fmt.Println(" Data Events are encrypted.   ... [well-done]")
+		fmt.Println(" UI Webboard Configuration complete ... [well-done]")
+		fmt.Println(" Application started ... [well-done](All process have completed)")
+		fmt.Println(" Application Persistance Storage Configuration completed ...  [well-done]")
 
 		if port != "127.0.0.1:5000" {
-			fmt.Println(" Application IP Address generated. The webboard started with this address at ", port)
+			fmt.Println(" The webboard started with this address at ", "127.0.0.1"+port)
 		}
-		fmt.Println(" Application Default IP-Address Allocate ... Default IP-Address allow user to access UI Webboard on your browser. The webboard started with this address 127.0.0.1:5000/ [wel-done]")
 		fmt.Println(" ***************************************************************************************")
 		fmt.Println("  @@@  @@@  @@@ @@@ @@@@@@@@ @@@@@@@  @@@  @@@  @@@  @@@@@@  @@@@@@@  @@@@@@@@  @@@@@@ ")
 		fmt.Println("   @@!  @@!  @@! @@!      @@! @@!  @@@ @@!  @@!  @@! @@!  @@@ @@!  @@@ @@!      !@@     ")
@@ -277,7 +281,6 @@ func distorted(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println("hello")
 	temp.Execute(w, "Distorted")
 
 }
@@ -744,12 +747,24 @@ func treasure(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
-	webpage := template.Must(template.ParseFiles("treasure.html"))
+	webpage := template.Must(template.ParseFiles("analysis.html"))
 
-	log.Println("analysis data :", visualizeReport.Percentage)
+	if reflect.DeepEqual(visualizeReport.UVinfo, openweathermap.UVIndexInfo{}) {
+		w.WriteHeader(http.StatusBadRequest)
+		distorted(w, r)
+
+		return
+	}
 
 	// analysis data results
 	algo.SetProbParameter(visualizeReport.Percentage)
+
+	if visualizeReport.Percentage <= 50 {
+		visualizeReport.Immune_Test = "negative"
+	}
+
+	visualizeReport.Immune_Test = "positive"
+
 	if r.Method == "GET" && algo.GetProbParameter() < 101 {
 
 		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
@@ -787,9 +802,10 @@ func treasure(w http.ResponseWriter, r *http.Request) {
 		data := analytics_amino[len(analytics_amino)-count:]
 		err = pusherClient.TriggerMulti([]string{"protein"}, "molecule", data)
 		if err != nil {
-			cacheObject.Set_Key("Internal:", err.Error())
 			w.WriteHeader(http.StatusBadRequest)
 			distorted(w, r)
+
+			cacheObject.Set_Key("Internal:", err.Error())
 
 			value, err := cacheObject.Get_Key("Internal:")
 			if err != nil {
@@ -801,6 +817,8 @@ func treasure(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		visualizeReport.Elapse = timer.Elasped(time.Now(), _start)
+
 		webpage.Execute(w, visualizeReport)
 	}
 }
@@ -811,7 +829,7 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
-	temp := template.Must(template.ParseFiles("visualize.html"))
+	temp := template.Must(template.ParseFiles("computation.html"))
 
 	userProfile, err := Cloud.GetDocumentById(AppName, *profiler)
 	if err != nil && userProfile != nil {
@@ -860,6 +878,8 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	visualizeReport.Record = weather.Man{Name: profiler.Name, Email: profiler.Email}
+
 	if r.Method == "GET" {
 
 		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
@@ -871,6 +891,8 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 
 		logformat.Trace(value)
 
+		_start = time.Now()
+
 		// firestore credentials
 		genetics.Client = piplines.Firestore_Reference()
 
@@ -879,7 +901,7 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		genetics.Pkk = fmt.Sprintf("%x", cdr)
 
 		// genetics object
-		rece_gen := genetics.New()
+		// rece_gen := genetics.New()
 
 		life := genome.Lifecode{}
 
@@ -906,21 +928,21 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// genetics database
-		status := rece_gen.AddCode(context.Background(), &life)
-		if status.ErrorCode == binaries.Errors_Error {
+		// status := rece_gen.AddCode(context.Background(), &life)
+		// if status.ErrorCode == binaries.Errors_Error {
 
-			w.WriteHeader(http.StatusBadRequest)
-			distorted(w, r)
-			cacheObject.Set_Key("Internal:", status.ErrorCode.String())
+		// 	w.WriteHeader(http.StatusBadRequest)
+		// 	distorted(w, r)
+		// 	cacheObject.Set_Key("Internal:", status.ErrorCode.String())
 
-			value, err := cacheObject.Get_Key("Internal:")
-			if err != nil {
-				return
-			}
+		// 	value, err := cacheObject.Get_Key("Internal:")
+		// 	if err != nil {
+		// 		return
+		// 	}
 
-			logformat.Error(value)
-			return
-		}
+		// 	logformat.Error(value)
+		// 	return
+		// }
 
 		// get all proteins symbols
 		listProteinsName := piplines.Active_Proteins(life.Genes)
@@ -1204,7 +1226,6 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			distorted(w, r)
-
 			cacheObject.Set_Key("Internal:", err.Error())
 
 			value, err := cacheObject.Get_Key("Internal:")
@@ -1221,7 +1242,6 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			distorted(w, r)
-
 			cacheObject.Set_Key("Internal:", err.Error())
 
 			value, err := cacheObject.Get_Key("Internal:")

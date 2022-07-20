@@ -9,6 +9,7 @@ require (
 	github.com/SkynetLabs/go-skynet/v2 v2.0.2
 	github.com/WisdomEnigma/urban-fiesta v0.0.0-20220509155221-3f7a1bbb7a14
 	github.com/agnivade/levenshtein v1.1.0
+	github.com/alimasyhur/is-connect v0.0.0-20180112042527-a7e9ece095d0
 	github.com/allegro/bigcache v1.2.1
 	github.com/biogo/biogo v1.0.2
 	github.com/briandowns/openweathermap v0.16.0

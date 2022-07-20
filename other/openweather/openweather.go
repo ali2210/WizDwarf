@@ -1,22 +1,35 @@
 package openweather
 
 import (
-	"log"
+	"time"
 
 	openmap "github.com/briandowns/openweathermap"
 	// geocoder "github.com/kelvins/geocoder"
 )
 
+type Man struct {
+	Name  string
+	Email string
+}
+
+type Person Man
+
+// Data Visualization specifies different visual parameters that either directly or indirectly have some impact over the data
 type DataVisualization struct {
 	Percentage float32
-	Process    int
-	SeenBy     string
+	// Process    int
+	// SeenBy     string
 
 	// additionalParameters
 	coordinates openmap.Coordinates
 	UVinfo      []openmap.UVIndexInfo
+
+	Elapse      time.Duration
+	Immune_Test string
+	Record      Man
 }
 
+// Coodinates have fields {Longituide and Latitude},
 type MyCoordinates struct {
 	Longitude float64
 	Latitude  float64
@@ -27,7 +40,6 @@ type OpenWeatherApi interface {
 	GetCoordinates(loc *MyCoordinates) *openmap.Coordinates
 	UVCoodinates(c *openmap.Coordinates, u *openmap.UV) error
 	UVCompleteInfo(u *openmap.UV) ([]openmap.UVIndexInfo, error)
-	PrintLogs()
 }
 
 func (*DataVisualization) OpenWeather(apikey string) (*openmap.UV, error) {
@@ -55,10 +67,6 @@ func (*DataVisualization) UVCompleteInfo(u *openmap.UV) ([]openmap.UVIndexInfo, 
 
 	i, err := u.UVInformation()
 	return i, err
-}
-
-func (d *DataVisualization) PrintLogs() {
-	log.Println("[Logs]... ", *d)
 }
 
 func NewWeatherClient() OpenWeatherApi {

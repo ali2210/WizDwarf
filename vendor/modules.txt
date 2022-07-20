@@ -33,6 +33,9 @@ github.com/WisdomEnigma/urban-fiesta/fingerprint
 # github.com/agnivade/levenshtein v1.1.0
 ## explicit
 github.com/agnivade/levenshtein
+# github.com/alimasyhur/is-connect v0.0.0-20180112042527-a7e9ece095d0
+## explicit
+github.com/alimasyhur/is-connect
 # github.com/allegro/bigcache v1.2.1
 ## explicit
 github.com/allegro/bigcache

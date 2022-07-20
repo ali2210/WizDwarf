@@ -1,7 +1,7 @@
 .main-dashboard-div {
 	background-color:#f9f9f9;
 	font-family: 'Lato', sans-serif;
-	height: 64vh;
+	height: 61vh;
 	width: 212vh;
   }
 
@@ -413,10 +413,12 @@
  .matices{
 	 display:flex;
 	 position:absolute;
-	 top: 87px;
+	 top: 11px;
 	 transform:scale(1.0);
-	 color: black;
+	 color: floralwhite;
 	 left: 22px;
+	 background:darkcyan;
+	 border:none;
 	 /* visibility: hidden; */
  }
 
@@ -431,12 +433,12 @@
 	 border-radius: 20px;
  }
  
- .chart-container{
+ /* .chart-container{
 	 display: flex;
 	 position: absolute;
-	 top:480px;
-	 left:457px;
- }
+	 top:-5px;
+	 left:91px;
+ } */
 
  .progress-circle{
 	 display: flex;

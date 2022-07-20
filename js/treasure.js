@@ -1,6 +1,8 @@
-const _m01 = document.getElementsByClassName('menu-div')[0];
+const _b01 = document.getElementsByClassName('matices')[0];
+const _d01 = document.getElementsByClassName('visual')[0];
+const _mn01 = document.getElementsByClassName('menu-div')[0];
 
-const _sp01 = document.getElementsByClassName('span-item')[0];
+// const _sp01 = document.getElementsByClassName('span-item')[0];
 
 const options = {
   // app_id : "1265511",
@@ -16,12 +18,14 @@ const options = {
  const web_local = window.localStorage;
 
  let pi_streaming = [];
+ var onetime = false;
 
   // craete channel log event
   // Pusher.logToConsole = true;
   pusher.allChannels().forEach((channels) =>{
     if (channels.name !== "protein"){
       alert("The channel is not encrypted and not ready to be sent!", channel.name);
+      return
     }
   });
 
@@ -33,8 +37,16 @@ const options = {
 
   // channel state changed
   pusher.connection.bind('state_change', (state) =>{
-    console.log("pusher channel status:", state.current);
-    _sp01.innerHTML = "Reload the webpage " + (new Date().getTime() / 1000000000000 );
+    _d01.style.backgroundColor = "transparent";
+
+    if (state.current === "connected" && !onetime){
+      reloadPage();
+      console.log("pusher channel status:", state.current, "flag:", onetime);
+    }
+
+    onetime = true;
+    
+    // _sp01.innerHTML = "Reload the webpage " + (new Date().getTime() / 1000000000000 );
   });
 
   // channel subcribe error 
@@ -42,6 +54,7 @@ const options = {
     var { status } = error;
     if (status == 408 || status == 503) {
       alert("Channel disconnected", status);
+      return
     }
   });
 
@@ -54,8 +67,10 @@ const options = {
     // End Time of Process //
     var plusTenSec = currentDocumentTimestamp + tenSec;
     if (now > plusTenSec) {
-        location.reload();
+        window.location.reload();
     }
+
+    
   }
 
   // read stream from channel
@@ -63,7 +78,7 @@ const options = {
 
     //alert("Event initating:" );
     // debugger mod
-    console.log(JSON.stringify(data));
+    console.log("data :", JSON.stringify(data));
     
     // Map object 
     const dataTensor = new Map();
@@ -86,6 +101,7 @@ const options = {
     // if y tensor hold 0 value then throw exception
     if(pi_streaming.length<=0){
       alert("data stream should not empty");
+      return
     }
 
     for(let index in pi_streaming){
@@ -95,10 +111,12 @@ const options = {
   }); 
 
 
-  const progressCircle = document.getElementsByClassName('progress-container')[0];
-_m01.addEventListener('click', (event) => {
+  // const progressCircle = document.getElementsByClassName('progress-container')[0];
+_b01.addEventListener('click', (event) => {
 
-  progressCircle.style.visibility = 'hidden';
+  if (_mn01.style.visibility === 'hidden') {
+    _mn01.style.visibility = 'visible';
+  }
 
   // chart metadata 
   let context2d = document.getElementById('chart').getContext('2d');
@@ -112,15 +130,16 @@ _m01.addEventListener('click', (event) => {
       }
     }
 
-    _sp01.style.visibility = 'hidden';
+    // _sp01.style.visibility = 'hidden';
 
+    
   // create new chart with channel data 
   new Chart(context2d, {
     type: 'bar',
     data: {
       labels: ['F', 'L', 'I', 'M', 'V', 'S', 'P', 'T','A', 'Y','!','!*','H','Q','N','K','D','E','C','!**','R','G',],
       datasets: [{
-          label : 'amino acid per protein',
+          label : 'Proteins Occurrence',
           data: [...getY_value],
           backgroundColor: [
               'rgba(255, 99, 132, 0.2)',
@@ -145,6 +164,7 @@ _m01.addEventListener('click', (event) => {
               'rgba(102, 54, 128, 0.2)',
               'rgba(123, 251, 236, 0.2)',
               'rgba(102, 221, 128, 0.2)',
+              'rgba(255, 99, 132, 0.2)',
           ],
           borderColor: [
               'rgba(255, 99, 132, 1)',
@@ -169,6 +189,8 @@ _m01.addEventListener('click', (event) => {
               'rgba(102, 54, 128, 1)',
               'rgba(123, 251, 236, 1)',
               'rgba(102, 221, 128, 1)',
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
           ],
           borderWidth: 1
       }]
@@ -185,15 +207,95 @@ _m01.addEventListener('click', (event) => {
   // delete cache 
   web_local.clear();
   pusher.unbind();
-
   console.log("Special data stream closed & cache now free ");
+  reloadPage();
+});
+
+// generate visual graph cubic Interpolation (line with points). 
+document.getElementsByClassName('line-chart')[0].addEventListener('click', (event)=>{
+  
+  if (_mn01.style.visibility === 'hidden') {
+    _mn01.style.visibility = 'visible';
+  }
+
+  // read canvas over web canvas
+  let ctx = document.getElementById('chart').getContext('2d');
+  
+  // data stream hold channel data;
+  let data_stream = [];
+  
+  // read local-cache and sore back 
+  for (let index = 0; index < 300; index++) {
+    
+    if(!JSON.parse(web_local.getItem(index) <= 0)){
+      
+      data_stream.push(JSON.parse(web_local.getItem(index)));
+    
+    }
+  }
+
+  // data processing
+  const data = {
+    // labels contains proteins name 
+    labels : ['F', 'L', 'I', 'M', 'V', 'S', 'P', 'T','A', 'Y','!','!*','H','Q','N','K','D','E','C','!**','R','G',],
+   
+    // datasets contain data about proteins
+    datasets : [
+      { 
+        label : 'Proteins Occurrence',
+        data : [...data_stream],
+        borderColor : 'rgba(0, 255, 255,1)',
+        fill: false,
+        cubicInterpolationMode: 'monotone',
+        tension: 0.4,
+      }
+    ],
+  }
+
+  // create new chart with default settings
+  new Chart(ctx, {
+    type : 'line',
+    data: data,
+    option : {
+      responsive : true,
+      plugins :{
+        title : {
+          display : true,
+          text : 'Proteins Occurrence Line Visualization',
+        },
+      },
+      intersection : {
+        intersect : false,
+      },
+      scales :{
+        x : {
+          display : true,
+          title : {
+            display : true,
+          }
+        },
+
+        y : {
+          display : true,
+          title : {
+            display : true,
+            text : 'Occurrence',
+          }
+        },
+
+        suggestedMin: 1,
+        suggestedMax: 100,
+      },
+    }
+  })
+
+
+  // clear the storage  
+  web_local.clear();
+  pusher.unbind();
+  console.log("Special data stream closed & cache now free ");
+  reloadPage();
 });
 
 
-
-  // console.log(max_scale(model));
-  // console.log(min_scale(model));
-// });
-
-// function max_scale(data){return Math.max(...data);}
-// function min_scale(data){return Math.min(...data);}
+  

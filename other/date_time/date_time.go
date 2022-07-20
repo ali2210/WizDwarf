@@ -129,6 +129,11 @@ func Year(s string) (int, error) {
 }
 
 func GetToday(year int, month time.Month, date int) time.Time {
-	now := time.Now()
-	return time.Date(year, month, date, now.Hour(), now.Minute(), now.Second(), now.Nanosecond(), time.UTC)
+
+	return time.Date(year, month, date, time.Now().Hour(), time.Now().Minute(), time.Now().Second(), time.Now().Nanosecond(), time.UTC)
+}
+
+func Elasped(t time.Time, start time.Time) time.Duration {
+
+	return time.Duration(t.Sub(<-time.After(time.Duration(start.Second()))))
 }

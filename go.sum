@@ -60,6 +60,8 @@ github.com/WisdomEnigma/urban-fiesta v0.0.0-20220509155221-3f7a1bbb7a14 h1:/rBfy
 github.com/WisdomEnigma/urban-fiesta v0.0.0-20220509155221-3f7a1bbb7a14/go.mod h1:evSQ+RfiICe0ataOSeCynB/6u/1C5Gk4ihb5KeVTgAA=
 github.com/agnivade/levenshtein v1.1.0 h1:n6qGwyHG61v3ABce1rPVZklEYRT8NFpCMrpZdBUbYGM=
 github.com/agnivade/levenshtein v1.1.0/go.mod h1:veldBMzWxcCG2ZvUTKD2kJNRdCk5hVbJomOvKkmgYbo=
+github.com/alimasyhur/is-connect v0.0.0-20180112042527-a7e9ece095d0 h1:W51dH0udo7NVhSJJI6hMCI2ELQlqWhTre8yRbFBo5/I=
+github.com/alimasyhur/is-connect v0.0.0-20180112042527-a7e9ece095d0/go.mod h1:b3xgOUlKx/XrCrXcM/nXkvr+/micjpqdP1i1g5OVZWs=
 github.com/allegro/bigcache v1.2.1 h1:hg1sY1raCwic3Vnsvje6TT7/pnZba83LeFck5NrFKSc=
 github.com/allegro/bigcache v1.2.1/go.mod h1:Cb/ax3seSYIx7SuZdm2G2xzfwmv3TPSk2ucNfQESPXM=
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=

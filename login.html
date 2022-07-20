@@ -80,6 +80,17 @@ convensions. @contact Ali Hassan AliMatrixCode@protonmail.com  -->
     const email = document.getElementsByClassName('emailclass')[0];
     const password = document.getElementsByClassName('passclass')[0];
     const htmlcontent = document.getElementsByClassName('form-check-label')[0];
+
+    navigator.permissions.query({name:'geolocation'}).then((result)=>{
+
+      if(result.state === 'granted'){
+        alert("Please Reset Permissions");
+      }else if(result.state === 'denied'){
+        alert('Change your permission to denied');
+      }else{
+        alert('Permission in default mode');
+      }
+    });
     
     pass_option.addEventListener('change', (event) =>{
 
@@ -98,6 +109,8 @@ convensions. @contact Ali Hassan AliMatrixCode@protonmail.com  -->
           alert("Operation Failed" + event.message);
         });
     });
+
+    
     
 
     
