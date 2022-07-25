@@ -18,195 +18,224 @@
 <body>
 
 	<div class='main-dashboard-div'>
-		<nav class="navbar navbar-expand-md navbar-light custom-navbar">
-		  <a class="navbar-brand" href="#">
-			<img src="/images/logo.png" alt="Logo" class="logo">
-		  </a>
-		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
-			<span class="navbar-toggler-icon"></span>
-		  </button>
-		  <div class="collapse navbar-collapse" id="navbarNavDropdown">
-			<ul class="navbar-nav">
-			  <li class="nav-item active pl-3">
-				<a class="nav-link" href="/home">
-				  <i class="fa fa-home icon-light" aria-hidden="true"></i>
-				  Home
-				</a>
-			  </li>
-			  <li class="nav-item dropdown pl-3">
-				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-				  aria-haspopup="true" aria-expanded="false">
-				  <i class="fa fa-handshake-o" aria-hidden="true"></i>
-				  Business
-				</a>
-				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-				  <!-- <a class="dropdown-item active" href="/open"><i class="fa fa-handshake-o " aria-hidden="true"></i> Premium </a>
-				  <a class="dropdown-item" href="/"> <i class="fa fa-briefcase" aria-hidden="true"> Service </i>
-				  </a>-->
-				  <div class="card" style="width: 19rem;height: 22rem;position: relative;">
-					<img class="images"
-					  src="https://physicsworld.com/wp-content/uploads/2019/08/Quantum-teleportation.jpg"
-					  alt="paint_the_world">
-					<div class="card-body card-body-text">
-					  <h5 class="card-title"> Paint the World </h5>
-					  <p class="card-text"> 
-						  "Beause the onces who are crazy enough to think that they can change the world, are the ones who do."
-					  </p>
+		<nav class="navbar navbar-expand-md navbar-light custom-navbar" style=" background-color: #ededed;display: flex;">
+			  <a class="navbar-brand" href="#">
+				<img src="/images/logo.png" alt="Logo" class="logo">
+			  </a>
+			  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
+				<span class="navbar-toggler-icon"></span>
+			  </button>
+			  <div class="collapse navbar-collapse" id="navbarNavDropdown" style="position: absolute;left: 37pc;">
+				<ul class="navbar-nav">
+				  <li class="nav-item active pl-3">
+					<a class="nav-link" href="/">
+					  <i class="fa fa-home icon-light" aria-hidden="true"></i>
+					</a>
+				  </li>
+				  <li class="nav-item dropdown pl-3">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+					  aria-haspopup="true" aria-expanded="false">
+					  <i class="fa fa-envelope" aria-hidden="true"></i>
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+					  <a class="dropdown-item active" href="#" title="Private Conversation"><i class="fa fa-envelope-o" aria-hidden="true"></i> Private </a>
+					  <a class="dropdown-item" href="#" title="Gossips"> <i class="fa fa-comments-o" aria-hidden="true"></i> Public </a>
 					</div>
-				  </div>
-				</div>
-			  </li>
-			  <li class="nav-item dropdown pl-3">
-				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-				  aria-haspopup="true" aria-expanded="false">
-				  <i class="fa fa-user-circle-o" aria-hidden="true"></i>
-				  Admin
-				</a>
-				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-				  <a class="dropdown-item" href="/dashboard/profile"><i class="fa fa-sliders" aria-hidden="true"></i>
-					Edit-Profile </a>
-				  <a class="dropdown-item" href="/logout"><i class="fa fa-sign-out icon icon-light"
-					  aria-hidden="true"></i>Logout</a>
-					  
-				  <div class="card" style="width: 25rem; height: 23rem; position: relative;">
-					<img class="img-class"
-					  src="https://6lli539m39y3hpkelqsm3c2fg-wpengine.netdna-ssl.com/wp-content/uploads/2019/01/tech-abstract_shutterstock-1191298288_700x-675x380.jpg"
-					  alt="Chase dreams">
-					<div class="card-body description">
-					  <h5 class="card-title"> Masterpiece  </h5>
-					  <p class="card-text"> The smallest feline is a masterpiece </p>
-					</div>
-				  </div>
-			  </li>
-			</ul>
-		  </div>
+				  </li>
+				  <li class="nav-item dropdown pl-3">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+					  aria-haspopup="true" aria-expanded="false">
+					  <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+					  <a class="dropdown-item active" href="/dashboard/profile" title="Edit Profile"><i class="fa fa-sliders" aria-hidden="true"></i>
+							Edit Your Profile
+			  		 </a>
+			  		  <a class="dropdown-item" href="#" title="Custom Settings "><i class="fa fa-cogs" aria-hidden="true"></i>
+			  				Preferences
+			  		  </a>
+					  <a class="dropdown-item" href="/logout" title="Lock the account"><i class="fa fa-sign-out icon icon-light"
+						  aria-hidden="true"></i>Logout</a>
+					  </div>
+				  </li>
+				</ul>
+			  </div>
 		</nav>
-	</div>
-		<div class="container-fluid">
-			<h1 class="page-header"> Legal Terms and Conditions </h1>	
-			<div class="locate-cont">
-				<section>
-					<div>
-						<ul>
-							<div class="col"></div>
-							<div class="col"></div>
-							<h3> <i class="fa fa-compass" aria-hidden="true"> Location Information Terms (LIT) </i> </h3>
-							<article class="row rowfluid">
-								In Wizdwarfs software we track your location information (LI). These information use in various services i.e UV-Index of your home town.
-								We believe in best security practices to ensure your information is protected. Keep your location information secure and don't 
-								share over the network. 
-							</article>
-							<div class="col"></div>
-							<div class="col"></div>
-							<div class="col"></div>
-							<div class="col"></div>
-							<div class="col"></div>
-							<h3> <i class="fa fa-shield" aria-hidden="true"> Data Protection and information shared (SED) </i></h3>
-							<article>
-								Information which you will shared between close peer over the network through application, is our responsiblity. 
-								<ul>
-									<li> The information that shared on over platform network are not exchange in third parties platform. </li>
-									<li> Your personal information such as account information, payment information & content shared with third party platform under your permission and under legal terms of our organization. </li>
-									<li> Location is not exchange between third parties. </li>
-									<li> All content store in decentralize storage linked with content routing address.</li>
-									<li> Content Routing Address shared and accessible within our application. </li>
-								</ul>
-							</article>
-							<div class="col"></div>
-							<div class="col"></div>
-							<div class="col"></div>
-						  <h3> <i class="fa fa-credit-card" aria-hidden="true"> Payment Terms (MOTT) </i> </h3>
-							Payment transact in the application through these channel. 
-							<ul>
-								<li> Special Services </li>
-								<li> Prevalue offers </li>
-								<li> Premium service </li>
-							</ul>
-							<div class="col"></div>
-							<h6> <i class="fa fa-user-secret" aria-hidden="true"> Bitaddress scam are very common. User will work only trustworthy investor and capitalist. Make sure your valuable information is not shared arcoss network or peers. </i> </h6>
-							<div class="col"></div> 
-						 <article>
-							<li> Payment transact will done with bitaddress. </li>
-							<li> Payment charges include gasprice, service fee. </li>
-							<div class="col"></div>
-							<h5> <i class="fa fa-qrcode" aria-hidden="true"></i> Royalty </h5>
-							<article>
-								User will buy royalty under following terms
-								<ul>
-									<li> Users will buy non-fugible token (NFT) that are generate by Wizdwarfs & WisdomEnigma. </li>
-								<li> Users claim ownership, when anyone bought. Customer either resale at same price or add new price within 1 months after sale. </li>
-								<li> Users will also buy NFT that are generated within our application. These NFT are only sale or purchase within our platform like a tickets. </li>
-								</ul>
-							</article>
-						 </article>
-						 <div class="col"></div>
-						 <div class="col"></div>
-						 <div class="col"></div>
-						 <h4> <i class="fa fa-briefcase" aria-hidden="true"> Business </i> </h4>
-							<article>
-								<a href="https://www.openprosper.com/u/WisdomEnigma"> Portfolio-DESO-overview! <br> </a>
-								Portfolio analysis help you choose better decisions about investment, company performance per capitia and other market related events.
-							</article>
-						 <div class="col"></div>
-						 <div class="col"></div>
-						 <div class="col"></div>
-						 <h3> <i class="fa fa-link" aria-hidden="true"> Other Links </i>  </h3>
-							<article>
-								<ul>
-									<li> <a href="https://github.com/ali2210/WizDwarf"> WizDwarfs </a> </li>
-									<li> <a href="https://github.com/ali2210/WizDwarf/discussions/303"> Vulnerablity Discusion Forum </a> </li>
-									<li> <a href="https://github.com/WisdomEnigma"> Open Source Repository</a></li>
-								</ul>
-							</article>
-						<div class="col"></div>
-						<div class="col"></div>
-						<div class="col"></div>
-							<section class="news-section">
-								<div class="buymecoffee">
-									<a href="https://www.buymeacoffee.com/ali2210"><img src="https://img.buymeacoffee.com/button-api/?text=Wizdwarfs&emoji=🧙‍♂️&slug=ali2210&button_colour=5F7FFF&font_colour=ffffff&font_family=Cookie&outline_colour=000000&coffee_colour=FFDD00"></a>
-								</div>
-							</section>
-					</div>
-				</section>
+	  </div> 
+	  
+	  <div class="container-fluid">
+		<h1 class="page-header" style="position: absolute;top: 5pc;left: 29pc;font-size: xxx-large;color: black;"> Terms and Conditions </h1>	
+		<div class="standard-terms">
+			<span style="position: relative;left: 19pc;">
+				All terms and conditions are applicable to all the registered members of the application.
+			</span>
+			<ul style="position: relative;width: 45pc;">
+				<li style="position: absolute;left: 5pc;top: 5pc;">Irrespective of the Nationality, Genderism, Skin care, religion and Wealth (Networth).</li>
+				<li style="position: absolute;top: 11pc;left: 5pc;">Registered members are not allowed to pinpoint, disrespectful, harness and manipulate others. In that case, company have a right to take action legally L1.A.
+					<li style="position: absolute; top: 20pc; left: 5pc;">Registered members are not allowed to share information or data with others. In that case, company have a right to take action legally L2.A.</li>
+					<li style="position: absolute; top: 28pc; left: 5pc;">Registered members are not allowed to transmit malicious data. In that case, company have a right to take action legally L2.A.</li>
+					<li style="position: absolute; top: 35pc; left: 5pc;">Registered members are not allowed to manipulate market through misinformation or other technique such as bot or sybills. This is considered a security market manipulate threat. In that case company have a right to take action legally L3.</li>
+					<li style="position: absolute; top: 48pc; left: 5pc;">Registered members are not allowed to download peer content. Peer content download voliate data privacy which is probihited and considered serious crime. Company will take action against such crime legally. CL.1.</li>
+			</ul>
+		</div>
+		<div class="contributor-rights" style="position: relative;top: 120pc;left: -44pc;width: 150pc;">
+			<h4>Contributors Terms </h4>
+			<div class="descriptions" style="position: absolute;width: 68pc;">
+				<p style="position: relative;left: 5pc;">
+					<ul>
+						<li>
+							Our project is open source and Licensed under Public License. The contributors should acknowledge about redistributions, modifications terms under this License . Section CA.1
+						</li>
+						<li>
+							Contributors will pay sustainable amount for License copy at sustainable time. SubLicense copy will hand over during sustainable timeframe thereafter additional amount wiil be made .  Futher description in CB.1[I, II]
+						</li>
+						<li>
+							Contributors will claim patent rights thereafter contribution. Contributor will acquire partial ownership (Joint work terms). Contributor will pay substantial amount for partial royalty fee under partial ownership. Futher description in CB.2
+						</li>
+						<li>
+							Contributors will not comply License and legal terms and conditions in any suitation. Otherwise contributors will under litigation, or termination terms discuss under License. Section C3.A 								 
+						</li>
+						<li>
+							Contributor will pay full cost in case of software deletion, distribute unLicensed copies and software damage . Futher description in License terms and Section C3.B.
+						</li>
+						<li>
+							Wisdomenigma is responsible for the protection of intellectual property rights, copyright, trademark, source code and patent rights.
+						</li>
+						<li>
+							Wisdomenigma employees will work in accordance with the vision of authors. Employees work is thereafter protected by company. Company will not issue License of a software without authors permission.
+						</li>
+					</ul>
+				</p>
 			</div>
 		</div>
+		<section class="sections" style="position: relative;left: -29pc;top: 15pc;">
+			<div class="standard" style="position: absolute;width: 21pc;">
+				All Standard sections are described in hereby.
+				<h5> Disrespectful Behavior Section L1.A  </h5> 
+				<p>
+					Community build on golden foundations that have social benefit. Social benefits are important for community development and evolve human relation with other participants.
+					It bring prosperity, happiness and opportunity to transform into great civilization.
+					<ul> Disrespectful Behavior </ul>
+					<li> All mens are equal and born free. It's probihited that members of a community treat other members with disrespectful.</li>
+					<li> Any members of a community will have pinpoint and harness other due to discriminate reasons. Will face consequences under the conditions of L1.A</li>
+					<p>
+						Either company will charged him or her along with temporary ban on login. Temporary Ban will be removed after analysis of member behaviour with in timeframe.
+						If the serious offense then the user will charged along with permanent ban on application. Or company treat as harnessment cybercrime. 
+					</p>
+				</p>
+				<h5> Share Information with Members or peers Section L2.A </h5>
+				<p>
+					Many peers will exchange personal information with peers such as keys, password and one time key generation.
+					Company will be notified (victim) about the sharing of data. Victim will pay 15% with in timeframe. While user (who used information) will pay 10% with in timeframe.
+				</p>
+				<h5>
+					Transmit malicious data Section L2.A
+				</h5>
+					<p>
+						Desiging Malicious worm or virus is probihited. Using someone computer without permission to authorized person will be crime. It had been offense that someone will manipulate instructions to gain control over system without permission and rights.
+						This is cyber offense which means company will fight through legal channel.   
+					</p>
+				<h5>
+					Manipulate Market through Advanced Information or technology. Section L3 
+				</h5>
+					<p>
+						In Information Age market or information manipulation are common offense. These offense will directly or indirectly on customer experience, active other driven forces, which transform market into colosseum. Its is probihited in our platform.
+						Sysbills Attack, Deep Fake , celebrities viewport, politicial attack are often considered. Company will follow legal channel to control such attacks. Manipulator will pay 100% after company taken action. Company will restrict social activities on a platform.
+						L1, L2, L3 are under considersation after company taken action legally.
+					</p>
+				<h5>
+					Misused Peer Content Section CL.1
+				</h5>
+				<p>
+					It's probihited on our platform that any member will be able to download other member data. Media files are common source of offense hereby. 
+					Every member data store as digital assets in chain. Company will take legal action against misused peer content. Section L1.A under considersation.
+				</p>
+			</div>
+		</section>
+		<section class="contribute-section" style="position: relative;top: 145pc;left: -75pc;">
+			<div class="participants" style="position: absolute;width: 45pc;">
+				Those who have contributed in the vision of authors or alliance with company mission. Contributors must acknowledge License Agreement and terms .
+				<h5> 1. License Section CA.1 </h5> 
+				<p>
+					All the License , subLicense and subsequent licence published by the Mozilla Public License.
+					New License copy will be published thereafter author permission with new License terms, new License version and contribution in source code. Contributors will be responsible for modification,error reporting, documentation and fixing.
+					Licenser must have acknowledge about Open Source License Agreement that will attached with source code.
+				</p>
+				<h5> 2. Filing For Licence Section CB.1[I] </h5> 
+				<p>
+					Contributors are exist following type. Developer,Technology Business Owner and Distributor.
+					In terms sustainable amount will used. This section for IPO Officer. IPO Officer will notify how much amount will be paid thereafter issue License.
+					<span> Contributor will have a right to concern about Intellectual Properties and Licence with his or her attorneys.</span>
+				</p>
+				<h5> 
+					3. Filing For Sub-Licence Section CB.1[II] </h5>
+					<p> 
+						Again substantial time will be used. IPO Officer will decide how much time to get subLicense.
+					</p> 
+				</h5>
+				<h5> 4. Patents ownership under License agreement Section CB.2 </h5>
+				<p>
+					Contributors will filing for patent ownership , If the contributor will contribute in source code repository, author License copy and new License version. License Version information is available in the License file.
+					Business Owner will also apply for patent ownership if he will not comply with the License and terms. Contributor will get filing for his work not on entire software. The reason it's open source public License and many contributors will work the software.
+					Contributor will pay partial royalty fees. Licence fees, License sustainable amount and subLicense substantial amount are different from royalty fees. Royalty , License  and subLicense amount will be disclosed By Intellectual Property Coperation and Author during filing.  
+				</p>
+				<h5>
+					5. Termination of License Section C3.A
+				</h5>
+				<p>
+					License will be granted thereafter contributor will accept the software License terms and conditions created by Author,
+				</p>
+				<h5> 6. Irresponsible Manner Section C3.B</h5>
+				<p>
+					Contributors will be responsible for any irresponsible activities such as deletion of software or delete business code that will cause application crash, distribute software to third parties without license without author permission will be cybercrime and complete voliation terms and conditions.
+					Author will charged full cost of his work through legal channel. Full cost will be disclose to third during cost filing. Contributor will clearly voliate section C3.A.
+				</p>
+			</div>
+		</section>
+		</div>
 		<footer class="foot-mark">
-			<p class="line-2">
+			<p class="line-2" style="position: relative;top: 111px;">
 			  &copy; 2022 - WisdomEnigma Inc
 			  wizdwarfs@gmail.com
 			</p>
 			<div class="channel">
 				<div class="fb">
-					<a href="https://www.facebook.com/wizdwarfs">
+					<a href="https://www.facebook.com/wizdwarfs" alt="Facebook" target="_blank" style="color:floralwhite;">
 						<i class="fa fa-facebook" aria-hidden="true"></i>
 					</a>
 				</div>
 				<div class="insta">
-					<a href="https://www.instagram.com/wisdomenigma">
+					<a href="https://www.instagram.com/wisdomenigma" alt="instagram" target="_blank" style="color:floralwhite;">
 						<i class="fa fa-instagram" aria-hidden="true"></i>
 					</a>	
 				</div>
 				<div class="tweet">
-					<a href="https://twitter.com/DwarfWiz">
+					<a href="https://twitter.com/DwarfWiz" alt="Twitter" target="_blank" style="color:floralwhite;">
 						<i class="fa fa-twitter" aria-hidden="true"></i>
 					</a>
 				</div>
 				<div class="reddit">
-					<a href="https://www.reddit.com/r/wizdwarfs">
+					<a href="https://www.reddit.com/r/wizdwarfs" alt="reddit" target="_blank" style="color:floralwhite;">
 						<i class="fa fa-reddit-alien" aria-hidden="true"></i>
 					</a>
 				</div>
 			</div>
+			<div class="terms" style="position: relative;top: 3pc;left: -46pc;height: 2pc;">
+				<i class="fa fa-file-text-o" aria-hidden="true"></i>
+				<a href="/terms" alt="Terms and conditions" style="color:floralwhite;">Terms and conditions</a>
+			</div>
 		  </footer>
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
+
+		
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+			integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+			crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+			integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+			crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+			integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+			crossorigin="anonymous"></script>
 </body>
 
 </html>

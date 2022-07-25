@@ -272,3 +272,41 @@
     top: 24px;
     box-shadow: 5px 5px whitesmoke;
   }
+
+    
+  .foot-mark{
+    display: flex;
+    position: relative;
+    justify-content: center;
+    top: 10pc;
+    background-color: black;
+    color: whitesmoke;
+    height: 9pc;
+  }
+  
+  .channel{
+    position: absolute;
+    display: flex;
+    top: 18px;
+    left:73pc;
+    border-radius: 11px;
+  }
+  
+  .insta{
+    position : absolute;
+    display: flex;
+    left: 27px;
+  }
+  
+
+  .tweet{
+    position : absolute;
+    display: flex;
+    left: 53px;
+  }
+
+  .reddit{
+    position : absolute;
+    display: flex;
+    left: 77px;
+  }

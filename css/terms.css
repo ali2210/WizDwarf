@@ -1,7 +1,7 @@
 .main-dashboard-div {
     background-color:#f9f9f9;
     font-family: 'Lato', sans-serif;
-    height: 100vh;
+    height: 62vh;
   }
   
   .icon-light {
@@ -46,18 +46,18 @@
     display: flex;
     position: relative;
     justify-content: center;
-    top: -418px;
+    top: -208px;
     text-rendering: geometricPrecision;
     color: gray;
   }
 
-  .locate-cont{
+  .standard-terms{
     position: relative;
-    display: flex;
-    top: 186px;
+    /* display: flex; */
+    top: 157px;
     justify-content: flex-start;
     flex-direction: row-reverse;
-    left:-95px;
+    left:13px;
     font-weight: bold;
   }
 
@@ -77,16 +77,17 @@
     display: flex;
     position: relative;
     justify-content: center;
-    margin-top: -135px;
+    top: 191pc;
     background-color: black;
     color: whitesmoke;
+    height: 9pc;
   }
   
   .channel{
     position: absolute;
     display: flex;
-    top: -21px;
-    left:632px;
+    top: 18px;
+    left:73pc;
     border-radius: 11px;
   }
   
@@ -95,6 +96,7 @@
     display: flex;
     left: 27px;
   }
+  
 
   .tweet{
     position : absolute;
@@ -109,11 +111,11 @@
   }
   
 
-  .buymecoffee{
+  /* .buymecoffee{
     display: flex;
     position : absolute;
     left: 47px;
-  }
+  } */
 
   .col{
     display: flex;
