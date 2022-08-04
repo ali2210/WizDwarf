@@ -1019,7 +1019,9 @@ func Data_Predicition(w http.ResponseWriter, r *http.Request, fname, choose stri
 
 		// calculate matching probability
 		distance := GetEditParameters().EditDistanceStrings(Virus, Usr)
-		SetBioAlgoParameters(algo.Result(distance), fname, algo.CalcualtePercentage(algo.Probablity))
+
+		SetBioAlgoParameters(algo.Result(distance, len(Usr)), fname, algo.CalcualtePercentage(algo.GetProbParameter()))
+
 
 		return err
 	} else if i == 0 {

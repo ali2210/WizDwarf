@@ -4,7 +4,9 @@ package piplines
 
 import (
 	//firebase "firebase.google.com/go"
+
 	"reflect"
+	"strings"
 
 	"cloud.google.com/go/firestore"
 	bio "github.com/ali2210/wizdwarf/other/bioinformatics"
@@ -82,8 +84,14 @@ func SetBioAlgoParameters(prob float32, pattern_name string, percent float32) {
 }
 
 func GetBioAlgoParameters() info.Levenshtein {
-	if Algo == (info.Levenshtein{}) {
+
+	if reflect.DeepEqual((info.Levenshtein{}), Algo) {
 		return info.Levenshtein{}
 	}
 	return Algo
+}
+
+func Extractor(in, pattern string) string {
+
+	return strings.Trim(in, pattern)
 }

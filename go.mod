@@ -8,6 +8,7 @@ require (
 	firebase.google.com/go v3.13.0+incompatible
 	github.com/SkynetLabs/go-skynet/v2 v2.0.2
 	github.com/WisdomEnigma/urban-fiesta v0.0.0-20220509155221-3f7a1bbb7a14
+	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/agnivade/levenshtein v1.1.0
 	github.com/alimasyhur/is-connect v0.0.0-20180112042527-a7e9ece095d0
 	github.com/allegro/bigcache v1.2.1
@@ -22,14 +23,17 @@ require (
 	github.com/fogleman/ribbon v0.0.0-20191101191537-568057efb726
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
+	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/goombaio/namegenerator v0.0.0-20181006234301-989e774b106e
 	github.com/gorilla/mux v1.7.4
 	github.com/gorilla/sessions v1.2.0
 	github.com/gyozatech/noodlog v0.0.0-20211006161024-c2cd168c8400
+	github.com/hashicorp/hcl2 v0.0.0-20191002203319-fb75b3253c80
 	github.com/ipfs/go-cid v0.1.0
 	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/logpacker/PayPal-Go-SDK v2.0.5+incompatible
+	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/multiformats/go-base32 v0.0.4 // indirect
 	github.com/multiformats/go-multihash v0.0.16
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
@@ -38,6 +42,7 @@ require (
 	github.com/onsi/gomega v1.19.0
 	github.com/plutov/paypal v2.0.5+incompatible // indirect
 	github.com/pusher/pusher-http-go v4.0.1+incompatible
+	github.com/zclconf/go-cty v1.10.0 // indirect
 	gitlab.com/NebulousLabs/errors v0.0.0-20200929122200-06c536cf6975 // indirect
 	golang.org/x/crypto v0.0.0-20220214200702-86341886e292 // indirect
 	golang.org/x/net v0.0.0-20220630215102-69896b714898

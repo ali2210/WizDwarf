@@ -18,6 +18,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/hcl2/gohcl"
+	"github.com/hashicorp/hcl2/hclparse"
+
 	"cloud.google.com/go/firestore"
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
 	"github.com/ali2210/wizdwarf/other/bucket"
@@ -75,8 +78,9 @@ var (
 	GEO_Index_KEY          string          = ""
 	APP_CHANNEL_KEY        string          = " "
 	APP_CHANNEL_ID         string          = " "
-	APP_CHANNEL_SCRECT     string          = " "
+	APP_CHANNEL_SECRET     string          = " "
 	APP_CHANNEL_CLUSTER_ID string          = " "
+	SECRET_TOKEN           string          = " "
 	_start                 time.Time
 	CONNECTIVITY           string = ""
 )
@@ -88,7 +92,14 @@ var (
 	Cloud       users.DBFirestore = piplines.SetDBCollect()
 )
 
-// var igress_route_name [5]string = [5]string{"messages"}
+type HCLDeclaration struct {
+	Weatherapi  string `hcl:"Weatherapi"`
+	Channel_key string `hcl:"Channel_key"`
+	Channel_id  string `hcl:"Channel_id"`
+	Secret      string `hcl:"Secret"`
+	Cluster_ID  string `hcl:"Cluster_ID"`
+	Token_Auth  string `hcl:"Token_Auth"`
+}
 
 func main() {
 
@@ -97,17 +108,62 @@ func main() {
 	host := os.Getenv("HOST")
 	port := os.Getenv("PORT")
 	wizDir := os.Getenv("WIZ_VOLUME_DIR")
-	GEO_Index_KEY = os.Getenv("GEOCOORDINATE")
-	APP_CHANNEL_KEY = os.Getenv("Registry_PUSHER_KEY")
-	APP_CHANNEL_ID = os.Getenv("Registry_CHANNEL_ID")
-	APP_CHANNEL_SCRECT = os.Getenv("Registry_CHANNEL_SCRECT")
-	APP_CHANNEL_CLUSTER_ID = os.Getenv("Registry_CHANNEL_CLUSTER_ID")
+
+	// GEO_Index_KEY = os.Getenv("GEOCOORDINATE")
+	// APP_CHANNEL_KEY = os.Getenv("Registry_PUSHER_KEY")
+	// APP_CHANNEL_ID = os.Getenv("Registry_CHANNEL_ID")
+	// APP_CHANNEL_SCRECT = os.Getenv("Registry_CHANNEL_SCRECT")
+	// APP_CHANNEL_CLUSTER_ID = os.Getenv("Registry_CHANNEL_CLUSTER_ID")
+
+	ast := hclparse.NewParser()
+
+	body, errs := ast.ParseHCLFile("creds.hcl")
+
+	if errs.HasErrors() {
+
+		log.Fatalln(" Error :", errs)
+
+		return
+	}
+
+	var hcldeclare HCLDeclaration
+
+	errs = gohcl.DecodeBody(body.Body, nil, &hcldeclare)
+
+	if errs.HasErrors() {
+
+		log.Fatalln(" Error :", errs)
+		return
+	}
 
 	// Makesure application will connect with internet
+
 	if reflect.DeepEqual(connection.IsOnline(), false) {
+
 		CONNECTIVITY = "OFFLINE"
+
 	} else {
+
 		CONNECTIVITY = "ONLINE"
+	}
+
+	if reflect.DeepEqual(hcldeclare.Token_Auth, "") {
+
+		GEO_Index_KEY = piplines.Extractor(hcldeclare.Weatherapi, hcldeclare.Weatherapi[0:40])[3:]
+		APP_CHANNEL_KEY = piplines.Extractor(hcldeclare.Channel_key, hcldeclare.Channel_key[0:40])[3:]
+		APP_CHANNEL_SECRET = piplines.Extractor(hcldeclare.Secret, hcldeclare.Secret[0:35])[7:]
+		APP_CHANNEL_ID = piplines.Extractor(hcldeclare.Channel_id, hcldeclare.Channel_id[0:2])
+		APP_CHANNEL_CLUSTER_ID = piplines.Extractor(hcldeclare.Cluster_ID, hcldeclare.Cluster_ID[0:4])
+
+	} else {
+		geoApi := piplines.Extractor(hcldeclare.Weatherapi, hcldeclare.Weatherapi[0:40])[3:]
+		channelKey := piplines.Extractor(hcldeclare.Channel_key, hcldeclare.Channel_key[0:40])[3:]
+		channelSecret := piplines.Extractor(hcldeclare.Secret, hcldeclare.Secret[0:35])[7:]
+		channelId := piplines.Extractor(hcldeclare.Channel_id, hcldeclare.Channel_id[0:2])
+		channelCluster := piplines.Extractor(hcldeclare.Cluster_ID, hcldeclare.Cluster_ID[0:4])
+		SECRET_TOKEN = hcldeclare.Token_Auth
+
+		log.Println(" Vault credentials:", geoApi, channelKey, channelSecret, channelId, channelCluster)
 	}
 
 	// whether port or host will be empty.
@@ -756,8 +812,8 @@ func treasure(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// analysis data results
-	algo.SetProbParameter(visualizeReport.Percentage)
+	// // analysis data results
+	// algo.SetProbParameter(visualizeReport.Percentage)
 
 	if visualizeReport.Percentage <= 50 {
 		visualizeReport.Immune_Test = "negative"
@@ -775,11 +831,12 @@ func treasure(w http.ResponseWriter, r *http.Request) {
 		}
 
 		logformat.Trace(value)
+
 		// client param
 		pusherClient := pusher.Client{
 			AppID:   APP_CHANNEL_ID,
 			Key:     APP_CHANNEL_KEY,
-			Secret:  APP_CHANNEL_SCRECT,
+			Secret:  APP_CHANNEL_SECRET,
 			Cluster: APP_CHANNEL_CLUSTER_ID,
 			Secure:  true,
 		}
@@ -802,6 +859,8 @@ func treasure(w http.ResponseWriter, r *http.Request) {
 		data := analytics_amino[len(analytics_amino)-count:]
 		err = pusherClient.TriggerMulti([]string{"protein"}, "molecule", data)
 		if err != nil {
+
+			log.Println(" Error:", err, "Trigger failed:", data)
 			w.WriteHeader(http.StatusBadRequest)
 			distorted(w, r)
 
@@ -1301,6 +1360,8 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 
 			pattern_analysis := piplines.GetBioAlgoParameters()
 
+			fmt.Println("Patetrn analysis:", pattern_analysis)
+
 			visualizeReport.Percentage = pattern_analysis.Percentage
 
 			// route return Ok callback
@@ -1326,6 +1387,7 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			pattern_analysis := piplines.GetBioAlgoParameters()
+			fmt.Println("Patetrn analysis:", pattern_analysis)
 			visualizeReport.Percentage = pattern_analysis.Percentage
 			w.WriteHeader(http.StatusOK)
 
@@ -1350,6 +1412,7 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			}
 			pattern_analysis := piplines.GetBioAlgoParameters()
 			visualizeReport.Percentage = pattern_analysis.Percentage
+			fmt.Println("Patetrn analysis:", pattern_analysis)
 
 			w.WriteHeader(http.StatusOK)
 			r.Method = "GET"
@@ -1372,6 +1435,7 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			pattern_analysis := piplines.GetBioAlgoParameters()
+			fmt.Println("Patetrn analysis:", pattern_analysis)
 			visualizeReport.Percentage = pattern_analysis.Percentage
 
 			w.WriteHeader(http.StatusOK)
@@ -1395,6 +1459,8 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			pattern_analysis := piplines.GetBioAlgoParameters()
+
+			fmt.Println("Patetrn analysis:", pattern_analysis)
 			visualizeReport.Percentage = pattern_analysis.Percentage
 			w.WriteHeader(http.StatusOK)
 

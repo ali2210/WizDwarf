@@ -8,7 +8,7 @@ import (
 )
 
 var result = Levenshtein{
-	Probablity: 0.0,
+	Probablity: 1250,
 	Percentage: 0.0,
 	Name:       "",
 }
@@ -20,15 +20,15 @@ func ResultsTestCases(t *testing.T) {
 
 var _ = Describe("Levenshtein Object State", func() {
 
-	Context("Object Probability ", func() {
-		It("Probability ", func() {
-			Expect(result.Result(int(result.Probablity))).Should(BeZero())
+	Context("Genetics tracebility", func() {
+		It("Corelation between virus genome and human genome in probability", func() {
+			Expect(result.Result(int(result.Probablity), 700)).Should(BeZero())
 		})
 	})
 
-	Context("Object Percentage", func() {
-		It("Percentage ", func() {
-			Expect(result.CalcualtePercentage(result.Percentage)).Should(BeZero())
+	Context("Identitical genome", func() {
+		It("Corelation between virus genome and human genome through percentage ", func() {
+			Expect(result.CalcualtePercentage(result.Probablity / 700)).Should(BeZero())
 		})
 	})
 
