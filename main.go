@@ -812,8 +812,7 @@ func treasure(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// // analysis data results
-	// algo.SetProbParameter(visualizeReport.Percentage)
+	// Check whether genome exist or not. If yes and probablity value will be less or equal to 5 then. No worry
 
 	if visualizeReport.Probab_Event <= 5 {
 

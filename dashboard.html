@@ -135,7 +135,7 @@
     const para_div = document.getElementsByClassName('signed_message')[0];
     const verifiedBtn = document.getElementsByClassName('verified')[0];
     const submitBtn = document.getElementsByClassName('submit-button')[0];
-    console.log(para_div, parent_div);
+    let price = 0;
     
     $('#signed').on('change', () =>{
   
@@ -145,7 +145,11 @@
       // create div, icon and button
       const div = document.createElement('div');
       const icon = document.createElement('i');
-    
+      const _bs0 = document.createElement('button');
+      const bicon = document.createElement('i');
+      const star1 = document.createElement('i');
+      const star2 = document.createElement('i');
+      const star3 = document.createElement('i');
 
       // adjust button props
       verifiedBtn.id  = 'fortmatic';
@@ -179,11 +183,53 @@
       para_div.style.border = '2px whitesmoke none';
       para_div.style.borderRadius = '13px';
       para_div.style.top = '-31px';
+
+
+      _bs0.className = 'low';
+      _bs0.style.position = 'absolute';
+      _bs0.style.top = '79px';
+      _bs0.style.left = '3pc';
+      _bs0.style.border = 'none';
+      _bs0.style.cursor = 'pointer';
+      _bs0.type = 'button';
+
+      bicon.className = 'fa fa-star';
+      bicon.ariaHidden = true;
+      bicon.style.color = 'slategray';
+
+      star1.className = 'fa fa-star';
+      star1.ariaHidden = true;
+      star1.style.color = 'slategray';
+
+      star1.style.position = 'absolute';
+      star1.style.top = '84px';
+      star1.style.left = '10pc';
+
+      star2.className = 'fa fa-star';
+      star2.ariaHidden = true;
+      star2.style.color = 'slategray';
+
+      star2.style.position = 'absolute';
+      star2.style.top = '84px';
+      star2.style.left = '18pc';
+
+      star3.className = 'fa fa-star';
+      star3.ariaHidden = true;
+      star3.style.color = 'slategray';
+
+      star3.style.position = 'absolute';
+      star3.style.top = '84px';
+      star3.style.left = '26pc';
      
       //  newly created div render
       div.className = 'actions';
       div.appendChild(para_div);
       div.appendChild(verifiedBtn);
+      _bs0.appendChild(bicon);
+      div.appendChild(_bs0);
+      div.appendChild(star1);
+      div.appendChild(star2);
+      div.appendChild(star3);
 
       // message props
       parent_div.style.position = 'relative';
@@ -197,12 +243,48 @@
     
       // message box render
       parent_div.appendChild(div);
+
+      document.getElementsByClassName('low')[0].addEventListener('click', (event) =>{
+        
+        document.getElementsByClassName('fa fa-star')[0].style.color = 'yellow';
+        price =  20;
+        alert('Congratulations ! cupons active');
+      });
+
+      let stars = document.getElementsByClassName('fa fa-star')[0];
+      let blink = null;
+
+      clearTimeout(blink);
+      blink = setInterval(twlight, 1000);
+
+      function twlight() {
+          
+          if(star1.style.color === 'slategray'){
+            star1.style.color = 'yellow';
+          }else if (star1.style.color === 'yellow'){
+            star1.style.color = 'slategray';
+          }
+          
+          if (star2.style.color === 'slategray' && star1.style.color === 'slategray') {
+            star2.style.color = 'yellow';
+          }else if (star1.style.color === 'yellow'){
+            star2.style.color = 'slategray';
+          }
+          
+          if (star3.style.color === 'slategray' && star2.style.color === 'slategray') {
+            star3.style.color = 'yellow';
+          }else if (star2.style.color === 'yellow'){
+            star3.style.color = 'slategray';
+          }
+      }
     }
       if ($('#signed').prop('checked', false)) {
         parent_div.children[0].style.visibility = 'hidden';
         console.log("checked false");
       }
 });
+
+
   </script>
   <script type="text/javascript">
     
@@ -214,6 +296,9 @@
     const FORTMATIC_API_KEY = 'pk_test_7B12425D6845E31A';
     const FORTMATIC_API_Prod = 'pk_live_FB9BC8CDD0A5884D';
     const ToAddress = '0x1E919035e637e36eC998c2568bA0697D11133a8f'; 
+
+
+    
     
     
     // verified button event
@@ -223,9 +308,10 @@
       let fsdk = new Fortmatic(FORTMATIC_API_Prod);
       let web3eth = new Web3(fsdk.getProvider());
       
+      if(price === 0){ console.log("new price:", price); price = 70;}
 
       // ether balance pay for signed message
-      let Tovalue = web3eth.utils.toWei('0.0007', 'ether');
+      let Tovalue = web3eth.utils.toWei(price.toString(), 'ether');
       let accountLogin;
       
       // if user have fortmatic access 
@@ -239,17 +325,16 @@
         
             // user login credentials 
             accountLogin = fsdk.user.isLoggedIn();
+            
             // user fortmatic account created from user 'email address'
         
             fsdk.configure({
               primaryLoginOption: 'email' 
             }).then(()=>{
               
-              // if user have email account created and also login then
+              // if user have email account created and also login then verified button props
             if (accountLogin){
 
-              
-              // verified button props
               vbtn.style.visibility = 'hidden';
 
               // input props
@@ -276,37 +361,45 @@
                   to : ToAddress,
                   value : Tovalue,
                 };
+
+
+                web3eth.eth.getBalance(account[0]).then((balance)=>{
+                    let tnx = balance < Tovalue ? true : false;
+                    if (!tnx){ alert('Transaction is not possible , because you have low balance'); return}
+                })
               
                 // get coinbase addresss for market and other transact activities
                 web3eth.eth.getCoinbase().then((coinbase)=>{
-                //  console.log("fortmatic account linkin with coinbase:", coinbase);
-                //  console.log("Fortmatic address:", account, tnxParam);
-                 address.value = tnxParam.from;
-                  fsdk.user.deposit().then(()=>{
-                    web3eth.eth.sendTransaction(tnxParam).once('transactionHash', (hash) => { 
-                    }).once('receipt', (receipt) => { 
-                      // console.log("user recipt generate via fortmatic wallet:", receipt); 
+                
+                  address.value = tnxParam.from;
+                    fsdk.user.deposit().then(()=>{
+                      web3eth.eth.sendTransaction(tnxParam).once('transactionHash', (hash) => { 
+                      }).once('receipt', (receipt) => { 
+                        alert(' Congratulations , Transaction is almost completed. ');
+                      });
+
+                    }).catch(()=>{
+                      alert("Transaction is not completed check your balance ");
                     });
-                  }).catch(()=>{
-                    // console.log("Transaction through your account is not allowed. Please contact wizdwarfs@gmail.com if problem remain!");
-                    alert("Transaction through your account is not allowed. Please contact wizdwarfs@gmail.com if problem remain!")
+
+                  }).catch((error)=>{
+                    alert('Make sure your address linked with coinbase', coinbase);
                   });
-                }).catch((error)=>{
-                //  console.log("fortmatic account not link with coinbase:", error);
-                 alert("Fortmatic Account not linkin by coinbase, which means no exchange of commodities");
-                });
+
               }).catch(()=>{
-                // console.log(" Wrong Credentials submitted ");
                 alert(" Wrong Credentials submitted ");
               });
             }
-          });      
+          });
+
         }).catch(()=>{
-            // console.log("account credentials failed:" + !fsdk.user.isLoggedIn());
+            
             alert("No Credentials submitted !");   
         });
     }
   });
+
+  
   </script>
   <script>
     const _p01 = document.getElementsByClassName('search-container')[0];

@@ -388,7 +388,7 @@
                              web3eth.eth.getBalance(account[0]).then((balance)=>{
                                 
                                 // if user account have zero balance
-                                let balance_status = balance > _i01.value ? true : false;
+                                let balance_status = balance < _i01.value ? true : false;
                                 if(!balance_status) {alert("You have " + balance + " balance." ); return}
                               
                                   // compose invoice 
@@ -613,7 +613,7 @@
                              web3eth.eth.getBalance(account[0]).then((balance)=>{
                                 
                                 // if user account have zero balance
-                                let balance_status = balance > (_i09.value + 0.0002) ? true : false;
+                                let balance_status = balance < (_i09.value + 0.0002) ? true : false;
                                 if(!balance_status) {alert("You have " + balance + " balance." ); return}
                               
                                   // compose invoice 
