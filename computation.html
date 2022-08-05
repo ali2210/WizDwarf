@@ -80,6 +80,9 @@
       <p class="card-text">
         <div class="progress">
           <div class="progress-done" data-done="100">
+            <span> <small> Initial Genome Trace Value of your body (GTV)  </small> {{.Probab_Event}}. <small>
+              Results are calculate within a seconds....
+            </small> </span>
           </div>
         </div>
             <div class="list-groups">
@@ -209,15 +212,15 @@ run();
     progress.style.opacity = 1;
     progress.style.width = progress.getAttribute('data-done') + '%';
     
-    while(i != 10){
+    // while(i != 10){
 
-      let intv = setInterval(inc, 1000, Math.ceil(Math.random()* 100));
+    //   let intv = setInterval(inc, 1000, Math.ceil(Math.random()* 100));
 
-      if (intv === 100){
-        clearInterval(intv);
-      }
-      i++;
-    }
+    //   if (intv === 100){
+    //     clearInterval(intv);
+    //   }
+    //   i++;
+    // }
     
     
     
@@ -230,18 +233,18 @@ run();
   }, 10000 * 3.0);
   
   
-  function inc(index){  
+  // function inc(index){  
  
-        setTimeout(() => {
-          progress.style.width = (parseInt(progress.style.width)) + '%';
-          progress.innerHTML = index + '%';
-        }, 20);
+  //       setTimeout(() => {
+  //         progress.style.width = (parseInt(progress.style.width)) + '%';
+  //         progress.innerHTML = index + '%';
+  //       }, 20);
         
-        progress.style.width = ' ' + '%';
-        progress.style.width = 100 + '%';
+  //       progress.style.width = ' ' + '%';
+  //       progress.style.width = 100 + '%';
 
     
-  }
+  // }
   
   </script>
 

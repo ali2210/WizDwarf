@@ -80,6 +80,7 @@ func SetEditParameters() bio.LevenTable {
 }
 
 func SetBioAlgoParameters(prob float32, pattern_name string, percent float32) {
+
 	Algo = info.Levenshtein{Probablity: prob, Name: pattern_name, Percentage: percent}
 }
 

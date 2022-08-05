@@ -27,6 +27,8 @@ type DataVisualization struct {
 	Elapse      time.Duration
 	Immune_Test string
 	Record      Man
+
+	Probab_Event float32
 }
 
 // Coodinates have fields {Longituide and Latitude},

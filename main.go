@@ -151,7 +151,7 @@ func main() {
 
 		GEO_Index_KEY = piplines.Extractor(hcldeclare.Weatherapi, hcldeclare.Weatherapi[0:40])[3:]
 		APP_CHANNEL_KEY = piplines.Extractor(hcldeclare.Channel_key, hcldeclare.Channel_key[0:40])[3:]
-		APP_CHANNEL_SECRET = piplines.Extractor(hcldeclare.Secret, hcldeclare.Secret[0:35])[7:]
+		APP_CHANNEL_SECRET = piplines.Extractor(hcldeclare.Secret, hcldeclare.Secret[30:36])[43:]
 		APP_CHANNEL_ID = piplines.Extractor(hcldeclare.Channel_id, hcldeclare.Channel_id[0:2])
 		APP_CHANNEL_CLUSTER_ID = piplines.Extractor(hcldeclare.Cluster_ID, hcldeclare.Cluster_ID[0:4])
 
@@ -815,11 +815,14 @@ func treasure(w http.ResponseWriter, r *http.Request) {
 	// // analysis data results
 	// algo.SetProbParameter(visualizeReport.Percentage)
 
-	if visualizeReport.Percentage <= 50 {
-		visualizeReport.Immune_Test = "negative"
-	}
+	if visualizeReport.Probab_Event <= 5 {
 
-	visualizeReport.Immune_Test = "positive"
+		visualizeReport.Immune_Test = "negative"
+
+	} else {
+
+		visualizeReport.Immune_Test = "positive"
+	}
 
 	if r.Method == "GET" && algo.GetProbParameter() < 101 {
 
@@ -860,7 +863,6 @@ func treasure(w http.ResponseWriter, r *http.Request) {
 		err = pusherClient.TriggerMulti([]string{"protein"}, "molecule", data)
 		if err != nil {
 
-			log.Println(" Error:", err, "Trigger failed:", data)
 			w.WriteHeader(http.StatusBadRequest)
 			distorted(w, r)
 
@@ -1358,11 +1360,9 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			pattern_analysis := piplines.GetBioAlgoParameters()
+			visualizeReport.Probab_Event = piplines.GetBioAlgoParameters().Probablity
 
-			fmt.Println("Patetrn analysis:", pattern_analysis)
-
-			visualizeReport.Percentage = pattern_analysis.Percentage
+			visualizeReport.Percentage = piplines.GetBioAlgoParameters().Percentage
 
 			// route return Ok callback
 			w.WriteHeader(http.StatusOK)
@@ -1386,9 +1386,9 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 				logformat.Error(value)
 				return
 			}
-			pattern_analysis := piplines.GetBioAlgoParameters()
-			fmt.Println("Patetrn analysis:", pattern_analysis)
-			visualizeReport.Percentage = pattern_analysis.Percentage
+
+			visualizeReport.Probab_Event = piplines.GetBioAlgoParameters().Probablity
+			visualizeReport.Percentage = piplines.GetBioAlgoParameters().Percentage
 			w.WriteHeader(http.StatusOK)
 
 			r.Method = "GET"
@@ -1410,9 +1410,9 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 				logformat.Error(value)
 				return
 			}
-			pattern_analysis := piplines.GetBioAlgoParameters()
-			visualizeReport.Percentage = pattern_analysis.Percentage
-			fmt.Println("Patetrn analysis:", pattern_analysis)
+
+			visualizeReport.Probab_Event = piplines.GetBioAlgoParameters().Probablity
+			visualizeReport.Percentage = piplines.GetBioAlgoParameters().Percentage
 
 			w.WriteHeader(http.StatusOK)
 			r.Method = "GET"
@@ -1434,9 +1434,9 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 				logformat.Error(value)
 				return
 			}
-			pattern_analysis := piplines.GetBioAlgoParameters()
-			fmt.Println("Patetrn analysis:", pattern_analysis)
-			visualizeReport.Percentage = pattern_analysis.Percentage
+
+			visualizeReport.Probab_Event = piplines.GetBioAlgoParameters().Probablity
+			visualizeReport.Percentage = piplines.GetBioAlgoParameters().Percentage
 
 			w.WriteHeader(http.StatusOK)
 			r.Method = "GET"
@@ -1458,10 +1458,9 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 				logformat.Error(value)
 				return
 			}
-			pattern_analysis := piplines.GetBioAlgoParameters()
 
-			fmt.Println("Patetrn analysis:", pattern_analysis)
-			visualizeReport.Percentage = pattern_analysis.Percentage
+			visualizeReport.Probab_Event = piplines.GetBioAlgoParameters().Probablity
+			visualizeReport.Percentage = piplines.GetBioAlgoParameters().Percentage
 			w.WriteHeader(http.StatusOK)
 
 			r.Method = "GET"
