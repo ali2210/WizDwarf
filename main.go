@@ -158,7 +158,7 @@ func main() {
 	} else {
 		geoApi := piplines.Extractor(hcldeclare.Weatherapi, hcldeclare.Weatherapi[0:40])[3:]
 		channelKey := piplines.Extractor(hcldeclare.Channel_key, hcldeclare.Channel_key[0:40])[3:]
-		channelSecret := piplines.Extractor(hcldeclare.Secret, hcldeclare.Secret[0:35])[7:]
+		channelSecret := piplines.Extractor(hcldeclare.Secret, hcldeclare.Secret[30:36])[43:]
 		channelId := piplines.Extractor(hcldeclare.Channel_id, hcldeclare.Channel_id[0:2])
 		channelCluster := piplines.Extractor(hcldeclare.Cluster_ID, hcldeclare.Cluster_ID[0:4])
 		SECRET_TOKEN = hcldeclare.Token_Auth
@@ -238,9 +238,10 @@ func main() {
 	routing.HandleFunc("/logout", logout)
 	routing.HandleFunc("/messages", messages)
 	routing.HandleFunc("/error", distorted)
+	routing.HandleFunc("/visualize", visualize)
 	// routing.HandleFunc("/feedback", customerViews)
 	routing.HandleFunc("/terms", terms)
-	routing.HandleFunc("/treasure", treasure)
+	routing.HandleFunc("/analysis", analysis)
 	routing.HandleFunc("/phenylalanine", phenylalanine)
 	routing.HandleFunc("/leucine", leucine)
 	routing.HandleFunc("/isoleucine", isoleucine)
@@ -262,7 +263,6 @@ func main() {
 	routing.HandleFunc("/arginine", arginine)
 	routing.HandleFunc("/glycine", glycine)
 	routing.HandleFunc("/stop", stop_codon)
-	routing.HandleFunc("/visualize", visualize)
 	// routing.HandleFunc("/modal/success", success)
 
 	// Static Files
@@ -797,7 +797,7 @@ func setting(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func treasure(w http.ResponseWriter, r *http.Request) {
+func analysis(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")

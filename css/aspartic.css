@@ -51,7 +51,8 @@ convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
 .jmol{
     position: relative;
     color: whitesmoke;
-   left: 59px;
+   left: 48pc;
+   top:114px;
 }
 
 .jmol:hover{

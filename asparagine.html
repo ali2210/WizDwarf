@@ -9,8 +9,7 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&family=Roboto+Mono:wght@500&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-  <link rel="stylesheet" type="text/css" href="/css/phenylalanine.css">
+  <link rel="stylesheet" type="text/css" href="/css/asparagine.css">
   <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r126/three.js"
     integrity="sha512-aPhrlLlp7Mr8g+MVw6/wMD8PjqqzRNhSM8pHDyyJPmUTJMzKxMmxrjauzQforOaAegN3CIKUTKXJyLwFD57RtA=="
@@ -20,68 +19,50 @@
 
 <body>
   <div class='main-dashboard-div'>
-		<nav class="navbar navbar-expand-md navbar-light custom-navbar">
+    <nav class="navbar navbar-expand-md navbar-light custom-navbar" style=" background-color: #ededed;display: flex;">
 		  <a class="navbar-brand" href="#">
 			<img src="/images/logo.png" alt="Logo" class="logo">
 		  </a>
 		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
 			<span class="navbar-toggler-icon"></span>
 		  </button>
-		  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+		  <div class="collapse navbar-collapse" id="navbarNavDropdown" style="position: absolute;left: 37pc;">
 			<ul class="navbar-nav">
 			  <li class="nav-item active pl-3">
-				<a class="nav-link" href="/home">
+				<a class="nav-link" href="/">
 				  <i class="fa fa-home icon-light" aria-hidden="true"></i>
-				  Home
 				</a>
 			  </li>
 			  <li class="nav-item dropdown pl-3">
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
 				  aria-haspopup="true" aria-expanded="false">
-				  <i class="fa fa-handshake-o" aria-hidden="true"></i>
-				  Business
+				  <i class="fa fa-envelope" aria-hidden="true"></i>
 				</a>
 				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-				  <!-- <a class="dropdown-item active" href="/open"><i class="fa fa-handshake-o " aria-hidden="true"></i> Premium </a>
-				  <a class="dropdown-item" href="/"> <i class="fa fa-briefcase" aria-hidden="true"> Service </i>
-				  </a>-->
-				  <div class="card" style="width: 19rem;height: 22rem;position: relative; top:5px; border-radius: 10px; left:20px;">
-					<img class="images"
-					  src="https://physicsworld.com/wp-content/uploads/2019/08/Quantum-teleportation.jpg"
-					  alt="paint_the_world">
-					<div class="card-body card-body-text">
-					  <h5 class="card-title"> Paint the World </h5>
-					  <p class="card-text"> 
-						  "Beause the onces who are crazy enough to think that they can change the world, are the ones who do."
-					  </p>
-					</div>
-				  </div>
+				  <a class="dropdown-item active" href="#" title="Private Conversation"><i class="fa fa-envelope-o" aria-hidden="true"></i> Private </a>
+				  <a class="dropdown-item" href="#" title="Gossips"> <i class="fa fa-comments-o" aria-hidden="true"></i> Public </a>
 				</div>
 			  </li>
 			  <li class="nav-item dropdown pl-3">
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
 				  aria-haspopup="true" aria-expanded="false">
 				  <i class="fa fa-user-circle-o" aria-hidden="true"></i>
-				  Admin
 				</a>
 				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-				  <a class="dropdown-item" href="/dashboard/profile"><i class="fa fa-sliders" aria-hidden="true"></i>
-					Edit-Profile </a>
-				  <a class="dropdown-item" href="/logout"><i class="fa fa-sign-out icon icon-light"
+				  <a class="dropdown-item active" href="/dashboard/profile" title="Edit Profile"><i class="fa fa-sliders" aria-hidden="true"></i>
+					  Edit Your Profile
+          </a>
+          <a class="dropdown-item" href="#" title="Custom Settings "><i class="fa fa-cogs" aria-hidden="true"></i>
+            Preferences
+          </a>
+				  <a class="dropdown-item" href="/logout" title="Lock the account"><i class="fa fa-sign-out icon icon-light"
 					  aria-hidden="true"></i>Logout</a>
-				  <div class="card" style="width: 25rem; height: 20rem; position: relative;top:3px; border-radius: 10px; left:20px;">
-					<img class="img-class"
-					  src="https://6lli539m39y3hpkelqsm3c2fg-wpengine.netdna-ssl.com/wp-content/uploads/2019/01/tech-abstract_shutterstock-1191298288_700x-675x380.jpg"
-					  alt="Chase dreams">
-					<div class="card-body description">
-					  <h5 class="card-title"> Masterpiece  </h5>
-					  <p class="card-text"> The smallest feline is a masterpiece </p>
-					</div>
 				  </div>
 			  </li>
 			</ul>
 		  </div>
-		</nav>
+	</nav>
+  </div>
     <div class="proteins-card">
         <div class="card text-white bg-primary mb-3" style="max-width: 60rem; max-height: 50rem;">
             <div class="card-header"> Asparagine </div>
@@ -102,6 +83,8 @@
                                RACK1, SSAT1, GSK3β, and FOXO4 </td>
                           <td> Neutral, </td>
                           <td> C<small class="subscript">4-</small>H<small class="subscript">8-</small>N<small class="subscript">2-</small>O<small>3</small></td>
+                          <i class="fa fa-picture-o" aria-hidden="true" title="checmial composition of asparagine" style="position: relative;left: 53pc;top: 87px;"></i>
+                          <a class="jmol" href="https://chemapps.stolaf.edu/jmol/jmol.php?model=C%28%5BC%40%40H%5D%28C%28%3DO%29%5BO-%5D%29%5BNH3%2B%5D%29C%28%3DO%29N" title="chemical"> Asparagine Structure </a>
                       </tr>
                       <tr>
                           <th> Weight, </th>
@@ -133,13 +116,47 @@
                           </td>
                       </tr>
                   </table>
-                  <i class="fa fa-picture-o" aria-hidden="true" title="checmial composition of asparagine"></i>
-                  <a class="jmol" href="https://chemapps.stolaf.edu/jmol/jmol.php?model=C%28%5BC%40%40H%5D%28C%28%3DO%29%5BO-%5D%29%5BNH3%2B%5D%29C%28%3DO%29N" title="chemical"> Asparagine-Molecules </a>
               </p>
             </div>
           </div>
     </div>
     </div>
+    <footer class="foot-mark">
+			<p class="line-2" style="position: relative;top: 111px;">
+			  &copy; 2022 - WisdomEnigma Inc
+			  wizdwarfs@gmail.com
+			</p>
+			<div class="channel">
+				<div class="fb">
+					<a href="https://www.facebook.com/wizdwarfs" alt="Facebook" target="_blank" style="color:floralwhite;">
+						<i class="fa fa-facebook" aria-hidden="true"></i>
+					</a>
+				</div>
+				<div class="insta">
+					<a href="https://www.instagram.com/wisdomenigma" alt="instagram" target="_blank" style="color:floralwhite;">
+						<i class="fa fa-instagram" aria-hidden="true"></i>
+					</a>	
+				</div>
+				<div class="tweet">
+					<a href="https://twitter.com/DwarfWiz" alt="Twitter" target="_blank" style="color:floralwhite;">
+						<i class="fa fa-twitter" aria-hidden="true"></i>
+					</a>
+				</div>
+				<div class="reddit">
+					<a href="https://www.reddit.com/r/wizdwarfs" alt="reddit" target="_blank" style="color:floralwhite;">
+						<i class="fa fa-reddit-alien" aria-hidden="true"></i>
+					</a>
+				</div>
+			</div>
+			<div class="terms" style="position: relative;top: 3pc;left: -46pc;height: 2pc;">
+				<i class="fa fa-file-text-o" aria-hidden="true"></i>
+				<a href="/terms" alt="Terms and conditions" style="color:floralwhite;">Terms and conditions</a>
+			</div>
+      <div class="blogspot" style="position: absolute;top: 5pc;left: 5px;color: floralwhite">
+        <i class="fa fa-link"aria-hidden="true"> </i>
+        <a href="https://www.buymeacoffee.com/ali2210" style="color:floralwhite;"> Blogspot </a>
+      </div>
+		  </footer>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
     crossorigin="anonymous"></script>
