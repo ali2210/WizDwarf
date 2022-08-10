@@ -272,6 +272,8 @@ func main() {
 	routing.PathPrefix("/css/").Handler(css)
 	js := http.StripPrefix("/js/", http.FileServer(http.Dir("./js")))
 	routing.PathPrefix("/js/").Handler(js)
+	gltf := http.StripPrefix("/models/", http.FileServer(http.Dir("./models")))
+	routing.PathPrefix("/models/").Handler(gltf)
 
 	// tcp connection
 	err := http.ListenAndServe(":5000", routing)

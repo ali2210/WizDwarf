@@ -14,6 +14,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r126/three.js"
     integrity="sha512-aPhrlLlp7Mr8g+MVw6/wMD8PjqqzRNhSM8pHDyyJPmUTJMzKxMmxrjauzQforOaAegN3CIKUTKXJyLwFD57RtA=="
     crossorigin="anonymous"></script>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
   <title>WizDwarfs</title>
 </head>
 
@@ -64,12 +65,18 @@
 	</nav>
   </div>
     <div class="proteins-card">
-        <div class="card text-white bg-primary mb-3" style="max-width: 50rem; max-height: 50rem;">
+        <div class="card text-white bg-dark mb-3" style="max-width: 88rem; max-height: 50rem;">
             <div class="card-header"> Arginine </div>
             <div class="card-body">
               <h5 class="card-title"> <i class="fa fa-info-circle" aria-hidden="true" title="information about amino-acid"></i>
               </h5>
               <p class="card-text"> 
+                <a-scene>
+                  <a-assets>
+                      <a-asset-item id="Herpes_Simplex_virus" src="/models/2GV9.glb"></a-asset-item>
+                  </a-assets>
+                  <a-entity gltf-model="#Herpes_Simplex_virus" animation-mixer position="27.420 40.000 -150"></a-entity>
+                </a-scene>
                   <table>
                       <tr>
                           <th> Group, </th>
@@ -81,9 +88,13 @@
                           <td> α-carboxylic acid group </td>
                           <td>  </td>
                           <td> Neutral, </td>
-                          <td> C<small class="subscript">6-</small>H<small class="subscript">14-</small>N<small class="subscript">4-</small>O<small>2</small> </td>
-                          <i class="fa fa-picture-o" aria-hidden="true" title="checmial composition of arginine" style="position: relative;left: 44pc;top: 72px;"></i>
-                  <a class="jmol" href="https://chemapps.stolaf.edu/jmol/jmol.php?model=%5BNH3%2B%5DC%28CCCNC%28N%29%3DN%29C%28%5BO-%5D%29%3DO" title="chemical"> Arginine Structure </a>
+                          <td> 
+                            <a class="jmol" href="https://chemapps.stolaf.edu/jmol/jmol.php?model=%5BNH3%2B%5DC%28CCCNC%28N%29%3DN%29C%28%5BO-%5D%29%3DO" title="Chemical structure of arginine molecule. Arginine belong to Guanidino group. In Arginine compound Hydrogen atoms are abudant.">
+                              C<small class="subscript">6-</small>H<small class="subscript">14-</small>N<small class="subscript">4-</small>O<small>2</small>
+                            </a>          
+                             
+                          </td>
+                  
                       </tr>
                       <tr>
                           <th> Weight, </th>
@@ -109,8 +120,6 @@
                                 <li> High blood pressure</li> 
                                 <li> Schizophrenia </li>
                               Arginine plays an important role in cell division, wound healing, removing ammonia from the body, immune function, and the release of hormones.
-                              <li> Proteins </li>
-                              <li> Precursor</li>
                           </td>
                           <td> 
                                  Guanidino group,
@@ -123,42 +132,7 @@
     </div>
     </div>
 
-    <footer class="foot-mark">
-			<p class="line-2" style="position: relative;top: 111px;">
-			  &copy; 2022 - WisdomEnigma Inc
-			  wizdwarfs@gmail.com
-			</p>
-			<div class="channel">
-				<div class="fb">
-					<a href="https://www.facebook.com/wizdwarfs" alt="Facebook" target="_blank" style="color:floralwhite;">
-						<i class="fa fa-facebook" aria-hidden="true"></i>
-					</a>
-				</div>
-				<div class="insta">
-					<a href="https://www.instagram.com/wisdomenigma" alt="instagram" target="_blank" style="color:floralwhite;">
-						<i class="fa fa-instagram" aria-hidden="true"></i>
-					</a>	
-				</div>
-				<div class="tweet">
-					<a href="https://twitter.com/DwarfWiz" alt="Twitter" target="_blank" style="color:floralwhite;">
-						<i class="fa fa-twitter" aria-hidden="true"></i>
-					</a>
-				</div>
-				<div class="reddit">
-					<a href="https://www.reddit.com/r/wizdwarfs" alt="reddit" target="_blank" style="color:floralwhite;">
-						<i class="fa fa-reddit-alien" aria-hidden="true"></i>
-					</a>
-				</div>
-			</div>
-			<div class="terms" style="position: relative;top: 3pc;left: -46pc;height: 2pc;">
-				<i class="fa fa-file-text-o" aria-hidden="true"></i>
-				<a href="/terms" alt="Terms and conditions" style="color:floralwhite;">Terms and conditions</a>
-			</div>
-      <div class="blogspot" style="position: absolute;top: 5pc;left: 5px;color: floralwhite">
-        <i class="fa fa-link"aria-hidden="true"> </i>
-        <a href="https://www.buymeacoffee.com/ali2210" style="color:floralwhite;"> Blogspot </a>
-      </div>
-		  </footer>
+    
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
     crossorigin="anonymous"></script>

@@ -14,6 +14,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r126/three.js"
     integrity="sha512-aPhrlLlp7Mr8g+MVw6/wMD8PjqqzRNhSM8pHDyyJPmUTJMzKxMmxrjauzQforOaAegN3CIKUTKXJyLwFD57RtA=="
     crossorigin="anonymous"></script>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
   <title>WizDwarfs</title>
 </head>
 
@@ -64,13 +65,19 @@
 	</nav>
   </div>
     <div class="proteins-card">
-        <div class="card text-white bg-primary mb-3" style="max-width: 60rem; max-height: 55rem;">
+        <div class="card text-white bg-primary mb-3" style="max-width: 83rem; max-height: 55rem;">
             <div class="card-header"> Aspartic </div>
             <div class="card-body">
               <h5 class="card-title"> <i class="fa fa-info-circle" aria-hidden="true" title="information about amino-acid"></i>
               </h5>
               <p class="card-text"> 
-                  <table>
+                <a-scene>
+                  <a-assets>
+                      <a-asset-item id="Aspartate_aminotransferase" src="/models/5AX8.glb"></a-asset-item>
+                  </a-assets>
+                  <a-entity gltf-model="#Aspartate_aminotransferase" animation-mixer position="30 22 -150"></a-entity>
+                </a-scene>  
+                <table>
                       <tr>
                           <th> Group, </th>
                           <th> Alien-Protein-code, </th>
@@ -80,12 +87,14 @@
                       <tr>
                           <td> Benzyl-group which is subsuite of methyl-group of alanine. </td>
                           <td> 
-                                AST,
+                            Aspartate transaminase (AST),
                           </td>
                           <td> Acidic, </td>
-                          <td> C<small class="subscript">4-</small>H<small class="subscript">7-</small>NO<small class="subscript">4</small></td>
-                          <i class="fa fa-picture-o" aria-hidden="true" title="checmial composition of aspartic" style="position: relative;left: 54pc;top: 77px;"></i>
-                          <a class="jmol" href="https://chemapps.stolaf.edu/jmol/jmol.php?model=O%3DC%28%5BO-%5D%29CC%28%5BNH3%2B%5D%29C%28%3DO%29%5BO-%5D" title="chemical"> Aspartic Structure</a>
+                          <td> 
+                            <a class="jmol" href="https://chemapps.stolaf.edu/jmol/jmol.php?model=O%3DC%28%5BO-%5D%29CC%28%5BNH3%2B%5D%29C%28%3DO%29%5BO-%5D"title="Chemical structure of Aspartate molecule. In Aspartate compound Hydrogen atoms are abudant.">
+                              C<small class="subscript">4-</small>H<small class="subscript">7-</small>NO<small class="subscript">4</small>
+                            </a>  
+                          </td>
                       </tr>
                       <tr>
                           <th> Weight, </th>

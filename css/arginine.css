@@ -42,20 +42,22 @@ convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
 
 .proteins-card{
     position: absolute;
-    top: 103px;
-    left: 309px;
+    top: 87px;
+    left: -2px;
     
 }
 
 .jmol{
   position: relative;
-  color: whitesmoke;
-  left: 32pc;
-  top:71px; 
+      color: floralwhite;
+      left: 0pc;
+      font-style: italic;
+      font-weight: bold;
+      top:0pc;
 }
 
 .jmol:hover{
-    color: white;
+    color: floralwhite;
 }
 
 .description{
@@ -90,40 +92,4 @@ convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
     width: 315px;
     font-size:large;
     border-radius: 10px;
-}
-.foot-mark{
-  display: flex;
-  position: relative;
-  justify-content: center;
-  top: 21pc;
-  background-color: black;
-  color: whitesmoke;
-  height: 15pc;
-}
-
-.channel{
-  position: absolute;
-  display: flex;
-  top: 18px;
-  left:73pc;
-  border-radius: 11px;
-}
-
-.insta{
-  position : absolute;
-  display: flex;
-  left: 27px;
-}
-
-
-.tweet{
-  position : absolute;
-  display: flex;
-  left: 53px;
-}
-
-.reddit{
-  position : absolute;
-  display: flex;
-  left: 77px;
 }
