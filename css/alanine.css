@@ -50,7 +50,7 @@ convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
 
   .jmol{
       position: relative;
-      color: slategray;
+      color: floralwhite;
       left: 0pc;
       font-style: italic;
       font-weight: bold;
@@ -58,7 +58,7 @@ convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
   }
 
   .jmol:hover{
-      color: slategray;
+      color: floralwhite;
   }
 
   .description{

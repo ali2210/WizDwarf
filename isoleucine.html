@@ -14,6 +14,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r126/three.js"
     integrity="sha512-aPhrlLlp7Mr8g+MVw6/wMD8PjqqzRNhSM8pHDyyJPmUTJMzKxMmxrjauzQforOaAegN3CIKUTKXJyLwFD57RtA=="
     crossorigin="anonymous"></script>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
   <title>WizDwarfs</title>
 </head>
 
@@ -64,12 +65,18 @@
 	</nav>
   </div>
     <div class="proteins-card">
-        <div class="card text-white bg-dark mb-3" style="max-width: 42rem; max-height: 42rem;">
+        <div class="card text-white bg-success mb-3" style="max-width: 83rem; max-height: 42rem;">
             <div class="card-header"> Isoleucine </div>
             <div class="card-body">
               <h5 class="card-title"> <i class="fa fa-info-circle" aria-hidden="true" title="information about amino-acid"></i>
               </h5>
-              <p class="card-text"> 
+              <p class="card-text">
+                <a-scene>
+                  <a-assets>
+                      <a-asset-item id="Acetolactate_synthase" src="/models/1OZF.glb"></a-asset-item>
+                  </a-assets>
+                  <a-entity gltf-model="#Acetolactate_synthase" animation-mixer position="30 52 -150" rotation="120.000 40.000 100.000"></a-entity>
+                </a-scene> 
                   <table>
                       <tr>
                           <th> Group, </th>
@@ -81,9 +88,11 @@
                           <td> Carboxylic acid-group </td>
                           <td>  </td>
                           <td> Neutral, </td>
-                          <td> C<small class="subscript">6-</small>H<small class="subscript">13-</small>NO<small class="subscript">2</small></td>
-                          <i class="fa fa-picture-o" aria-hidden="true" title="checmial composition of Isoleucine" style="position: relative;left: 35pc;top: 1px;"></i>
-                  <a class="jmol" href="https://chemapps.stolaf.edu/jmol/jmol.php?model=CC%5BC%40H%5D%28C%29%5BC%40%40H%5D%28C%28%3DO%29%5BO-%5D%29%5BNH3%2B%5D" title="configuration"> Isoleucine Structure 3D-View </a>
+                          <td>
+                            <a class="jmol" href="https://chemapps.stolaf.edu/jmol/jmol.php?model=CC%5BC%40H%5D%28C%29%5BC%40%40H%5D%28C%28%3DO%29%5BO-%5D%29%5BNH3%2B%5D" title="Chemical structure of Isoleucine molecule. In Isoleucine compound Hydrogen atoms are abudant.">
+                              C<small class="subscript">6-</small>H<small class="subscript">13-</small>NO<small class="subscript">2</small>
+                            </a> 
+                          </td>
                       </tr>
                       <tr>
                           <th> Weight, </th>

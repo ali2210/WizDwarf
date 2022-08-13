@@ -14,6 +14,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r126/three.js"
     integrity="sha512-aPhrlLlp7Mr8g+MVw6/wMD8PjqqzRNhSM8pHDyyJPmUTJMzKxMmxrjauzQforOaAegN3CIKUTKXJyLwFD57RtA=="
     crossorigin="anonymous"></script>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
   <title>WizDwarfs</title>
 </head>
 
@@ -64,12 +65,18 @@
 	</nav>
   </div>
     <div class="proteins-card">
-        <div class="card text-white bg-primary mb-3" style="max-width: 50rem; max-height: 42rem;">
+        <div class="card text-white bg-success mb-3" style="max-width: 83rem; max-height: 42rem;">
             <div class="card-header"> Proline </div>
             <div class="card-body">
               <h5 class="card-title"> <i class="fa fa-info-circle" aria-hidden="true" title="information about amino-acid"></i>
               </h5>
               <p class="card-text"> 
+                <a-scene>
+                  <a-assets>
+                      <a-asset-item id="hypoxia_inducible_transcription_factor" src="/models/2XUM.glb"></a-asset-item>
+                  </a-assets>
+                  <a-entity gltf-model="#hypoxia_inducible_transcription_factor" animation-mixer position="30 42 -150"></a-entity>
+                </a-scene>
                   <table>
                       <tr>
                           <th> Group, </th>
@@ -85,7 +92,7 @@
                           </td>
                           <td> Neutral, </td>
                           <td>
-                            <a class="jmol" href="https://chemapps.stolaf.edu/jmol/jmol.php?model=%5BO-%5DC%28%3DO%29%5BC%40H%5D%28CCC2%29%5BNH2%2B%5D2" title="configuration">
+                            <a class="jmol" href="https://chemapps.stolaf.edu/jmol/jmol.php?model=%5BO-%5DC%28%3DO%29%5BC%40H%5D%28CCC2%29%5BNH2%2B%5D2" title="Chemical structure of Proline molecule. In Proline compound Hydrogen atoms are abudant">
                               C<small class="subscript">5-</small>H<small class="subscript">9-</small>NO<small class="subscript">2</small></td>
                             </a> 
                             

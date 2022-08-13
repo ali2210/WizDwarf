@@ -95,7 +95,7 @@
 	/*display: flex;*/
 }
 .dropdown{
-	margin-right: 70px;
+	margin-right: 238px;
 	align-items: center;
 	/*display: flex;*/
 }
@@ -143,7 +143,7 @@
 }
 
 
-.foot-mark{
+/* .foot-mark{
 	display: flex;
 	position: relative;
 	justify-content: center;
@@ -153,7 +153,7 @@
 	width: 1346px;
 	left: -45px;
 	border-radius: 11px;
-}
+} */
 
 .terms{
 	position: absolute;
@@ -162,32 +162,39 @@
 	color: whitesmoke;
 }
 
-.channels{
+.foot-mark{
 	display: flex;
+	position: relative;
+	justify-content: center;
+	top: -2pc;    
+	background-color: black;
+	color: whitesmoke;
+	height: 9pc;
+  }
+  
+  .channel{
 	position: absolute;
-	top:-20px;
-}
-
-.fb{
 	display: flex;
-	position: absolute;
-	left: -34px;
-}
-
-.insta{
+	top: 18px;
+	left:73pc;
+	border-radius: 11px;
+  }
+  
+  .insta{
+	position : absolute;
 	display: flex;
-	position: absolute;
-	left: -19px;
-}
-
-.tweet{
+	left: 27px;
+  }
+  
+  
+  .tweet{
+	position : absolute;
 	display: flex;
-	position: absolute;
-	left: 0px;
-}
-
-.reddit{
+	left: 53px;
+  }
+  
+  .reddit{
+	position : absolute;
 	display: flex;
-	position: absolute;
-	left: 19px;
-}
+	left: 77px;
+  }

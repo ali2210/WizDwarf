@@ -42,22 +42,23 @@ convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
 }
 
 .proteins-card{
-    position: absolute;
-    top: 103px;
-    left: 309px;
+  position: absolute;
+  top: 87px;
+  left: -2px
     
 }
 
 .jmol{
-    position: relative;
-    color: whitesmoke;
-    left: 15px;
-    font-style: italic;
-    font-weight: bold;
+  position: relative;
+  color: floralwhite;
+  left: 0pc;
+  font-style: italic;
+  font-weight: bold;
+  top:0pc;
 }
 
 .jmol:hover{
-    color: white;
+  color: floralwhite;
 }
 
 .description{

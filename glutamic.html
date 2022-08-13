@@ -14,6 +14,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r126/three.js"
     integrity="sha512-aPhrlLlp7Mr8g+MVw6/wMD8PjqqzRNhSM8pHDyyJPmUTJMzKxMmxrjauzQforOaAegN3CIKUTKXJyLwFD57RtA=="
     crossorigin="anonymous"></script>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
   <title>WizDwarfs</title>
 </head>
 
@@ -64,12 +65,18 @@
 	</nav>
   </div>
     <div class="proteins-card">
-        <div class="card text-white bg-primary mb-3" style="max-width: 50rem; max-height: 42rem;">
+        <div class="card text-white bg-success mb-3" style="max-width: 83rem; max-height: 42rem;">
             <div class="card-header"> Glutamic </div>
             <div class="card-body">
               <h5 class="card-title"> <i class="fa fa-info-circle" aria-hidden="true" title="information about amino-acid"></i>
               </h5>
               <p class="card-text"> 
+                <a-scene>
+                  <a-assets>
+                      <a-asset-item id="IDH1" src="/models/5SVF.glb"></a-asset-item>
+                  </a-assets>
+                  <a-entity gltf-model="#IDH1" animation-mixer position="30 27 -150"></a-entity>
+                </a-scene>
                   <table>
                       <tr>
                           <th> Group, </th>
@@ -81,9 +88,11 @@
                           <td>  </td>
                           <td> IDH1, </td>
                           <td> Neutral, </td>
-                          <td> C<small class="subscript">5-</small>H<small class="subscript">9-</small>NO<small class="subscript">4</small></td>
-                          <i class="fa fa-picture-o" aria-hidden="true" title="checmial composition of glutamic" style="position: relative;left: 44pc;top: 0px;"></i>
-                          <a class="jmol" href="https://chemapps.stolaf.edu/jmol/jmol.php?model=C%28CC%28%3DO%29O%29C%28C%28%3DO%29%5BO-%5D%29%5BNH3%2B%5D" title="chemical"> Glutamic Structure 3D-View </a>
+                          <td> 
+                            <a class="jmol" href="https://chemapps.stolaf.edu/jmol/jmol.php?model=C%28CC%28%3DO%29O%29C%28C%28%3DO%29%5BO-%5D%29%5BNH3%2B%5D" title="Chemical structure of Glutamic molecule. In Glutamic compound Hydrogen atoms are abudant."">
+                              C<small class="subscript">5-</small>H<small class="subscript">9-</small>NO<small class="subscript">4</small>
+                            </a>
+                          </td>
                       </tr>
                       <tr>
                           <th> Weight, </th>
@@ -120,42 +129,7 @@
           </div>
     </div>
     </div>
-    <footer class="foot-mark">
-			<p class="line-2" style="position: relative;top: 111px;">
-			  &copy; 2022 - WisdomEnigma Inc
-			  wizdwarfs@gmail.com
-			</p>
-			<div class="channel">
-				<div class="fb">
-					<a href="https://www.facebook.com/wizdwarfs" alt="Facebook" target="_blank" style="color:floralwhite;">
-						<i class="fa fa-facebook" aria-hidden="true"></i>
-					</a>
-				</div>
-				<div class="insta">
-					<a href="https://www.instagram.com/wisdomenigma" alt="instagram" target="_blank" style="color:floralwhite;">
-						<i class="fa fa-instagram" aria-hidden="true"></i>
-					</a>	
-				</div>
-				<div class="tweet">
-					<a href="https://twitter.com/DwarfWiz" alt="Twitter" target="_blank" style="color:floralwhite;">
-						<i class="fa fa-twitter" aria-hidden="true"></i>
-					</a>
-				</div>
-				<div class="reddit">
-					<a href="https://www.reddit.com/r/wizdwarfs" alt="reddit" target="_blank" style="color:floralwhite;">
-						<i class="fa fa-reddit-alien" aria-hidden="true"></i>
-					</a>
-				</div>
-			</div>
-			<div class="terms" style="position: relative;top: 3pc;left: -46pc;height: 2pc;">
-				<i class="fa fa-file-text-o" aria-hidden="true"></i>
-				<a href="/terms" alt="Terms and conditions" style="color:floralwhite;">Terms and conditions</a>
-			</div>
-      <div class="blogspot" style="position: absolute;top: 5pc;left: 5px;color: floralwhite">
-        <i class="fa fa-link"aria-hidden="true"> </i>
-        <a href="https://www.buymeacoffee.com/ali2210" style="color:floralwhite;"> Blogspot </a>
-      </div>
-		  </footer>
+    
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
     crossorigin="anonymous"></script>

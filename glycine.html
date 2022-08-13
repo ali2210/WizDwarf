@@ -14,6 +14,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r126/three.js"
     integrity="sha512-aPhrlLlp7Mr8g+MVw6/wMD8PjqqzRNhSM8pHDyyJPmUTJMzKxMmxrjauzQforOaAegN3CIKUTKXJyLwFD57RtA=="
     crossorigin="anonymous"></script>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
   <title>WizDwarfs</title>
 </head>
 
@@ -64,12 +65,18 @@
 	</nav>
   </div>
     <div class="proteins-card">
-        <div class="card text-white bg-primary mb-3" style="max-width: 45rem; max-height: 42rem;">
+        <div class="card text-white bg-success mb-3" style="max-width: 83rem; max-height: 42rem;">
             <div class="card-header"> Glycine </div>
             <div class="card-body">
               <h5 class="card-title"> <i class="fa fa-info-circle" aria-hidden="true" title="information about amino-acid"></i>
               </h5>
               <p class="card-text"> 
+                <a-scene>
+                  <a-assets>
+                      <a-asset-item id="Clostridium_tetani" src="/models/7OH1.glb"></a-asset-item>
+                  </a-assets>
+                  <a-entity gltf-model="#Clostridium_tetani" animation-mixer position="35 35 -150" rotation="0.080 20.000 20.000"></a-entity>
+                </a-scene>
                   <table>
                       <tr>
                           <th> Group, </th>
@@ -81,9 +88,11 @@
                           <td>  </td>
                           <td>  </td>
                           <td> Neutral, </td>
-                          <td> C<small class="subscript">2-</small>H<small class="subscript">5-</small>NO<small class="subscript">2</small></td>
-                          <i class="fa fa-picture-o" aria-hidden="true" title="checmial composition of glycine" style="position: relative;left: 39pc;top: 1px;"></i>
-                  <a class="jmol" href="https://chemapps.stolaf.edu/jmol/jmol.php?model=C%28C%28%3DO%29O%29N" title="chemical"> Glycine Structure 3D-View </a>
+                          <td> 
+                            <a class="jmol" href="https://chemapps.stolaf.edu/jmol/jmol.php?model=C%28C%28%3DO%29O%29N" title="Chemical structure of Glycine molecule. In Glycine compound Hydrogen atoms are abudant.">
+                              C<small class="subscript">2-</small>H<small class="subscript">5-</small>NO<small class="subscript">2</small>
+                            </a>
+                          </td>
                       </tr>
                       <tr>
                           <th> Weight, </th>

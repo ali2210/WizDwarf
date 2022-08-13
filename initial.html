@@ -10,177 +10,308 @@
   </head>
   <body>
     <div class="company-logo-image">
-        <h2> &#127881; WizDwarfs &#127881; </h2>
+        <h2> &#127881; Wizdwarfs &#127881; </h2>
     </div>
       <div class="typewriter container-text">
          <h4 class="common"> $ --Wizdwarfs  </h4>
          <h5 class="init"> &#129497; Wizdwarfs Initating ... </h5> 
          <h4 class="versions"> $ --version </h4>
-         <h5 class="version"> &#128302; v0.0 ...  </h5> 
+         <h5 class="version"> &#128302; v0.0.1 ...  </h5> 
          <a href="/home" class="link">   Home</a>
       </div>
       <canvas id="confetti"></canvas>
-      <!-- <small> <a class="credit" href="https://codepen.io/nasser-ali-karimi"> created by Nasser Ali Karimi </a></small> -->
+      
   </body>
   <script>
     var retina = window.devicePixelRatio,
 
-// Math shorthands
-PI = Math.PI,
-sqrt = Math.sqrt,
-round = Math.round,
-random = Math.random,
-cos = Math.cos,
-sin = Math.sin,
+    // Math shorthands
+    PI = Math.PI,
+    sqrt = Math.sqrt, 
+    round = Math.round,
+    random = Math.random,
+    cos = Math.cos,
+    sin = Math.sin,
 
-// Local WindowAnimationTiming interface
-rAF = window.requestAnimationFrame,
-cAF = window.cancelAnimationFrame || window.cancelRequestAnimationFrame,
-_now = Date.now || function () {return new Date().getTime();};
+    // Local WindowAnimationTiming interface
+    rAF = window.requestAnimationFrame,
+    cAF = window.cancelAnimationFrame || window.cancelRequestAnimationFrame,
+    _now = Date.now || function () {return new Date().getTime();};
 
-// Local WindowAnimationTiming interface polyfill
-(function (w) {
-/**
+      // Local WindowAnimationTiming interface polyfill
+    (function (w) {
+    /**
     * Fallback implementation.
     */
-var prev = _now();
-function fallback(fn) {
-var curr = _now();
-var ms = Math.max(0, 16 - (curr - prev));
-var req = setTimeout(fn, ms);
-prev = curr;
-return req;
-}
 
-/**
+    var prev = _now();
+
+    function fallback(fn) {
+
+      var curr = _now();
+
+      var ms = Math.max(0, 16 - (curr - prev));
+
+      var req = setTimeout(fn, ms);
+
+      prev = curr;
+
+      return req;
+
+    }
+
+
+    /**
+
     * Cancel.
+
     */
-var cancel = w.cancelAnimationFrame
-|| w.webkitCancelAnimationFrame
-|| w.clearTimeout;
 
-rAF = w.requestAnimationFrame
-|| w.webkitRequestAnimationFrame
-|| fallback;
+    var cancel = w.cancelAnimationFrame
 
-cAF = function(id){
-cancel.call(w, id);
-};
-}(window));
+    || w.webkitCancelAnimationFrame
 
-document.addEventListener("DOMContentLoaded", function() {
-var speed = 50,
-  duration = (1.0 / speed),
-  confettiRibbonCount = 11,
-  ribbonPaperCount = 30,
-  ribbonPaperDist = 8.0,
-  ribbonPaperThick = 8.0,
-  confettiPaperCount = 95,
-  DEG_TO_RAD = PI / 180,
-  RAD_TO_DEG = 180 / PI,
-  colors = [
+    || w.clearTimeout;
+
+
+    rAF = w.requestAnimationFrame
+
+    || w.webkitRequestAnimationFrame
+
+    || fallback;
+
+
+    cAF = function(id){
+
+      cancel.call(w, id);
+
+    };
+
+  }(window));
+
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    var speed = 50,
+
+    duration = (1.0 / speed),
+
+    confettiRibbonCount = 11,
+
+    ribbonPaperCount = 30,
+
+    ribbonPaperDist = 8.0,
+
+    ribbonPaperThick = 8.0,
+
+    confettiPaperCount = 95,
+
+    DEG_TO_RAD = PI / 180,
+
+    RAD_TO_DEG = 180 / PI,
+
+    colors = [
+
     ["#df0049", "#660671"],
     ["#00e857", "#005291"],
     ["#2bebbc", "#05798a"],
     ["#ffd200", "#b06c00"]
+
   ];
 
-function Vector2(_x, _y) {
-this.x = _x, this.y = _y;
-this.Length = function() {
-  return sqrt(this.SqrLength());
-}
-this.SqrLength = function() {
-  return this.x * this.x + this.y * this.y;
-}
-this.Add = function(_vec) {
-  this.x += _vec.x;
-  this.y += _vec.y;
-}
-this.Sub = function(_vec) {
-  this.x -= _vec.x;
-  this.y -= _vec.y;
-}
-this.Div = function(_f) {
-  this.x /= _f;
-  this.y /= _f;
-}
-this.Mul = function(_f) {
-  this.x *= _f;
-  this.y *= _f;
-}
-this.Normalize = function() {
-  var sqrLen = this.SqrLength();
-  if (sqrLen != 0) {
-    var factor = 1.0 / sqrt(sqrLen);
-    this.x *= factor;
-    this.y *= factor;
-  }
-}
-this.Normalized = function() {
-  var sqrLen = this.SqrLength();
-  if (sqrLen != 0) {
-    var factor = 1.0 / sqrt(sqrLen);
-    return new Vector2(this.x * factor, this.y * factor);
-  }
-  return new Vector2(0, 0);
-}
-}
-Vector2.Lerp = function(_vec0, _vec1, _t) {
-return new Vector2((_vec1.x - _vec0.x) * _t + _vec0.x, (_vec1.y - _vec0.y) * _t + _vec0.y);
-}
-Vector2.Distance = function(_vec0, _vec1) {
-return sqrt(Vector2.SqrDistance(_vec0, _vec1));
-}
-Vector2.SqrDistance = function(_vec0, _vec1) {
-var x = _vec0.x - _vec1.x;
-var y = _vec0.y - _vec1.y;
-return (x * x + y * y + z * z);
-}
-Vector2.Scale = function(_vec0, _vec1) {
-return new Vector2(_vec0.x * _vec1.x, _vec0.y * _vec1.y);
-}
-Vector2.Min = function(_vec0, _vec1) {
-return new Vector2(Math.min(_vec0.x, _vec1.x), Math.min(_vec0.y, _vec1.y));
-}
-Vector2.Max = function(_vec0, _vec1) {
-return new Vector2(Math.max(_vec0.x, _vec1.x), Math.max(_vec0.y, _vec1.y));
-}
-Vector2.ClampMagnitude = function(_vec0, _len) {
-var vecNorm = _vec0.Normalized;
-return new Vector2(vecNorm.x * _len, vecNorm.y * _len);
-}
-Vector2.Sub = function(_vec0, _vec1) {
-return new Vector2(_vec0.x - _vec1.x, _vec0.y - _vec1.y, _vec0.z - _vec1.z);
-}
 
-function EulerMass(_x, _y, _mass, _drag) {
-this.position = new Vector2(_x, _y);
-this.mass = _mass;
-this.drag = _drag;
-this.force = new Vector2(0, 0);
-this.velocity = new Vector2(0, 0);
-this.AddForce = function(_f) {
-  this.force.Add(_f);
-}
-this.Integrate = function(_dt) {
-  var acc = this.CurrentForce(this.position);
-  acc.Div(this.mass);
-  var posDelta = new Vector2(this.velocity.x, this.velocity.y);
-  posDelta.Mul(_dt);
-  this.position.Add(posDelta);
-  acc.Mul(_dt);
-  this.velocity.Add(acc);
-  this.force = new Vector2(0, 0);
-}
-this.CurrentForce = function(_pos, _vel) {
-  var totalForce = new Vector2(this.force.x, this.force.y);
-  var speed = this.velocity.Length();
-  var dragVel = new Vector2(this.velocity.x, this.velocity.y);
-  dragVel.Mul(this.drag * this.mass * speed);
-  totalForce.Sub(dragVel);
-  return totalForce;
-}
+  function Vector2(_x, _y) {
+
+    this.x = _x, this.y = _y;
+
+    this.Length = function() {
+
+      return sqrt(this.SqrLength());
+
+    }
+
+    this.SqrLength = function() {
+
+      return this.x * this.x + this.y * this.y;
+
+    }
+
+    this.Add = function(_vec) {
+
+      this.x += _vec.x;
+
+      this.y += _vec.y;
+
+    }
+
+    this.Sub = function(_vec) {
+
+      this.x -= _vec.x;
+
+      this.y -= _vec.y;
+
+    }
+
+    this.Div = function(_f) {
+
+      this.x /= _f;
+
+      this.y /= _f;
+
+    }
+
+    this.Mul = function(_f) {
+
+      this.x *= _f;
+
+      this.y *= _f;
+
+    }
+
+    this.Normalize = function() {
+
+      var sqrLen = this.SqrLength();
+
+      if (sqrLen != 0) {
+
+        var factor = 1.0 / sqrt(sqrLen);
+
+
+        this.x *= factor;
+
+        this.y *= factor;
+
+      }
+
+    }
+
+    this.Normalized = function() {
+
+      var sqrLen = this.SqrLength();
+
+      if (sqrLen != 0) {
+
+        var factor = 1.0 / sqrt(sqrLen);
+
+        return new Vector2(this.x * factor, this.y * factor);
+
+      }
+
+      return new Vector2(0, 0);
+
+    }
+
+  }
+
+  Vector2.Lerp = function(_vec0, _vec1, _t) {
+
+    return new Vector2((_vec1.x - _vec0.x) * _t + _vec0.x, (_vec1.y - _vec0.y) * _t + _vec0.y);
+
+  }
+
+  Vector2.Distance = function(_vec0, _vec1) {
+
+    return sqrt(Vector2.SqrDistance(_vec0, _vec1));
+
+  }
+
+  Vector2.SqrDistance = function(_vec0, _vec1) {
+
+    var x = _vec0.x - _vec1.x;
+
+    var y = _vec0.y - _vec1.y;
+
+    return (x * x + y * y + z * z);
+
+  }
+
+  Vector2.Scale = function(_vec0, _vec1) {
+
+    return new Vector2(_vec0.x * _vec1.x, _vec0.y * _vec1.y);
+
+  }
+
+  Vector2.Min = function(_vec0, _vec1) {
+
+    return new Vector2(Math.min(_vec0.x, _vec1.x), Math.min(_vec0.y, _vec1.y));
+
+  }
+
+  Vector2.Max = function(_vec0, _vec1) {
+
+    return new Vector2(Math.max(_vec0.x, _vec1.x), Math.max(_vec0.y, _vec1.y));
+
+  }
+
+  Vector2.ClampMagnitude = function(_vec0, _len) {
+
+    var vecNorm = _vec0.Normalized;
+
+    return new Vector2(vecNorm.x * _len, vecNorm.y * _len);
+
+  }
+
+  Vector2.Sub = function(_vec0, _vec1) {
+
+    return new Vector2(_vec0.x - _vec1.x, _vec0.y - _vec1.y, _vec0.z - _vec1.z);
+
+  }
+
+
+  function EulerMass(_x, _y, _mass, _drag) {
+
+    this.position = new Vector2(_x, _y);
+
+    this.mass = _mass;
+
+    this.drag = _drag;
+
+    this.force = new Vector2(0, 0);
+
+    this.velocity = new Vector2(0, 0);
+
+    this.AddForce = function(_f) {
+
+    this.force.Add(_f);
+
+  }
+
+  this.Integrate = function(_dt) {
+
+    var acc = this.CurrentForce(this.position);
+
+    acc.Div(this.mass);
+
+    var posDelta = new Vector2(this.velocity.x, this.velocity.y);
+
+    posDelta.Mul(_dt);
+
+    this.position.Add(posDelta);
+
+    acc.Mul(_dt);
+
+    this.velocity.Add(acc);
+
+    this.force = new Vector2(0, 0);
+
+  }
+
+  this.CurrentForce = function(_pos, _vel) {
+
+    var totalForce = new Vector2(this.force.x, this.force.y);
+
+    var speed = this.velocity.Length();
+
+    var dragVel = new Vector2(this.velocity.x, this.velocity.y);
+
+    dragVel.Mul(this.drag * this.mass * speed);
+
+    totalForce.Sub(dragVel);
+
+    return totalForce;
+
+  }
+
 }
 
 function ConfettiPaper(_x, _y) {
