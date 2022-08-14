@@ -166,10 +166,11 @@
 	display: flex;
 	position: relative;
 	justify-content: center;
-	top: -2pc;    
+	top: 10pc;    
 	background-color: black;
 	color: whitesmoke;
 	height: 9pc;
+	border-radius: 20px;
   }
   
   .channel{
