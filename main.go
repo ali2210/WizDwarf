@@ -18,9 +18,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/hcl2/gohcl"
-	"github.com/hashicorp/hcl2/hclparse"
-
 	"cloud.google.com/go/firestore"
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
 	"github.com/ali2210/wizdwarf/other/bucket"
@@ -41,6 +38,9 @@ import (
 	"github.com/ali2210/wizdwarf/piplines"
 	connection "github.com/alimasyhur/is-connect"
 	"github.com/briandowns/openweathermap"
+	"github.com/emojisum/emojisum/emoji"
+	"github.com/hashicorp/hcl2/gohcl"
+	"github.com/hashicorp/hcl2/hclparse"
 
 	"github.com/ali2210/wizdwarf/other/geo"
 	weather "github.com/ali2210/wizdwarf/other/openweather"
@@ -166,32 +166,54 @@ func main() {
 		log.Println(" Vault credentials:", geoApi, channelKey, channelSecret, channelId, channelCluster)
 	}
 
-	// whether port or host will be empty.
-	if host == "" {
+	emoji_keys := []int64{196, 3, 50, 7, 28, 9, 119, 18, 30, 240, 175}
+	emoji_values := make([]string, 11)
 
-		if port == " " && wizDir == " " {
-			log.Fatalln("Internet Status:", CONNECTIVITY)
-			log.Fatalln(" Firebase Configuration complete ... [well-done]")
-			log.Fatalln(" Private IP-Address Configuration ... [fail]")
-			log.Fatalln(" Protocol-Buffer v3 Configuration complete ... [well-done]")
-			log.Fatalln(" UI Webboard Configuration ... [fail]")
-			log.Fatalln(" Application Configuration ... [fail]")
-			log.Fatalln(" Application Default IP-Address Allocate ... [fail]")
-			log.Fatalln(" Application Persistance Storage Configuration completed ...  [fail]")
-			log.Fatalln("Make sure volume mount")
-			panic("Application fail to started because no port is specified and we do not have writing permission on your disk ")
-		}
+	for _, value := range emoji_keys {
+
+		emoji_map_value := emoji.Map(byte(value))
+		emoji_values = append(emoji_values, emoji.CodepointToUnicode(emoji_map_value[1]))
+	}
+
+	// whether port or host will be empty.
+	if reflect.DeepEqual(strings.Contains(host, ""), true) {
+
+		log.Fatalln(emoji_values[11], " Internet Status:", CONNECTIVITY)
+		log.Fatalln(emoji_values[12], " Firebase Configuration complete ... [well-done]")
+		log.Fatalln(emoji_values[13], " Private IP-Address Configuration ... [fail]")
+		log.Fatalln(emoji_values[14], " Protocol-Buffer v3 Configuration complete ... [well-done]")
+		log.Fatalln(emoji_values[16], " UI Webboard Configuration ... [fail]")
+		log.Fatalln(emoji_values[17], " Application Configuration ... [fail]")
+		log.Fatalln(emoji_values[18], " Application Default IP-Address Allocate ... [fail]")
+		log.Fatalln(emoji_values[19], " Application Persistance Storage Configuration completed ...  [fail]")
+
+		panic("Application fail to started because no port is specified and we do not have writing permission on your disk ")
+	}
+
+	if reflect.DeepEqual(strings.Contains(port, ""), true) && reflect.DeepEqual(strings.Contains(wizDir, ""), true) {
+
+		log.Fatalln(emoji_values[11], " Internet Status:", CONNECTIVITY)
+		log.Fatalln(emoji_values[12], " Firebase Configuration complete ... [well-done]")
+		log.Fatalln(emoji_values[13], " Private IP-Address Configuration ... [fail]")
+		log.Fatalln(emoji_values[14], " Protocol-Buffer v3 Configuration complete ... [well-done]")
+		log.Fatalln(emoji_values[16], " UI Webboard Configuration ... [fail]")
+		log.Fatalln(emoji_values[17], " Application Configuration ... [fail]")
+		log.Fatalln(emoji_values[18], " Application Default IP-Address Allocate ... [fail]")
+		log.Fatalln(emoji_values[19], " Application Persistance Storage Configuration completed ...  [fail]")
+		log.Fatalln(emoji_values[20], "Make sure volume mount")
+		panic("Application fail to started because no port is specified and we do not have writing permission on your disk ")
 	} else {
-		fmt.Println("Internet Status:", CONNECTIVITY)
-		fmt.Println(" Firebase Configuration complete ... [well-done]")
-		fmt.Println(" Private IP-Address Configuration complete ... [well-done]")
-		fmt.Println(" Protocol-Buffer v3 Configuration complete ... [well-done]")
-		fmt.Println(" FAUNA DB Connected ... [well-done]")
-		fmt.Println(" Channel communication Configuration complete ... [well-done]")
-		fmt.Println(" Data Events are encrypted.   ... [well-done]")
-		fmt.Println(" UI Webboard Configuration complete ... [well-done]")
-		fmt.Println(" Application started ... [well-done](All process have completed)")
-		fmt.Println(" Application Persistance Storage Configuration completed ...  [well-done]")
+
+		fmt.Println(emoji_values[15], " Internet Status:", CONNECTIVITY)
+		fmt.Println(emoji_values[12], " Firebase Configuration complete ... [well-done]")
+		fmt.Println(emoji_values[13], " Private IP-Address Configuration complete ... [well-done]")
+		fmt.Println(emoji_values[14], " Protocol-Buffer v3 Configuration complete ... [well-done]")
+		fmt.Println(emoji_values[16], " FAUNA DB Connected ... [well-done]")
+		fmt.Println(emoji_values[17], " Channel communication Configuration complete ... [well-done]")
+		fmt.Println(emoji_values[18], " Data Events are encrypted.   ... [well-done]")
+		fmt.Println(emoji_values[19], " UI Webboard Configuration complete ... [well-done]")
+		fmt.Println(emoji_values[20], " Application started ... [well-done](All process have completed)")
+		fmt.Println(emoji_values[21], " Application Persistance Storage Configuration completed ...  [well-done]")
 
 		if port != "127.0.0.1:5000" {
 			fmt.Println(" The webboard started with this address at ", "127.0.0.1"+port)

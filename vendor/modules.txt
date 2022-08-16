@@ -72,6 +72,9 @@ github.com/cncf/xds/go/xds/core/v3
 github.com/cncf/xds/go/xds/data/orca/v3
 github.com/cncf/xds/go/xds/type/matcher/v3
 github.com/cncf/xds/go/xds/type/v3
+# github.com/emojisum/emojisum/emoji v0.0.0-20211123161002-dddcd7a159ed
+## explicit
+github.com/emojisum/emojisum/emoji
 # github.com/envoyproxy/go-control-plane v0.10.1
 ## explicit
 github.com/envoyproxy/go-control-plane/envoy/admin/v3
