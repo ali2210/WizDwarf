@@ -6,7 +6,7 @@ jobs:
   build:
     docker:
       # specify the version
-      - image: cimg/go:1.16
+      - image: circleci/golang:1.16
         auth:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
