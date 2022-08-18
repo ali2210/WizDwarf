@@ -6,7 +6,7 @@ jobs:
   build:
     docker:
       # specify the version
-      - image: circleci/golang:1.16
+      - image: cimg/go:1.19.0
         auth:
           username: ali2210
           password: hack@Docker0x
