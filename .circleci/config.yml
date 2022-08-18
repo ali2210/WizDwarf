@@ -9,7 +9,7 @@ jobs:
       - image: circleci/golang:1.16
         auth:
           username: ali2210
-          password: hackmydockeraccount0511
+          password: hack@Docker0x
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
@@ -38,7 +38,7 @@ jobs:
             - go mod-v4-{{ checksum  "go.sum" }}
             
       # build wizdwarfs docker image 
-      - run: docker build -t ali2210/wizdwarfs-masterpiece . 
+      - run: docker build -t ali2210/wizdwarfs-v0 . 
       
       # specify any bash command here prefixed with `run: `
       - run: go get -v -t -d ./...
