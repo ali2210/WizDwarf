@@ -5,13 +5,16 @@ package piplines
 import (
 	//firebase "firebase.google.com/go"
 
+	"errors"
 	"reflect"
 	"strings"
 
 	"cloud.google.com/go/firestore"
+	vault_wraper "github.com/WisdomEnigma/vault-keygen/vault"
 	bio "github.com/ali2210/wizdwarf/other/bioinformatics"
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
 	"github.com/ali2210/wizdwarf/other/users"
+	"github.com/hashicorp/vault/api"
 )
 
 var (
@@ -95,4 +98,60 @@ func GetBioAlgoParameters() info.Levenshtein {
 func Extractor(in, pattern string) string {
 
 	return strings.Trim(in, pattern)
+}
+
+type HCLDeclaration struct {
+	Weatherapi  string `hcl:"Weatherapi"`
+	Channel_key string `hcl:"Channel_key"`
+	Channel_id  string `hcl:"Channel_id"`
+	Secret      string `hcl:"Secret"`
+	Cluster_ID  string `hcl:"Cluster_ID"`
+	Token_Auth  string `hcl:"Token_Auth"`
+}
+
+var v_wrapper vault_wraper.Vault_Services
+
+func PutKV(object *HCLDeclaration, path string, client *api.Client) error {
+
+	if reflect.DeepEqual(object, &HCLDeclaration{}) {
+		return errors.Unwrap(errors.New("Object field must not be empty"))
+	}
+
+	if reflect.DeepEqual(client, &api.Client{}) {
+		return errors.Unwrap(errors.New("Vault client is not running in background or vault credentials had not submit yet."))
+	}
+
+	v_wrapper = vault_wraper.NewClient(client)
+
+	_, err := v_wrapper.SaveKeygen(vault_wraper.Keygen{
+		Vault_path: path,
+		Vault_record: map[string]interface{}{
+			"data": map[string]interface{}{
+				"Weatherapi":  object.Weatherapi,
+				"Channel_key": object.Channel_key,
+				"Channel_id":  object.Channel_id,
+				"Secret":      object.Secret,
+				"Cluster_ID":  object.Cluster_ID,
+			},
+		},
+	})
+
+	return err
+}
+
+func GetKV(path string) (interface{}, error) {
+
+	keygen, err := v_wrapper.GetKeygen(vault_wraper.Keygen{
+		Vault_path:   path,
+		Vault_record: nil,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if reflect.DeepEqual(keygen.Data["data"], map[string]interface{}{}) {
+		return map[string]interface{}{}, errors.Unwrap(errors.New("secrets vault is empty.."))
+	}
+
+	return keygen.Data["data"], nil
 }

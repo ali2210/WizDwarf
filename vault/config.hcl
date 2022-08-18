@@ -1,15 +1,16 @@
 storage "raft"{
     path = "./vault/data"
-    node_id = "1"
+    node_id = "client_0f33"
 }
 
 
 listener "tcp"{
-    address = "127.0.0.1:82000"
+    address = "127.0.0.1:8200"
     tls_disable = "true"
 }
 
 
-api_addr = "127.0.0.1:82000"
-cluster_addr = "127.0.0.1:82001"
+api_addr = "http://127.0.0.1:8200"
+cluster_addr = "https://127.0.0.1:8201"
 ui = true
+disable_mlock = true

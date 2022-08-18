@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"reflect"
@@ -41,6 +42,7 @@ import (
 	"github.com/emojisum/emojisum/emoji"
 	"github.com/hashicorp/hcl2/gohcl"
 	"github.com/hashicorp/hcl2/hclparse"
+	"github.com/hashicorp/vault/api"
 
 	"github.com/ali2210/wizdwarf/other/geo"
 	weather "github.com/ali2210/wizdwarf/other/openweather"
@@ -50,6 +52,11 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 )
+
+// constants
+
+const Secret_path string = "kv/appsecret"
+const VAULT_ADDRESS string = "http://127.0.0.1:8200"
 
 // Variables
 
@@ -83,6 +90,8 @@ var (
 	SECRET_TOKEN           string          = " "
 	_start                 time.Time
 	CONNECTIVITY           string = ""
+	client                 *api.Client
+	hcldeclare             piplines.HCLDeclaration
 )
 
 var (
@@ -92,15 +101,6 @@ var (
 	Cloud       users.DBFirestore = piplines.SetDBCollect()
 )
 
-type HCLDeclaration struct {
-	Weatherapi  string `hcl:"Weatherapi"`
-	Channel_key string `hcl:"Channel_key"`
-	Channel_id  string `hcl:"Channel_id"`
-	Secret      string `hcl:"Secret"`
-	Cluster_ID  string `hcl:"Cluster_ID"`
-	Token_Auth  string `hcl:"Token_Auth"`
-}
-
 func main() {
 
 	// Server
@@ -108,12 +108,6 @@ func main() {
 	host := os.Getenv("HOST")
 	port := os.Getenv("PORT")
 	wizDir := os.Getenv("WIZ_VOLUME_DIR")
-
-	// GEO_Index_KEY = os.Getenv("GEOCOORDINATE")
-	// APP_CHANNEL_KEY = os.Getenv("Registry_PUSHER_KEY")
-	// APP_CHANNEL_ID = os.Getenv("Registry_CHANNEL_ID")
-	// APP_CHANNEL_SCRECT = os.Getenv("Registry_CHANNEL_SCRECT")
-	// APP_CHANNEL_CLUSTER_ID = os.Getenv("Registry_CHANNEL_CLUSTER_ID")
 
 	ast := hclparse.NewParser()
 
@@ -125,8 +119,6 @@ func main() {
 
 		return
 	}
-
-	var hcldeclare HCLDeclaration
 
 	errs = gohcl.DecodeBody(body.Body, nil, &hcldeclare)
 
@@ -147,7 +139,68 @@ func main() {
 		CONNECTIVITY = "ONLINE"
 	}
 
-	if reflect.DeepEqual(hcldeclare.Token_Auth, "") {
+	emoji_keys := []int64{196, 3, 50, 7, 28, 9, 119, 18, 30, 240, 175}
+	emoji_values := make([]string, 11)
+
+	for _, value := range emoji_keys {
+
+		emoji_map_value := emoji.Map(byte(value))
+		emoji_values = append(emoji_values, emoji.CodepointToUnicode(emoji_map_value[1]))
+	}
+
+	// whether port or host will be empty.
+	if reflect.DeepEqual(strings.Compare(CONNECTIVITY, "OFFLINE"), 0) && !reflect.DeepEqual(host, " ") {
+
+		log.Fatalln(emoji_values[11], " Internet Status:", CONNECTIVITY)
+		log.Fatalln(emoji_values[12], " Firebase Configuration complete ... [well-done]")
+		log.Fatalln(emoji_values[13], " Private IP-Address Configuration ... [fail]", rand.Intn(100), "%")
+		log.Fatalln(emoji_values[14], " Protocol-Buffer v3 Configuration complete ... [well-done]")
+		log.Fatalln(emoji_values[16], " UI Webboard Configuration ... [fail]", rand.Intn(100), "%")
+		log.Fatalln(emoji_values[17], " Application Configuration ... [fail]", rand.Intn(100), "%")
+		log.Fatalln(emoji_values[18], " Application Default IP-Address Allocate ... [fail]", rand.Intn(100), "%")
+		log.Fatalln(emoji_values[19], " Application Persistance Storage Configuration completed ...  [fail]", rand.Intn(100), "%")
+
+		panic("Application fail to started because no port is specified and we do not have writing permission on your disk ")
+	}
+
+	if reflect.DeepEqual(strings.Contains(port, ":5000"), false) && reflect.DeepEqual(strings.Contains(wizDir, "/app/app_data/apps.txt"), false) {
+
+		log.Fatalln(emoji_values[11], " Internet Status:", CONNECTIVITY)
+		log.Fatalln(emoji_values[12], " Firebase Configuration complete ... [well-done]")
+		log.Fatalln(emoji_values[13], " Private IP-Address Configuration ... [fail]", rand.Intn(100), "%")
+		log.Fatalln(emoji_values[14], " Protocol-Buffer v3 Configuration complete ... [well-done]")
+		log.Fatalln(emoji_values[16], " UI Webboard Configuration ... [fail]", rand.Intn(100), "%")
+		log.Fatalln(emoji_values[17], " Application Configuration ... [fail]", rand.Intn(100), "%")
+		log.Fatalln(emoji_values[18], " Application Default IP-Address Allocate ... [fail]", rand.Intn(100), "%")
+		log.Fatalln(emoji_values[19], " Application Persistance Storage Configuration completed ...  [fail]", rand.Intn(100), "%")
+		log.Fatalln(emoji_values[20], "Make sure volume mount", rand.Intn(100), "%")
+		panic("Application fail to started because no port is specified and we do not have writing permission on your disk ")
+	} else {
+
+		log.Println(emoji_values[15], " Internet Status:", CONNECTIVITY)
+		log.Println(emoji_values[12], " Firebase Configuration complete ... [well-done]")
+		log.Println(emoji_values[13], " Private IP-Address Configuration complete ... [well-done]")
+		log.Println(emoji_values[14], " Protocol-Buffer v3 Configuration complete ... [well-done]")
+		log.Println(emoji_values[16], " FAUNA DB Connected ... [well-done]")
+		log.Println(emoji_values[17], " Channel communication Configuration complete ... [well-done]")
+		log.Println(emoji_values[18], " Data Events are encrypted.   ... [well-done]")
+		log.Println(emoji_values[19], " UI Webboard Configuration complete ... [well-done]")
+		log.Println(emoji_values[20], " Application started ... [well-done](All process have completed)")
+		log.Println(emoji_values[21], " Application Persistance Storage Configuration completed ...  [well-done]")
+
+		if port != "127.0.0.1:5000" {
+			fmt.Println(" The webboard started with this address at ", "127.0.0.1"+port)
+		}
+		fmt.Println(" ***************************************************************************************")
+		fmt.Println("  @@@  @@@  @@@ @@@ @@@@@@@@ @@@@@@@  @@@  @@@  @@@  @@@@@@  @@@@@@@  @@@@@@@@  @@@@@@ ")
+		fmt.Println("   @@!  @@!  @@! @@!      @@! @@!  @@@ @@!  @@!  @@! @@!  @@@ @@!  @@@ @@!      !@@     ")
+		fmt.Println("   @!!  !!@  @!@ !!@    @!!   @!@  !@! @!!  !!@  @!@ @!@!@!@! @!@!!@!  @!!!:!    !@@!!  ")
+		fmt.Println("    !:  !!:  !!  !!:  !!:     !!:  !!!  !:  !!:  !!  !!:  !!! !!: :!!  !!:          !:! ")
+		fmt.Println("    ::.:  :::   :   :.::.: : :: :  :    ::.:  :::    :   : :  :   : :  :       ::.: :  ")
+		fmt.Println(" ****************************************************************************************")
+	}
+
+	if reflect.DeepEqual(hcldeclare.Token_Auth, " ") {
 
 		GEO_Index_KEY = piplines.Extractor(hcldeclare.Weatherapi, hcldeclare.Weatherapi[0:40])[3:]
 		APP_CHANNEL_KEY = piplines.Extractor(hcldeclare.Channel_key, hcldeclare.Channel_key[0:40])[3:]
@@ -163,68 +216,48 @@ func main() {
 		channelCluster := piplines.Extractor(hcldeclare.Cluster_ID, hcldeclare.Cluster_ID[0:4])
 		SECRET_TOKEN = hcldeclare.Token_Auth
 
-		log.Println(" Vault credentials:", geoApi, channelKey, channelSecret, channelId, channelCluster)
-	}
+		log.Println(emoji_values[15], "Developer Mode initating .....", rand.Intn(100), "%")
 
-	emoji_keys := []int64{196, 3, 50, 7, 28, 9, 119, 18, 30, 240, 175}
-	emoji_values := make([]string, 11)
-
-	for _, value := range emoji_keys {
-
-		emoji_map_value := emoji.Map(byte(value))
-		emoji_values = append(emoji_values, emoji.CodepointToUnicode(emoji_map_value[1]))
-	}
-
-	// whether port or host will be empty.
-	if reflect.DeepEqual(strings.Contains(host, ""), true) {
-
-		log.Fatalln(emoji_values[11], " Internet Status:", CONNECTIVITY)
-		log.Fatalln(emoji_values[12], " Firebase Configuration complete ... [well-done]")
-		log.Fatalln(emoji_values[13], " Private IP-Address Configuration ... [fail]")
-		log.Fatalln(emoji_values[14], " Protocol-Buffer v3 Configuration complete ... [well-done]")
-		log.Fatalln(emoji_values[16], " UI Webboard Configuration ... [fail]")
-		log.Fatalln(emoji_values[17], " Application Configuration ... [fail]")
-		log.Fatalln(emoji_values[18], " Application Default IP-Address Allocate ... [fail]")
-		log.Fatalln(emoji_values[19], " Application Persistance Storage Configuration completed ...  [fail]")
-
-		panic("Application fail to started because no port is specified and we do not have writing permission on your disk ")
-	}
-
-	if reflect.DeepEqual(strings.Contains(port, ""), true) && reflect.DeepEqual(strings.Contains(wizDir, ""), true) {
-
-		log.Fatalln(emoji_values[11], " Internet Status:", CONNECTIVITY)
-		log.Fatalln(emoji_values[12], " Firebase Configuration complete ... [well-done]")
-		log.Fatalln(emoji_values[13], " Private IP-Address Configuration ... [fail]")
-		log.Fatalln(emoji_values[14], " Protocol-Buffer v3 Configuration complete ... [well-done]")
-		log.Fatalln(emoji_values[16], " UI Webboard Configuration ... [fail]")
-		log.Fatalln(emoji_values[17], " Application Configuration ... [fail]")
-		log.Fatalln(emoji_values[18], " Application Default IP-Address Allocate ... [fail]")
-		log.Fatalln(emoji_values[19], " Application Persistance Storage Configuration completed ...  [fail]")
-		log.Fatalln(emoji_values[20], "Make sure volume mount")
-		panic("Application fail to started because no port is specified and we do not have writing permission on your disk ")
-	} else {
-
-		fmt.Println(emoji_values[15], " Internet Status:", CONNECTIVITY)
-		fmt.Println(emoji_values[12], " Firebase Configuration complete ... [well-done]")
-		fmt.Println(emoji_values[13], " Private IP-Address Configuration complete ... [well-done]")
-		fmt.Println(emoji_values[14], " Protocol-Buffer v3 Configuration complete ... [well-done]")
-		fmt.Println(emoji_values[16], " FAUNA DB Connected ... [well-done]")
-		fmt.Println(emoji_values[17], " Channel communication Configuration complete ... [well-done]")
-		fmt.Println(emoji_values[18], " Data Events are encrypted.   ... [well-done]")
-		fmt.Println(emoji_values[19], " UI Webboard Configuration complete ... [well-done]")
-		fmt.Println(emoji_values[20], " Application started ... [well-done](All process have completed)")
-		fmt.Println(emoji_values[21], " Application Persistance Storage Configuration completed ...  [well-done]")
-
-		if port != "127.0.0.1:5000" {
-			fmt.Println(" The webboard started with this address at ", "127.0.0.1"+port)
+		var err error
+		client, err = api.NewClient(&api.Config{Address: VAULT_ADDRESS, HttpClient: &http.Client{Timeout: time.Second * 30}})
+		if err != nil {
+			log.Fatalln(" connecting Error ... :", err)
+			return
 		}
-		fmt.Println(" ***************************************************************************************")
-		fmt.Println("  @@@  @@@  @@@ @@@ @@@@@@@@ @@@@@@@  @@@  @@@  @@@  @@@@@@  @@@@@@@  @@@@@@@@  @@@@@@ ")
-		fmt.Println("   @@!  @@!  @@! @@!      @@! @@!  @@@ @@!  @@!  @@! @@!  @@@ @@!  @@@ @@!      !@@     ")
-		fmt.Println("   @!!  !!@  @!@ !!@    @!!   @!@  !@! @!!  !!@  @!@ @!@!@!@! @!@!!@!  @!!!:!    !@@!!  ")
-		fmt.Println("    !:  !!:  !!  !!:  !!:     !!:  !!!  !:  !!:  !!  !!:  !!! !!: :!!  !!:          !:! ")
-		fmt.Println("    ::.:  :::   :   :.::.: : :: :  :    ::.:  :::    :   : :  :   : :  :       ::.: :  ")
-		fmt.Println(" ****************************************************************************************")
+
+		client.SetToken(SECRET_TOKEN)
+
+		err = piplines.PutKV(&piplines.HCLDeclaration{Weatherapi: geoApi, Channel_key: channelKey, Channel_id: channelId, Secret: channelSecret, Cluster_ID: channelCluster, Token_Auth: ""}, Secret_path, client)
+		if err != nil {
+			log.Fatalln(" Error :", err)
+			return
+		}
+
+		mapper, err := piplines.GetKV(Secret_path)
+		if err != nil {
+			log.Fatalln(" Error :", err)
+			return
+		}
+
+		var _credentials piplines.HCLDeclaration
+
+		cred, err := json.Marshal(mapper)
+		if err != nil {
+			log.Fatalln("Error data marshal: ...", err)
+			return
+		}
+
+		err = json.Unmarshal(cred, &_credentials)
+		if err != nil {
+			log.Fatalln("Error data unmarshal: ...", err)
+			return
+		}
+
+		GEO_Index_KEY = _credentials.Weatherapi
+		APP_CHANNEL_KEY = _credentials.Channel_key
+		APP_CHANNEL_SECRET = _credentials.Secret
+		APP_CHANNEL_ID = _credentials.Channel_id
+		APP_CHANNEL_CLUSTER_ID = _credentials.Cluster_ID
 	}
 
 	// Routing
@@ -1545,6 +1578,7 @@ func logout(w http.ResponseWriter, r *http.Request) {
 
 	// route actions
 	if r.Method == "GET" {
+
 		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
 
 		value, err := cacheObject.Get_Key("Route_Path:")
@@ -1553,11 +1587,20 @@ func logout(w http.ResponseWriter, r *http.Request) {
 		}
 
 		logformat.Trace(value)
+
 		act := websession.Cookies{}
 
 		act.SetContextSession(userSessions, w, r)
+
+		if !reflect.DeepEqual(hcldeclare.Token_Auth, "") {
+			client.ClearToken()
+			client.ClientTimeout()
+		}
+
 		err = act.ExpireToken()
+
 		if err != nil {
+
 			w.WriteHeader(http.StatusBadRequest)
 			distorted(w, r)
 			cacheObject.Set_Key("Internal:", err.Error())
@@ -1570,6 +1613,7 @@ func logout(w http.ResponseWriter, r *http.Request) {
 			logformat.Error(value)
 			return
 		}
+
 		existing(w, r)
 	}
 }
@@ -1583,7 +1627,9 @@ func stop_codon(w http.ResponseWriter, r *http.Request) {
 
 	// webpage route
 	webpge := template.Must(template.ParseFiles("codons.html"))
+
 	if r.Method == "GET" {
+
 		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
 
 		value, err := cacheObject.Get_Key("Route_Path:")
