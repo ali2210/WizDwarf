@@ -8,8 +8,8 @@ jobs:
       # specify the version
       - image: circleci/golang:1.16
         auth:
-          username: ali2210
-          password: hack@Docker0x
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
