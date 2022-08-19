@@ -1592,7 +1592,7 @@ func logout(w http.ResponseWriter, r *http.Request) {
 
 		act.SetContextSession(userSessions, w, r)
 
-		if !reflect.DeepEqual(hcldeclare.Token_Auth, "") {
+		if !reflect.DeepEqual(hcldeclare.Token_Auth, " ") {
 			client.ClearToken()
 			client.ClientTimeout()
 		}
