@@ -3,7 +3,7 @@
 # convensions. @contact Ali Hassan AliMatrixCode@protonmail.com
 
 # base image 
-FROM golang:1.17.7-alpine3.15
+FROM golang:1.17.10-alpine3.15
 
 # environment params  
 ENV CGO_ENABLED=0
