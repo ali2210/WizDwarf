@@ -41,8 +41,6 @@ import (
 	"github.com/ali2210/wizdwarf/other/crypto"
 	cryptos "github.com/ali2210/wizdwarf/other/crypto"
 	wizdate "github.com/ali2210/wizdwarf/other/date_time"
-	"github.com/ali2210/wizdwarf/other/fauna"
-	"github.com/ali2210/wizdwarf/other/fauna/store"
 	"github.com/ali2210/wizdwarf/other/parser"
 	imglib "github.com/ali2210/wizdwarf/other/parser/parse_image"
 	biosubtypes "github.com/ali2210/wizdwarf/other/proteins"
@@ -479,16 +477,6 @@ func SkyDataCenter(client skynet.SkynetClient, file string) bool {
 
 	cdr[cid.String()] = sia_object_url
 	Set_cdr(cid.String())
-
-	errs := fauna.Content_X(cid.String(), sia_object_url).ConnectFaunaLedger(&store.Endpoint_Info{
-		API_Key: fauna.WizNetHook,
-		Address: "https://db.fauna.com:443",
-	})
-	if reflect.DeepEqual(errs.State, store.Error_ERROR) {
-
-		log.Fatalln(errs.Description, errs.State)
-		return false
-	}
 
 	return true
 }
@@ -1021,7 +1009,6 @@ func Data_Predicition(w http.ResponseWriter, r *http.Request, fname, choose stri
 		distance := GetEditParameters().EditDistanceStrings(Virus, Usr)
 
 		SetBioAlgoParameters(algo.Result(distance, len(Usr)), fname, algo.CalcualtePercentage(algo.GetProbParameter()))
-
 
 		return err
 	} else if i == 0 {

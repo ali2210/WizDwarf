@@ -37,8 +37,8 @@
 				  <i class="fa fa-envelope" aria-hidden="true"></i>
 				</a>
 				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-				  <a class="dropdown-item active" href="#" title="Private.  These message will dispear after few seconds."><i class="fa fa-envelope-o" aria-hidden="true"></i> Private </a>
-				  <a class="dropdown-item" href="#" title="Gossips"> <i class="fa fa-comments-o" aria-hidden="true"></i> Public </a>
+				  <a class="dropdown-item active" href="/messages" title="Private.  These message will dispear after few seconds."><i class="fa fa-envelope-o" aria-hidden="true"></i> Private </a>
+				  <a class="dropdown-item" href="/messages" title="Gossips"> <i class="fa fa-comments-o" aria-hidden="true"></i> Public </a>
 				</div>
 			  </li>
 			  <li class="nav-item dropdown pl-3">
@@ -50,7 +50,7 @@
 				  <a class="dropdown-item active" href="/dashboard/profile" title="User will edit any information in the profile"><i class="fa fa-sliders" aria-hidden="true"></i>
 					Edit Your Profile
           </a>
-          <a class="dropdown-item" href="#" title="User Preferences "><i class="fa fa-cogs" aria-hidden="true"></i>
+          <a class="dropdown-item" href="/dashbaord/setting" title="User Preferences "><i class="fa fa-cogs" aria-hidden="true"></i>
           Preferences
           </a>
 				  <a class="dropdown-item" href="/logout" title="Lock the account"><i class="fa fa-sign-out icon icon-light"
@@ -61,31 +61,8 @@
 		  </div>
 		</nav>
 
-        <div class="chat-container" style="display: flex;position: absolute;width: 58pc;height: 32pc;/* background: aliceblue; */left: 2pc;top: 6pc;">
-            <div class="conversation" style="position: inherit;">
-                <ul class="chat" style="display: flex;position: inherit;width: 57pc;height: 26pc;">
-                    <div class="chat0" style="position: inherit;width: 57pc;height: 5pc;left: 0pc;border-radius: 10pc;"></div>
-                    <div class="chat1" style="position: inherit;width: 57pc;height: 5pc;left: 0pc;border-radius: 10pc;top: 6pc;"></div>
-                    <div class="chat2" style="position: inherit;width: 57pc;height: 5pc;left: 0pc;border-radius: 10pc;"></div>
-                    <div class="chat3" style="position: inherit;width: 57pc;height: 5pc;left: 0pc;border-radius: 10pc;top: 6pc;"></div>
-                </ul>
-                <div class="sender" style="display: flex;position: inherit;top: 27pc;">
-                    <form action="#" method="post">
-                      <input type="text" class="sender-message" id="sender" style="position: inherit;width: 57pc;height: 5pc;border-radius: 10pc;border: 1px slategray dashed;color: black;font-size: large;">
-                      <button type="submit" class="send" style="position: absolute;left: 53pc;top: 2pc;border: none;background: transparent; color:slategray; visibility: hidden;">
-                        <i class="fa fa-android"></i>
-                      </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="chat-properties" style="display: flex;position: absolute;width: 19pc;height: 32pc;/* background: silver; */left: 60pc;top: 6pc;">
-            <i class="fa fa-android" style="display: flex;position: absolute;left: 8pc;top: 3pc;color: slategray;"></i>
-            <i class="fa fa-user" style="display: flex;position: absolute;left: 8pc;top: 9pc; color:slategray;"></i>
-            <i class="fa fa-hourglass" style="display: flex;position: absolute;left: 8pc;top: 16pc; color:slategray;"></i>
-            <i class="fa fa-envelope message-count"  style="display: flex;position: absolute;left: 8pc;top: 24pc; color:slategray;"></i>
-        </div>
-    </div>
+    <h1 style="position: relative;top: 14pc;width: 20pc;left: 32pc;"> Messaging Feature will not be accessible until next release !. Our team will be working over it.</h1>
+        
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
     crossorigin="anonymous"></script>
@@ -95,16 +72,5 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
-  <script>
-    const _i01 = document.getElementsByClassName('sender-message')[0];
-    const _b01 = document.getElementsByClassName('send')[0];                                                                                                                                                                                                                                                                                                                                                                                                                          
-    _i01.addEventListener('change', (event)=>{
-      if(_b01.style.visibility == 'hidden'){
-        _b01.style.visibility = 'visible';
-      }else{
-        _b01.style.visibility = 'hidden';
-      }
-    });
-  </script>
     </body>
     </html>

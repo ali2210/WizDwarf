@@ -526,4 +526,51 @@
 	}
  }
 
-   
+
+ .fa-flask{
+	animation : reaction 60s infinite alternate ;
+ }
+
+ @keyframes reaction {
+	25%{
+		color: red;
+	}
+	50%{
+		color: green;
+	}
+	75%{
+		color: yellow;
+	}
+	100%{
+		color: blue;
+	}	 
+ }
+
+ .fa-clock-o{
+	 animation: circle 60s infinite alternate;
+ }
+
+ @keyframes circle {
+	 50%{
+		 color: red;
+	 }
+	 100%{
+		 color: green;
+	 }
+ }
+
+ .fa-sun-o{
+	 animation: sun 20s linear infinite alternate;
+ }
+
+ @keyframes sun {
+	 30%{
+		 color: yellow;
+	 }
+	 60%{
+		color : gold;
+	 }
+	 90%{
+		 color : orange;
+	 }
+ }

@@ -14,7 +14,6 @@ require (
 	github.com/biogo/biogo v1.0.2
 	github.com/briandowns/openweathermap v0.16.0
 	github.com/emojisum/emojisum/emoji v0.0.0-20211123161002-dddcd7a159ed
-	github.com/fauna/faunadb-go/v4 v4.2.0
 	github.com/fogleman/ribbon v0.0.0-20191101191537-568057efb726
 	github.com/goombaio/namegenerator v0.0.0-20181006234301-989e774b106e
 	github.com/gorilla/mux v1.7.4

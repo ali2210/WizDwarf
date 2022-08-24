@@ -47,8 +47,6 @@ github.com/alimasyhur/is-connect
 ## explicit
 github.com/allegro/bigcache
 github.com/allegro/bigcache/queue
-# github.com/andybalholm/cascadia v1.3.1
-## explicit; go 1.16
 # github.com/apparentlymart/go-textseg v1.0.0
 ## explicit
 github.com/apparentlymart/go-textseg/textseg
@@ -146,9 +144,6 @@ github.com/envoyproxy/protoc-gen-validate/validate
 # github.com/fatih/color v1.13.0
 ## explicit; go 1.13
 github.com/fatih/color
-# github.com/fauna/faunadb-go/v4 v4.2.0
-## explicit; go 1.16
-github.com/fauna/faunadb-go/v4/faunadb
 # github.com/fogleman/ribbon v0.0.0-20191101191537-568057efb726
 ## explicit
 github.com/fogleman/ribbon/pdb
