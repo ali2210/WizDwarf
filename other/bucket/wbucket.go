@@ -14,16 +14,16 @@ import (
 	"github.com/ali2210/wizdwarf/other/bucket/proto"
 )
 
-//
+// general variables
 var content_address string = ""
 var Client *firestore.Client
 var Key string = ""
 var Composite string = ""
 var instance DBStorage
 var client_Bucket DBStorage
-
 var sia_client = skynet.New()
 
+// constants
 const API_KEY_SIA = "wizStorage"
 const APP_VENDOR_CODE = "Sia-Agent"
 

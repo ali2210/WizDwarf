@@ -114,11 +114,11 @@ var v_wrapper vault_wraper.Vault_Services
 func PutKV(object *HCLDeclaration, path string, client *api.Client) error {
 
 	if reflect.DeepEqual(object, &HCLDeclaration{}) {
-		return errors.Unwrap(errors.New("Object field must not be empty"))
+		return errors.Unwrap(errors.New("object field must not be empty"))
 	}
 
 	if reflect.DeepEqual(client, &api.Client{}) {
-		return errors.Unwrap(errors.New("Vault client is not running in background or vault credentials had not submit yet."))
+		return errors.Unwrap(errors.New("vault client is not running in background or vault credentials had not submit yet"))
 	}
 
 	v_wrapper = vault_wraper.NewClient(client)
@@ -150,7 +150,7 @@ func GetKV(path string) (interface{}, error) {
 	}
 
 	if reflect.DeepEqual(keygen.Data["data"], map[string]interface{}{}) {
-		return map[string]interface{}{}, errors.Unwrap(errors.New("secrets vault is empty.."))
+		return map[string]interface{}{}, errors.Unwrap(errors.New("secrets vault is empty"))
 	}
 
 	return keygen.Data["data"], nil

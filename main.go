@@ -20,10 +20,14 @@ import (
 	"time"
 
 	"cloud.google.com/go/firestore"
+	"github.com/SkynetLabs/go-skynet/v2"
+	error_codes "github.com/ali2210/wizdwarf/errors_codes"
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
 	"github.com/ali2210/wizdwarf/other/bucket"
 	"github.com/ali2210/wizdwarf/other/bucket/proto"
 	logcache "github.com/ali2210/wizdwarf/other/cache_logs"
+	"github.com/ali2210/wizdwarf/other/cloudmedia"
+	"github.com/ali2210/wizdwarf/other/cloudmedia/dlink"
 	cryptos "github.com/ali2210/wizdwarf/other/crypto"
 	timer "github.com/ali2210/wizdwarf/other/date_time"
 	genetics "github.com/ali2210/wizdwarf/other/genetic"
@@ -89,7 +93,7 @@ var (
 	APP_CHANNEL_CLUSTER_ID string          = " "
 	SECRET_TOKEN           string          = " "
 	_start                 time.Time
-	CONNECTIVITY           string = ""
+	CONNECTIVITY           string = " "
 	client                 *api.Client
 	hcldeclare             piplines.HCLDeclaration
 )
@@ -181,7 +185,7 @@ func main() {
 		log.Println(emoji_values[12], " Firebase Configuration complete ... [well-done]")
 		log.Println(emoji_values[13], " Private IP-Address Configuration complete ... [well-done]")
 		log.Println(emoji_values[14], " Protocol-Buffer v3 Configuration complete ... [well-done]")
-		log.Println(emoji_values[16], " FAUNA DB Connected ... [well-done]")
+		log.Println(emoji_values[16], " Salt and Pepper added ... [well-done]")
 		log.Println(emoji_values[17], " Channel communication Configuration complete ... [well-done]")
 		log.Println(emoji_values[18], " Data Events are encrypted.   ... [well-done]")
 		log.Println(emoji_values[19], " UI Webboard Configuration complete ... [well-done]")
@@ -227,7 +231,14 @@ func main() {
 
 		client.SetToken(SECRET_TOKEN)
 
-		err = piplines.PutKV(&piplines.HCLDeclaration{Weatherapi: geoApi, Channel_key: channelKey, Channel_id: channelId, Secret: channelSecret, Cluster_ID: channelCluster, Token_Auth: ""}, Secret_path, client)
+		err = piplines.PutKV(&piplines.HCLDeclaration{
+			Weatherapi:  geoApi,
+			Channel_key: channelKey,
+			Channel_id:  channelId,
+			Secret:      channelSecret,
+			Cluster_ID:  channelCluster,
+			Token_Auth:  "",
+		}, Secret_path, client)
 		if err != nil {
 			log.Fatalln(" Error :", err)
 			return
@@ -329,6 +340,9 @@ func main() {
 	routing.PathPrefix("/js/").Handler(js)
 	gltf := http.StripPrefix("/models/", http.FileServer(http.Dir("./models")))
 	routing.PathPrefix("/models/").Handler(gltf)
+
+	docker_files := http.StripPrefix("/app_data", http.FileServer(http.Dir("./app_data")))
+	routing.PathPrefix("/app_data/").Handler(docker_files)
 
 	// tcp connection
 	err := http.ListenAndServe(":5000", routing)
@@ -660,8 +674,6 @@ func profile(w http.ResponseWriter, r *http.Request) {
 	// page renderer
 	temp := template.Must(template.ParseFiles("profile.html"))
 
-	w.WriteHeader(http.StatusBadRequest)
-	distorted(w, r)
 	// to find app have information
 	visit, err := Cloud.GetDocumentById(AppName, *profiler)
 	if err != nil {
@@ -669,6 +681,8 @@ func profile(w http.ResponseWriter, r *http.Request) {
 
 		value, err := cacheObject.Get_Key("Internal:")
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 			return
 		}
 
@@ -679,12 +693,12 @@ func profile(w http.ResponseWriter, r *http.Request) {
 	// encode information with json schema
 	data, err := json.Marshal(visit)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		distorted(w, r)
 		cacheObject.Set_Key("Internal:", err.Error())
 
 		value, err := cacheObject.Get_Key("Internal:")
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 			return
 		}
 
@@ -695,12 +709,13 @@ func profile(w http.ResponseWriter, r *http.Request) {
 	// proper encoding over data streams
 	err = json.Unmarshal(data, &member)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		distorted(w, r)
+
 		cacheObject.Set_Key("Internal:", err.Error())
 
 		value, err := cacheObject.Get_Key("Internal:")
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 			return
 		}
 
@@ -714,6 +729,8 @@ func profile(w http.ResponseWriter, r *http.Request) {
 
 		value, err := cacheObject.Get_Key("Route_Path:")
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 			return
 		}
 
@@ -722,76 +739,22 @@ func profile(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == "POST" {
 
 		// user add profile picture resolution must be less 2kb
-		piplines.AvatarUpload(r, member.Id)
+		if filename, err := piplines.AvatarUpload(r, member.Id); err != nil && strings.Contains(filename, " ") {
+			cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
 
-		// update users information
-		user := users.Visitors{}
+			value, err := cacheObject.Get_Key("Route_Path:")
+			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				distorted(w, r)
+				return
+			}
 
-		// users information hold
-		user.Id = member.Id
-		user.Password = member.Password
-		user.Email = member.Email
-
-		if strings.Contains(r.FormValue("name"), " ") {
-			user.Name = member.Name
-		} else {
-			user.Name = r.FormValue("name")
+			logformat.Trace(value)
 		}
 
-		if strings.Contains(r.FormValue("lastname"), " ") {
-			user.LastName = member.LastName
-		} else {
-			user.LastName = r.FormValue("lastname")
-		}
-
-		if strings.Contains(r.FormValue("address"), " ") {
-			user.Address = member.Address
-		} else {
-			user.Address = r.FormValue("address")
-		}
-
-		if strings.Contains(r.FormValue("appartment"), " ") {
-			user.Appartment = member.Appartment
-		} else {
-			user.Appartment = r.FormValue("appartment")
-		}
-		if strings.Contains(r.FormValue("zip"), " ") {
-			user.Zip = member.Zip
-		} else {
-			user.Zip = r.FormValue("zip")
-		}
-
-		if strings.Contains(r.FormValue("city"), " ") {
-			user.City = member.City
-		} else {
-			user.City = r.FormValue("city")
-		}
-
-		if strings.Contains(r.FormValue("country"), " ") {
-			user.Country = member.Country
-		} else {
-			user.Country = r.FormValue("country")
-		}
-
-		if strings.Contains(r.FormValue("tweet"), " ") {
-			user.Twitter = member.Twitter
-		} else {
-			user.Twitter = r.FormValue("tweet")
-		}
-
-		if strings.Contains(r.FormValue("phone"), " ") {
-			user.PhoneNo = member.PhoneNo
-		} else {
-			user.PhoneNo = r.FormValue("phone")
-		}
-
-		// user information completed and store in database
-		if status_profile := piplines.UpdateProfileInfo(&user); status_profile {
-
-			w.WriteHeader(http.StatusOK)
-			return
-		}
-
+		w.WriteHeader(http.StatusOK)
+		r.Method = "GET"
+		dashboard(w, r)
 	}
 
 }
@@ -867,6 +830,109 @@ func analysis(w http.ResponseWriter, r *http.Request) {
 		distorted(w, r)
 
 		return
+	}
+
+	files, err := os.ReadDir("app_data/")
+	if err != nil {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
+		return
+	}
+
+	visit, err := Cloud.GetDocumentById(AppName, *profiler)
+	if err != nil {
+		cacheObject.Set_Key("Internal:", err.Error())
+
+		value, err := cacheObject.Get_Key("Internal:")
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
+			return
+		}
+
+		logformat.Error(value)
+		return
+	}
+
+	// encode information with json schema
+	data, err := json.Marshal(visit)
+	if err != nil {
+		cacheObject.Set_Key("Internal:", err.Error())
+
+		value, err := cacheObject.Get_Key("Internal:")
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
+			return
+		}
+
+		logformat.Error(value)
+		return
+	}
+
+	var member users.Visitors
+
+	// proper encoding over data streams
+	err = json.Unmarshal(data, &member)
+	if err != nil {
+
+		cacheObject.Set_Key("Internal:", err.Error())
+
+		value, err := cacheObject.Get_Key("Internal:")
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
+			return
+		}
+
+		logformat.Error(value)
+		return
+	}
+
+	meta, mapData := piplines.GetDocuments([]string{member.Id}...)
+	contKey, contVae := piplines.ReflectMaps(mapData)
+
+	for list := range files {
+
+		if strings.Contains("app_data/"+files[list].Name(), meta) {
+
+			visualizeReport.Avatar_Path = "/" + meta
+			break
+		}
+
+		if !strings.Contains(meta, "app_data/"+files[list].Name()) {
+
+			ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+			defer cancel()
+
+			inter, num := bucket.New(contKey, contVae, member.Id).Get(ctx, piplines.Firestore_Reference())
+			if num != 0 {
+
+				log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+				return
+
+			}
+
+			_, resource := piplines.ReflectMaps(inter)
+
+			if strings.Contains(contKey, " ") && !strings.Contains(contVae, resource) {
+
+				log.Fatalln(error_codes.Operation_ERROR_CODE_MISMATCH_STATE)
+				return
+			}
+
+			client := skynet.New()
+
+			if dlinkerr := cloudmedia.NewDlinkObject(&client, "app_data/").Get(meta, contVae); dlinkerr != dlink.Errors_NONE {
+
+				log.Fatalln(dlinkerr)
+				return
+			}
+
+			log.Println("File download successfully... open mounted directory", meta)
+			visualizeReport.Avatar_Path = "/" + meta
+			break
+		}
+
 	}
 
 	// Check whether genome exist or not. If yes and probablity value will be less or equal to 5 then. No worry
@@ -1561,6 +1627,8 @@ func terms(w http.ResponseWriter, r *http.Request) {
 
 		value, err := cacheObject.Get_Key("Route_Path:")
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 			return
 		}
 
@@ -1583,6 +1651,8 @@ func logout(w http.ResponseWriter, r *http.Request) {
 
 		value, err := cacheObject.Get_Key("Route_Path:")
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 			return
 		}
 

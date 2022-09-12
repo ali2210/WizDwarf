@@ -1,0 +1,23 @@
+syntax = "proto3";
+package dlink;
+
+message DLINK_MESSAGE{
+
+    string RESOURCE_D_LINK = 1;  // resource link => {ips://0x12deab899fgh789}
+    string USER_SESSION_ID = 2;  // user session id => {0x......}
+    string PEPPER_MESSAGE = 3;   // PEPPER message => { bigac......}
+    Errors ErrorType = 4;       // Error type => { none}
+}
+
+enum Errors{
+
+    ERR_EMPTY_URL = 0;
+    ERR_INVALID_URL = 1;
+    ERR_CLOSE_CON = 2;
+    ERR_MALICIOUS_URL = 3;
+    ERR_PATH_MOVED = 4;
+    ERR_UNKNOWN_ = 5;
+    ERR_KEYS_NOT_EXIST = 6;
+    ERR_EMPTY_VALUE = 7;
+    NONE = 8;
+}

@@ -14,31 +14,6 @@ var (
 )
 
 type (
-	// DigialProfile struct {
-
-	// 	// ledger my data
-	// 	Public  string
-	// 	Private string
-
-	// 	// visitor profile
-	// 	Name     string
-	// 	FName    string
-	// 	Email    string
-	// 	Address  string
-	// 	LAddress string
-	// 	City     string
-	// 	Zip      string
-	// 	Country  string
-	// 	Phone    string
-	// 	Twitter  string
-
-	// 	// credit card details
-	// 	Number      string
-	// 	ExpireMonth string
-	// 	ExpireYear  string
-	// 	Type        string
-	// }
-
 	Visitors struct {
 		Id         string `json:"id", omitempty`
 		Name       string `json:"name", omitempty`
@@ -76,27 +51,6 @@ func (*DigitalPrint) SetAuthorizeStoreID(id string) {
 func (*DigitalPrint) GetAuthorizeStoreID() string {
 	return persona
 }
-
-/*func (*DigitalPrint) VoidStruct() *DigialProfile {
-	return &DigialProfile{
-		Public:      "",
-		Private:     "",
-		Name:        "",
-		FName:       "",
-		Email:       "",
-		Address:     "",
-		LAddress:    "",
-		City:        "",
-		Zip:         "",
-		Country:     "",
-		Phone:       "",
-		Twitter:     "",
-		Number:      "",
-		ExpireMonth: "",
-		ExpireYear:  "",
-		Type:        "",
-	}
-}*/
 
 type CalculationInterface interface {
 	CalculateTotalBalance(st1, str2 float64) float64

@@ -67,7 +67,7 @@ func (db *DBStore) Get(ctx context.Context, client *firestore.Client) (interface
 		query_result = doc.Data()
 	}
 
-	return query_result[db.Key], Ok
+	return reflect.ValueOf(query_result).Interface(), Ok
 }
 
 func SetClient(c *firestore.Client) {

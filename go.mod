@@ -15,6 +15,7 @@ require (
 	github.com/briandowns/openweathermap v0.16.0
 	github.com/emojisum/emojisum/emoji v0.0.0-20211123161002-dddcd7a159ed
 	github.com/fogleman/ribbon v0.0.0-20191101191537-568057efb726
+	github.com/golang/protobuf v1.5.2
 	github.com/goombaio/namegenerator v0.0.0-20181006234301-989e774b106e
 	github.com/gorilla/mux v1.7.4
 	github.com/gorilla/sessions v1.2.0
@@ -32,6 +33,8 @@ require (
 	google.golang.org/api v0.62.0
 	google.golang.org/protobuf v1.28.1
 )
+
+require github.com/go-test/deep v1.0.7 // indirect
 
 require (
 	cloud.google.com/go v0.99.0 // indirect
@@ -51,9 +54,9 @@ require (
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
-	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/gax-go/v2 v2.1.1 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
