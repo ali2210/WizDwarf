@@ -64,46 +64,131 @@
 			</ul>
 		  </div>
 	</nav>
+  </div>
 
-  <div class="profile-image-form">
+  <div class="profile-image-form" style="position: relative; top:-90pc;">
     <form class="profile-form" action="/dashboard/profile" enctype="multipart/form-data" method="post">
-      <div class="avatar" name="avato-pic" id="avato-pics">
-        <div class="photoBtn" style=" position: absolute;top: 267px ;left: 92px;transform: scale(1.7);">
-          <p>
-            <button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapsePhoto" aria-expanded="false" aria-controls="collapsePhoto" title="upload your profile picture">
-              <i class="fa fa-picture-o" aria-hidden="true"></i>
-            </button>
-          </p>
-          <div class="collapse" id="collapsePhoto">
-            <div class="card card-body" style="position: absolute; top: 40px; left: -207px; border-radius:35px; box-shadow: 5px 5px whitesmoke; height:325px; overflow: auto; width: 38rem; display: flex;">
-              <h5 class="card-title"></h5>
-                <div class="float-card">
-                  <input type="file" class="myphotos" name="profile-input" accept="images/*">
-                  <div class="line"></div>
-                  <div class="photo-preview"></div>
-                  <button type="button" class="btn btn-light btns-links" title="Avatar Filters">
-                    <i class="fa fa-filter" aria-hidden="true" style="color: slategray;"></i>
-                  </button>
-                  <button type="submit" class="btn btn-light uploads" title="avatar">
-                    <i class="fa fa-check-square" aria-hidden="true" style="color: slategray;"></i>
-                  </button>
-                  <button class="btn btn-light zoomin" type="button" title="Zoom in" style="position: relative;top: -215px;left: 241px;transform: scale(0.6);">
-                    <i class="fa fa-plus" aria-hidden="true" style="color: slategray;"></i>
-                  </button>
-                  <button class="btn btn-light zoomout" type="button" title="Zoom out" style="position: relative;top: -215px;left: 295px;transform: scale(0.6);">
-                    <i class="fa fa-minus" aria-hidden="true" style="color: slategray;"></i>
-                  </button>
-                  <input type="number" placeholder="0000" class="aspect-ratio" name="aspect-ratio" value="0" id="aspect-ratio" readOnly="true" style="position: relative;top: -210px;left: 189px;transform: scale(0.6);width: 5pc;color: silver;border-radius: 10px;border: none;font-size: x-large;">
-                  <input class="date-picker" name="date" type="date" style="visibility: visible;">
-                  <img name="profile-avatar" class="avatars"/>
-                  <div class="hyerlink">
-                    <i class="fa fa-link" aria-hidden="true"> </i> <input class="cdr" type="checkbox" name="cdrlink"/> View CDR_LINK
-                  </div>
+      <div class="avatar" name="avato-pic" id="avato-pics"></div>  
+      <div class="photoBtn" style=" position: absolute;top: 31pc;left: 45pc;transform: scale(1.7);">
+        <p>
+          <button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapsePhoto" aria-expanded="false" aria-controls="collapsePhoto" title="upload your profile picture" style="position: absolute;top: -41px;left: -27px;">
+            <i class="fa fa-picture-o" aria-hidden="true"> Upload your Picture </i>
+          </button>
+        </p>
+        <div class="collapse" id="collapsePhoto">
+          <div class="card card-body" style="position: absolute; top: 40px; left: -207px; border-radius:35px; box-shadow: 5px 5px whitesmoke; height:325px; overflow: auto; width: 38rem; display: flex;">
+            <h5 class="card-title"></h5>
+              <div class="float-card">
+                <input type="file" class="myphotos" name="profile-input" accept="images/*">
+                <div class="line"></div>
+                <div class="photo-preview"></div>
+                <button type="button" class="btn btn-light btns-links" title="Avatar Filters">
+                  <i class="fa fa-filter" aria-hidden="true" style="color: slategray;"></i>
+                </button>
+                <button type="submit" class="btn btn-light uploads" title="avatar">
+                  <i class="fa fa-check-square" aria-hidden="true" style="color: slategray;"></i>
+                </button>
+                <button class="btn btn-light zoomin" type="button" title="Zoom in" style="position: relative;top: -215px;left: 241px;transform: scale(0.6);">
+                  <i class="fa fa-plus" aria-hidden="true" style="color: slategray;"></i>
+                </button>
+                <button class="btn btn-light zoomout" type="button" title="Zoom out" style="position: relative;top: -215px;left: 295px;transform: scale(0.6);">
+                  <i class="fa fa-minus" aria-hidden="true" style="color: slategray;"></i>
+                </button>
+                <input type="number" placeholder="0000" class="aspect-ratio" name="aspect-ratio" value="0" id="aspect-ratio" readOnly="true" style="position: relative;top: -210px;left: 189px;transform: scale(0.6);width: 5pc;color: silver;border-radius: 10px;border: none;font-size: x-large;">
+                <input class="date-picker" name="date" type="date" style="visibility: visible;">
+                <img name="profile-avatar" class="avatars"/>
+                <!-- <div class="hyerlink">
+                  <i class="fa fa-link" aria-hidden="true"> </i> <input class="cdr" type="checkbox" name="cdrlink"/> View CDR_LINK
+                </div> -->
                 </div>
-            </div>
-          </div>  
+          </div>
+      </div>
+      </div>
     </form>
   </div>
+  
+  <section class="editor" style="position: relative;top: -13pc;left: -50px;">
+    <div class="container">
+      <ul class="nav flex-column">
+        <li class="nav-item">
+              <i class="fa fa-user" aria-hidden="true" style="color: slategray;"> Biography </i>
+              <span class="badge badge-success" style="display:none"> 0 </span>
+        </li>
+        <li class="nav-item">
+          <i class="fa fa-users" aria-hidden="true" style="color: slategray;"> Family </i>
+          <span class="badge badge-danger" style="display:none;"> 0 </span>
+        </li>
+        <li class="nav-item">
+          <i class="fa fa-home" aria-hidden="true" style="color: slategray;"> Address </i>
+          <span class="badge badge-danger" style="display:none"> 0 </span>
+        </li>
+        <li class="nav-item">
+          <i class="fa fa-graduation-cap" aria-hidden="true" style="color: slategray;"> Education </i>
+          <span class="badge badge-danger" style="display:none"> 0 </span>
+        </li>
+        <li class="nav-item">
+          <i class="fa fa-university" aria-hidden="true" style="color: slategray;"> Research </i>
+          <span class="badge badge-danger" style="display:none"> 0 </span>
+        </li>
+        <li class="nav-item">
+          <i class="fa fa-heart" aria-hidden="true" style="color: slategray;"> Relationship </i>
+          <span class="badge badge-danger" style="display:none"> 0 </span>
+        </li>
+        <li class="nav-item">
+          <i class="fa fa-building" aria-hidden="true" style="color: slategray;"> Work </i>
+          <span class="badge badge-danger" style="display:none"> 0 </span>
+        </li>
+        <li class="nav-item">
+          <i class="fa fa-at" aria-hidden="true" style="color: slategray;"> Contact </i>
+          <span class="badge badge-danger" style="display:none"> 0 </span>
+        </li>
+        <li class="nav-item">
+          <i class="fa fa-trophy" aria-hidden="true" style="color: slategray;"> Achievements </i>
+          <span class="badge badge-danger" style="display:none"> 0 </span>
+        </li>
+      </ul>
+      <form class="edit-form" role="form"action="#" method="post">
+        <div class="name" style="position: relative;top: -17pc;left: 20pc;">
+          <input type="text" class="name" placeholder="First Name" id="name" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: large;">
+          <input type="text" class="sufix" placeholder="Mr" id="sufix" style="width: 9pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+        </div>
+        <div class="family" style="position: relative;top: -15pc;left: 20pc;">
+          <input type="text" class="family" placeholder="Family Name" id="family" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+        </div>
+        <div class="address" style="position: relative;top: -13pc;left: 20pc;">
+          <input type="text" class="address" placeholder="Home Address" id="home" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="zip" class="zip" placeholder="Zip-Code" id="zip" style="width: 9pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="text" class="city" placeholder="LA,USA" id="city" style="width: 9pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+        </div>
+        <div class="education" style="position: relative;top: -11pc;left: 20pc;">
+          <input type="text" class="education" placeholder="Alumni" id="alumni" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="text" class="programme" placeholder="Computer Science" id="programme" style="width: 10pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+        </div>
+        <div class="research" style="position: relative;top: -9pc;left: 20pc;">
+          <input type="number" class="research" placeholder="Research Already Published" id="research" style="width: 15pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="url" class="research-profile" placeholder="Citation / Researcher Profile Link" id="citation" style="width: 18pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+        </div>
+        <div class="work" style="position: relative;top: -7pc;left: 20pc;">
+          <input type="text" class="work" placeholder="Company name" id="work" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="date" class="joined" placeholder="Joined Date" id="joined" style="width: 10pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+        </div>
+        <div class="contact" style="position: relative;top: -5pc;left: 20pc;">
+          <input type="email" class="email" placeholder=" Email Address" id="email" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="tel" class="phone" placeholder="Phone Number" id="phone" style="width: 10pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+        </div>
+        <div class="achievement" style="position: relative;top: -3pc;left: 20pc;">
+          <input type="text" class="achievement" placeholder=" Your Achievements" id="achievement" style="width: 50pc;border-radius: 10px;height: 10pc;cursor: text;color: slategray;font-size: medium;">
+          <span style="width: 50pc;border-radius: 10px;height: 10pc;cursor: text;color: slategray;font-size: medium; position:absolute; top: 7pc; left: 45pc;">0/300</span>
+        </div>
+        <div class="complete" style="position: absolute;left: 47pc;">
+          <button type="submit" class="btn btn-success" style="width:10pc;">
+            <i class="fa fa-edit" aria-hidden="true"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+  
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
     </script>
@@ -120,7 +205,7 @@
     const _b01 = document.getElementsByClassName('zoomin')[0];
     const _b02 = document.getElementsByClassName('zoomout')[0];
     const _b03 = document.getElementsByClassName('uploads')[0];
-    const _b04 = document.getElementsByClassName('btns-links')[0];
+    // const _b04 = document.getElementsByClassName('btns-links')[0];
     const _b05 = document.getElementsByClassName('photoBtn')[0];
     
 
@@ -128,12 +213,23 @@
     const _d02 = document.getElementsByClassName('line')[0];
     const _d03 = document.getElementsByClassName('avatar')[0];
     const _d04 = document.getElementsByClassName('main-dashboard-div')[0];
-    const _d05 = document.getElementsByClassName('hyerlink')[0];
+    // const _d05 = document.getElementsByClassName('hyerlink')[0];
 
     const _pp01 = document.getElementsByClassName('photo-preview')[0];
+    const _n01 = document.getElementsByClassName('flex-column')[0];
 
     const _i01 = document.getElementsByClassName('aspect-ratio')[0];
     const _i02 = document.getElementsByClassName('myphotos')[0];
+    const _i03 = document.getElementsByClassName('name')[0];
+    const _i04 = document.getElementsByClassName('family')[0];
+    const _i05 = document.getElementsByClassName('address')[0];
+    const _i06 = document.getElementsByClassName('education')[0];
+    const _i07 = document.getElementsByClassName('research')[0];
+    const _i08 = document.getElementsByClassName('sufix')[0];
+    const _i09 = document.getElementsByClassName('work')[0];
+    const _i10 = document.getElementsByClassName('contact')[0];
+    const _i11 = document.getElementsByClassName('achievement')[0];
+
     const _bx00 = document.getElementsByClassName('date-picker')[0];
     
     // global parameters
@@ -250,10 +346,10 @@
         _bx00.style.left = '4px';
         _bx00.style.width = '23pc';
 
-        _d05.style.position = 'absolute';
-        _d05.style.top = '5pc';
-        _d05.style.left = '29pc';
-        _d05.style.color = 'slategray';
+        // _d05.style.position = 'absolute';
+        // _d05.style.top = '5pc';
+        // _d05.style.left = '29pc';
+        // _d05.style.color = 'slategray';
 
         _d03.append(_d01);  
         
@@ -266,83 +362,322 @@
       
     }
 
-    // _b04 allow you to add filter in your picture frame
-    _b04.addEventListener('click', ()=>{
-        alert(' Filter Option is not enabled. Please wait for upcoming update');
-    });
+    var complete_ratio = 0;
 
-    _d05.children[1].addEventListener('change', ()=>{
-      
-      if (_count >= 0 && _count <  100) {
-      
-        Proceed(_standard_invoice);
-                  
-      }else if (_count >= 100 && _count < 500) {
-
-        Proceed(_mostly_invoice);
-      
-      }else if ( _count >= 500){
-
-        Proceed(_prenium_invoice);
-      }else{
-
-        alert("No key will be attached with content!"); return;
-      
+    _i04.addEventListener('change', (event)=>{
+ 
+      if (event.target.value <= 0){
+        _n01.children[1].children[1].style.display = 'unset';
+        _n01.children[1].children[1].innerHTML = '1';
+        alert(" Family Name required!");
+        return;
       }
 
-    });
+      complete_ratio+=1;
 
-
-    function Proceed(early){
         
-      var fort_wallet, web3eth = null;
-      fort_wallet = new Fortmatic(API_KEY);
+    });
 
-      // create provider object for web3
-      web3eth = new Web3(fort_wallet.getProvider());
-                  
-      // create batch process object for transaction
-      var batch = new web3eth.eth.BatchRequest();
-  
-      // if user browser have formatic gateway access then login user account. If account is not created then create
-      if(!fort_wallet.getProvider().isFortmatic){alert('Fortmatic is not installed'); return}
-                  
-          console.log("application connect with fortmatic provider");
-          console.log(web3eth.currentProvider.enable());
+    var epoch = 0;
 
-          fort_wallet.user.login().then(()=>{
-                        
-              var isLogin = fort_wallet.user.isLoggedIn();
-                          
-              // when a user login , get the public address
-              if(!isLogin){alert("Fortnight account login Fail"); return}
-                
-                web3eth.eth.getAccounts().then((account)=>{
-                             
-                  // read user account information
-                  web3eth.eth.getBalance(account[0]).then((balance)=>{
-                                
-                    // if user account have zero balance
-                    let balance_status = balance > early ? true : false;
-
-                    if(!balance_status) {alert("You have " + balance + " balance." ); return}
-
-                    var txs = {
-                                      to : '0x55057eb78fDbF783C961b4AAd6A5f8BC60cab44B',
-                                      from : account[0],
-                                      value : web3eth.utils.toWei(early, 'ether'),
-                              }
-
-                    batch.add(web3eth.eth.sendTransaction.request(txs), (error, signed)=>{
-                        if (error) throw error;
-                          console.log("message signed: " + signed);
-                    });
-
-                    batch.execute();
-                  });
-              });
-          });
+    _i05.addEventListener('change', (event)=>{
+      
+      if (event.target.value <= 0){
+        _n01.children[2].children[1].style.display = 'unset';
+        epoch+=1;
+        _n01.children[2].children[1].innerHTML = epoch.toString();
+        alert(" Address Field required!");
+        return;
       }
+
+      if (_i05.children[1].value <= 0){
+        _n01.children[2].children[1].style.display = 'unset';
+        epoch+=1;
+        _n01.children[2].children[1].innerHTML = epoch.toString();
+        alert("Zip code has not provided!");
+        return;
+      }
+
+      if (_i05.children[2].value <= 0){
+        _n01.children[2].children[1].style.display = 'unset';
+        epoch+=1;
+        _n01.children[2].children[1].innerHTML = epoch.String();
+        alert("Country name has not updated!");
+        return;
+      }
+
+      complete_ratio +=1;
+      epoch = 0;
+    });
+
+    _i06.addEventListener('change', (event)=>{
+
+      if (event.target.value <= 0){
+        _n01.children[3].children[1].style.display = 'unset';
+        epoch+=1;
+        _n01.children[3].children[1].innerHTML = epoch.toString();
+        alert("University Field required!");
+        return;
+      } 
+
+      if (_i06.children[1].value <= 0){
+        _n01.children[3].children[1].style.display = 'unset';
+        epoch+=1;
+        _n01.children[3].children[1].innerHTML = epoch.toString();
+        alert(" Programme Field required!");
+        return;
+      }
+
+      complete_ratio+=1;
+      epoch = 0;
+    });
+
+    _i07.addEventListener('change', (event)=>{
+
+      if (event.target.value <= 0){
+        _n01.children[4].children[1].style.display = 'unset';
+        epoch+=1;
+        _n01.children[4].children[1].innerHTML = epoch.toString();
+        alert(" Num of Publishication required!");
+        return;
+      } 
+
+      if (_i07.children[1].value <= 0){
+        _n01.children[4].children[1].style.display = 'unset';
+        epoch+=1;
+        _n01.children[4].children[1].innerHTML = epoch.toString();
+        alert(" Citations References required!");
+        return;
+      }
+
+      complete_ratio+=1;
+      epoch = 0;
+
+    });
+
+    _i08.addEventListener('change', (event)=>{
+ 
+      if (event.target.value <= 0){
+        
+        _n01.children[5].children[1].style.display = 'unset';
+        _n01.children[5].children[1].innerHTML = '1';
+
+        alert(" Señor Field required!");
+        return;
+      }
+
+      if (!(_i08.value === "Mr"||
+           _i08.value === "mr" || _i08.value === "Ms"
+           || _i08.value === "ms" || 
+           _i08.value === "Mrs" || _i08.value === "mrs")){
+
+            _n01.children[5].children[1].style.display = 'unset';
+            _n01.children[5].children[1].innerHTML = '1';
+
+            alert(" Field value should be mr, mrs, ms!");
+            return;
+      
+          }
+
+      complete_ratio+=1; 
+  
+    });
+
+    _i09.addEventListener('change', (event)=>{
+
+
+      if (event.target.value <= 0){
+
+        _n01.children[6].children[1].style.display = 'unset';
+
+        epoch+=1;
+
+        _n01.children[6].children[1].innerHTML = epoch.toString();
+
+        alert(" Company Name required!");
+
+        return;
+
+      } 
+
+
+      if (_i09.children[1].value <= 0){
+
+        _n01.children[6].children[1].style.display = 'unset';
+
+        epoch+=1;
+
+        _n01.children[6].children[1].innerHTML = epoch.toString();
+       
+        alert(" Your Join Date required!");
+       
+        return;
+      
+      }
+
+      complete_ratio+=1;
+
+      epoch = 0;
+
+    });
+
+    _i10.addEventListener('change', (event)=>{
+
+      if (event.target.value <= 0){
+
+        _n01.children[7].children[1].style.display = 'unset';
+
+        epoch+=1;
+
+        _n01.children[7].children[1].innerHTML = epoch.toString();
+
+        alert(" Email required!");
+
+        return;
+
+      } 
+
+      if (_i10.children[1].value <= 0){
+
+        _n01.children[7].children[1].style.display = 'unset';
+
+        epoch+=1;
+
+        _n01.children[7].children[1].innerHTML = epoch.toString();
+
+        alert(" Phone Number required!");
+
+        return;
+
+      }
+
+      complete_ratio+=1;
+
+      epoch = 0;
+
+    });
+
+    _i11.addEventListener('change', (event)=>{
+
+        if (event.target.value <= 0){
+
+          _n01.children[8].children[1].style.display = 'unset';
+
+          epoch+=1;
+
+          _n01.children[8].children[1].innerHTML = epoch.toString();
+
+          alert(" Achievements required!");
+
+          return;
+
+        }
+
+        if (_i11.children[0].value.length > 0) {
+
+            _i11.children[1].innerHTML = _i11.children[0].value.length.toString()+"/300";
+        }
+        complete_ratio+=1;
+
+        epoch = 0;
+    });
+
+    _i03.addEventListener('change', (event)=>{
+
+        if(complete_ratio <= 3){
+          
+          _n01.children[0].children[1].className = 'badge badge-danger';
+          _n01.children[0].children[1].style.display = 'unset';
+          _n01.children[0].children[1].innerHTML = complete_ratio.toString();
+          
+          alert("Too many fields are missing!");
+          return;
+        }
+
+        _n01.children[0].children[1].className = 'badge badge-success';
+        _n01.children[0].children[1].style.display = 'unset';
+        _n01.children[0].children[1].innerHTML = complete_ratio.toString();
+        complete_ratio = 0;
+    });
+
+
+    // _b04 allow you to add filter in your picture frame
+    // _b04.addEventListener('click', ()=>{
+    //     alert(' Filter Option is not enabled. Please wait for upcoming update');
+    // });
+
+    // _d05.children[1].addEventListener('change', ()=>{
+      
+    //   if (_count >= 0 && _count <  100) {
+      
+    //     Proceed(_standard_invoice);
+                  
+    //   }else if (_count >= 100 && _count < 500) {
+
+    //     Proceed(_mostly_invoice);
+      
+    //   }else if ( _count >= 500){
+
+    //     Proceed(_prenium_invoice);
+    //   }else{
+
+    //     alert("No key will be attached with content!"); return;
+      
+    //   }
+
+    // });
+
+
+    // function Proceed(early){
+        
+    //   var fort_wallet, web3eth = null;
+    //   fort_wallet = new Fortmatic(API_KEY);
+
+    //   // create provider object for web3
+    //   web3eth = new Web3(fort_wallet.getProvider());
+                  
+    //   // create batch process object for transaction
+    //   var batch = new web3eth.eth.BatchRequest();
+  
+    //   // if user browser have formatic gateway access then login user account. If account is not created then create
+    //   if(!fort_wallet.getProvider().isFortmatic){alert('Fortmatic is not installed'); return}
+                  
+    //       console.log("application connect with fortmatic provider");
+    //       console.log(web3eth.currentProvider.enable());
+
+    //       fort_wallet.user.login().then(()=>{
+                        
+    //           var isLogin = fort_wallet.user.isLoggedIn();
+                          
+    //           // when a user login , get the public address
+    //           if(!isLogin){alert("Fortnight account login Fail"); return}
+                
+    //             web3eth.eth.getAccounts().then((account)=>{
+                             
+    //               // read user account information
+    //               web3eth.eth.getBalance(account[0]).then((balance)=>{
+                                
+    //                 // if user account have zero balance
+    //                 let balance_status = balance > early ? true : false;
+
+    //                 if(!balance_status) {alert("You have " + balance + " balance." ); return}
+
+    //                 var txs = {
+    //                                   to : '0x55057eb78fDbF783C961b4AAd6A5f8BC60cab44B',
+    //                                   from : account[0],
+    //                                   value : web3eth.utils.toWei(early, 'ether'),
+    //                           }
+
+    //                 batch.add(web3eth.eth.sendTransaction.request(txs), (error, signed)=>{
+    //                     if (error) throw error;
+    //                       console.log("message signed: " + signed);
+    //                 });
+
+    //                 batch.execute();
+    //               });
+    //           });
+    //       });
+    //   }
 
   </script>
 </body>
