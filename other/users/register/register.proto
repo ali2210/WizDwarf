@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package user;
+
+
+message New_User {
+    
+    string Name = 1;
+    string Email = 2;
+    string Password = 3;
+    string Lastname = 4;
+    string Address = 5;
+    string Phone = 6;
+    string Zip = 7;
+    string City = 8;
+    string State = 9;
+    Traits Gender = 10;
+    string ID = 11;
+    int64 Friends = 12;
+    int64 Inspire = 13;
+    int64 Lead = 14;
+    int64 SocialEvolution = 15;
+    string Link = 16;
+}
+
+message Updated_User{
+
+    string ID = 1;
+    string Name = 2;
+    string Email = 3;
+    string Phone = 4;
+    string Lastname = 5;
+    string Address = 6;
+    string State = 7;
+    string City = 8;
+    string Zip = 9;
+    Traits Gender = 10;
+    Relationship Status = 11;
+    Respecful Suffix = 12;
+    string University = 13;
+    string Circulum = 14;
+    string Company = 15;
+    string Date = 16;
+    int64 Published = 17;
+    string Achievements = 18;
+    string Citation = 19;
+    int64 Friends = 20;
+    int64 Inspire = 21;
+    int64 Lead = 22;
+    int64 SocialEvolution = 24;
+    string Password = 25;
+    string Link = 26;
+}
+
+enum Traits {
+    MAN = 0;
+    WOMEN = 1;
+}
+
+enum Respecful{
+    Mr = 0;
+    Ms = 1;
+    Mrs = 2;
+}
+
+enum Relationship{
+    Single = 0;
+    Maried = 1;
+    Widow = 2;
+    Divoced = 3;
+}
+
+enum RelationLevel {
+
+    Family = 0;
+    Pal = 1;
+    Peers = 2;
+    Relatives = 3;
+    Acquaintance = 4;
+    Inspiring = 5;
+    None = 6;
+}
+

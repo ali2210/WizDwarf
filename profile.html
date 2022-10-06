@@ -4,7 +4,7 @@
 <head>
   <meta charset='utf-8'>
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-  <title>WizDwarfs</title>
+  <title>Wizdwarfs</title>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -147,37 +147,38 @@
           <span class="badge badge-danger" style="display:none"> 0 </span>
         </li>
       </ul>
-      <form class="edit-form" role="form"action="#" method="post">
+      <form class="edit-form" action="/dashboard/profile/edit" method="post">
         <div class="name" style="position: relative;top: -17pc;left: 20pc;">
-          <input type="text" class="name" placeholder="First Name" id="name" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: large;">
-          <input type="text" class="sufix" placeholder="Mr" id="sufix" style="width: 9pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="text" class="name" placeholder="First Name" id="name" name="name" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: large;">
+          <input type="text" class="sufix" placeholder="Mr" id="sufix" name="sufix" style="width: 9pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
         </div>
         <div class="family" style="position: relative;top: -15pc;left: 20pc;">
-          <input type="text" class="family" placeholder="Family Name" id="family" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="text" class="family" placeholder="Family Name" id="family" name="family" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="text" class="relationship" placeholder="Relationship Status" name="status" id="relationship" style="width: 9pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
         </div>
         <div class="address" style="position: relative;top: -13pc;left: 20pc;">
-          <input type="text" class="address" placeholder="Home Address" id="home" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
-          <input type="zip" class="zip" placeholder="Zip-Code" id="zip" style="width: 9pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
-          <input type="text" class="city" placeholder="LA,USA" id="city" style="width: 9pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="text" class="address" placeholder="Home Address" id="home" name="home" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="zip" class="zip" placeholder="Zip-Code" id="zip" name="zip" style="width: 9pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="text" class="city" placeholder="LA,USA" id="city" name="city" style="width: 9pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
         </div>
         <div class="education" style="position: relative;top: -11pc;left: 20pc;">
-          <input type="text" class="education" placeholder="Alumni" id="alumni" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
-          <input type="text" class="programme" placeholder="Computer Science" id="programme" style="width: 10pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="text" class="education" placeholder="Alumni" id="alumni" name="alumni" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="text" class="programme" placeholder="Computer Science" id="programme" name="programme" style="width: 10pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
         </div>
         <div class="research" style="position: relative;top: -9pc;left: 20pc;">
-          <input type="number" class="research" placeholder="Research Already Published" id="research" style="width: 15pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
-          <input type="url" class="research-profile" placeholder="Citation / Researcher Profile Link" id="citation" style="width: 18pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="number" class="research" placeholder="Research Already Published" id="research" name="research" min="0" max="1"style="width: 15pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="url" class="research-profile" placeholder="Citation / Researcher Profile Link" id="citation" name="citation" style="width: 18pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
         </div>
         <div class="work" style="position: relative;top: -7pc;left: 20pc;">
-          <input type="text" class="work" placeholder="Company name" id="work" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
-          <input type="date" class="joined" placeholder="Joined Date" id="joined" style="width: 10pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="text" class="work" placeholder="Company name" id="work" name="work" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="date" class="joined" placeholder="Joined Date" id="joined" name="joined" style="width: 10pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
         </div>
         <div class="contact" style="position: relative;top: -5pc;left: 20pc;">
-          <input type="email" class="email" placeholder=" Email Address" id="email" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
-          <input type="tel" class="phone" placeholder="Phone Number" id="phone" style="width: 10pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="email" class="email" placeholder=" Email Address" id="email" name="email" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="tel" class="phone" placeholder="Phone Number" id="phone" name="phone" style="width: 10pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
         </div>
         <div class="achievement" style="position: relative;top: -3pc;left: 20pc;">
-          <input type="text" class="achievement" placeholder=" Your Achievements" id="achievement" style="width: 50pc;border-radius: 10px;height: 10pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="text" class="achievement" name="achievement" placeholder=" Your Achievements" id="achievement" style="width: 50pc;border-radius: 10px;height: 10pc;cursor: text;color: slategray;font-size: medium;">
           <span style="width: 50pc;border-radius: 10px;height: 10pc;cursor: text;color: slategray;font-size: medium; position:absolute; top: 7pc; left: 45pc;">0/300</span>
         </div>
         <div class="complete" style="position: absolute;left: 47pc;">
@@ -213,6 +214,7 @@
     const _d02 = document.getElementsByClassName('line')[0];
     const _d03 = document.getElementsByClassName('avatar')[0];
     const _d04 = document.getElementsByClassName('main-dashboard-div')[0];
+    const _d05 = document.getElementsByClassName('editor')[0];
     // const _d05 = document.getElementsByClassName('hyerlink')[0];
 
     const _pp01 = document.getElementsByClassName('photo-preview')[0];
@@ -229,6 +231,7 @@
     const _i09 = document.getElementsByClassName('work')[0];
     const _i10 = document.getElementsByClassName('contact')[0];
     const _i11 = document.getElementsByClassName('achievement')[0];
+    
 
     const _bx00 = document.getElementsByClassName('date-picker')[0];
     
@@ -276,11 +279,12 @@
       preview.style.left = '19px';
       preview.style.borderRadius = '48px';
 
-      _d04.style.width = '190vh';
-      _d04.style.height = '10vh';
+      // _d04.style.width = '190vh';
+      // _d04.style.height = '10vh';
 
       
       _d01.children[2].appendChild(preview);
+
       
     });
 
@@ -346,6 +350,8 @@
         _bx00.style.left = '4px';
         _bx00.style.width = '23pc';
 
+        _d05.style.top = '-45pc';
+
         // _d05.style.position = 'absolute';
         // _d05.style.top = '5pc';
         // _d05.style.left = '29pc';
@@ -363,244 +369,323 @@
     }
 
     var complete_ratio = 0;
+    var epoch = 1;
 
-    _i04.addEventListener('change', (event)=>{
+    // Family
+
+    _i04.children[0].addEventListener('change', (event)=>{
  
-      if (event.target.value <= 0){
+      if (event.target.value.length <= 0){
         _n01.children[1].children[1].style.display = 'unset';
-        _n01.children[1].children[1].innerHTML = '1';
-        alert(" Family Name required!");
+        _n01.children[1].children[1].innerHTML = epoch.toString();
+        // alert(" Family Name required!");
         return;
+      }else if (event.target.value.length > 0){
+          complete_ratio = complete_ratio + 1;
       }
-
-      complete_ratio+=1;
-
-        
-    });
-
-    var epoch = 0;
-
-    _i05.addEventListener('change', (event)=>{
-      
-      if (event.target.value <= 0){
-        _n01.children[2].children[1].style.display = 'unset';
-        epoch+=1;
-        _n01.children[2].children[1].innerHTML = epoch.toString();
-        alert(" Address Field required!");
-        return;
-      }
-
-      if (_i05.children[1].value <= 0){
-        _n01.children[2].children[1].style.display = 'unset';
-        epoch+=1;
-        _n01.children[2].children[1].innerHTML = epoch.toString();
-        alert("Zip code has not provided!");
-        return;
-      }
-
-      if (_i05.children[2].value <= 0){
-        _n01.children[2].children[1].style.display = 'unset';
-        epoch+=1;
-        _n01.children[2].children[1].innerHTML = epoch.String();
-        alert("Country name has not updated!");
-        return;
-      }
-
-      complete_ratio +=1;
-      epoch = 0;
-    });
-
-    _i06.addEventListener('change', (event)=>{
-
-      if (event.target.value <= 0){
-        _n01.children[3].children[1].style.display = 'unset';
-        epoch+=1;
-        _n01.children[3].children[1].innerHTML = epoch.toString();
-        alert("University Field required!");
-        return;
-      } 
-
-      if (_i06.children[1].value <= 0){
-        _n01.children[3].children[1].style.display = 'unset';
-        epoch+=1;
-        _n01.children[3].children[1].innerHTML = epoch.toString();
-        alert(" Programme Field required!");
-        return;
-      }
-
-      complete_ratio+=1;
-      epoch = 0;
-    });
-
-    _i07.addEventListener('change', (event)=>{
-
-      if (event.target.value <= 0){
-        _n01.children[4].children[1].style.display = 'unset';
-        epoch+=1;
-        _n01.children[4].children[1].innerHTML = epoch.toString();
-        alert(" Num of Publishication required!");
-        return;
-      } 
-
-      if (_i07.children[1].value <= 0){
-        _n01.children[4].children[1].style.display = 'unset';
-        epoch+=1;
-        _n01.children[4].children[1].innerHTML = epoch.toString();
-        alert(" Citations References required!");
-        return;
-      }
-
-      complete_ratio+=1;
-      epoch = 0;
-
-    });
-
-    _i08.addEventListener('change', (event)=>{
- 
-      if (event.target.value <= 0){
-        
-        _n01.children[5].children[1].style.display = 'unset';
-        _n01.children[5].children[1].innerHTML = '1';
-
-        alert(" Señor Field required!");
-        return;
-      }
-
-      if (!(_i08.value === "Mr"||
-           _i08.value === "mr" || _i08.value === "Ms"
-           || _i08.value === "ms" || 
-           _i08.value === "Mrs" || _i08.value === "mrs")){
-
-            _n01.children[5].children[1].style.display = 'unset';
-            _n01.children[5].children[1].innerHTML = '1';
-
-            alert(" Field value should be mr, mrs, ms!");
-            return;
-      
-          }
-
-      complete_ratio+=1; 
   
     });
 
-    _i09.addEventListener('change', (event)=>{
+    // Relationship
 
-
-      if (event.target.value <= 0){
-
-        _n01.children[6].children[1].style.display = 'unset';
-
-        epoch+=1;
-
-        _n01.children[6].children[1].innerHTML = epoch.toString();
-
-        alert(" Company Name required!");
-
-        return;
-
-      } 
-
-
-      if (_i09.children[1].value <= 0){
-
-        _n01.children[6].children[1].style.display = 'unset';
-
-        epoch+=1;
-
-        _n01.children[6].children[1].innerHTML = epoch.toString();
-       
-        alert(" Your Join Date required!");
-       
-        return;
+    _i04.children[1].addEventListener('change', (event)=>{
+ 
+      if (event.target.value.length <= 0){
       
+        _n01.children[5].children[1].style.display = 'unset';
+        _n01.children[5].children[1].innerHTML = epoch.toString();
+          // alert(" Family Name required!");
+        return;
+      }else if (event.target.value.length.length > 0){
+          complete_ratio = complete_ratio + 1;
+      }
+  
+    });
+
+
+    // Address 
+    _i05.children[0].addEventListener('change', (event)=>{
+      
+      if (event.target.value.length.length <= 0){
+        _n01.children[2].children[1].style.display = 'unset';
+        _n01.children[2].children[1].innerHTML = epoch.toString();
+        // alert(" Address Field required!");
+        return;
+      }else if (event.target.value.length.length > 0){
+          complete_ratio = complete_ratio + 1;
       }
 
-      complete_ratio+=1;
-
-      epoch = 0;
-
     });
 
-    _i10.addEventListener('change', (event)=>{
-
-      if (event.target.value <= 0){
-
-        _n01.children[7].children[1].style.display = 'unset';
-
-        epoch+=1;
-
-        _n01.children[7].children[1].innerHTML = epoch.toString();
-
-        alert(" Email required!");
-
+    // Zip 
+    _i05.children[1].addEventListener('change', (event)=>{
+      
+      if (event.target.value.length.length <= 0){
+        _n01.children[2].children[1].style.display = 'unset';
+        _n01.children[2].children[1].innerHTML = epoch.toString();
+        // alert("Zip code has not provided!");
         return;
-
-      } 
-
-      if (_i10.children[1].value <= 0){
-
-        _n01.children[7].children[1].style.display = 'unset';
-
-        epoch+=1;
-
-        _n01.children[7].children[1].innerHTML = epoch.toString();
-
-        alert(" Phone Number required!");
-
-        return;
-
+      }else if (event.target.value.length.length > 0){
+          complete_ratio = complete_ratio + 1;
       }
 
-      complete_ratio+=1;
+    });
 
-      epoch = 0;
+    // State
+    _i05.children[2].addEventListener('change', (event)=>{
+
+      if (event.target.value.length <= 0){
+        _n01.children[2].children[1].style.display = 'unset';
+        _n01.children[2].children[1].innerHTML = epoch.String();
+        // alert("Country name has not updated!");
+        return;
+      }else if (event.target.value.length > 0){
+          complete_ratio = complete_ratio + 1;
+      }
 
     });
 
-    _i11.addEventListener('change', (event)=>{
 
-        if (event.target.value <= 0){
+    // Education
+    _i06.children[0].addEventListener('change', (event)=>{
 
-          _n01.children[8].children[1].style.display = 'unset';
+      if (event.target.value.length <= 0){
+  
+        _n01.children[3].children[1].style.display = 'unset';
+        
+        _n01.children[3].children[1].innerHTML = epoch.toString();
+        // alert("University Field required!");
+        return;
+      }else if (event.target.value.length > 0){
+          complete_ratio = complete_ratio + 1;
+      }
 
-          epoch+=1;
-
-          _n01.children[8].children[1].innerHTML = epoch.toString();
-
-          alert(" Achievements required!");
-
-          return;
-
-        }
-
-        if (_i11.children[0].value.length > 0) {
-
-            _i11.children[1].innerHTML = _i11.children[0].value.length.toString()+"/300";
-        }
-        complete_ratio+=1;
-
-        epoch = 0;
     });
 
-    _i03.addEventListener('change', (event)=>{
+    // Programme
+    _i06.children[1].addEventListener('change', (event)=>{
 
-        if(complete_ratio <= 3){
-          
-          _n01.children[0].children[1].className = 'badge badge-danger';
-          _n01.children[0].children[1].style.display = 'unset';
-          _n01.children[0].children[1].innerHTML = complete_ratio.toString();
-          
-          alert("Too many fields are missing!");
-          return;
-        }
+      if (event.target.value.length <= 0){
 
-        _n01.children[0].children[1].className = 'badge badge-success';
-        _n01.children[0].children[1].style.display = 'unset';
-        _n01.children[0].children[1].innerHTML = complete_ratio.toString();
-        complete_ratio = 0;
-    });
+  
+        _n01.children[3].children[1].style.display = 'unset';
+        
+        _n01.children[3].children[1].innerHTML = epoch.toString();
+        // alert("University Field required!");
+      return;
+    }else if (event.target.value.length > 0){
+          complete_ratio = complete_ratio + 1;
+    }
+
+  });
 
 
+    // Research
+  _i07.children[0].addEventListener('change', (event)=>{
+
+    if (event.target.value.length.length <= 0){
+  
+      _n01.children[4].children[1].style.display = 'unset';
+      
+      _n01.children[4].children[1].innerHTML = epoch.toString();
+  
+      // alert(" Num of Publishication required!");
+      return;
+    }else if (event.target.value.length.length > 0){
+          complete_ratio = complete_ratio + 1;
+    }
+
+    if (_i07.children[0].value < _i07.children[0].min){
+      alert('Citation number will be `1`...');
+      return;
+    }
+    
+    if(_i07.children[0].value > _i07.children[0].max ){
+      alert('Citation number will be `1`...');
+      return;
+    } 
+  });
+
+  // Citation
+  _i07.children[1].addEventListener('change', (event)=>{
+
+    if (event.target.value.length <= 0){
+
+      _n01.children[4].children[1].style.display = 'unset';
+      
+      _n01.children[4].children[1].innerHTML = epoch.toString();
+
+        // alert(" Num of Publishication required!");
+      return;
+    }else if (event.target.value.length > 0){
+          complete_ratio = complete_ratio + 1;
+      }
+
+  });
+
+  // Company
+
+  _i09.children[0].addEventListener('change', (event)=>{
+
+    if (event.target.value.length <= 0){
+
+      _n01.children[6].children[1].style.display = 'unset';
+
+      _n01.children[6].children[1].innerHTML = epoch.toString();
+
+      // alert(" Company Name required!");
+
+      return;
+    }else if (event.target.value.length > 0){
+          complete_ratio = complete_ratio + 1;
+      }
+
+  });
+
+  // Joined
+  _i09.children[1].addEventListener('change', (event)=>{
+
+  
+    if (event.target.value.length <= 0){
+
+      _n01.children[6].children[1].style.display = 'unset';
+      
+      _n01.children[6].children[1].innerHTML = epoch.toString();
+
+      // alert(" Company Name required!");
+
+      return;
+    }else if (event.target.value.length > 0){
+          complete_ratio = complete_ratio + 1;
+      }
+
+  });
+
+  // Email
+  _i10.children[0].addEventListener('change', (event)=>{
+
+    if (event.target.value.length <= 0){
+
+      _n01.children[7].children[1].style.display = 'unset';
+
+      _n01.children[7].children[1].innerHTML = epoch.toString();
+
+      // alert(" Email required!");
+
+      return;
+
+    }else if (event.target.value.length > 0){
+          complete_ratio = complete_ratio + 1;
+      }
+
+  });
+
+  // Phone
+  _i10.children[1].addEventListener('change', (event)=>{
+
+    if (event.target.value.length <= 0){
+ 
+      _n01.children[7].children[1].style.display = 'unset';
+  
+      _n01.children[7].children[1].innerHTML = epoch.toString();
+ 
+      // alert(" Email required!");
+ 
+      return;
+
+    }else if (event.target.value.length > 0){
+          complete_ratio = complete_ratio + 1;
+      }
+
+  });
+
+
+  // Achievements
+  _i11.children[0].addEventListener('change', (event)=>{
+
+    if (event.target.value.length <= 0){
+
+      _n01.children[8].children[1].style.display = 'unset';
+
+      _n01.children[8].children[1].innerHTML = epoch.toString();
+
+      // alert(" Achievements required!");
+
+      return;
+
+    }else if (event.target.value.length > 0){
+
+      complete_ratio = complete_ratio + 1;
+
+    }
+
+    _i11.children[1].innerHTML = _i11.children[0].value.length.toString()+"/300";
+
+  });
+
+
+  // Status
+
+  _i03.children[1].addEventListener('change', (event)=>{
+  
+    if (event.target.value.length <= 0){
+  
+      _n01.children[0].children[1].className = 'badge badge-danger';
+  
+      _n01.children[0].children[1].style.display = 'unset';
+    
+      _n01.children[0].children[1].innerHTML = epoch.toString();
+
+      // alert(" Señor Field required!");
+
+      return;
+    }else if (event.target.value.length > 0){
+      complete_ratio = complete_ratio + 1;
+    }
+
+  });
+
+
+  // Name
+
+  _i03.children[0].addEventListener('change', (event)=>{
+
+    if (event.target.value.length <= 0){
+
+      _n01.children[0].children[1].className = 'badge badge-danger';
+
+      _n01.children[0].children[1].style.display = 'unset';
+
+      _n01.children[0].children[1].innerHTML = epoch.toString();
+
+      // alert(" Señor Field required!");
+
+      return;
+
+    }else if (event.target.value.length > 0){
+          complete_ratio = complete_ratio + 1;
+      }
+
+    if (complete_ratio < 7){
+
+      _n01.children[0].children[1].style.display = 'unset';
+
+      _n01.children[0].children[1].innerHTML = (11 - complete_ratio).toString();
+
+      alert("Sorry, Your biography is incomplete");
+      return;
+    }else{
+
+      _n01.children[0].children[1].className = 'badge badge-success';
+      _n01.children[0].children[1].style.display = 'unset';
+      _n01.children[0].children[1].innerHTML = (11 - complete_ratio).toString();
+      return;
+    }
+
+    complete_ratio = 0;
+
+  });
+  
     // _b04 allow you to add filter in your picture frame
     // _b04.addEventListener('click', ()=>{
     //     alert(' Filter Option is not enabled. Please wait for upcoming update');

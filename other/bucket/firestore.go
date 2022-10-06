@@ -11,32 +11,41 @@ import (
 	"reflect"
 
 	"cloud.google.com/go/firestore"
+	error_codes "github.com/ali2210/wizdwarf/errors_codes"
 	"google.golang.org/api/iterator"
 )
 
+// Crdedntials structure
 type DBStore struct {
 	Key       string
 	Composite string
 	Value     string
 }
 
+// Enum selectors
 const (
 	Ok int = iota << 1
 	Err
 )
+
+// Collection name
 const COLLECTION_NAME string = "ContentAddress"
 
+// client object
 var client *firestore.Client
 
+// Credentials services
 type DBStorage interface {
 	Store(context.Context, *firestore.Client) int
-	Get(context.Context, *firestore.Client) (interface{}, int)
+	Get(context.Context, *firestore.Client) (map[string]interface{}, int)
 }
 
+// Instanitation of Credentials Object
 func New(key, value, composite string) DBStorage {
 	return &DBStore{Key: key, Value: value, Composite: composite}
 }
 
+// Store credentials object information
 func (db *DBStore) Store(ctx context.Context, client *firestore.Client) int {
 
 	// user shared content during sessions. Each address in onces generated and reference of a document.
@@ -53,7 +62,8 @@ func (db *DBStore) Store(ctx context.Context, client *firestore.Client) int {
 	return Ok
 }
 
-func (db *DBStore) Get(ctx context.Context, client *firestore.Client) (interface{}, int) {
+// Credentials Information Retreive
+func (db *DBStore) Get(ctx context.Context, client *firestore.Client) (map[string]interface{}, int) {
 
 	// user cannot remember every machine genated address.
 	// If the address exists in the database then user will do any operation such as view
@@ -67,9 +77,15 @@ func (db *DBStore) Get(ctx context.Context, client *firestore.Client) (interface
 		query_result = doc.Data()
 	}
 
-	return reflect.ValueOf(query_result).Interface(), Ok
+	if reflect.DeepEqual(query_result, map[string]interface{}{}) {
+		log.Fatalln(error_codes.Operation_ERROR_CODE_EMPTY_OUTPUT)
+		return map[string]interface{}{}, Err
+	}
+
+	return query_result, Ok
 }
 
+// Client reference
 func SetClient(c *firestore.Client) {
 	client = c
 }

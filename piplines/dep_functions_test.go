@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	skynet "github.com/SkynetLabs/go-skynet/v2"
-	"github.com/ali2210/wizdwarf/other/users"
+	user "github.com/ali2210/wizdwarf/other/users/register"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -60,7 +60,7 @@ var _ = Describe(date_describe, func() {
 	// update user profile
 	Context(updateinfo, func() {
 		It(updateinfotest, func() {
-			Expect(UpdateProfileInfo(&users.Visitors{})).Should(BeTrue())
+			Expect(UpdateProfileInfo(user.Updated_User{})).Should(BeTrue())
 		})
 	})
 
@@ -69,7 +69,7 @@ var _ = Describe(date_describe, func() {
 		It(adduser, func() {
 			var w http.ResponseWriter
 			r := &http.Request{}
-			Expect(AddNewProfile(w, r, users.Visitors{}, "0x1223...")).Should(BeTrue())
+			Expect(AddNewProfile(w, r, user.New_User{})).Should(BeTrue())
 		})
 	})
 
@@ -78,7 +78,7 @@ var _ = Describe(date_describe, func() {
 		It(db_credientials_test, func() {
 			var w http.ResponseWriter
 			r := &http.Request{}
-			Expect(Firebase_Gatekeeper(w, r, users.Visitors{})).Should(BeEmpty())
+			Expect(Firebase_Gatekeeper(w, r, user.New_User{})).Should(BeEmpty())
 		})
 	})
 

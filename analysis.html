@@ -14,7 +14,7 @@
 	<link rel="stylesheet" type="text/css" href="/css/analysis.css">
 	</link>
 	<link rel="shortcut icon" type="image/png" href="/images/favicon.png">
-	<title>WizDwarfs</title>
+	<title>Wizdwarfs</title>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script> 
 	<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 	<script src="https://js.pusher.com/7.0/pusher-with-encryption.min.js"></script>
@@ -66,16 +66,16 @@
 </div>
     <div class ="user" style="position: relative;top: -19pc;width: 20pc;height: 16pc;left: 1pc;border-radius: 30px;">
 		<div class="profile" style="position: absolute;width: 10pc;height: 10pc;left: 4pc;">
-			<img src="{{.Avatar_Path}}" alt="company" style="background: silver;border-radius: 130px;">
+			<img src="{{.Avatar_Path}}" alt="profile-picture" style="background: silver;border-radius: 130px;">
 		</div>
-		<div class="username" style="position: absolute;top: 13pc;left: 5pc; font-size:large; color: slategray">
+		<div class="username" style="position: absolute;top: 13pc;left: 7pc; font-size:large; color: slategray">
 			 {{.Record.Name}}
 		</div>
 		<div class="usermail" style="position: absolute;top: 16pc;left: 5pc;font-size: small; color: slategray">
 			 {{.Record.Email}}
 		</div>
 		<div class="me" style="position: relative;width: 20pc;height: 9pc;top: 16pc;transform: perspective(10px);transform-style: preserve-3d;z-index: 3;border-radius: 16px;">
-			<i class="fa fa-user-circle-o" aria-hidden="true" style="position: absolute;font-size: xxx-large;top: 42px;left: 2pc;color: cadetblue;"></i> <a href="" alt="edit profile" title="edit profile" style="position: absolute;top: 104px;left: 11px;color: cadetblue;"> View My Profile </a>
+			<i class="fa fa-user-circle-o" aria-hidden="true" style="position: absolute;font-size: xxx-large;top: 42px;left: 2pc;color: cadetblue;"></i> <a href="/dashboard/profile/view" alt="edit profile" title="edit profile" style="position: absolute;top: 104px;left: 11px;color: cadetblue;"> View Profile </a>
 			<span class="last" style="position: absolute;top: 38px;left: 4.4pc;color: cadetblue;">
 				<span class="badge badge-success">0</span>
 				<span class="sr-only">Last</span>

@@ -3,9 +3,11 @@ package cloudmedia
 import (
 	"context"
 	"errors"
+	"log"
 	"reflect"
 
 	"cloud.google.com/go/firestore"
+	error_codes "github.com/ali2210/wizdwarf/errors_codes"
 	"github.com/ali2210/wizdwarf/other/cloudmedia/media"
 	"google.golang.org/api/iterator"
 )
@@ -47,6 +49,7 @@ func (d *Dc_1) GetData(data *media.IMAGE_METADATA, code ...string) (map[string]i
 
 	var empty map[string]interface{}
 	ok, query := d.SearchData(data, code...)
+
 	if !ok {
 		return empty, errors.New("no record found")
 	}
@@ -71,6 +74,7 @@ func (d *Dc_1) SearchData(data *media.IMAGE_METADATA, code ...string) (bool, *fi
 	query := d.Client.Collection(COLLECTION_NAME).Where("Usercode", "==", code[0]).Where("Token_Category", "==", data.Tokens).Documents(d.Ctx)
 
 	if reflect.DeepEqual(query, &firestore.DocumentIterator{}) {
+		log.Fatalln(error_codes.Operation_ERROR_CODE_EMPTY_OUTPUT)
 		return false, &firestore.DocumentIterator{}
 	}
 

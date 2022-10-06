@@ -46,7 +46,7 @@ import (
 	"github.com/ali2210/wizdwarf/other/parser"
 	imglib "github.com/ali2210/wizdwarf/other/parser/parse_image"
 	biosubtypes "github.com/ali2210/wizdwarf/other/proteins"
-	"github.com/ali2210/wizdwarf/other/users"
+	user "github.com/ali2210/wizdwarf/other/users/register"
 	"github.com/biogo/biogo/alphabet"
 	"github.com/gorilla/sessions"
 	linkcid "github.com/ipfs/go-cid"
@@ -86,6 +86,9 @@ var link linkcid.Cid
 
 //  Molecular data; hold genomes sequence value
 var genes []string
+
+// session cache
+var profiler user.New_User
 
 // Signed key hold paticular state of an object called lock
 type SignedKey struct {
@@ -549,9 +552,10 @@ func Mapper(stream map[string]interface{}, key string) interface{} {
 }
 
 // Update Profile Information will update user profile .
-func UpdateProfileInfo(member *users.Visitors) bool {
+func UpdateProfileInfo(member user.Updated_User) bool {
 
-	if err := cloud.UpdateUserDetails(GetDBClientRef(), *member); err != nil {
+	_, err := cloud.UpdateUserDetails(GetDBClientRef(), member)
+	if err != nil {
 		log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
 		return false
 	}
@@ -668,89 +672,60 @@ func threepairs(str string, i int) bool {
 	return !strings.Contains(str[i:i+1], " ") && !strings.Contains(str[i+1:i+2], " ") && !strings.Contains(str[i+2:i+3], " ")
 }
 
-func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member users.Visitors) (*users.Visitors, error) {
+func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member user.New_User) (*user.New_User, *user.Updated_User, error) {
 
-	var mapper map[string]interface{}
-	var profile users.Visitors
-	data, err := cloud.SearchUser(GetDBClientRef(), member)
-
-	if reflect.DeepEqual(data, mapper) && err != nil {
-		log.Println(error_codes.Router_ERROR_CODE_EMPTY_RESPONSE)
-		return &profile, errors.New("no account on our server")
+	docIterator, err := cloud.SearchUser(GetDBClientRef(), member)
+	if err != nil && !docIterator.Doc_status {
+		log.Fatalln(error_codes.Router_ERROR_CODE_EMPTY_RESPONSE)
+		return &user.New_User{}, &user.Updated_User{}, errors.New("no account on our server")
 	}
 
-	query, err := json.Marshal(data)
-	if err != nil {
-		log.Fatalln(error_codes.JSON_CODE_MARSHAL_ERROR)
-		return &profile, err
+	if !reflect.DeepEqual(docIterator.Update, user.Updated_User{}) {
+		return &user.New_User{}, &docIterator.Update, nil
 	}
 
-	err = json.Unmarshal(query, &profile)
-	if err != nil {
-		log.Fatalln(error_codes.JSON_CODE_UNMARSHAL_ERROR)
-		return &profile, err
-	}
-	return &profile, nil
+	return &docIterator.Profile, &user.Updated_User{}, nil
 }
 
-func AddNewProfile(response http.ResponseWriter, request *http.Request, user users.Visitors, im string) (*firestore.DocumentRef, bool, error) {
+func AddNewProfile(response http.ResponseWriter, request *http.Request, add user.New_User) (*firestore.DocumentRef, bool, error) {
 
-	var member users.Visitors
-	var replicate *firestore.DocumentRef
+	// var member user.New_User
+	var document *firestore.DocumentRef
+	var err error
 
 	// user data accrording to json schema
-	data, err := json.Marshal(user)
+	data, err := json.Marshal(add)
 	if err != nil {
 		log.Fatalln(error_codes.JSON_CODE_MARSHAL_ERROR)
-		return replicate, false, err
+		return &firestore.DocumentRef{}, false, err
 	}
 
-	err = json.Unmarshal(data, &user)
+	err = json.Unmarshal(data, &add)
 	if err != nil {
 		log.Fatalln(error_codes.JSON_CODE_UNMARSHAL_ERROR)
-		return replicate, false, err
+		return &firestore.DocumentRef{}, false, err
 	}
 
 	// search data if there is
-	candidate, err := Firebase_Gatekeeper(response, request, user)
+	candidate, _, err := Firebase_Gatekeeper(response, request, add)
 	if err != nil {
 		log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
-		return replicate, false, err
+		return &firestore.DocumentRef{}, false, err
 	}
 
 	// search data doesn't exist
-	if reflect.DeepEqual(candidate, &member) {
+	if reflect.DeepEqual(candidate, &user.New_User{}) {
 
-		member.Id = im
-		member.Name = user.Name
-		member.Email = user.Email
-		member.Password = user.Password
-		member.LastName = user.LastName
-		if user.Eve {
-			member.Eve = user.Eve
-		} else {
-			member.Eve = user.Eve
-		}
-		member.Address = user.Address
-		member.Appartment = user.Appartment
-		member.City = user.City
-		member.Zip = user.Zip
-		member.Country = user.Country
-
-		// add user data in your dataabse
-		document, _, err := cloud.AddUser(GetDBClientRef(), member)
+		document, _, err = cloud.AddUser(GetDBClientRef(), add)
 		if err != nil {
 			log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
-			return replicate, false, err
+			return &firestore.DocumentRef{}, false, err
 		}
 
-		replicate = document
-
-		return document, true, nil
-	} else {
-		log.Fatalln(error_codes.Operation_ERROR_CODE_GARBAGE_VALUE)
-		return replicate, false, err
 	}
+
+	return document, true, nil
+
 }
 
 func Firestore_Reference() *firestore.Client {
@@ -849,7 +824,7 @@ func RFiles(filename string) ([]byte, error) {
 	return []byte(body), nil
 }
 
-func Presence(w http.ResponseWriter, r *http.Request, regexp_emal, regexp_pss bool, user users.Visitors) (bool, *SignedKey) {
+func Presence(w http.ResponseWriter, r *http.Request, regexp_emal, regexp_pss bool, add user.New_User) (bool, *SignedKey) {
 
 	code := SignedKey{}
 
@@ -857,7 +832,7 @@ func Presence(w http.ResponseWriter, r *http.Request, regexp_emal, regexp_pss bo
 		return false, &SignedKey{}
 	}
 
-	code.Reader, code.Signed, code.Tx = Signx(w, r, hex.EncodeToString([]byte(user.Email)), hex.EncodeToString([]byte(user.Password)))
+	code.Reader, code.Signed, code.Tx = Signx(w, r, hex.EncodeToString([]byte(add.Email)), hex.EncodeToString([]byte(add.Password)))
 	return true, &code
 }
 
@@ -1130,6 +1105,11 @@ func GetDocuments(session_id ...string) (string, interface{}) {
 		return " ", newInter
 	}
 
+	if reflect.DeepEqual(mapper, map[string]interface{}{}) {
+		log.Fatalln(error_codes.Router_ERROR_CODE_EMPTY_RESPONSE)
+		return " ", newInter
+	}
+
 	lists := reflect.ValueOf(mapper).MapRange()
 	var name string = ""
 	var dlinks interface{}
@@ -1142,7 +1122,7 @@ func GetDocuments(session_id ...string) (string, interface{}) {
 
 		if reflect.DeepEqual(lists.Key().String(), "CDR_LINK") {
 
-			dlinks = lists.Value().Elem().Interface()
+			dlinks = lists.Value().Interface()
 		}
 	}
 
@@ -1152,13 +1132,19 @@ func GetDocuments(session_id ...string) (string, interface{}) {
 
 func ReflectMaps(i interface{}) (string, string) {
 
+	var nullify interface{}
+	if reflect.DeepEqual(i, nullify) {
+		log.Fatalln(error_codes.Operation_ERROR_CODE_EMPTY_OUTPUT)
+		return "", ""
+	}
+
 	reflex := reflect.ValueOf(i).MapRange()
 	var key, value string = "", ""
 
 	for reflex.Next() {
 
-		key = reflex.Key().String()
-		value = reflex.Value().Elem().String()
+		key = reflex.Key().Interface().(string)
+		value = reflex.Value().Interface().(string)
 	}
 
 	return key, value
