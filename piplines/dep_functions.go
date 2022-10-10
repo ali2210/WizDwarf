@@ -2,8 +2,10 @@
 Redistribution , contribution and improve codebase under license
 convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
 
+// Package or module
 package piplines
 
+// Libaries
 import (
 	"crypto/ecdsa"
 	"crypto/ed25519"
@@ -82,13 +84,11 @@ var cdr map[string]string = make(map[string]string, 1)
 var ImageMeta *media.IMAGE_METADATA
 var link linkcid.Cid
 
-// var count int64 = 0
-
 //  Molecular data; hold genomes sequence value
 var genes []string
 
 // session cache
-var profiler user.New_User
+//var profiler user.New_User
 
 // Signed key hold paticular state of an object called lock
 type SignedKey struct {
@@ -99,8 +99,9 @@ type SignedKey struct {
 
 // User will add their profile picture on the profile. User shared picture have different parameters such as upload time ; resize image etc.
 // User currently add jpeg, png and gif to the profile picture. Profile store on private blockchain. Each Shared Picture key attached to the keys;
-
 // Keys are generated one time; All the keys store in your account meta-wallet .
+// @param responsewriter and request object
+// @return string and error
 
 func AvatarUpload(r *http.Request, user_id string) (string, error) {
 
@@ -440,7 +441,8 @@ func AvatarUpload(r *http.Request, user_id string) (string, error) {
 // Sky Data Center have following properties. It's provide best solution for Decentralize Content storage ; just like ipfs & pinta;
 // Each content store in public ledger which means every content access through key signature called CDR-link.
 // CDR_Link is similar to URL , however cdr-link generated based on content that user want to located
-
+// @param skynet client ; file name & file type
+// @return boolean
 func SkyDataCenter(client skynet.SkynetClient, file, filetype string) bool {
 
 	// application store user picture in the app_data directory
@@ -522,11 +524,11 @@ func SkyDataCenter(client skynet.SkynetClient, file, filetype string) bool {
 	return true
 }
 
-// Download Content is a special function that downloads shared resources
+// Download Content is a special function that will get copy of your content
+// @param File , client Bucket service
 func Download_Content_ownership(File string, client bucket.Bucket_Service) *proto.QState {
 
 	return client.Download(&proto.Query{ByName: File})
-
 }
 
 // Mapper take stream as interface , key is used to decode the kv value.
@@ -540,6 +542,9 @@ func Download_Content_ownership(File string, client bucket.Bucket_Service) *prot
     * }
 */
 
+// Mapper is a specified function that will return value aginst paticular key
+// @param map set and key
+// @return interface (any)
 func Mapper(stream map[string]interface{}, key string) interface{} {
 
 	var occ interface{}
@@ -551,7 +556,9 @@ func Mapper(stream map[string]interface{}, key string) interface{} {
 	return occ
 }
 
-// Update Profile Information will update user profile .
+// This function provide gateway services. User credentils update through gateway.
+// @param Protocol Updated User Message
+// @return boolean .
 func UpdateProfileInfo(member user.Updated_User) bool {
 
 	_, err := cloud.UpdateUserDetails(GetDBClientRef(), member)
@@ -569,7 +576,9 @@ func Set_cdr(c string) { CDRL = c }
 
 func Get_cdr() string { return CDRL }
 
-// Trust Request is digital contract signature certificate
+// Trust Request ensure that both parties are trusted and ready to complete the pending transaction.
+// @param message , validator and request command (string)
+// @return edsca public and error
 func TrustRequest(message, verifier, request string) (bool, *ed25519.PrivateKey, error) {
 
 	// contain check whether request have pass-key ,
@@ -618,6 +627,9 @@ func TrustRequest(message, verifier, request string) (bool, *ed25519.PrivateKey,
 	}
 }
 
+// This function specified codons that exist in user genetic material
+// @param string
+// @return map set string
 func Active_Proteins(str string) map[string]string {
 	i, j := 0, 3
 
@@ -639,6 +651,9 @@ func Active_Proteins(str string) map[string]string {
 	return chain
 }
 
+// This function specified codons that exist in user genetic material
+// @param string
+// @return map set Aminochain
 func AminoChains(str string) map[string]biosubtypes.Aminochain {
 
 	// initalization & declaration of local attributes
@@ -668,10 +683,16 @@ func AminoChains(str string) map[string]biosubtypes.Aminochain {
 	return chain
 }
 
+// This function ensure whole codon either hold three proteins or none
+// @param string and int
+// @return boolean
 func threepairs(str string, i int) bool {
 	return !strings.Contains(str[i:i+1], " ") && !strings.Contains(str[i+1:i+2], " ") && !strings.Contains(str[i+2:i+3], " ")
 }
 
+// This function act as gateway services which allow to connect application with database . However , this method will only allow search functionality.
+// @param responsewriter, user credentials and request object
+// @return user credentials  and error message
 func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member user.New_User) (*user.New_User, *user.Updated_User, error) {
 
 	docIterator, err := cloud.SearchUser(GetDBClientRef(), member)
@@ -687,6 +708,8 @@ func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member user.New
 	return &docIterator.Profile, &user.Updated_User{}, nil
 }
 
+// This function is another gateway service which allow to create new credentials on our database
+// @param responsewriter, request and user credentials
 func AddNewProfile(response http.ResponseWriter, request *http.Request, add user.New_User) (*firestore.DocumentRef, bool, error) {
 
 	// var member user.New_User
@@ -728,6 +751,9 @@ func AddNewProfile(response http.ResponseWriter, request *http.Request, add user
 
 }
 
+// This function allow you to connect with cloud db .
+// @return client
+
 func Firestore_Reference() *firestore.Client {
 
 	_, err := os.Stat("config/" + GetKeyFile())
@@ -754,6 +780,7 @@ func Firestore_Reference() *firestore.Client {
 
 }
 
+// String convesion to integer
 func StringInt(s string) (int, error) {
 
 	i, err := strconv.Atoi(s)
@@ -765,10 +792,15 @@ func StringInt(s string) (int, error) {
 
 }
 
+// This function allow you to create session
+// @param  string message
+// @return session
 func Web_Token(unique string) *sessions.CookieStore {
 	return sessions.NewCookieStore([]byte(unique))
 }
 
+// This function allow user to store file in application directory
+// @param responsewriter, request and file name
 func MountDisk(w http.ResponseWriter, r *http.Request, filename string) os.FileInfo {
 	f, err := os.OpenFile(filename+".txt", os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
@@ -785,6 +817,9 @@ func MountDisk(w http.ResponseWriter, r *http.Request, filename string) os.FileI
 	return finfo
 }
 
+// This function will generate salt bit which will used in validate or transaction
+// @param responserwriter, request and messages
+// @return string messages and edsca key
 func Signx(w http.ResponseWriter, r *http.Request, h1, h2 string) (string, string, *ecdsa.PrivateKey) {
 
 	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
@@ -812,6 +847,8 @@ func Signx(w http.ResponseWriter, r *http.Request, h1, h2 string) (string, strin
 
 }
 
+// @param message string
+// @return byte vector and error
 func RFiles(filename string) ([]byte, error) {
 
 	body, err := ioutil.ReadFile(filename)
@@ -824,6 +861,8 @@ func RFiles(filename string) ([]byte, error) {
 	return []byte(body), nil
 }
 
+// @param responsewriter, request and user credentials
+// @return boolean and signature
 func Presence(w http.ResponseWriter, r *http.Request, regexp_emal, regexp_pss bool, add user.New_User) (bool, *SignedKey) {
 
 	code := SignedKey{}
@@ -835,6 +874,10 @@ func Presence(w http.ResponseWriter, r *http.Request, regexp_emal, regexp_pss bo
 	code.Reader, code.Signed, code.Tx = Signx(w, r, hex.EncodeToString([]byte(add.Email)), hex.EncodeToString([]byte(add.Password)))
 	return true, &code
 }
+
+// Mounted will store content in the app directory to complete futher processing
+// @param responsewriter & request
+// @return string message & error message
 
 func Mounted(w http.ResponseWriter, r *http.Request) (string, error) {
 	r.ParseMultipartForm(10 << 50)
@@ -912,6 +955,9 @@ func Mounted(w http.ResponseWriter, r *http.Request) (string, error) {
 *  To keep user privacy , Encrypted-Channels accept stream of data.
 *  Onces the data transfer complete this path completely closed.
  */
+
+//  @param file string
+// @return boolean
 func OpenSkyChain(file string) bool {
 
 	/*
@@ -969,6 +1015,9 @@ func OpenSkyChain(file string) bool {
 	return false
 }
 
+// @param user genetic content and matcher file
+// @return string vectors and error message
+
 func ReadAllow(serverFile *os.File, userFile os.FileInfo) ([]string, []string, error) {
 
 	seq, err := RFiles(userFile.Name())
@@ -1006,6 +1055,8 @@ func ReadAllow(serverFile *os.File, userFile os.FileInfo) ([]string, []string, e
 
 }
 
+// @param byte message
+// @return string message
 func ToRunes(seq byte) string {
 
 	if seq >= 65 && seq < 91 {
@@ -1014,6 +1065,9 @@ func ToRunes(seq byte) string {
 	return string(alphabet.Letter(seq))
 }
 
+// calculate risk analysis on the user shared data
+// @param responsewriter, request, choices , data and risk algorithm params
+// @return error message
 func Data_Predicition(w http.ResponseWriter, r *http.Request, fname, choose string, file *os.File, algo info.Levenshtein) error {
 
 	i, err := strconv.Atoi(choose)
@@ -1062,6 +1116,8 @@ func SetGenes(gene []string) {
 // get genes
 func GetGenes() []string { return genes }
 
+// @param directory path and file name message
+// @return File and error message
 func Open_SFiles(path, filename string) (*os.File, error) {
 
 	fileinfo, err := os.Stat(path)
@@ -1083,6 +1139,9 @@ func Open_SFiles(path, filename string) (*os.File, error) {
 	return file, nil
 }
 
+// GetDocuments is a specified algorithm that will copy image from public ledger
+// @param vector string of session
+// @return string and set message
 func GetDocuments(session_id ...string) (string, interface{}) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
@@ -1130,6 +1189,9 @@ func GetDocuments(session_id ...string) (string, interface{}) {
 
 }
 
+// Get Documents return in interface which is used only when there a function which will extract values from set. Here ReflectMaps come in action
+// @param interface 
+// @return string values 
 func ReflectMaps(i interface{}) (string, string) {
 
 	var nullify interface{}

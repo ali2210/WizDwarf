@@ -2,8 +2,10 @@
 Redistribution , contribution and improve codebase under license
 convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
 
+// Package
 package users
 
+// importing packages or libraries
 import (
 	"context"
 	"errors"
@@ -17,17 +19,25 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
+// constants ...
 const (
 	collection_name string = "ProfileVisitors"
 )
 
+// structs Object which hold information about a single context.
 type Doc_Response struct {
-	Profile    user.New_User
-	Update     user.Updated_User
+	// Profile (without update data )
+	Profile user.New_User
+
+	// Updated (after update data)
+	Update user.Updated_User
+	// Doc_Status {true, false}
 	Doc_status bool
 }
 
 type (
+
+	// User will access data through various receiver methods.
 	DBFirestore interface {
 		AddUser(client *firestore.Client, member user.New_User) (*firestore.DocumentRef, *firestore.WriteResult, error)
 		GetDocumentById(client *firestore.Client, member user.New_User) (map[string]interface{}, error)
@@ -36,13 +46,18 @@ type (
 		GetUpdatedRecord(client *firestore.Client, member user.Updated_User) (map[string]interface{}, error)
 	}
 
+	// Firestore_client Empty Object
 	FirestoreClient struct{}
 )
 
+// This function provide receivers references
 func NewCloudInstance() DBFirestore {
 	return &FirestoreClient{}
 }
 
+// Add user is a simple receiver function which will create a new user account in our database.
+// @param : client & user account information
+// @return : signature and error
 func (*FirestoreClient) AddUser(client *firestore.Client, member user.New_User) (*firestore.DocumentRef, *firestore.WriteResult, error) {
 
 	// create new document
@@ -71,6 +86,9 @@ func (*FirestoreClient) AddUser(client *firestore.Client, member user.New_User) 
 	return doc, result, nil
 }
 
+// This function return user credentials when the document is not updated.
+// @param client and account
+// @return Set and error
 func (*FirestoreClient) GetDocumentById(client *firestore.Client, member user.New_User) (map[string]interface{}, error) {
 
 	var result_profile map[string]interface{}
@@ -107,6 +125,9 @@ func (*FirestoreClient) GetDocumentById(client *firestore.Client, member user.Ne
 // Flag Value                               Description
 //  true 									  	Document exist
 //   false										No Document exist
+
+// @param client and user account information
+// @return Response and error
 
 func (fire *FirestoreClient) SearchUser(client *firestore.Client, member user.New_User) (*Doc_Response, error) {
 
@@ -252,6 +273,8 @@ func (fire *FirestoreClient) SearchUser(client *firestore.Client, member user.Ne
 
 	}
 
+	// If user information is not updated then return old data
+
 	if updated.SocialEvolution == 2 {
 		_new := user.New_User{}
 		_new.Name = updated.Name
@@ -270,10 +293,14 @@ func (fire *FirestoreClient) SearchUser(client *firestore.Client, member user.Ne
 		return &Doc_Response{Profile: _new, Update: user.Updated_User{}, Doc_status: true}, nil
 	}
 
+	// otherwise .....
 	return &Doc_Response{Profile: user.New_User{}, Update: updated, Doc_status: true}, nil
 
 }
 
+// This function will update user information.
+// @param client and user information
+// @return document signature and error
 func (*FirestoreClient) UpdateUserDetails(client *firestore.Client, member user.Updated_User) (*firestore.WriteResult, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
@@ -324,6 +351,9 @@ func (*FirestoreClient) UpdateUserDetails(client *firestore.Client, member user.
 	return result, nil
 }
 
+// This function specified for a simple case. When user will reteive his or her information after adding something.
+// @param client and user information
+// @return information and error
 func (*FirestoreClient) GetUpdatedRecord(client *firestore.Client, member user.Updated_User) (map[string]interface{}, error) {
 
 	var result_profile map[string]interface{}
