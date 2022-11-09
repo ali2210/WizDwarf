@@ -14,7 +14,7 @@ import (
 
 	"cloud.google.com/go/firestore"
 	fingerprints "github.com/WisdomEnigma/urban-fiesta/fingerprint"
-	"github.com/ali2210/wizdwarf/other/bucket"
+	"github.com/ali2210/wizdwarf/other/bucket/fireclient"
 )
 
 var decodeRawImage image.Image
@@ -92,30 +92,30 @@ func Metadata(filename, key, ownership string, client *firestore.Client) int {
 	if reflect.DeepEqual(ownership, "") {
 
 		log.Fatalln("Empty ownership:", ownership)
-		return bucket.Err
+		return fireclient.Err
 	}
 
 	if strings.Contains(filename, ".png") {
 
-		datasource := bucket.NewClient(client, context.TODO(), ownership, key)
+		datasource := fireclient.NewClient(client, context.TODO(), ownership, key)
 
 		return datasource.GenerateFingersprints(GetImageDecoder())
 
 	} else if strings.Contains(filename, ".jpeg") {
 
-		datasource := bucket.NewClient(client, context.TODO(), ownership, key)
+		datasource := fireclient.NewClient(client, context.TODO(), ownership, key)
 
 		return datasource.GenerateFingersprints(GetImageDecoder())
 
 	} else if strings.Contains(filename, ".gif") {
 
-		datasource := bucket.NewClient(client, context.TODO(), ownership, key)
+		datasource := fireclient.NewClient(client, context.TODO(), ownership, key)
 
 		return datasource.GenerateFingersprints(GetImageDecoder())
 
 	} else {
 		log.Fatalln("FORMAT NOT SUPORTED")
-		return bucket.Err
+		return fireclient.Err
 	}
 
 }
@@ -128,7 +128,7 @@ func GetImageDecoder() image.Image {
 // GetMetadata instance is an bridge object. If user provide certain parameters then it will return metadata of the shared data
 func GetMetadata(key, ownership string, client *firestore.Client) (interface{}, int) {
 
-	return bucket.NewClient(client, context.TODO(), ownership, key).AnalyzeFingersprints(GetImageDecoder())
+	return fireclient.NewClient(client, context.TODO(), ownership, key).AnalyzeFingersprints(GetImageDecoder())
 }
 
 // Pixels Value hold RGBA value

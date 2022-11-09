@@ -4,7 +4,6 @@ import (
 	"crypto/rand"
 	"io/ioutil"
 	"math/big"
-	"mime/multipart"
 	"os"
 	"path/filepath"
 	"strings"
@@ -53,9 +52,9 @@ func Generator() string {
 	return rightGen.Generate() + "_" + leftGen.Generate()
 }
 
-func CreateFile(fileHeader *multipart.FileHeader, file *multipart.File) (*os.File, error) {
+func CreateFile(filename ...string) (*os.File, error) {
 
-	if _, err := os.Stat(fileHeader.Filename); os.IsExist(err) {
+	if _, err := os.Stat(filename[0]); os.IsExist(err) {
 		return &os.File{}, err
 	}
 
@@ -69,7 +68,7 @@ func CreateFile(fileHeader *multipart.FileHeader, file *multipart.File) (*os.Fil
 		return &os.File{}, err
 	}
 
-	src_image := "Avatar-*-" + fileHeader.Filename
+	src_image := "Avatar-*-" + filename[0]
 
 	// Store user-picture file in the storage directory
 	_contentFile, err := ioutil.TempFile(filepath.Dir(INTERNAL_PATH), src_image)

@@ -7,9 +7,11 @@ package cloudmedia
 
 // Libraries
 import (
+	"fmt"
 	"log"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/SkynetLabs/go-skynet/v2"
 	"github.com/ali2210/wizdwarf/other/cloudmedia/dlink"
@@ -28,6 +30,7 @@ const ENDPOINT string = "/"
 type DLINK_DC interface {
 	Generate(data string, datatype ...string) (dlink.Errors, string)
 	Get(filename string, link ...string) dlink.Errors
+	Preview_Get(filename string, link ...string) (dlink.PreviewLink, dlink.Errors)
 }
 
 // Dlink Struct Object
@@ -93,4 +96,66 @@ func (o *DLINK_Object) Get(filename string, link ...string) dlink.Errors {
 	}
 
 	return dlink.Errors_NONE
+}
+
+func (o *DLINK_Object) Preview_Get(filename string, link ...string) (dlink.PreviewLink, dlink.Errors) {
+
+	if errs := o.Get(filename, link...); errs != dlink.Errors_NONE {
+		return dlink.PreviewLink{}, errs
+	}
+
+	read, err := os.ReadDir("app_data/")
+	if err != nil {
+		return dlink.PreviewLink{}, dlink.Errors_ERR_PATH_MOVED
+	}
+
+	for dir, _ := range read {
+		if strings.Contains(filename, read[dir].Name()) {
+
+			content, err := os.ReadFile(filename)
+			if err != nil {
+				return dlink.PreviewLink{}, dlink.Errors_ERR_PATH_MOVED
+			}
+
+			return dlink.PreviewLink{
+				Filename: filename,
+				Path:     "app_data/" + filename,
+				Size:     GetFileSize(),
+				Readable: string(content[:]),
+				DateTime: GetFileCreationTime().String(),
+			}, dlink.Errors_NONE
+		}
+	}
+
+	return dlink.PreviewLink{}, dlink.Errors_ERR_UNKNOWN_
+}
+
+func GetFileSize(filename ...string) string {
+
+	_, err := os.ReadDir("app_data/")
+	if err != nil {
+		return " "
+	}
+
+	properties, err := os.Stat(filename[0])
+	if err != nil {
+		return " "
+	}
+
+	return fmt.Sprintf("%d", properties.Size()/1024) + "KiB"
+}
+
+func GetFileCreationTime(filename ...string) time.Time {
+
+	_, err := os.ReadDir("app_data/")
+	if err != nil {
+		return time.Time{}
+	}
+
+	properties, err := os.Stat(filename[0])
+	if err != nil {
+		return time.Time{}
+	}
+
+	return properties.ModTime()
 }

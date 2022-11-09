@@ -16,6 +16,7 @@ import (
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
 	"github.com/ali2210/wizdwarf/other/users"
 	"github.com/hashicorp/vault/api"
+	"storj.io/uplink"
 )
 
 // inter-variables these variables are used to complete or required during the execution state
@@ -177,3 +178,8 @@ func GetKV(path string) (interface{}, error) {
 
 	return keygen.Data["data"], nil
 }
+
+var app *uplink.Project
+
+func SetAppLink(project *uplink.Project) { app = project }
+func GetAppLink() *uplink.Project        { return app }

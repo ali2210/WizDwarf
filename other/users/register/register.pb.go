@@ -30,6 +30,7 @@ const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 type Traits int32
 
+
 const (
 	Traits_MAN   Traits = 0
 	Traits_WOMEN Traits = 1

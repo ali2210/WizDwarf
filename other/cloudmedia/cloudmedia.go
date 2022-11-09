@@ -35,6 +35,13 @@ type Dc_1 struct {
 	Client *firestore.Client
 }
 
+// dc_2 struct object
+
+type Datecenter struct {
+	Ctx    context.Context
+	Client *firestore.Client
+}
+
 // @param context & client
 // @return dc_1
 func NewDc_1(ctx context.Context, client *firestore.Client) DC_1 {
@@ -110,4 +117,55 @@ func (d *Dc_1) SearchData(data *media.IMAGE_METADATA, code ...string) (bool, *fi
 	}
 
 	return true, query
+}
+
+type MediaDescriptor interface {
+	AddMediaFile(media_file *media.MediaStream) error
+	GetMediaFile(media_file *media.MediaStream, session ...string) (map[string]interface{}, error)
+	SearchMediaFile(category *media.Descriptor_Category, session ...string) *firestore.DocumentIterator
+}
+
+func NewMediaDescriptor(ctx context.Context, client *firestore.Client) MediaDescriptor {
+	return &Datecenter{Ctx: ctx, Client: client}
+}
+
+func (c *Datecenter) AddMediaFile(media_file *media.MediaStream) error {
+
+	if reflect.DeepEqual(media_file, &media.MediaStream{}) {
+		return errors.New(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE.String())
+	}
+
+	_, _, err := c.Client.Collection("Proteins").Add(c.Ctx, map[string]interface{}{
+		"Filename":   (*media_file).Name,
+		"UserID":     (*media_file).IdentityCode,
+		"Created":    (*media_file).Datecreated,
+		"Mounted":    (*media_file).Path,
+		"Descriptor": (*media_file).Category,
+	})
+
+	log.Println("Document created ....")
+	return err
+}
+
+func (c *Datecenter) GetMediaFile(media_file *media.MediaStream, session ...string) (map[string]interface{}, error) {
+
+	var document map[string]interface{}
+	query := c.SearchMediaFile(&media_file.Category, session[0])
+
+	for {
+		doc, err := query.Next()
+		if err == iterator.Done {
+			break
+		}
+
+		document = doc.Data()
+	}
+
+	log.Println("Retreive Information : ....")
+	return document, nil
+}
+
+func (c *Datecenter) SearchMediaFile(category *media.Descriptor_Category, session ...string) *firestore.DocumentIterator {
+
+	return c.Client.Collection("_Proteins").Where("UserID", "==", session[0]).Where("Descriptor", "==", category).Documents(c.Ctx)
 }

@@ -19,6 +19,7 @@ import (
 	"image/gif"
 	"image/jpeg"
 	"image/png"
+	"io/fs"
 	"io/ioutil"
 	"log"
 	"math"
@@ -37,8 +38,9 @@ import (
 	skynet "github.com/SkynetLabs/go-skynet/v2"
 	error_codes "github.com/ali2210/wizdwarf/errors_codes"
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
-	"github.com/ali2210/wizdwarf/other/bucket"
-	"github.com/ali2210/wizdwarf/other/bucket/proto"
+	"github.com/ali2210/wizdwarf/other/bucket/fireclient"
+
+	// "github.com/ali2210/wizdwarf/other/bucket/fireclient"
 	"github.com/ali2210/wizdwarf/other/cloudmedia"
 	"github.com/ali2210/wizdwarf/other/cloudmedia/dlink"
 	"github.com/ali2210/wizdwarf/other/cloudmedia/media"
@@ -124,13 +126,13 @@ func AvatarUpload(r *http.Request, user_id string) (string, error) {
 	// protos.Incement()
 
 	// Get the picture file from HtmlContent
-	file, fileHandle, err := r.FormFile("profile-input")
+	File, Handler, err := r.FormFile("profile-input")
 
 	if err != nil {
 		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_FILE_NOT_FOUND)
 		return " ", err
 	}
-	defer file.Close()
+	defer File.Close()
 
 	// Get today year, month and date . This help to generate image metadata which is helpful when images store in the collections.
 	// Get Date from html Form
@@ -189,7 +191,7 @@ func AvatarUpload(r *http.Request, user_id string) (string, error) {
 
 	// parse_num := strconv.Itoa(rdn.Intn(512))
 
-	if str := strings.Join(parser.ParseTags(fileHandle.Filename), " "); str != "" {
+	if str := strings.Join(parser.ParseTags(Handler.Filename), " "); str != "" {
 		if n := strings.Compare(str, " "); n != -1 {
 			pic_tag = str
 		}
@@ -202,7 +204,7 @@ func AvatarUpload(r *http.Request, user_id string) (string, error) {
 	var width, height int = 200, 200
 
 	// shared document have typesystem or discard shared data
-	ok, err := regexp.MatchString(".[a-z]+", fileHandle.Filename)
+	ok, err := regexp.MatchString(".[a-z]+", Handler.Filename)
 	if err != nil {
 
 		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_FILE_NAMING_CONVERSION)
@@ -219,13 +221,13 @@ func AvatarUpload(r *http.Request, user_id string) (string, error) {
 		return " ", err
 	}
 
-	if strings.Contains(fileHandle.Filename, ".png") && ok {
+	if strings.Contains(Handler.Filename, ".png") && ok {
 
 		// unique digital print for shared resources
-		_ = imglib.PNG_Color_Hash(&file)
+		_ = imglib.PNG_Color_Hash(&File)
 
 		// store contents in memory
-		_temp_avatar, err = parser.CreateFile(fileHandle, &file)
+		_temp_avatar, err = parser.CreateFile([]string{Handler.Filename}...)
 		if err != nil {
 
 			log.Fatalln(error_codes.File_BAD_REQUEST_CODE_WRITE_FAILED)
@@ -293,11 +295,11 @@ func AvatarUpload(r *http.Request, user_id string) (string, error) {
 			MyProfile: true,
 		}
 
-	} else if strings.Contains(fileHandle.Filename, ".jpeg") && ok {
+	} else if strings.Contains(Handler.Filename, ".jpeg") && ok {
 
-		_ = imglib.JPEG_Color_Hash(file)
+		_ = imglib.JPEG_Color_Hash(File)
 
-		_temp_avatar, err = parser.CreateFile(fileHandle, &file)
+		_temp_avatar, err = parser.CreateFile([]string{Handler.Filename}...)
 		if err != nil {
 
 			log.Fatalln(error_codes.File_BAD_REQUEST_CODE_WRITE_FAILED)
@@ -360,11 +362,11 @@ func AvatarUpload(r *http.Request, user_id string) (string, error) {
 			MyProfile: true,
 		}
 
-	} else if strings.Contains(fileHandle.Filename, ".gif") && ok {
+	} else if strings.Contains(Handler.Filename, ".gif") && ok {
 
-		_ = imglib.GIF_Color_Hash(file)
+		_ = imglib.GIF_Color_Hash(File)
 
-		_temp_avatar, err = parser.CreateFile(fileHandle, &file)
+		_temp_avatar, err = parser.CreateFile([]string{Handler.Filename}...)
 		if err != nil {
 
 			log.Fatalln(error_codes.File_BAD_REQUEST_CODE_WRITE_FAILED)
@@ -526,10 +528,10 @@ func SkyDataCenter(client skynet.SkynetClient, file, filetype string) bool {
 
 // Download Content is a special function that will get copy of your content
 // @param File , client Bucket service
-func Download_Content_ownership(File string, client bucket.Bucket_Service) *proto.QState {
+// func Download_Content_ownership(File string, client bucket.Bucket_Service) *proto.QState {
 
-	return client.Download(&proto.Query{ByName: File})
-}
+// 	return client.Download(&proto.Query{ByName: File})
+// }
 
 // Mapper take stream as interface , key is used to decode the kv value.
 
@@ -988,7 +990,7 @@ func OpenSkyChain(file string) bool {
 			return false
 		}
 
-		if bucket_state := bucket.New(link.String(), ImageMeta.Cdr[Get_cdr()], user_Id).Store(ctx, Firestore_Reference()); bucket_state != 0 {
+		if bucket_state := fireclient.New(ctx, Firestore_Reference()).Store(link.String(), ImageMeta.Cdr[Get_cdr()], user_Id); bucket_state != 0 {
 			log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
 			return false
 		}
@@ -1141,15 +1143,17 @@ func Open_SFiles(path, filename string) (*os.File, error) {
 
 // GetDocuments is a specified algorithm that will copy image from public ledger
 // @param vector string of session
-// @return string and set message
+// @return string and interface
 func GetDocuments(session_id ...string) (string, interface{}) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
 	var newInter interface{}
+	var mapper map[string]interface{}
+	var err error
 
-	mapper, err := cloudmedia.NewDc_1(ctx, Firestore_Reference()).GetData(&media.IMAGE_METADATA{
+	mapper, err = cloudmedia.NewDc_1(ctx, Firestore_Reference()).GetData(&media.IMAGE_METADATA{
 		Name:      "",
 		Type:      "",
 		Created:   "",
@@ -1190,8 +1194,8 @@ func GetDocuments(session_id ...string) (string, interface{}) {
 }
 
 // Get Documents return in interface which is used only when there a function which will extract values from set. Here ReflectMaps come in action
-// @param interface 
-// @return string values 
+// @param interface
+// @return string values
 func ReflectMaps(i interface{}) (string, string) {
 
 	var nullify interface{}
@@ -1210,4 +1214,53 @@ func ReflectMaps(i interface{}) (string, string) {
 	}
 
 	return key, value
+}
+
+// Read File size
+// @param string as final
+// @return string message
+func GetFileSize(filename ...string) string {
+
+	_, err := os.ReadDir("app_data/")
+	if err != nil {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
+		return " "
+	}
+
+	properties, err := os.Stat(filename[0])
+	if err != nil {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_READ_FAILED)
+		return " "
+	}
+
+	return fmt.Sprintf("%d", properties.Size()/1024) + "KiB"
+}
+
+func GetFileCreationTime(filename string) string {
+
+	var properties fs.FileInfo
+	var err error
+
+	files, err := os.ReadDir("app_data/")
+	if err != nil {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
+		return ""
+	}
+
+	for entries, _ := range files {
+
+		if strings.Contains("app_data/"+files[entries].Name(), filename) {
+
+			properties, err = os.Stat("app_data/" + files[entries].Name())
+			if err != nil {
+				log.Fatalln(error_codes.File_BAD_REQUEST_CODE_READ_FAILED)
+				return ""
+			}
+		}
+	}
+
+	if reflect.DeepEqual(properties, nil) {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_FILE_PATH_ERROR)
+	}
+	return properties.ModTime().String()
 }

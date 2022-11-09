@@ -36,7 +36,6 @@ type Doc_Response struct {
 }
 
 type (
-
 	// User will access data through various receiver methods.
 	DBFirestore interface {
 		AddUser(client *firestore.Client, member user.New_User) (*firestore.DocumentRef, *firestore.WriteResult, error)

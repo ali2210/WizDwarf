@@ -1,0 +1,46 @@
+.main-dashboard-div {
+    background-color:#f9f9f9;
+    font-family: 'Lato', sans-serif;
+    height: 12vh;
+	  width: 212vh;
+  }
+  
+  .icon-light {
+    color: black;
+    margin-right: 5px;
+  }
+  
+  .dropdown-menu {
+    left: 30px;
+  }
+  
+  .h4 {
+    margin: 20px 0px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 20px;
+  }
+  
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .logo {
+    height: 60px;
+  }
+  
+  .custom-navbar {
+    background-color: #ededed;
+  }
+  
+
+  .heading-text{
+	  margin-top: 70px;
+    display: flex;
+    justify-content: center;
+	  position: relative;
+	  margin-right: 18px;
+  }
+
+  

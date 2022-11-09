@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package bucket;
+
+
+message Bucket_Error {
+    Bucket_Error_Category bucket = 1;
+}
+
+enum Bucket_Error_Category {
+
+    Ok = 0;
+    Error = 1;
+}

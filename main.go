@@ -2,8 +2,10 @@
 Redistribution , contribution and improve codebase under license
 convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
 
+// package
 package main
 
+// Libraries
 import (
 	"context"
 	"encoding/json"
@@ -19,22 +21,29 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ali2210/wizdwarf/other/bucket/proto"
+	"github.com/ali2210/wizdwarf/other/bucket/fireclient"
 	cryptos "github.com/ali2210/wizdwarf/other/crypto"
 	genetics "github.com/ali2210/wizdwarf/other/genetic"
 	"github.com/ali2210/wizdwarf/other/jsonpb"
 	"github.com/ali2210/wizdwarf/other/jsonpb/jsonledit"
 	"github.com/ali2210/wizdwarf/other/parser"
 	"github.com/ali2210/wizdwarf/other/proteins"
+	manager "github.com/ali2210/wizdwarf/other/secrets"
+	secrets "github.com/ali2210/wizdwarf/other/secrets/secretsparam"
+
+	dbucketerror "github.com/ali2210/wizdwarf/other/bucket/storj_bucket/bucket"
+	"github.com/sethvargo/go-diceware/diceware"
 
 	"cloud.google.com/go/firestore"
 	"github.com/SkynetLabs/go-skynet/v2"
 	error_codes "github.com/ali2210/wizdwarf/errors_codes"
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
 	"github.com/ali2210/wizdwarf/other/bucket"
+	dbucket "github.com/ali2210/wizdwarf/other/bucket/storj_bucket"
 	logcache "github.com/ali2210/wizdwarf/other/cache_logs"
 	"github.com/ali2210/wizdwarf/other/cloudmedia"
 	"github.com/ali2210/wizdwarf/other/cloudmedia/dlink"
+	"github.com/ali2210/wizdwarf/other/cloudmedia/media"
 	timer "github.com/ali2210/wizdwarf/other/date_time"
 	genome "github.com/ali2210/wizdwarf/other/genetic/binary"
 	"github.com/ali2210/wizdwarf/other/logformatter"
@@ -313,6 +322,7 @@ func main() {
 	routing.HandleFunc("/messages", messages)
 	routing.HandleFunc("/error", distorted)
 	routing.HandleFunc("/visualize", visualize)
+	routing.HandleFunc("/dashboard/dvault", dvault)
 	// routing.HandleFunc("/feedback", customerViews)
 	routing.HandleFunc("/terms", terms)
 	routing.HandleFunc("/analysis", analysis)
@@ -624,62 +634,41 @@ func existing(w http.ResponseWriter, r *http.Request) {
 
 		// Search Data in DB
 		data, update, err := piplines.Firebase_Gatekeeper(w, r, add)
+		var ID string
 		if !reflect.DeepEqual(data, &user.New_User{}) && err != nil {
-			// account interface
-			act := websession.Cookies{}
 
-			// create user session for user
-			if userSessions == nil {
-
-				// initialize the web session
-				userSessions = piplines.Web_Token(data.ID)
-
-				// valid the session data
-				act.SetContextSession(userSessions, w, r)
-				err := act.NewToken()
-				if err != nil {
-
-					w.WriteHeader(http.StatusBadRequest)
-					distorted(w, r)
-					cacheObject.Set_Key("Token:", "Web token are not created")
-
-					value, err := cacheObject.Get_Key("Token:")
-					if err != nil {
-						return
-					}
-
-					logformat.Error(value)
-					return
-				}
-			}
+			ID = data.ID
 
 		} else {
-			// account interface
-			act := websession.Cookies{}
 
-			// create user session for user
-			if userSessions == nil {
+			ID = update.ID
+		}
 
-				// initialize the web session
-				userSessions = piplines.Web_Token(update.ID)
+		// account interface
+		act := websession.Cookies{}
 
-				// valid the session data
-				act.SetContextSession(userSessions, w, r)
-				err := act.NewToken()
+		// create user session for user
+		if userSessions == nil {
+
+			// initialize the web session
+			userSessions = piplines.Web_Token(ID)
+
+			// valid the session data
+			act.SetContextSession(userSessions, w, r)
+			err := act.NewToken()
+			if err != nil {
+
+				w.WriteHeader(http.StatusBadRequest)
+				distorted(w, r)
+				cacheObject.Set_Key("Token:", "Web token are not created")
+
+				value, err := cacheObject.Get_Key("Token:")
 				if err != nil {
-
-					w.WriteHeader(http.StatusBadRequest)
-					distorted(w, r)
-					cacheObject.Set_Key("Token:", "Web token are not created")
-
-					value, err := cacheObject.Get_Key("Token:")
-					if err != nil {
-						return
-					}
-
-					logformat.Error(value)
 					return
 				}
+
+				logformat.Error(value)
+				return
 			}
 		}
 
@@ -715,6 +704,8 @@ func profile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var ID string
+
 	// web request "get"
 	if r.Method == "GET" {
 		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
@@ -728,36 +719,30 @@ func profile(w http.ResponseWriter, r *http.Request) {
 
 		logformat.Trace(value)
 		temp.Execute(w, "Profile")
+
 	} else if r.Method == "POST" {
 
 		if !reflect.DeepEqual(update, user.Updated_User{}) {
-			// user add profile picture resolution must be less 2kb
-			if filename, err := piplines.AvatarUpload(r, update.ID); err != nil && strings.Contains(filename, " ") {
-				cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
 
-				value, err := cacheObject.Get_Key("Route_Path:")
-				if err != nil {
-					w.WriteHeader(http.StatusBadRequest)
-					distorted(w, r)
-					return
-				}
+			ID = update.ID
 
-				logformat.Trace(value)
-			}
 		} else {
-			// user add profile picture resolution must be less 2kb
-			if filename, err := piplines.AvatarUpload(r, data.ID); err != nil && strings.Contains(filename, " ") {
-				cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
 
-				value, err := cacheObject.Get_Key("Route_Path:")
-				if err != nil {
-					w.WriteHeader(http.StatusBadRequest)
-					distorted(w, r)
-					return
-				}
+			ID = data.ID
+		}
 
-				logformat.Trace(value)
+		// user add profile picture resolution must be less 2kb
+		if filename, err := piplines.AvatarUpload(r, ID); err != nil && strings.Contains(filename, " ") {
+			cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+			value, err := cacheObject.Get_Key("Route_Path:")
+			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				distorted(w, r)
+				return
 			}
+
+			logformat.Trace(value)
 		}
 
 		w.WriteHeader(http.StatusOK)
@@ -836,14 +821,30 @@ func analysis(w http.ResponseWriter, r *http.Request) {
 	if reflect.DeepEqual(visualizeReport.UVinfo, openweathermap.UVIndexInfo{}) {
 		w.WriteHeader(http.StatusBadRequest)
 		distorted(w, r)
+		cacheObject.Set_Key("Bad:", "Bad Request")
 
+		value, err := cacheObject.Get_Key("Bad:")
+		if err != nil {
+			return
+		}
+
+		logformat.Error(value)
 		return
 	}
 
 	files, err := os.ReadDir("app_data/")
 	if err != nil {
 		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
+		cacheObject.Set_Key("Token:", "Web token are not created")
+
+		value, err := cacheObject.Get_Key("Token:")
+		if err != nil {
+			return
+		}
+
+		logformat.Error(value)
 		return
+
 	}
 
 	data, update, err := piplines.Firebase_Gatekeeper(w, r, user.New_User{Email: _email, Password: _secret})
@@ -854,106 +855,76 @@ func analysis(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			distorted(w, r)
+			cacheObject.Set_Key("Token:", "Web token are not created")
+
+			value, err := cacheObject.Get_Key("Token:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
 			return
+
 		}
 
 		logformat.Error(value)
 		return
 	}
 
+	var ID string
+
 	if !reflect.DeepEqual(update, user.Updated_User{}) {
 
-		meta, mapData := piplines.GetDocuments([]string{update.ID}...)
-		contKey, contVae := piplines.ReflectMaps(map[string]interface{}{"avatar": mapData})
+		ID = update.ID
 
-		for list := range files {
-
-			if strings.Contains("app_data/"+files[list].Name(), meta) {
-
-				visualizeReport.Avatar_Path = "/" + meta
-
-				break
-			}
-
-			if !strings.Contains(meta, "app_data/"+files[list].Name()) {
-
-				ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
-				defer cancel()
-
-				inter, num := bucket.New(contKey, contVae, update.ID).Get(ctx, piplines.Firestore_Reference())
-
-				if num != 0 {
-					log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
-					return
-				}
-
-				_, resource := piplines.ReflectMaps(inter)
-
-				if strings.Contains(contKey, " ") && !strings.Contains(contVae, resource) {
-
-					log.Fatalln(error_codes.Operation_ERROR_CODE_MISMATCH_STATE)
-					return
-				}
-
-				client := skynet.New()
-
-				if dlinkerr := cloudmedia.NewDlinkObject(&client, "app_data/").Get(meta, contVae); dlinkerr != dlink.Errors_NONE {
-
-					log.Fatalln(dlinkerr)
-					return
-				}
-
-				log.Println("File download successfully... open mounted directory", meta)
-				visualizeReport.Avatar_Path = "/" + meta
-				break
-			}
-		}
 	} else {
 
-		meta, mapData := piplines.GetDocuments([]string{data.ID}...)
-		contKey, contVae := piplines.ReflectMaps(map[string]interface{}{"avatar": mapData})
+		ID = data.ID
+	}
 
-		for list := range files {
+	meta, mapData := piplines.GetDocuments([]string{ID}...)
+	contKey, contVae := piplines.ReflectMaps(mapData)
 
-			if strings.Contains("app_data/"+files[list].Name(), meta) {
+	for list := range files {
 
-				visualizeReport.Avatar_Path = "/" + meta
+		if strings.Contains("app_data/"+files[list].Name(), meta) {
 
-				break
+			// visualizeReport.Avatar_Path = "/" + meta
+
+			break
+		}
+
+		if !strings.Contains(meta, "app_data/"+files[list].Name()) {
+
+			ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+			defer cancel()
+
+			inter, num := fireclient.New(ctx, piplines.Firestore_Reference()).Get(contKey, contVae, update.ID)
+
+			if num != 0 {
+				log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+				return
 			}
 
-			if !strings.Contains(meta, "app_data/"+files[list].Name()) {
+			_, resource := piplines.ReflectMaps(inter)
 
-				ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
-				defer cancel()
+			if strings.Contains(contKey, " ") && !strings.Contains(contVae, resource) {
 
-				inter, num := bucket.New(contKey, contVae, data.ID).Get(ctx, piplines.Firestore_Reference())
-
-				if num != 0 {
-					log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
-					return
-				}
-
-				_, resource := piplines.ReflectMaps(inter)
-
-				if strings.Contains(contKey, " ") && !strings.Contains(contVae, resource) {
-
-					log.Fatalln(error_codes.Operation_ERROR_CODE_MISMATCH_STATE)
-					return
-				}
-
-				client := skynet.New()
-
-				if dlinkerr := cloudmedia.NewDlinkObject(&client, "app_data/").Get(meta, contVae); dlinkerr != dlink.Errors_NONE {
-
-					log.Fatalln(dlinkerr)
-					return
-				}
-
-				log.Println("File download successfully... open mounted directory", meta)
-				visualizeReport.Avatar_Path = "/" + meta
-				break
+				log.Fatalln(error_codes.Operation_ERROR_CODE_MISMATCH_STATE)
+				return
 			}
+
+			client := skynet.New()
+
+			if dlinkerr := cloudmedia.NewDlinkObject(&client, "app_data/").Get(meta, contVae); dlinkerr != dlink.Errors_NONE {
+
+				log.Fatalln(dlinkerr)
+				return
+			}
+
+			log.Println("File download successfully... open mounted directory", meta)
+			// visualizeReport.Avatar_Path = "/" + meta
+			break
 		}
 	}
 
@@ -1035,6 +1006,10 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	temp := template.Must(template.ParseFiles("computation.html"))
+	var ID string
+	var NAME string
+	var Email string
+	_start = time.Now()
 
 	data, update, err := piplines.Firebase_Gatekeeper(w, r, user.New_User{Email: _email, Password: _secret})
 	if err != nil {
@@ -1054,54 +1029,33 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 
 	life := genome.Lifecode{}
 
-	if r.Method == "GET" {
-
-		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
-
-		value, err := cacheObject.Get_Key("Route_Path:")
-		if err != nil {
-			return
-		}
-
-		logformat.Trace(value)
-
-		_start = time.Now()
-	}
-
 	if !reflect.DeepEqual(update, &user.Updated_User{}) {
 
-		visualizeReport.Record = weather.Man{Name: update.Name, Email: update.Email}
-
-		// firestore credentials
-		genetics.Client = piplines.Firestore_Reference()
-
-		// generate ed25519 key
-		cdr, _ := cryptos.PKK25519(update.ID)
-		genetics.Pkk = fmt.Sprintf("%x", cdr)
-
-		// genetics object
-		// rece_gen := genetics.New()
-
-		// genetics data string
-		life.Genes = strings.Join(piplines.GetGenes(), "")
-		life.Pkk = genetics.Pkk
+		ID = update.ID
+		NAME = update.Name
+		Email = update.Email
 	} else {
-		visualizeReport.Record = weather.Man{Name: data.Name, Email: data.Email}
 
-		// firestore credentials
-		genetics.Client = piplines.Firestore_Reference()
-
-		// generate ed25519 key
-		cdr, _ := cryptos.PKK25519(data.ID)
-		genetics.Pkk = fmt.Sprintf("%x", cdr)
-
-		// genetics object
-		// rece_gen := genetics.New()
-
-		// genetics data string
-		life.Genes = strings.Join(piplines.GetGenes(), "")
-		life.Pkk = genetics.Pkk
+		ID = data.ID
+		NAME = data.Name
+		Email = data.Email
 	}
+
+	visualizeReport.Record = weather.Man{Name: NAME, Email: Email}
+
+	// firestore credentials
+	genetics.Client = piplines.Firestore_Reference()
+
+	// generate ed25519 key
+	cdr, _ := cryptos.PKK25519(update.ID)
+	genetics.Pkk = fmt.Sprintf("%x", cdr)
+
+	// genetics object
+	// rece_gen := genetics.New()
+
+	// genetics data string
+	life.Genes = strings.Join(piplines.GetGenes(), "")
+	life.Pkk = genetics.Pkk
 
 	// create trust object ... trust verified whom that content .
 	ok, key, err := piplines.TrustRequest(life.Pkk, address_wallet, signed_msg)
@@ -1250,9 +1204,8 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 	proteins.CreateNewJSONFile(jsonFile)
 
 	// additional param
-	context := context.Background()
-	client := bucket.New_Client(&context)
-	bucket.Client = piplines.Firestore_Reference()
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
 
 	if !reflect.DeepEqual(update, user.Updated_User{}) {
 
@@ -1260,76 +1213,87 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		bucket.Key = update.ID
 		bucket.Composite = Ckk
 
-		// creating decentalize & dynamic links of the content
-		iobject := client.New_Bucket(&proto.Object{Name: jsonFile.Names, Types: jsonFile.Types, Content: jsonFile.Molecule})
-		if iobject.Istatus == proto.Object_Status_ERROR {
-			w.WriteHeader(http.StatusBadRequest)
-			distorted(w, r)
-
-			cacheObject.Set_Key("Internal:", iobject.Istatus.String())
-
-			value, err := cacheObject.Get_Key("Internal:")
-			if err != nil {
-				return
-			}
-
-			logformat.Error(value)
-			return
-		}
-
-		File = jsonFile.Names + jsonFile.Types
-
-		//prev_object := client.Preview(&proto.Query{ByName: file})
-		//log.Println("prev_object:", prev_object)
-
-		//w.WriteHeader(http.StatusOK)
-
-		temp.Execute(w, visualizeReport)
 	} else {
 
 		// each transaction param before storing in physical database.
 		bucket.Key = data.ID
 		bucket.Composite = Ckk
 
-		// creating decentalize & dynamic links of the content
-		iobject := client.New_Bucket(&proto.Object{Name: jsonFile.Names, Types: jsonFile.Types, Content: jsonFile.Molecule})
-		if iobject.Istatus == proto.Object_Status_ERROR {
-			w.WriteHeader(http.StatusBadRequest)
-			distorted(w, r)
-
-			cacheObject.Set_Key("Internal:", iobject.Istatus.String())
-
-			value, err := cacheObject.Get_Key("Internal:")
-			if err != nil {
-				return
-			}
-
-			logformat.Error(value)
-			return
-		}
-
-		File = jsonFile.Names + jsonFile.Types
-
-		//prev_object := client.Preview(&proto.Query{ByName: file})
-		//log.Println("prev_object:", prev_object)
-
-		//w.WriteHeader(http.StatusOK)
-
-		temp.Execute(w, visualizeReport)
 	}
 
-	if r.Method != "POST" {
+	iobject := dbucket.New_Bucket(ctx, (*jsonFile).Names, "amino-chemical")
+
+	words, err := diceware.Generate(12)
+	if err != nil {
+		return
+	}
+
+	log.Println("Your Passphrase is: ", words, "please save it somewhere on your computer. It'll generated by application one time only (OTP)")
+
+	errs, access := iobject.StoreJCredentials(strings.Join(words, " "), []string{"heavy cancel window wild supply replace oppose until canvas lava lamp muffin"}...)
+	if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) && access != nil {
+
 		w.WriteHeader(http.StatusBadRequest)
 		distorted(w, r)
-		cacheObject.Set_Key("Internal:", err.Error())
+
+		cacheObject.Set_Key("Internal:", errs.String())
+
 		value, err := cacheObject.Get_Key("Internal:")
 		if err != nil {
-
 			return
 		}
 
 		logformat.Error(value)
-		panic("method not supported")
+		return
+	}
+
+	links, errs := iobject.StoreObject(strings.Join(words, " "), life.Pkk, jsonFile.Names, jsonFile.Types, []string{"heavy cancel window wild supply replace oppose until canvas lava lamp muffin"}...)
+	if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) && links != nil {
+
+		w.WriteHeader(http.StatusBadRequest)
+		distorted(w, r)
+
+		cacheObject.Set_Key("Internal:", errs.String())
+
+		value, err := cacheObject.Get_Key("Internal:")
+		if err != nil {
+			return
+		}
+
+		logformat.Error(value)
+		return
+	}
+
+	piplines.SetAppLink(links)
+
+	err = cloudmedia.NewMediaDescriptor(ctx, piplines.Firestore_Reference()).AddMediaFile(&media.MediaStream{
+		Name:         (*jsonFile).Names,
+		Datecreated:  piplines.GetFileCreationTime((*jsonFile).Names),
+		IdentityCode: ID,
+		Category:     media.Descriptor_Category_Text,
+		Path:         "app_data/",
+	})
+	if err != nil {
+		log.Fatalln(error_codes.DATABASE_ERRORS_DOCUMENT_CREATE_ERROR)
+		return
+	}
+
+	if r.Method == "GET" {
+
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
+
+		temp.Execute(w, visualizeReport)
+	}
+
+	if r.Method != "GET" {
+		return
 	}
 
 }
@@ -2001,7 +1965,7 @@ func view(w http.ResponseWriter, r *http.Request) {
 				ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 				defer cancel()
 
-				inter, num := bucket.New(contKey, contVae, update.ID).Get(ctx, piplines.Firestore_Reference())
+				inter, num := fireclient.New(ctx, piplines.Firestore_Reference()).Get(contKey, contVae, update.ID)
 
 				if num != 0 {
 					log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
@@ -2105,7 +2069,7 @@ func view(w http.ResponseWriter, r *http.Request) {
 				ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 				defer cancel()
 
-				inter, num := bucket.New(contKey, contVae, data.ID).Get(ctx, piplines.Firestore_Reference())
+				inter, num := fireclient.New(ctx, piplines.Firestore_Reference()).Get(contKey, contVae, data.ID)
 
 				if num != 0 {
 					log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
@@ -2215,6 +2179,218 @@ func view(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+}
+
+func dvault(w http.ResponseWriter, r *http.Request) {
+
+	// user request headers
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
+
+	// webpage route
+	webpge := template.Must(template.ParseFiles("dvault.html"))
+
+	data, update, err := piplines.Firebase_Gatekeeper(w, r, user.New_User{Email: _email, Password: _secret})
+	if err != nil {
+		return
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	const docname string = "ContentAddress"
+	list, err := manager.NewSecretsInstance(ctx, piplines.Firestore_Reference()).GetAllDocuments([]string{docname}...)
+	if err != nil {
+		log.Fatalln(error_codes.DATABASE_ERRORS_DOCUMENT_READ_ERROR)
+		return
+	}
+
+	log.Println("List:", list)
+
+	img_name, img_src, filename := "", "", ""
+
+	var value interface{}
+
+	old, updated := piplines.GetID(update, data)
+	if !reflect.DeepEqual(update, &user.Updated_User{}) {
+		filename, value = piplines.GetDocuments([]string{old.ID}...)
+		img_name, img_src = piplines.ReflectMaps(value)
+
+	} else {
+		filename, value = piplines.GetDocuments([]string{updated.ID}...)
+		img_name, img_src = piplines.ReflectMaps(value)
+	}
+
+	files, err := os.ReadDir("app_data/")
+	if err != nil {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
+		return
+	}
+
+	log.Println("Read File: ...", filename)
+
+	wallet := make([]*secrets.Vault_Params, len(list))
+	img_path := ""
+	var counter int64 = -1
+
+	for direc, _ := range files {
+
+		log.Println("Directory:", files[direc].Name())
+		// if strings.Contains("app_data/"+files[direc].Name(), ".txt") {
+		// 	piplines.GetFileCreationTime([]string{"app_data/" + files[direc].Name()}...)
+		// 	client := skynet.New()
+
+		// 	key, value := piplines.ReflectMaps(list[1])
+
+		// 	if strings.Contains(key, "Value") {
+		// 		// cloudmedia.NewDlinkObject(&client, "app_data/").Preview_Get(files[direc].Name(), []string{value}...)
+		// 	}
+		// }
+
+		if strings.Contains("app_data/"+files[direc].Name(), filename) && (!strings.Contains(filename, ".txt")) {
+			img_path = "/" + filename
+		}
+
+		if !strings.Contains("app_data/"+files[direc].Name(), filename) && (!strings.Contains(filename, ".txt")) {
+
+			// _, err = os.Stat(filename)
+			// if err != nil {
+			// 	log.Fatalln(error_codes.File_BAD_REQUEST_CODE_FILE_PERMISSION_FAILED)
+			// 	return
+			// }
+
+			client := skynet.New()
+
+			if dlinkerr := cloudmedia.NewDlinkObject(&client, "app_data/").Get(filename, img_src); dlinkerr != dlink.Errors_NONE {
+				log.Fatalln(error_codes.DATABASE_ERRORS_DOCUMENT_READ_ERROR)
+				return
+			}
+
+			img_path = "/" + filename
+		}
+
+	}
+
+	for i, _ := range list {
+
+		if !reflect.DeepEqual(list[i], map[string]interface{}{}) {
+
+			mapIterator := reflect.ValueOf(list[i]).MapRange()
+
+			for mapIterator.Next() {
+
+				if strings.Contains(mapIterator.Key().Interface().(string), "Key") {
+
+					if reflect.DeepEqual(mapIterator.Value().Interface().(string), img_name) && (!strings.Contains(filename, " ") && !strings.Contains(img_src, " ")) {
+
+						if !reflect.DeepEqual(update, &user.Updated_User{}) {
+
+							wallet = append(wallet, &secrets.Vault_Params{
+								ID:       old.ID,
+								CDR_LINK: img_name,
+								TEXT:     "",
+								IMAGE:    img_path,
+								IsImage:  true,
+								SizeOf:   piplines.GetFileSize([]string{filename}...),
+								Access:   "private",
+							})
+							counter += 1
+						} else {
+							wallet = append(wallet, &secrets.Vault_Params{
+								ID:       updated.ID,
+								CDR_LINK: img_name,
+								TEXT:     "",
+								IMAGE:    img_path,
+								IsImage:  true,
+								SizeOf:   piplines.GetFileSize([]string{filename}...),
+								Access:   "private",
+							})
+							counter += 1
+						}
+
+						if i >= len(list) {
+							break
+						}
+
+					}
+
+				}
+			}
+		} else {
+			continue
+		}
+	}
+
+	var list_wallet secrets.List_Vault
+	var iterator = counter
+
+	if counter >= 0 {
+		list_wallet.ID_ = wallet[len(list)].ID
+		list_wallet.Count = counter
+		list_wallet.List = make([]*secrets.Vault_Params, counter)
+		for iterator != (int64)(len(wallet)) {
+
+			if !reflect.DeepEqual(wallet[iterator], &secrets.Vault_Params{}) {
+				list_wallet.List = append(list_wallet.List, wallet[iterator])
+			}
+
+			iterator += 1
+			continue
+		}
+	}
+
+	pusherCred := pusher.Client{
+		AppID:   APP_CHANNEL_ID,
+		Key:     APP_CHANNEL_KEY,
+		Secret:  APP_CHANNEL_SECRET,
+		Cluster: APP_CHANNEL_CLUSTER_ID,
+		Secure:  true,
+	}
+
+	if err := pusherCred.TriggerMulti([]string{"keygen"}, "tnxs", map[string]interface{}{
+		"keys":   list_wallet.ID_,
+		"values": list_wallet.List,
+	}); err != nil {
+		log.Fatalln(error_codes.CHANNEL_ERROR_CHANNEL_CLOSED)
+		return
+	}
+
+	if r.Method == "GET" {
+
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
+
+		webpge.Execute(w, "Dvault")
+	}
+
+	if r.Method != "GET" {
+
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
+			cacheObject.Set_Key("Internal:", err.Error())
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
+			return
+		}
+		logformat.Trace(value)
+		return
+	}
 }
 
 func stop_codon(w http.ResponseWriter, r *http.Request) {

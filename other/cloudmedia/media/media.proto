@@ -16,11 +16,30 @@ message IMAGE_METADATA {
     string tags = 8;
 }
 
+message MediaStream {
+
+    string name = 1;
+    string identity_code = 2;
+    string datecreated = 3;
+    string path = 4;
+    Descriptor_Category category = 5;
+}
+
 enum TOKEN_CATEGORY {
 
     NON_FUNGIABLE_TOKEN = 0;
     FUNGIABLE_TOKEN = 1;
     SOUL_BOUND_TOKEN = 2;
 }
+
+enum Descriptor_Category {
+
+    Text = 0;
+    Video = 1;
+    Audio = 2;
+    Image = 3;
+}
+
+
 
 

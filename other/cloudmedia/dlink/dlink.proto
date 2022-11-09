@@ -21,3 +21,12 @@ enum Errors{
     ERR_EMPTY_VALUE = 7;
     NONE = 8;
 }
+
+message PreviewLink{
+
+    string Filename = 1;
+    string Path = 2;
+    string Size = 3;
+    string Readable = 4;
+    string DateTime = 5;
+}
