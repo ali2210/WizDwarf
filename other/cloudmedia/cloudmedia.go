@@ -65,6 +65,7 @@ func (d *Dc_1) PutData(data *media.IMAGE_METADATA, user_token ...string) error {
 		"CDR_LINK":       data.Cdr,
 		"Date":           data.Timeline,
 		"Tag":            data.Tags,
+		"Passphrase":     data.Signature,
 	})
 	return err
 }
@@ -141,6 +142,7 @@ func (c *Datecenter) AddMediaFile(media_file *media.MediaStream) error {
 		"Created":    (*media_file).Datecreated,
 		"Mounted":    (*media_file).Path,
 		"Descriptor": (*media_file).Category,
+		"Passphrase": (*media_file).Signature,
 	})
 
 	log.Println("Document created ....")

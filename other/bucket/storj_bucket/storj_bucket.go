@@ -36,6 +36,10 @@ func (boj *BucketObject) StoreJCredentials(user_phrase string, passphrase ...str
 	perm := uplink.FullPermission()
 	perm.NotBefore = time.Now().Add(-2 * time.Minute)
 	perm.NotAfter = time.Now().Add(12 * time.Hour)
+	perm.AllowUpload = true
+	perm.AllowDownload = true
+	perm.AllowList = true
+	perm.AllowDelete = false
 
 	user_cred, err := app_cred.Share(perm, uplink.SharePrefix{Bucket: boj.Bucket, Prefix: boj.Key})
 	if err != nil {
@@ -62,32 +66,36 @@ func (boj *BucketObject) StoreJCredentials(user_phrase string, passphrase ...str
 }
 
 // DownloadObject implements Storj_Proteins_Bucket
-func (boj *BucketObject) DownloadObject(project *uplink.Project, filetype string, filename ...string) *bucket.Bucket_Error {
+func (boj *BucketObject) DownloadObject(project *uplink.Project) *bucket.Bucket_Error {
 
-	download, err := project.DownloadObject(boj.Ctx, boj.Bucket, boj.Key, nil)
+	downObj, err := project.StatObject(boj.Ctx, boj.Bucket, boj.Key)
 	if err != nil {
+
+		log.Fatalln("Error:", err.Error())
 		return &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
 	}
 
-	log.Println("Content key: ", boj.Key, " bucket:...", boj.Bucket)
+	log.Println("Object_State:", downObj.Key)
+
+	download, err := project.DownloadObject(boj.Ctx, boj.Bucket, boj.Key, &uplink.DownloadOptions{Offset: 10, Length: 10})
+	if err != nil {
+		log.Fatalln("Error:", err.Error())
+		return &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
+	}
 
 	defer download.Close()
 
-	read, err := os.ReadFile("app_data/" + filename[0] + filetype)
-	if err != nil {
-		return &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
-	}
-
 	content, err := io.ReadAll(download)
 	if err != nil {
+
+		log.Fatalln("Error:", err.Error())
 		return &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
 	}
 
-	if !bytes.Equal(read, content) {
+	if !bytes.Equal([]byte(""), content) {
 		return &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
 	}
 
-	log.Println("Downloading process almost completed: ...", download)
 	return &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Ok}
 }
 
@@ -112,16 +120,16 @@ func (boj *BucketObject) ListObject(project *uplink.Project) (*uplink.Object, *b
 }
 
 // StoreObject implements Storj_Proteins_Bucket
-func (bo *BucketObject) StoreObject(user_phrase string, salt, filename, filetype string, passphrase ...string) (*uplink.Project, *bucket.Bucket_Error) {
+func (bo *BucketObject) StoreObject(user_phrase string, salt, filename, filetype string, passphrase ...string) *bucket.Bucket_Error {
 
 	if reflect.DeepEqual(bo.NodeCredentials, &uplink.Access{}) {
-		return &uplink.Project{}, &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
+		return &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
 	}
 
 	iso_pub_key, err := uplink.DeriveEncryptionKey(passphrase[0], []byte(salt))
 	if err != nil && !reflect.DeepEqual(iso_pub_key, &uplink.EncryptionKey{}) {
 		log.Fatalln(err.Error())
-		return &uplink.Project{}, &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
+		return &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
 	}
 
 	// if err := bo.NodeCredentials.OverrideEncryptionKey(bo.Bucket, user_phrase+"/", iso_pub_key); err != nil {
@@ -129,54 +137,73 @@ func (bo *BucketObject) StoreObject(user_phrase string, salt, filename, filetype
 	// 	return &uplink.Project{}, &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
 	// }
 
-	blockApp, err := uplink.OpenProject(bo.Ctx, bo.NodeCredentials)
-	if err != nil && reflect.DeepEqual(blockApp, &uplink.Project{}) {
+	blockApp := bo.GetUplinkProject()
+	if reflect.DeepEqual(blockApp, nil) {
 		log.Fatalln(err.Error())
-		return &uplink.Project{}, &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
+		return &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
 	}
-	defer blockApp.Close()
 
-	blockBucket, err := blockApp.EnsureBucket(bo.Ctx, bo.Bucket)
-	if err != nil && reflect.DeepEqual(blockBucket, &uplink.Bucket{}) {
-		log.Fatalln(err.Error())
-		return &uplink.Project{}, &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
-	}
+	// blockBucket, err := blockApp.EnsureBucket(bo.Ctx, bo.Bucket)
+	// if err != nil && reflect.DeepEqual(blockBucket, &uplink.Bucket{}) {
+	// 	log.Fatalln(err.Error())
+	// 	return &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
+	// }
 
 	uploadObject, err := blockApp.UploadObject(bo.Ctx, bo.Bucket, bo.Key, nil)
 	if err != nil && reflect.DeepEqual(uploadObject, nil) {
 		log.Fatalln(err.Error())
-		return &uplink.Project{}, &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
+		return &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
 	}
 
 	read, err := os.ReadFile("app_data/" + filename + filetype)
 	if err != nil {
 		log.Fatalln(err.Error())
-		return &uplink.Project{}, &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
+		return &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
 	}
 
 	if _, err := io.Copy(uploadObject, bytes.NewBuffer(read)); err != nil {
 		uploadObject.Abort()
 		log.Fatalln(err.Error())
-		return &uplink.Project{}, &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
+		return &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
 	}
 
 	if err := uploadObject.Commit(); err != nil {
 		log.Fatalln(err.Error())
-		return &uplink.Project{}, &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
+		return &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Error}
 	}
 
-	log.Println("File upload completed: ...", uploadObject.Info())
+	log.Println("File upload completed: ...")
 
-	return blockApp, &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Ok}
+	return &bucket.Bucket_Error{Bucket: bucket.Bucket_Error_Category_Ok}
 }
 
 type Storj_Proteins_Bucket interface {
-	StoreObject(user_phrase string, salt, filename, filetype string, passphrase ...string) (*uplink.Project, *bucket.Bucket_Error)
+	StoreObject(user_phrase string, salt, filename, filetype string, passphrase ...string) *bucket.Bucket_Error
 	ListObject(project *uplink.Project) (*uplink.Object, *bucket.Bucket_Error)
-	DownloadObject(project *uplink.Project, filetype string, filename ...string) *bucket.Bucket_Error
+	DownloadObject(project *uplink.Project) *bucket.Bucket_Error
 	StoreJCredentials(user_phrase string, passphrase ...string) (*bucket.Bucket_Error, *uplink.Access)
+	GetUplinkProject() *uplink.Project
 }
 
 func New_Bucket(ctx context.Context, key, bucket string) Storj_Proteins_Bucket {
 	return &BucketObject{Ctx: ctx, Key: key, Bucket: bucket, NodeCredentials: &uplink.Access{}}
+}
+
+func (bo *BucketObject) GetUplinkProject() *uplink.Project {
+
+	blockApp, err := uplink.OpenProject(bo.Ctx, bo.NodeCredentials)
+	if err != nil && reflect.DeepEqual(blockApp, &uplink.Project{}) {
+		log.Fatalln(err.Error())
+		return &uplink.Project{}
+	}
+
+	blockBucket, err := blockApp.EnsureBucket(bo.Ctx, bo.Bucket)
+	if err != nil && reflect.DeepEqual(blockBucket, &uplink.Bucket{}) {
+		log.Fatalln(err.Error())
+		return &uplink.Project{}
+	}
+
+	defer blockApp.Close()
+
+	return blockApp
 }

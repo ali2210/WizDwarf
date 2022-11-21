@@ -49,43 +49,60 @@ const options = {
 
 channel.bind("tnxs", (data) => {
   
+  
   console.log("Data:", JSON.stringify(data));
+  
   const stream = JSON.stringify(data,(key, value)=>
       (value instanceof Map? Array.from(value.entries()): value));
+
+  console.log('Stream: ... ', stream);
   
   const parser = JSON.parse(stream);
+  console.log('JSON ... ', parser);
 
-  for (let i = 0; i < 6; i++){
-   const parse_arr = parser["values"][i] instanceof Array ? Array.from(JSON.parse(parser["values"][i])): parser["values"][i];
-   if (parse_arr !== null){
-      Object.entries(parse_arr).forEach(([key, value])=>{
+  // for (let i = 0; i < 6; i++){
+   
+  //   const parse_arr = parser["values"][i] instanceof Array ? Array.from(JSON.parse(parser["values"][i])): parser["values"][i];
+  
+  //   console.log('Array:', parse_arr);
+   
+  //   if (parse_arr !== null){
+  //     Object.entries(parse_arr).forEach(([key, value])=>{
             
-        if (value !== " "){
-          key_entries.push(key);
-          values_entries.push(value);
-        }
-      });
+  //       if (value !== " "){
+  //         key_entries.push(key);
+  //         values_entries.push(value);
+  //       }
+  //     });
 
-      console.log("Output:", ...key_entries, "Value:", ...values_entries);
-      weblocal.setItem(count, JSON.stringify(values_entries));
-   }
-  }
+  //     console.log("Output: ....", ...key_entries, "Value:", ...values_entries);
+  //     weblocal.setItem(count, JSON.stringify(values_entries));
+  //  }
+  // }
 });
 
-count = 0;
-console.log("Web cache:", weblocal.getItem(count));
-const obj = [];
+// count = 0;
+// console.log("Web cache:", weblocal.getItem(count));
+// const obj = [];
 
-obj.push(weblocal.getItem(count));
+// obj.push(weblocal.getItem(count));
 
-if (Array.from(JSON.parse(obj[0]))[0] !== ''){
-    document.getElementsByClassName('info')[0].innerHTML = 'Peer ID :' + Array.from(JSON.parse(obj[0]))[0];
-    document.getElementsByClassName('info-content-1')[0].children[0].innerHTML = Array.from(JSON.parse(obj[0]))[1];
-    document.getElementsByClassName('info-content-1')[0].children[1].innerHTML = Array.from(JSON.parse(obj[0]))[4];
-    document.getElementsByClassName('info-content-1')[0].children[2].innerHTML = Array.from(JSON.parse(obj[0]))[5];
-    if (Array.from(obj[0])[3]){
-      document.getElementsByClassName('info-content-1')[0].children[4].children[0].src = JSON.parse(obj[0])[2];
-    }else{
-      document.getElementsByClassName('info-content-1')[0].children[4].children[1].innerHTML = '';
-    }
-}
+// console.log('Object:', object);
+
+// if (Array.from(JSON.parse(obj[0]))[0] !== ''){
+//     document.getElementsByClassName('info')[0].innerHTML = 'Peer ID :' + Array.from(JSON.parse(obj[0]))[0];
+//     document.getElementsByClassName('info-content-1')[0].children[0].innerHTML = Array.from(JSON.parse(obj[0]))[1];
+//     document.getElementsByClassName('info-content-1')[0].children[1].innerHTML = Array.from(JSON.parse(obj[0]))[4];
+//     document.getElementsByClassName('info-content-1')[0].children[2].innerHTML = Array.from(JSON.parse(obj[0]))[5];
+//     if (Array.from(obj[0])[3]){
+//       document.getElementsByClassName('info-content-1')[0].children[4].children[0].src = JSON.parse(obj[0])[2];
+//     }else{
+//       document.getElementsByClassName('info-content-1')[0].children[4].children[1].innerHTML = '';
+//     }
+// }
+
+
+// weblocal.clear();
+// pusher.unbind();
+
+// console.log('local cache free now ...')

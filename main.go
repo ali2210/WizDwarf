@@ -359,7 +359,7 @@ func main() {
 	gltf := http.StripPrefix("/models/", http.FileServer(http.Dir("./models")))
 	routing.PathPrefix("/models/").Handler(gltf)
 
-	docker_files := http.StripPrefix("/app_data", http.FileServer(http.Dir("./app_data")))
+	docker_files := http.StripPrefix("/app_data/", http.FileServer(http.Dir("./app_data")))
 	routing.PathPrefix("/app_data/").Handler(docker_files)
 
 	// tcp connection
@@ -819,6 +819,8 @@ func analysis(w http.ResponseWriter, r *http.Request) {
 	webpage := template.Must(template.ParseFiles("analysis.html"))
 
 	if reflect.DeepEqual(visualizeReport.UVinfo, openweathermap.UVIndexInfo{}) {
+
+		log.Fatalln(" Error : no information")
 		w.WriteHeader(http.StatusBadRequest)
 		distorted(w, r)
 		cacheObject.Set_Key("Bad:", "Bad Request")
@@ -830,21 +832,6 @@ func analysis(w http.ResponseWriter, r *http.Request) {
 
 		logformat.Error(value)
 		return
-	}
-
-	files, err := os.ReadDir("app_data/")
-	if err != nil {
-		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
-		cacheObject.Set_Key("Token:", "Web token are not created")
-
-		value, err := cacheObject.Get_Key("Token:")
-		if err != nil {
-			return
-		}
-
-		logformat.Error(value)
-		return
-
 	}
 
 	data, update, err := piplines.Firebase_Gatekeeper(w, r, user.New_User{Email: _email, Password: _secret})
@@ -882,49 +869,77 @@ func analysis(w http.ResponseWriter, r *http.Request) {
 		ID = data.ID
 	}
 
-	meta, mapData := piplines.GetDocuments([]string{ID}...)
+	files, err := os.ReadDir("app_data/")
+	if err != nil {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
+		cacheObject.Set_Key("Path:", "No Directory Found")
+
+		value, err := cacheObject.Get_Key("Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Error(value)
+		return
+
+	}
+
+	meta, mapData, _ := piplines.GetDocuments([]string{ID}...)
 	contKey, contVae := piplines.ReflectMaps(mapData)
 
 	for list := range files {
 
 		if strings.Contains("app_data/"+files[list].Name(), meta) {
 
-			// visualizeReport.Avatar_Path = "/" + meta
+			visualizeReport.Avatar_Path = "/" + meta
 
 			break
 		}
 
 		if !strings.Contains(meta, "app_data/"+files[list].Name()) {
 
-			ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
-			defer cancel()
+			// ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+			// defer cancel()
 
-			inter, num := fireclient.New(ctx, piplines.Firestore_Reference()).Get(contKey, contVae, update.ID)
+			log.Println("Key:", contKey, "Value:", contVae)
 
-			if num != 0 {
-				log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
-				return
-			}
+			// inter, num := fireclient.New(ctx, piplines.Firestore_Reference()).Get(contKey, []string{contVae}...)
 
-			_, resource := piplines.ReflectMaps(inter)
+			// if num != 0 {
+			// 	log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+			// 	return
+			// }
 
-			if strings.Contains(contKey, " ") && !strings.Contains(contVae, resource) {
+			// _, resource := piplines.ReflectMaps(inter)
 
-				log.Fatalln(error_codes.Operation_ERROR_CODE_MISMATCH_STATE)
-				return
-			}
+			// log.Println("Value:", inter, "Resources:", resource)
 
-			client := skynet.New()
+			// if strings.Contains(contKey, " ") && !strings.Contains(contVae, resource) {
 
-			if dlinkerr := cloudmedia.NewDlinkObject(&client, "app_data/").Get(meta, contVae); dlinkerr != dlink.Errors_NONE {
+			// 	log.Fatalln(error_codes.Operation_ERROR_CODE_MISMATCH_STATE)
+			// 	return
+			// }
 
-				log.Fatalln(dlinkerr)
-				return
-			}
+			// iobject := dbucket.New_Bucket(ctx, meta, "avatars")
 
-			log.Println("File download successfully... open mounted directory", meta)
-			// visualizeReport.Avatar_Path = "/" + meta
-			break
+			// errs, access := iobject.StoreJCredentials(strings.Join(signature, " "), []string{"chief inner hint orient crane mobile pattern rude moon approve train cheap"}...)
+			// if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) && access != nil {
+			// 	log.Fatalln(error_codes.CHANNEL_ERROR_CHANNEL_CLOSED)
+			// 	return
+			// }
+
+			// if strings.Contains(meta, ".png") {
+
+			// 	str := strings.Trim(meta, ".png")
+			// 	str = strings.Trim(meta, "app_data/")
+			// 	err := iobject.DownloadObject(iobject.GetUplinkProject(), " ", []string{str}...)
+			// 	if err != nil {
+
+			// 		log.Fatalln(error_codes.DATABASE_ERRORS_DOCUMENT_READ_ERROR)
+			// 		return
+			// 	}
+			// }
+
 		}
 	}
 
@@ -1247,8 +1262,8 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	links, errs := iobject.StoreObject(strings.Join(words, " "), life.Pkk, jsonFile.Names, jsonFile.Types, []string{"heavy cancel window wild supply replace oppose until canvas lava lamp muffin"}...)
-	if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) && links != nil {
+	errs = iobject.StoreObject(strings.Join(words, " "), life.Pkk, jsonFile.Names, jsonFile.Types, []string{"heavy cancel window wild supply replace oppose until canvas lava lamp muffin"}...)
+	if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) {
 
 		w.WriteHeader(http.StatusBadRequest)
 		distorted(w, r)
@@ -1264,14 +1279,13 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	piplines.SetAppLink(links)
-
 	err = cloudmedia.NewMediaDescriptor(ctx, piplines.Firestore_Reference()).AddMediaFile(&media.MediaStream{
 		Name:         (*jsonFile).Names,
 		Datecreated:  piplines.GetFileCreationTime((*jsonFile).Names),
 		IdentityCode: ID,
 		Category:     media.Descriptor_Category_Text,
 		Path:         "app_data/",
+		Signature:    words,
 	})
 	if err != nil {
 		log.Fatalln(error_codes.DATABASE_ERRORS_DOCUMENT_CREATE_ERROR)
@@ -1949,7 +1963,7 @@ func view(w http.ResponseWriter, r *http.Request) {
 
 	if !reflect.DeepEqual(update, &user.Updated_User{}) && updateInfo {
 
-		meta, mapData := piplines.GetDocuments([]string{update.ID}...)
+		meta, mapData, _ := piplines.GetDocuments([]string{update.ID}...)
 		contKey, contVae := piplines.ReflectMaps(mapData)
 
 		for list := range files {
@@ -2052,7 +2066,7 @@ func view(w http.ResponseWriter, r *http.Request) {
 
 	} else {
 
-		meta, mapData := piplines.GetDocuments([]string{data.ID}...)
+		meta, mapData, _ := piplines.GetDocuments([]string{data.ID}...)
 		contKey, contVae := piplines.ReflectMaps(mapData)
 
 		for list := range files {
@@ -2202,77 +2216,100 @@ func dvault(w http.ResponseWriter, r *http.Request) {
 	const docname string = "ContentAddress"
 	list, err := manager.NewSecretsInstance(ctx, piplines.Firestore_Reference()).GetAllDocuments([]string{docname}...)
 	if err != nil {
-		log.Fatalln(error_codes.DATABASE_ERRORS_DOCUMENT_READ_ERROR)
+		log.Fatalln("Error:", error_codes.DATABASE_ERRORS_DOCUMENT_READ_ERROR)
 		return
 	}
-
-	log.Println("List:", list)
 
 	img_name, img_src, filename := "", "", ""
 
 	var value interface{}
+	var ID string
+	var signature []string
 
 	old, updated := piplines.GetID(update, data)
 	if !reflect.DeepEqual(update, &user.Updated_User{}) {
-		filename, value = piplines.GetDocuments([]string{old.ID}...)
-		img_name, img_src = piplines.ReflectMaps(value)
+		ID = old.ID
 
 	} else {
-		filename, value = piplines.GetDocuments([]string{updated.ID}...)
-		img_name, img_src = piplines.ReflectMaps(value)
+
+		ID = updated.ID
 	}
+
+	filename, value, signature = piplines.GetDocuments([]string{ID}...)
+	img_name, img_src = piplines.ReflectMaps(value)
 
 	files, err := os.ReadDir("app_data/")
 	if err != nil {
-		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
+		log.Fatalln("Error:", error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
 		return
 	}
 
-	log.Println("Read File: ...", filename)
-
 	wallet := make([]*secrets.Vault_Params, len(list))
-	img_path := ""
+	// img_path := ""
 	var counter int64 = -1
+	str := "nil"
 
-	for direc, _ := range files {
+	if len(files) == 0 && !strings.Contains(filename, " ") && !(strings.Contains(filename, ".txt")) {
 
-		log.Println("Directory:", files[direc].Name())
-		// if strings.Contains("app_data/"+files[direc].Name(), ".txt") {
-		// 	piplines.GetFileCreationTime([]string{"app_data/" + files[direc].Name()}...)
-		// 	client := skynet.New()
+		iobject := dbucket.New_Bucket(ctx, filename, "avatars")
 
-		// 	key, value := piplines.ReflectMaps(list[1])
-
-		// 	if strings.Contains(key, "Value") {
-		// 		// cloudmedia.NewDlinkObject(&client, "app_data/").Preview_Get(files[direc].Name(), []string{value}...)
-		// 	}
-		// }
-
-		if strings.Contains("app_data/"+files[direc].Name(), filename) && (!strings.Contains(filename, ".txt")) {
-			img_path = "/" + filename
+		errs, access := iobject.StoreJCredentials(strings.Join(signature, " "), []string{"chief inner hint orient crane mobile pattern rude moon approve train cheap"}...)
+		if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) && access != nil {
+			log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+			return
 		}
 
-		if !strings.Contains("app_data/"+files[direc].Name(), filename) && (!strings.Contains(filename, ".txt")) {
+		errs = iobject.DownloadObject(iobject.GetUplinkProject())
+		if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) {
+			log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+			return
+		}
 
-			// _, err = os.Stat(filename)
-			// if err != nil {
-			// 	log.Fatalln(error_codes.File_BAD_REQUEST_CODE_FILE_PERMISSION_FAILED)
-			// 	return
+		log.Println("Data is already moved...", filename)
+	} else {
+
+		for direc := range files {
+
+			log.Println("Direc:", strings.Contains("app_data/"+files[direc].Name(), " "))
+
+			// if !reflect.DeepEqual("app_data/"+files[direc].Name(), filename) {
+
+			// 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+			// 	defer cancel()
+
+			// 	iobject := dbucket.New_Bucket(ctx, filename, "avatars")
+
+			// 	log.Println("Object:", iobject)
+
+			// 	errs, access := iobject.StoreJCredentials(strings.Join(signature, " "), []string{"chief inner hint orient crane mobile pattern rude moon approve train cheap"}...)
+			// 	if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) && access != nil {
+			// 		log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+			// 		return
+			// 	}
+
+			// 	log.Println("Access:", access)
+
+			// 	errs = iobject.DownloadObject(iobject.GetUplinkProject())
+			// 	if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) {
+			// 		log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+			// 		return
+			// 	}
+
+			// 	break
+
 			// }
 
-			client := skynet.New()
+			if strings.Contains("app_data/"+files[direc].Name(), filename) && (!strings.Contains(filename, ".txt")) {
+				// img_path = "/" + filename
 
-			if dlinkerr := cloudmedia.NewDlinkObject(&client, "app_data/").Get(filename, img_src); dlinkerr != dlink.Errors_NONE {
-				log.Fatalln(error_codes.DATABASE_ERRORS_DOCUMENT_READ_ERROR)
-				return
+				str = piplines.GetFileSize([]string{filename}...)
+				break
 			}
 
-			img_path = "/" + filename
 		}
-
 	}
 
-	for i, _ := range list {
+	for i := range list {
 
 		if !reflect.DeepEqual(list[i], map[string]interface{}{}) {
 
@@ -2284,41 +2321,29 @@ func dvault(w http.ResponseWriter, r *http.Request) {
 
 					if reflect.DeepEqual(mapIterator.Value().Interface().(string), img_name) && (!strings.Contains(filename, " ") && !strings.Contains(img_src, " ")) {
 
-						if !reflect.DeepEqual(update, &user.Updated_User{}) {
+						wallet = append(wallet, &secrets.Vault_Params{
+							ID:       ID,
+							CDR_LINK: img_name,
+							TEXT:     "",
+							// IMAGE:    img_path,
+							IsImage: true,
+							SizeOf:  str,
+							Access:  "private",
+						})
 
-							wallet = append(wallet, &secrets.Vault_Params{
-								ID:       old.ID,
-								CDR_LINK: img_name,
-								TEXT:     "",
-								IMAGE:    img_path,
-								IsImage:  true,
-								SizeOf:   piplines.GetFileSize([]string{filename}...),
-								Access:   "private",
-							})
-							counter += 1
-						} else {
-							wallet = append(wallet, &secrets.Vault_Params{
-								ID:       updated.ID,
-								CDR_LINK: img_name,
-								TEXT:     "",
-								IMAGE:    img_path,
-								IsImage:  true,
-								SizeOf:   piplines.GetFileSize([]string{filename}...),
-								Access:   "private",
-							})
-							counter += 1
-						}
+						counter += 1
 
 						if i >= len(list) {
 							break
 						}
-
+					} else {
+						continue
 					}
 
+				} else {
+					continue
 				}
 			}
-		} else {
-			continue
 		}
 	}
 
@@ -2326,9 +2351,11 @@ func dvault(w http.ResponseWriter, r *http.Request) {
 	var iterator = counter
 
 	if counter >= 0 {
+
 		list_wallet.ID_ = wallet[len(list)].ID
 		list_wallet.Count = counter
 		list_wallet.List = make([]*secrets.Vault_Params, counter)
+
 		for iterator != (int64)(len(wallet)) {
 
 			if !reflect.DeepEqual(wallet[iterator], &secrets.Vault_Params{}) {
@@ -2352,7 +2379,7 @@ func dvault(w http.ResponseWriter, r *http.Request) {
 		"keys":   list_wallet.ID_,
 		"values": list_wallet.List,
 	}); err != nil {
-		log.Fatalln(error_codes.CHANNEL_ERROR_CHANNEL_CLOSED)
+		log.Fatalln("Erorr:", error_codes.CHANNEL_ERROR_CHANNEL_CLOSED)
 		return
 	}
 
@@ -2368,29 +2395,13 @@ func dvault(w http.ResponseWriter, r *http.Request) {
 		logformat.Trace(value)
 
 		webpge.Execute(w, "Dvault")
+		return
 	}
 
 	if r.Method != "GET" {
-
-		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
-
-		value, err := cacheObject.Get_Key("Route_Path:")
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			distorted(w, r)
-			cacheObject.Set_Key("Internal:", err.Error())
-
-			value, err := cacheObject.Get_Key("Internal:")
-			if err != nil {
-				return
-			}
-
-			logformat.Error(value)
-			return
-		}
-		logformat.Trace(value)
 		return
 	}
+
 }
 
 func stop_codon(w http.ResponseWriter, r *http.Request) {

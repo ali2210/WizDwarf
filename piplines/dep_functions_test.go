@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	skynet "github.com/SkynetLabs/go-skynet/v2"
+	"github.com/ali2210/wizdwarf/other/cloudmedia/media"
 	user "github.com/ali2210/wizdwarf/other/users/register"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -41,9 +41,9 @@ func PiplinesBDDTesting(t *testing.T) {
 
 var _ = Describe(date_describe, func() {
 	// decentralize content storage
-	Context(skynet_protocol, func() {
-		It(skynet_object, func() {
-			Expect(SkyDataCenter(skynet.New(), "mickymouse.jpeg", "jpeg")).Should(BeFalse())
+	Context("decentralize link testing", func() {
+		It("Should link without content", func() {
+			Expect(SkyDataCenter(&media.IMAGE_METADATA{})).Should(BeFalse())
 		})
 	})
 	Context(anscitest, func() {
