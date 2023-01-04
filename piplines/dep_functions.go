@@ -55,7 +55,7 @@ import (
 	"github.com/biogo/biogo/alphabet"
 	"github.com/gorilla/sessions"
 	linkcid "github.com/ipfs/go-cid"
-	multihash "github.com/multiformats/go-multihash"
+
 	"github.com/nfnt/resize"
 	"golang.org/x/net/context"
 	"google.golang.org/api/option"
@@ -500,52 +500,9 @@ func SkyDataCenter(media_file *media.IMAGE_METADATA) bool {
 
 	// high order function this function takes cdr convert into bytes with netwiork identifical code and then apply hash sha-256
 	// Result -- breakable
-	hash_data := sha256.Sum256([]byte(media_file.Created))
 
-	// this function also high order function which convert hash of bytes into encoded string
-	// fog(c) = f(g(x)) mathematical notion of high order function
-	// encoded string in hex format which mus be decode as string in hex format
-	decoder, err := hex.DecodeString(hex.EncodeToString(hash_data[:]))
-	if err != nil {
-		log.Fatalln(error_codes.Operation_ERROR_CODE_GARBAGE_VALUE)
-		return false
-	}
+	cdr, cid := cryptos.FilePrints([]string{media_file.Created}...)
 
-	// EncodeName function takes decoder which is already in hex format and then apply x11 crypto algorithm.
-	// with x11 breakable signature into unbreakable
-	encodetype, err := multihash.EncodeName(decoder, "x11")
-	if err != nil {
-		log.Fatalln(error_codes.Operation_ERROR_CODE_GARBAGE_VALUE)
-		return false
-	}
-
-	// This is an higher order function encodeName value as encode string in hex format.
-	// multihash hex string apply on encoded string in hex format.
-	encodex11, err := multihash.FromHexString(hex.EncodeToString(encodetype))
-	if err != nil {
-		log.Fatalln(error_codes.Operation_ERROR_CODE__DUMP)
-		return false
-	}
-
-	// generate new cid.. The specification of this function require two parameters (codeType & other one is hash algorithm)
-	// merkel tree (dag) data serilaization (protocol buffer [https://en.wikipedia.org/wiki/Protocol_Buffers])
-	// & hash algorithm
-
-	cid := linkcid.NewCidV1(linkcid.DagProtobuf, encodex11)
-
-	// check whether cid version is 0. For this application cid version must be 1
-	if version := cid.Version(); version != 1 {
-		log.Fatalln(error_codes.Operation_ERROR_CODE_GARBAGE_VALUE)
-		return false
-	}
-
-	// create protocol buffer map object
-	// map key which we had calculated before cid because key must be in string
-	// value should be cdr link
-
-	cdr = make(map[string]string, 1)
-
-	cdr[cid.String()] = cid.Hash().B58String()
 	Set_cdr(cid.String())
 
 	link = cid
@@ -553,7 +510,7 @@ func SkyDataCenter(media_file *media.IMAGE_METADATA) bool {
 	ImageMeta.Cdr = make(map[string]string, 1)
 	ImageMeta.Cdr = cdr
 
-	log.Println("Signature created .....", cid.String()[5:10]+"****")
+	log.Println("Signature created .....", Get_cdr()[5:10]+"****")
 
 	return true
 }
@@ -1233,14 +1190,14 @@ func ReflectMaps(i interface{}) (string, string) {
 // @return string message
 func GetFileSize(filename ...string) string {
 
-	_, err := os.ReadDir("app_data/")
-	if err != nil {
+	files, err := os.ReadDir("app_data/")
+	if err != nil || len(files) == 0 && !strings.Contains(filename[0], " ") {
 		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
 		return " "
 	}
 
 	properties, err := os.Stat(filename[0])
-	if err != nil {
+	if err != nil && reflect.DeepEqual(properties, nil) {
 		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_READ_FAILED)
 		return " "
 	}
@@ -1275,4 +1232,239 @@ func GetFileCreationTime(filename string) string {
 		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_FILE_PATH_ERROR)
 	}
 	return properties.ModTime().String()
+}
+
+func GetQProteins(value int64) ([]map[string]interface{}, error) {
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	var nullify []map[string]interface{}
+
+	// descriptor, err := cloudmedia.NewMediaDescriptor(ctx, Firestore_Reference()).GetMediaFile(&media.MediaStream{
+	// 	Name:         "",
+	// 	IdentityCode: id[0],
+	// 	Datecreated:  "",
+	// 	Path:         "app_data/",
+	// 	Category:     media.Descriptor_Category_Text,
+	// 	Signature:    []string{""},
+	// 	Cdrlink:      "",
+	// })
+
+	descriptor, err := cloudmedia.NewMediaDescriptor(ctx, Firestore_Reference()).GetAll(value)
+
+	if err != nil {
+		log.Fatalln(error_codes.DATABASE_ERRORS_DOCUMENT_READ_ERROR)
+		return nullify, err
+	}
+
+	return descriptor, nil
+}
+
+type DocumentCredentials struct {
+	Filename     []string
+	Passphrase   string
+	ReflectKey   []string
+	ReflectValue []string
+	SizeOf       []string
+	TextView     [][]byte
+}
+
+func ImagesCryptoSignature(id ...string) (*DocumentCredentials, error) {
+
+	filename, value, signature := GetDocuments([]string{id[0]}...)
+
+	img_name, img_src := ReflectMaps(value)
+
+	files, err := os.ReadDir("app_data/")
+	if err != nil {
+		log.Fatalln("Error:", error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
+		return &DocumentCredentials{}, err
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	if len(files) == 0 && !strings.Contains(filename, " ") && !(strings.Contains(filename, ".txt")) {
+
+		iobject := dbucket.New_Bucket(ctx, filename, "avatars")
+
+		errs, access := iobject.StoreJCredentials(strings.Join(signature, " "), []string{"chief inner hint orient crane mobile pattern rude moon approve train cheap"}...)
+		if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) && access != nil {
+			log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+			return &DocumentCredentials{}, err
+		}
+
+		errs = iobject.DownloadObject(iobject.GetUplinkProject())
+		if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) {
+			log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+			return &DocumentCredentials{}, err
+		}
+
+		log.Println("Data is already moved...", filename)
+
+	}
+
+	var view []byte
+	var sizeof []string
+	for direc := range files {
+
+		if strings.Contains("app_data/"+files[direc].Name(), filename) && (!strings.Contains(filename, ".json")) {
+			// img_path = "/" + filename
+
+			sizeof = append(sizeof, GetFileSize([]string{filename}...))
+			view = []byte{}
+			break
+		}
+
+	}
+
+	doc := &DocumentCredentials{
+		Filename:     []string{filename},
+		Passphrase:   strings.Join(signature, ""),
+		ReflectKey:   []string{img_name},
+		ReflectValue: []string{img_src},
+		SizeOf:       sizeof,
+		TextView:     [][]byte{view},
+	}
+
+	return doc, nil
+}
+
+func ProteinsCryptoSignature(value int64) (*DocumentCredentials, error) {
+
+	content, err := GetQProteins(value)
+	if err != nil {
+		log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+		return &DocumentCredentials{}, err
+	}
+
+	filename := []string{}
+	var link []interface{}
+	var passphase []interface{}
+
+	for i := range content {
+
+		reflectIterator := reflect.ValueOf(content[i]).MapRange()
+
+		for reflectIterator.Next() {
+
+			if reflect.DeepEqual(reflectIterator.Key().String(), "Filename") {
+				filename = append(filename, reflectIterator.Value().Elem().String())
+			}
+
+			if reflect.DeepEqual(reflectIterator.Key().String(), "CDR_LINK") {
+
+				link = append(link, reflectIterator.Value().Elem().String())
+			}
+
+			if reflect.DeepEqual(reflectIterator.Key().String(), "Passphrase") && !reflect.DeepEqual(reflectIterator.Value().Interface(), nil) {
+
+				passphase = append(passphase, reflectIterator.Value().Interface().(interface{}))
+			}
+		}
+
+	}
+
+	seed := fmt.Sprintf("%v", passphase[0])
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	list_keys, err := fireclient.New(ctx, Firestore_Reference()).GetAll()
+	if err != nil {
+
+		log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+		return &DocumentCredentials{}, err
+	}
+
+	var keys []string
+	var values []string
+
+	for i := range list_keys {
+
+		iterate := reflect.ValueOf(list_keys[i]).MapRange()
+		for iterate.Next() {
+
+			if reflect.DeepEqual(iterate.Value().Interface().(string), link) && strings.Contains(iterate.Key().String(), "Value") {
+
+				values = append(values, iterate.Value().Interface().(string))
+			}
+
+			if strings.Contains(iterate.Key().String(), "Key") {
+
+				keys = append(keys, iterate.Value().Interface().(string))
+			}
+		}
+
+	}
+
+	files, err := os.ReadDir("app_data/")
+	if err != nil {
+		log.Fatalln("Error:", error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
+		return &DocumentCredentials{}, err
+	}
+
+	for i := range content {
+
+		if len(files) == 0 && !strings.Contains(filename[i], " ") && (strings.Contains(filename[i], ".json")) {
+
+			iobject := dbucket.New_Bucket(ctx, filename[i], "amino-chemical")
+
+			errs, access := iobject.StoreJCredentials(seed, []string{"heavy cancel window wild supply replace oppose until canvas lava lamp muffin"}...)
+			if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) && access != nil {
+				log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+				return &DocumentCredentials{}, err
+			}
+
+			errs = iobject.DownloadObject(iobject.GetUplinkProject())
+			if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) {
+				log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+				return &DocumentCredentials{}, err
+			}
+
+			log.Println("Data is already moved...", filename)
+
+		}
+
+	}
+
+	var view []byte
+
+	var size []string
+
+	var documents [][]byte
+
+	for direc := range files {
+
+		for i := range content {
+
+			if reflect.DeepEqual(files[direc].Name(), filename[i]+".json") {
+
+				size = append(size, GetFileSize([]string{"app_data/" + filename[i] + ".json"}...))
+
+				read, err := os.ReadFile("app_data/" + filename[i] + ".json")
+				if err != nil {
+
+					return &DocumentCredentials{}, err
+				}
+
+				view = read
+
+				documents = append(documents, view)
+
+			}
+		}
+	}
+
+	doc := &DocumentCredentials{
+		Filename:     filename,
+		Passphrase:   seed,
+		ReflectKey:   keys,
+		ReflectValue: values,
+		SizeOf:       size,
+		TextView:     documents,
+	}
+
+	return doc, nil
 }

@@ -25,6 +25,7 @@ message MediaStream {
     string path = 4;
     Descriptor_Category category = 5;
     repeated string Signature = 6;
+    string cdrlink = 7;
 }
 
 enum TOKEN_CATEGORY {

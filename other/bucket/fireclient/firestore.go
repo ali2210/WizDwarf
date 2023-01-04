@@ -6,7 +6,6 @@ package fireclient
 
 import (
 	"context"
-	"errors"
 	"image"
 	"log"
 	"reflect"
@@ -42,7 +41,7 @@ var client *firestore.Client
 type DBStorage interface {
 	Store(key, value string, composite ...string) int
 	Get(key string, composite ...string) (map[string]interface{}, int)
-	GetAll() (map[string]interface{}, error)
+	GetAll() ([]map[string]interface{}, error)
 }
 
 // Instanitation of Credentials Object
@@ -68,30 +67,42 @@ func (db *DBStore) Store(key, value string, composite ...string) int {
 	return Ok
 }
 
-func (db *DBStore) GetAll() (map[string]interface{}, error) {
+func (db *DBStore) GetAll() ([]map[string]interface{}, error) {
 
-	exp := map[string]interface{}{}
-	query := db.Ref.Collection(COLLECTION_NAME).Documents(db.Ctx)
+	exp := make([]map[string]interface{}, 10)
+
+	query := db.Ref.CollectionGroup(COLLECTION_NAME).Limit(10).Documents(db.Ctx)
 
 	for {
-
 		doc, err := query.Next()
 		if err == iterator.Done {
 			break
 		}
 
-		if err != nil {
-			return map[string]interface{}{}, err
-		}
-		exp = doc.Data()
-	}
-
-	if reflect.DeepEqual(exp, map[string]interface{}{}) {
-		log.Fatalln(error_codes.Operation_ERROR_CODE_EMPTY_OUTPUT)
-		return map[string]interface{}{}, errors.New("empty record")
+		exp = append(exp, doc.Data())
 	}
 
 	return exp, nil
+
+	// for {
+
+	// 	doc, err := query.Next()
+	// 	if err == iterator.Done {
+	// 		break
+	// 	}
+
+	// 	if err != nil {
+	// 		return []map[string]interface{}{}, err
+	// 	}
+	// 	exp = append(exp, doc.Data())
+	// }
+
+	// if reflect.DeepEqual(exp, map[string]interface{}{}) {
+	// 	log.Fatalln(error_codes.Operation_ERROR_CODE_EMPTY_OUTPUT)
+	// 	return
+	// }
+
+	// return exp, nil
 }
 
 // Credentials Information Retreive

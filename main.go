@@ -28,7 +28,6 @@ import (
 	"github.com/ali2210/wizdwarf/other/jsonpb/jsonledit"
 	"github.com/ali2210/wizdwarf/other/parser"
 	"github.com/ali2210/wizdwarf/other/proteins"
-	manager "github.com/ali2210/wizdwarf/other/secrets"
 	secrets "github.com/ali2210/wizdwarf/other/secrets/secretsparam"
 
 	dbucketerror "github.com/ali2210/wizdwarf/other/bucket/storj_bucket/bucket"
@@ -1218,6 +1217,8 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 	// create a new .json file with these parameters and write data stream in file
 	proteins.CreateNewJSONFile(jsonFile)
 
+	cdrs, cid := cryptos.FilePrints([]string{(*jsonFile).Names}...)
+
 	// additional param
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
@@ -1279,6 +1280,10 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if bucket_state := fireclient.New(ctx, piplines.Firestore_Reference()).Store(cid.String(), cdrs[cid.String()], ID); bucket_state != 0 {
+		log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE, bucket_state)
+		return
+	}
 	err = cloudmedia.NewMediaDescriptor(ctx, piplines.Firestore_Reference()).AddMediaFile(&media.MediaStream{
 		Name:         (*jsonFile).Names,
 		Datecreated:  piplines.GetFileCreationTime((*jsonFile).Names),
@@ -1286,6 +1291,7 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		Category:     media.Descriptor_Category_Text,
 		Path:         "app_data/",
 		Signature:    words,
+		Cdrlink:      cdrs[cid.String()],
 	})
 	if err != nil {
 		log.Fatalln(error_codes.DATABASE_ERRORS_DOCUMENT_CREATE_ERROR)
@@ -2210,21 +2216,19 @@ func dvault(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
-	defer cancel()
+	// ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	// defer cancel()
 
-	const docname string = "ContentAddress"
-	list, err := manager.NewSecretsInstance(ctx, piplines.Firestore_Reference()).GetAllDocuments([]string{docname}...)
-	if err != nil {
-		log.Fatalln("Error:", error_codes.DATABASE_ERRORS_DOCUMENT_READ_ERROR)
-		return
-	}
+	// const docname string = "ContentAddress"
+	// list, err := manager.NewSecretsInstance(ctx, piplines.Firestore_Reference()).GetAllDocuments([]string{docname}...)
+	// if err != nil {
+	// 	log.Fatalln("Error:", error_codes.DATABASE_ERRORS_DOCUMENT_READ_ERROR)
+	// 	return
+	// }
 
-	img_name, img_src, filename := "", "", ""
-
-	var value interface{}
 	var ID string
-	var signature []string
+	var imagecred []*piplines.DocumentCredentials
+	// var contentcred *piplines.DocumentCredentials
 
 	old, updated := piplines.GetID(update, data)
 	if !reflect.DeepEqual(update, &user.Updated_User{}) {
@@ -2235,137 +2239,116 @@ func dvault(w http.ResponseWriter, r *http.Request) {
 		ID = updated.ID
 	}
 
-	filename, value, signature = piplines.GetDocuments([]string{ID}...)
-	img_name, img_src = piplines.ReflectMaps(value)
-
 	files, err := os.ReadDir("app_data/")
 	if err != nil {
-		log.Fatalln("Error:", error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
 		return
 	}
 
-	wallet := make([]*secrets.Vault_Params, len(list))
-	// img_path := ""
-	var counter int64 = -1
-	str := "nil"
+	counter, jcounter := 0, 0
 
-	if len(files) == 0 && !strings.Contains(filename, " ") && !(strings.Contains(filename, ".txt")) {
+	// Keys directly proportional to files in app_data directory
+	for file := range files {
 
-		iobject := dbucket.New_Bucket(ctx, filename, "avatars")
+		if strings.Contains(files[file].Name(), ".png") {
 
-		errs, access := iobject.StoreJCredentials(strings.Join(signature, " "), []string{"chief inner hint orient crane mobile pattern rude moon approve train cheap"}...)
-		if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) && access != nil {
-			log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
-			return
-		}
-
-		errs = iobject.DownloadObject(iobject.GetUplinkProject())
-		if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) {
-			log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
-			return
-		}
-
-		log.Println("Data is already moved...", filename)
-	} else {
-
-		for direc := range files {
-
-			log.Println("Direc:", strings.Contains("app_data/"+files[direc].Name(), " "))
-
-			// if !reflect.DeepEqual("app_data/"+files[direc].Name(), filename) {
-
-			// 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
-			// 	defer cancel()
-
-			// 	iobject := dbucket.New_Bucket(ctx, filename, "avatars")
-
-			// 	log.Println("Object:", iobject)
-
-			// 	errs, access := iobject.StoreJCredentials(strings.Join(signature, " "), []string{"chief inner hint orient crane mobile pattern rude moon approve train cheap"}...)
-			// 	if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) && access != nil {
-			// 		log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
-			// 		return
-			// 	}
-
-			// 	log.Println("Access:", access)
-
-			// 	errs = iobject.DownloadObject(iobject.GetUplinkProject())
-			// 	if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) {
-			// 		log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
-			// 		return
-			// 	}
-
-			// 	break
-
-			// }
-
-			if strings.Contains("app_data/"+files[direc].Name(), filename) && (!strings.Contains(filename, ".txt")) {
-				// img_path = "/" + filename
-
-				str = piplines.GetFileSize([]string{filename}...)
-				break
-			}
-
-		}
-	}
-
-	for i := range list {
-
-		if !reflect.DeepEqual(list[i], map[string]interface{}{}) {
-
-			mapIterator := reflect.ValueOf(list[i]).MapRange()
-
-			for mapIterator.Next() {
-
-				if strings.Contains(mapIterator.Key().Interface().(string), "Key") {
-
-					if reflect.DeepEqual(mapIterator.Value().Interface().(string), img_name) && (!strings.Contains(filename, " ") && !strings.Contains(img_src, " ")) {
-
-						wallet = append(wallet, &secrets.Vault_Params{
-							ID:       ID,
-							CDR_LINK: img_name,
-							TEXT:     "",
-							// IMAGE:    img_path,
-							IsImage: true,
-							SizeOf:  str,
-							Access:  "private",
-						})
-
-						counter += 1
-
-						if i >= len(list) {
-							break
-						}
-					} else {
-						continue
-					}
-
-				} else {
-					continue
-				}
-			}
-		}
-	}
-
-	var list_wallet secrets.List_Vault
-	var iterator = counter
-
-	if counter >= 0 {
-
-		list_wallet.ID_ = wallet[len(list)].ID
-		list_wallet.Count = counter
-		list_wallet.List = make([]*secrets.Vault_Params, counter)
-
-		for iterator != (int64)(len(wallet)) {
-
-			if !reflect.DeepEqual(wallet[iterator], &secrets.Vault_Params{}) {
-				list_wallet.List = append(list_wallet.List, wallet[iterator])
-			}
-
-			iterator += 1
+			counter += 1
+		} else if strings.Contains(files[file].Name(), ".gif") {
+			counter += 1
+		} else if strings.Contains(files[file].Name(), ".jpeg") {
+			counter += 1
+		} else if strings.Contains(files[file].Name(), ".json") {
+			jcounter += 1
+		} else {
 			continue
 		}
 	}
+
+	for i := 0; i < counter; i++ {
+
+		cred, err := piplines.ImagesCryptoSignature([]string{ID}...)
+		if err != nil {
+			return
+		}
+
+		imagecred = append(imagecred, cred)
+
+	}
+
+	var wallet []*secrets.Vault_Params
+
+	contentcred, err := piplines.ProteinsCryptoSignature(int64(jcounter - counter))
+	if err != nil {
+		return
+	}
+
+	for item := range imagecred {
+
+		for _, index := range imagecred[item].Filename {
+
+			if !reflect.DeepEqual((*imagecred[item]), nil) && !strings.Contains(index, ".json") {
+
+				for i := 0; i < counter; i++ {
+
+					wallet = append(wallet, &secrets.Vault_Params{
+
+						CDR_LINK:    (*imagecred[item]).ReflectKey[i],
+						TEXT:        string((*imagecred[item]).TextView[i]),
+						IsImage:     true,
+						SizeOf:      (*imagecred[item]).SizeOf[i],
+						Access:      "public",
+						Objects:     fmt.Sprintf("%d", counter),
+						ImagePath:   (*imagecred[item]).Filename[i],
+						ContentView: []string{""},
+					})
+
+					// pictures = append(pictures, &secrets.Content_Vault{SharedImages: (*imagecred[item]).Filename})
+				}
+
+			}
+
+		}
+
+	}
+
+	var word []string
+	var str []string
+
+	for i := range (*contentcred).TextView {
+
+		str = append(str, string((*contentcred).TextView[i][1000:]), "*")
+
+		word = append(word, strings.Join(str, " "))
+	}
+
+	for index := 0; index < jcounter; index++ {
+
+		for item := range imagecred {
+
+			if !reflect.DeepEqual((*imagecred[item]).ReflectKey, (*contentcred).ReflectKey) && !reflect.DeepEqual(imagecred, nil) && (index < 2) {
+
+				wallet = append(wallet, &secrets.Vault_Params{
+
+					CDR_LINK: (*contentcred).ReflectKey[index],
+					//TEXT:     word[index],
+					IsImage:   false,
+					SizeOf:    (*contentcred).SizeOf[index],
+					Access:    "private",
+					Objects:   fmt.Sprintf("%d", jcounter),
+					ImagePath: "",
+					// ContentView: word,
+				})
+
+			}
+
+		}
+	}
+
+	list_wallet := &secrets.List_Vault{
+		List: wallet,
+		ID:   ID,
+	}
+
+	// console.log("content: ...",(document.getElementsByClassName('info-content-1')[0].children[4].children[1].innerHTML).substring((document.getElementsByClassName('info-content-1')[0].children[4].children[1].innerHTML.length)-5000, (document.getElementsByClassName('info-content-1')[0].children[4].children[1].innerHTML.length)-1),"file:", document.getElementsByClassName('info-content-1')[0].children[4].children[0].innerHTML)
 
 	pusherCred := pusher.Client{
 		AppID:   APP_CHANNEL_ID,
@@ -2376,10 +2359,10 @@ func dvault(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := pusherCred.TriggerMulti([]string{"keygen"}, "tnxs", map[string]interface{}{
-		"keys":   list_wallet.ID_,
+		"keys":   list_wallet.ID,
 		"values": list_wallet.List,
 	}); err != nil {
-		log.Fatalln("Erorr:", error_codes.CHANNEL_ERROR_CHANNEL_CLOSED)
+		log.Fatalln("Erorr:", error_codes.CHANNEL_ERROR_CHANNEL_CLOSED, err)
 		return
 	}
 
@@ -2394,11 +2377,7 @@ func dvault(w http.ResponseWriter, r *http.Request) {
 
 		logformat.Trace(value)
 
-		webpge.Execute(w, "Dvault")
-		return
-	}
-
-	if r.Method != "GET" {
+		webpge.Execute(w, "Keygen")
 		return
 	}
 

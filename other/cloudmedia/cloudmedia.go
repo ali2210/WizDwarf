@@ -12,6 +12,7 @@ import (
 	"errors"
 	"log"
 	"reflect"
+	"strings"
 
 	"cloud.google.com/go/firestore"
 	error_codes "github.com/ali2210/wizdwarf/errors_codes"
@@ -122,8 +123,9 @@ func (d *Dc_1) SearchData(data *media.IMAGE_METADATA, code ...string) (bool, *fi
 
 type MediaDescriptor interface {
 	AddMediaFile(media_file *media.MediaStream) error
-	GetMediaFile(media_file *media.MediaStream, session ...string) (map[string]interface{}, error)
-	SearchMediaFile(category *media.Descriptor_Category, session ...string) *firestore.DocumentIterator
+	GetMediaFile(media_file *media.MediaStream) (map[string]interface{}, error)
+	SearchMediaFile(meta *media.MediaStream) *firestore.DocumentIterator
+	GetAll(it int64) ([]map[string]interface{}, error)
 }
 
 func NewMediaDescriptor(ctx context.Context, client *firestore.Client) MediaDescriptor {
@@ -143,19 +145,23 @@ func (c *Datecenter) AddMediaFile(media_file *media.MediaStream) error {
 		"Mounted":    (*media_file).Path,
 		"Descriptor": (*media_file).Category,
 		"Passphrase": (*media_file).Signature,
+		"CDR_LINK":   (*media_file).Cdrlink,
 	})
 
 	log.Println("Document created ....")
 	return err
 }
 
-func (c *Datecenter) GetMediaFile(media_file *media.MediaStream, session ...string) (map[string]interface{}, error) {
+func (c *Datecenter) GetMediaFile(media_file *media.MediaStream) (map[string]interface{}, error) {
 
 	var document map[string]interface{}
-	query := c.SearchMediaFile(&media_file.Category, session[0])
+
+	query := c.SearchMediaFile(media_file)
 
 	for {
+
 		doc, err := query.Next()
+
 		if err == iterator.Done {
 			break
 		}
@@ -167,7 +173,78 @@ func (c *Datecenter) GetMediaFile(media_file *media.MediaStream, session ...stri
 	return document, nil
 }
 
-func (c *Datecenter) SearchMediaFile(category *media.Descriptor_Category, session ...string) *firestore.DocumentIterator {
+func (c *Datecenter) GetAll(it int64) ([]map[string]interface{}, error) {
 
-	return c.Client.Collection("_Proteins").Where("UserID", "==", session[0]).Where("Descriptor", "==", category).Documents(c.Ctx)
+	var document []map[string]interface{}
+	query, err := c.Client.CollectionGroup("Proteins").GetPartitionedQueries(c.Ctx, 10)
+	if err != nil {
+
+		return document, err
+	}
+
+	for q := range query {
+
+		doc, err := query[q].Documents(c.Ctx).GetAll()
+		if err != nil && err == iterator.Done {
+
+			break
+		}
+
+		document = append(document, doc[q].Data())
+	}
+
+	var file []string
+
+	for i := range document {
+
+		iter := reflect.ValueOf(document[i]).MapRange()
+
+		for iter.Next() {
+
+			if strings.Contains(iter.Key().String(), "Filename") {
+
+				file = append(file, iter.Value().Interface().(string)+".json")
+			}
+
+			if i == int(it) {
+				break
+			}
+
+			continue
+		}
+	}
+
+	for i := range document {
+
+		if i != int(it) {
+			last := c.Client.Collection("Proteins").Where("Filename", "!=", file[i]).Documents(c.Ctx)
+
+			for {
+
+				doc, err := last.Next()
+				if err != nil && err == iterator.Done {
+
+					break
+				}
+
+				if !reflect.DeepEqual(doc.Data(), document[i]) {
+					document = append(document, doc.Data())
+				}
+
+				continue
+			}
+		}
+
+		if i == int(it) {
+			break
+		}
+	}
+
+	log.Println("Information retreive :")
+	return document, nil
+}
+
+func (c *Datecenter) SearchMediaFile(meta *media.MediaStream) *firestore.DocumentIterator {
+
+	return c.Client.Collection("Proteins").Where("Descriptor", "==", (*meta).Category).Where("UserID", "==", (*meta).IdentityCode).Documents(c.Ctx)
 }

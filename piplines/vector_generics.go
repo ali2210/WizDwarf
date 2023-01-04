@@ -13,8 +13,11 @@ import (
 
 func GetID[T user.Updated_User, U user.New_User](x *T, y *U) (*T, *U) {
 
+	var t T
+	var u U
+
 	if !reflect.DeepEqual(x, user.Updated_User{}) {
-		return x, y
+		return x, &u
 	}
-	return x, y
+	return &t, y
 }
