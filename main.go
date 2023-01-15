@@ -1280,11 +1280,20 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if bucket_state := fireclient.New(ctx, piplines.Firestore_Reference()).Store(cid.String(), cdrs[cid.String()], ID); bucket_state != 0 {
-		log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE, bucket_state)
+	// additional param
+	ctxs, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	if bucket_state := fireclient.New(ctxs, piplines.Firestore_Reference()).Store(cid.String(), cdrs[cid.String()], ID); bucket_state != 0 {
+		log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE, bucket_state)
 		return
 	}
-	err = cloudmedia.NewMediaDescriptor(ctx, piplines.Firestore_Reference()).AddMediaFile(&media.MediaStream{
+
+	// additional param
+	context, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	err = cloudmedia.NewMediaDescriptor(context, piplines.Firestore_Reference()).AddMediaFile(&media.MediaStream{
 		Name:         (*jsonFile).Names,
 		Datecreated:  piplines.GetFileCreationTime((*jsonFile).Names),
 		IdentityCode: ID,
@@ -1294,7 +1303,7 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		Cdrlink:      cdrs[cid.String()],
 	})
 	if err != nil {
-		log.Fatalln(error_codes.DATABASE_ERRORS_DOCUMENT_CREATE_ERROR)
+		log.Fatalln("Error : ", error_codes.DATABASE_ERRORS_DOCUMENT_CREATE_ERROR)
 		return
 	}
 
@@ -2274,9 +2283,9 @@ func dvault(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	var wallet []*secrets.Vault_Params
+	wallet := make([]*secrets.Vault_Params, jcounter)
 
-	contentcred, err := piplines.ProteinsCryptoSignature(int64(jcounter - counter))
+	contentcred, ranger, err := piplines.ProteinsCryptoSignature(int64(jcounter))
 	if err != nil {
 		return
 	}
@@ -2320,16 +2329,15 @@ func dvault(w http.ResponseWriter, r *http.Request) {
 		word = append(word, strings.Join(str, " "))
 	}
 
-	for index := 0; index < jcounter; index++ {
+	for index := range wallet {
 
 		for item := range imagecred {
 
-			if !reflect.DeepEqual((*imagecred[item]).ReflectKey, (*contentcred).ReflectKey) && !reflect.DeepEqual(imagecred, nil) && (index < 2) {
+			if !reflect.DeepEqual((*imagecred[item]).ReflectKey, (*contentcred).ReflectKey) && !reflect.DeepEqual(imagecred, nil) && index >= 0 && index < int(ranger) {
 
 				wallet = append(wallet, &secrets.Vault_Params{
 
-					CDR_LINK: (*contentcred).ReflectKey[index],
-					//TEXT:     word[index],
+					CDR_LINK:  (*contentcred).ReflectKey[index],
 					IsImage:   false,
 					SizeOf:    (*contentcred).SizeOf[index],
 					Access:    "private",
@@ -2341,6 +2349,7 @@ func dvault(w http.ResponseWriter, r *http.Request) {
 			}
 
 		}
+
 	}
 
 	list_wallet := &secrets.List_Vault{
@@ -2362,7 +2371,7 @@ func dvault(w http.ResponseWriter, r *http.Request) {
 		"keys":   list_wallet.ID,
 		"values": list_wallet.List,
 	}); err != nil {
-		log.Fatalln("Erorr:", error_codes.CHANNEL_ERROR_CHANNEL_CLOSED, err)
+		log.Fatalln("Erorr:", error_codes.CHANNEL_ERROR_CHANNEL_CLOSED)
 		return
 	}
 
@@ -2378,6 +2387,15 @@ func dvault(w http.ResponseWriter, r *http.Request) {
 		logformat.Trace(value)
 
 		webpge.Execute(w, "Keygen")
+		return
+	}
+
+	if !(r.Method == "HEAD") {
+
+		log.Println("Method:", r.Method)
+
+		webpge.Execute(w, "head")
+
 		return
 	}
 

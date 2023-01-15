@@ -4,6 +4,9 @@ const options = {
   cluster :"mt1",
 };
 
+// constant message 
+const message = "File Editor added in upcomming build v-0.1.2.b ";
+
 // entries for web cache ... This is used for further processing..... 
 const key_entries = [];
 var values_entries = [];
@@ -17,7 +20,6 @@ const weblocal = window.localStorage;
 
 
 //@  Read all channels; if channel name is not specified then throw error 
-
 pusher.allChannels().forEach((channels) =>{
 
   if (channels.name !== "keygen"){
@@ -60,7 +62,6 @@ channel.bind("pusher:subscription_error", (error) => {
 
 
 // Dara bind with channel ; 
-
 channel.bind("tnxs", (data) => {
 
 
@@ -79,8 +80,12 @@ channel.bind("tnxs", (data) => {
 
         for (let i = 0; i < value["values"].length; i++){
 
+          
+
             values_entries.push(value["values"][i]);
-            weblocal.setItem(i, JSON.stringify(values_entries[i]));                
+            weblocal.setItem(i, JSON.stringify(values_entries[i]));
+          
+                            
         }
 
         key_entries.push(value["keys"]);
@@ -95,196 +100,216 @@ channel.bind("tnxs", (data) => {
 
 });
 
+// @ declaration of an object array
 let tObjects = [];
 
+const arr = [];
+let filterObj = [];
 
+
+// @arr hold web cache after JSON object
 for (let i =0; i < weblocal.length; i++){
   
-    if (weblocal.getItem(weblocal.length) !== "pusherTransportTLS" && weblocal.getItem(i) !== null){
+  arr.push(JSON.parse(weblocal.getItem(i)));
+  
+}
+
+
+// @ In case array value is neither null nor undefined, then apply filter method.
+// @ Filter method retreive object states according to specific rule. 
+// @ then apply map method which change into map 
+arr.forEach(value =>{
+
+  if (value !== null){ 
+    filterObj = arr.filter(PopUnusedObjects).map(object => {
+      return object
+    })
+  }
+});
+
+
+
+      // @ keygen manger  
+for (let i =0; i < filterObj.length; i++){
       
-      
-         switch (i){
+  switch (i){
 
           case 0:
 
-              JSON.stringify(JSON.parse(weblocal.getItem(i)), (_, values) => {
-                
-                if (JSON.parse(weblocal.getItem(i) !== values["CDR_LINK"])){
+              // content details 
+                    document.getElementsByClassName('info-content-1')[0].children[0].innerHTML = filterObj[i].CDR_LINK;
                   
-                  document.getElementsByClassName('info-content-1')[0].children[0].innerHTML = values["CDR_LINK"];
-                  document.getElementsByClassName('info-content-1')[0].children[1].innerHTML = values["SizeOf"];
-                  document.getElementsByClassName('info-content-1')[0].children[2].innerHTML = values["Access"];
-                  document.getElementsByClassName('info-content-1')[0].children[3].style.display = 'unset';
+                    document.getElementsByClassName('info-content-1')[0].children[1].innerHTML = filterObj[i].SizeOf;
                   
-                  if ((values["ImagePath"]).includes(".png")){
+                    document.getElementsByClassName('info-content-1')[0].children[2].innerHTML = filterObj[i].Access;
+                  
+                    document.getElementsByClassName('info-content-1')[0].children[3].style.display = 'unset';
+                  
+              //  image case
+                    if ((filterObj[i].ImagePath !== undefined) && (filterObj[i].ImagePath).includes(".png")){
+                       
+                      document.getElementsByClassName('info-content-1')[0].children[4].children[0].src = "/" +filterObj[i].ImagePath;
+                  
+                    }else if ((filterObj[i].ImagePath !== undefined) && (filterObj[i].ImagePath).includes(".jpeg")){
                     
-                    document.getElementsByClassName('info-content-1')[0].children[4].children[0].src = "/" +values["ImagePath"];
+                      document.getElementsByClassName('info-content-1')[0].children[4].children[0].src = "/"+filterObj[i].ImagePath;
+                    
+                    }else if (((filterObj[i].ImagePath !== undefined) && filterObj[i].ImagePath).includes(".gif")){
+                    
+                      document.getElementsByClassName('info-content-1')[0].children[4].children[0].src = "/"+filterObj[i].ImagePath;
+                  
+                    }else{
+                      document.getElementsByClassName('info-content-1')[0].children[3].style.display = "none";
+                    }
 
-                  }else if ((values["ImagePath"]).includes(".jpeg")){
-                    
-                    document.getElementsByClassName('info-content-1')[0].children[4].children[0].src = "/"+values["ImagePath"];
-                    
-                  }else if ((values["ImagePath"]).includes(".gif")){
-                    
-                    document.getElementsByClassName('info-content-1')[0].children[4].children[0].src = "/"+values["ImagePath"];
-                    
-                  }
 
-                  tObjects.push(values["Objects"]);            
-                  
-                  document.getElementsByClassName('info')[0].innerHTML = 'Peer ID : ' + weblocal.getItem("key"); 
-                  
-                }
-                
-            });
+                    tObjects.push(filterObj[i].Objects);                              
+                    
+                    // peer id 
+                    document.getElementsByClassName('info')[0].innerHTML = 'Peer ID : ' + weblocal.getItem("key"); 
+
           break
           
           case 1:
             
-              JSON.stringify(JSON.parse(weblocal.getItem(i)), (_, values) => {
-            
-                
-                if (JSON.parse(weblocal.getItem(i) !== values["CDR_LINK"])){
-                  
-                  document.getElementsByClassName('info-content-2')[0].children[0].innerHTML = values["CDR_LINK"];
-                  document.getElementsByClassName('info-content-2')[0].children[1].innerHTML = values["SizeOf"];
-                  document.getElementsByClassName('info-content-2')[0].children[2].innerHTML = values["Access"];
+  
+                  document.getElementsByClassName('info-content-2')[0].children[0].innerHTML = filterObj[i].CDR_LINK;
+                  document.getElementsByClassName('info-content-2')[0].children[1].innerHTML = filterObj[i].SizeOf;
+                  document.getElementsByClassName('info-content-2')[0].children[2].innerHTML = filterObj[i].Access;
                   document.getElementsByClassName('info-content-2')[0].children[3].style.display = 'unset';
 
-                  if (!document.getElementsByClassName('info-content-2')[0].children[0].innerHTML === " " && (values["ImagePath"]).includes(".png")){
+                  if (!document.getElementsByClassName('info-content-2')[0].children[0].innerHTML === " " && (filterObj[i].ImagePath !== undefined) && (filterObj[i].ImagePath).includes(".png")){
                     
-                    document.getElementsByClassName('info-content-2')[0].children[4].children[0].src = "/" +values["ImagePath"];
+                    document.getElementsByClassName('info-content-2')[0].children[4].children[0].src = "/" +filterObj[i].ImagePath;
                     
 
-                  }else if (! document.getElementsByClassName('info-content-2')[0].children[0].innerHTML === " " && (values["ImagePath"]).includes(".jpeg")){
+                  }else if (! document.getElementsByClassName('info-content-2')[0].children[0].innerHTML === " " && (filterObj[i].ImagePath !== undefined) && (filterObj[i].ImagePath).includes(".jpeg")){
                     
-                    document.getElementsByClassName('info-content-2')[0].children[4].children[0].src = "/"+values["ImagePath"];
+                    document.getElementsByClassName('info-content-2')[0].children[4].children[0].src = "/"+filterObj[i].ImagePath;
                     
-                  }else if (! document.getElementsByClassName('info-content-2')[0].children[0].innerHTML === " " && (values["ImagePath"]).includes(".gif")){
+                  }else if (! document.getElementsByClassName('info-content-2')[0].children[0].innerHTML === " " && (filterObj[i].ImagePath !== undefined) && (filterObj[i].ImagePath).includes(".gif")){
                     
-                    document.getElementsByClassName('info-content-2')[0].children[4].children[0].src = "/"+values["ImagePath"];
+                    document.getElementsByClassName('info-content-2')[0].children[4].children[0].src = "/"+filterObj[i].ImagePath;
                     
+                  }else{
+
+                    document.getElementsByClassName('info-content-2')[0].children[3].style.display = "none";
                   }
 
-                  tObjects.push(values["Objects"]);
+                  tObjects.push(filterObj[i].Objects);
 
-                }
-              
-                
-                
-          });
-          break
+            break
         
           case 2: 
         
-          JSON.stringify(JSON.parse(weblocal.getItem(i)), (_, values) => {
-        
-            if (JSON.parse(weblocal.getItem(i) !== values["CDR_LINK"])){
+  
+              document.getElementsByClassName('info-content-3')[0].children[0].innerHTML = filterObj[i].CDR_LINK;
             
-              
-              document.getElementsByClassName('info-content-3')[0].children[0].innerHTML = values["CDR_LINK"];
+              document.getElementsByClassName('info-content-3')[0].children[1].innerHTML = filterObj[i].SizeOf;
             
-              document.getElementsByClassName('info-content-3')[0].children[1].innerHTML = values["SizeOf"];
-            
-              document.getElementsByClassName('info-content-3')[0].children[2].innerHTML = values["Access"];
+              document.getElementsByClassName('info-content-3')[0].children[2].innerHTML = filterObj[i].Access;
 
               document.getElementsByClassName('info-content-3')[0].children[3].style.display = 'unset';
               
-              if (! document.getElementsByClassName('info-content-3')[0].children[0].innerHTML === " " && (values["ImagePath"]).includes(".png")){
+              if (! document.getElementsByClassName('info-content-3')[0].children[0].innerHTML === " " && (filterObj[i].ImagePath !== undefined) && (filterObj[i].ImagePath).includes(".png")){
                     
-                document.getElementsByClassName('info-content-3')[0].children[4].children[0].src = "/" +values["ImagePath"];
+                document.getElementsByClassName('info-content-3')[0].children[4].children[0].src = "/" +filterObj[i].ImagePath;
 
-              }else if (! document.getElementsByClassName('info-content-3')[0].children[0].innerHTML === " " && (values["ImagePath"]).includes(".jpeg")){
+              }else if (! document.getElementsByClassName('info-content-3')[0].children[0].innerHTML === " " && (filterObj[i].ImagePath !== undefined) && (filterObj[i].ImagePath).includes(".jpeg")){
                 
-                document.getElementsByClassName('info-content-3')[0].children[4].children[0].src = "/"+values["ImagePath"];
+                document.getElementsByClassName('info-content-3')[0].children[4].children[0].src = "/"+filterObj[i].ImagePath;
                 
-              }else if (! document.getElementsByClassName('info-content-3')[0].children[0].innerHTML === " " && (values["ImagePath"]).includes(".gif")){
+              }else if (! document.getElementsByClassName('info-content-3')[0].children[0].innerHTML === " " && (filterObj[i].ImagePath !== undefined) && (filterObj[i].ImagePath).includes(".gif")){
                 
-                document.getElementsByClassName('info-content-3')[0].children[4].children[0].src = "/"+values["ImagePath"];
+                document.getElementsByClassName('info-content-3')[0].children[4].children[0].src = "/"+filterObj[i].ImagePath;
                 
+              }else{
+
+                document.getElementsByClassName('info-content-3')[0].children[3].style.display = "none";
               }
 
-              tObjects.push(values["Objects"]);
+              tObjects.push(filterObj[i].Objects);
 
-            }
-            
-            
-            
-        });
-        break  
+         break  
         case 3: 
         
-          JSON.stringify(JSON.parse(weblocal.getItem(i)), (_, values) => {
-        
-            if (JSON.parse(weblocal.getItem(i) !== values["CDR_LINK"])){
-            
               
-              document.getElementsByClassName('info-content-4')[0].children[0].innerHTML = values["CDR_LINK"];
+              document.getElementsByClassName('info-content-4')[0].children[0].innerHTML = filterObj[i].CDR_LINK;
             
-              document.getElementsByClassName('info-content-4')[0].children[1].innerHTML = values["SizeOf"];
+              document.getElementsByClassName('info-content-4')[0].children[1].innerHTML = filterObj[i].SizeOf;
             
-              document.getElementsByClassName('info-content-4')[0].children[2].innerHTML = values["Access"];
+              document.getElementsByClassName('info-content-4')[0].children[2].innerHTML = filterObj[i].Access;
           
               document.getElementsByClassName('info-content-4')[0].children[3].style.display = 'unset';
 
-              if (! document.getElementsByClassName('info-content-4')[0].children[0].innerHTML === " " && (values["ImagePath"]).includes(".png")){
-                    
-                document.getElementsByClassName('info-content-4')[0].children[4].children[0].src = "/" +values["ImagePath"];
+              
 
-              }else if (! document.getElementsByClassName('info-content-4')[0].children[0].innerHTML === " " &&(values["ImagePath"]).includes(".jpeg")){
+              if (! document.getElementsByClassName('info-content-4')[0].children[0].innerHTML === " " && (filterObj[i].ImagePath !== undefined) && (filterObj[i].ImagePath).includes(".png")){
+                    
+                document.getElementsByClassName('info-content-4')[0].children[4].children[0].src = "/" +filterObj[i].ImagePath;
+
+              }else if (! document.getElementsByClassName('info-content-4')[0].children[0].innerHTML === " " && (filterObj[i].ImagePath !== undefined) &&(filterObj[i].ImagePath).includes(".jpeg")){
                 
-                document.getElementsByClassName('info-content-4')[0].children[4].children[0].src = "/"+values["ImagePath"];
+                document.getElementsByClassName('info-content-4')[0].children[4].children[0].src = "/"+filterObj[i].ImagePath;
                 
-              }else if (! document.getElementsByClassName('info-content-4')[0].children[0].innerHTML === " " &&(values["ImagePath"]).includes(".gif")){
+              }else if (! document.getElementsByClassName('info-content-4')[0].children[0].innerHTML === " " && (filterObj[i].ImagePath !== undefined) &&(filterObj[i].ImagePath).includes(".gif")){
                 
-                document.getElementsByClassName('info-content-4')[0].children[4].children[0].src = "/"+values["ImagePath"];
+                document.getElementsByClassName('info-content-4')[0].children[4].children[0].src = "/"+filterObj[i].ImagePath;
                 
+              }else{
+                      
+                document.getElementsByClassName('info-content-4')[0].children[3].style.display = "none";
               }
 
-              tObjects.push(values["Objects"]);
-            }
-            
-        });
-        break
+              tObjects.push(filterObj[i].Objects);
+  
+         break
         case 4: 
-        
-          JSON.stringify(JSON.parse(weblocal.getItem(i)), (_, values) => {
-        
-            if (JSON.parse(weblocal.getItem(i) !== values["CDR_LINK"])){
             
-              document.getElementsByClassName('info-content-5')[0].children[0].innerHTML = values["CDR_LINK"];
+              document.getElementsByClassName('info-content-5')[0].children[0].innerHTML = filterObj[i].CDR_LINK;
             
-              document.getElementsByClassName('info-content-5')[0].children[1].innerHTML = values["SizeOf"];
+              document.getElementsByClassName('info-content-5')[0].children[1].innerHTML = filterObj[i].SizeOf;
             
-              document.getElementsByClassName('info-content-5')[0].children[2].innerHTML = values["Access"];
+              document.getElementsByClassName('info-content-5')[0].children[2].innerHTML = filterObj[i].Access;
           
               document.getElementsByClassName('info-content-5')[0].children[3].style.display = 'unset';
 
-              if (! document.getElementsByClassName('info-content-5')[0].children[0].innerHTML === " " && (values["ImagePath"]).includes(".png")){
+              if (! document.getElementsByClassName('info-content-5')[0].children[0].innerHTML === " " && (filterObj[i].ImagePath !== undefined) && (filterObj[i].ImagePath).includes(".png")){
                     
-                document.getElementsByClassName('info-content-5')[0].children[4].children[0].src = "/" +values["ImagePath"];
+                document.getElementsByClassName('info-content-5')[0].children[4].children[0].src = "/" +filterObj[i].ImagePath;
 
-              }else if (!  document.getElementsByClassName('info-content-5')[0].children[0].innerHTML === " " &&(values["ImagePath"]).includes(".jpeg")){
+              }else if (!  document.getElementsByClassName('info-content-5')[0].children[0].innerHTML === " " && (filterObj[i].ImagePath !== undefined) &&(filterObj[i].ImagePath).includes(".jpeg")){
                 
-                document.getElementsByClassName('info-content-5')[0].children[4].children[0].src = "/"+values["ImagePath"];
+                document.getElementsByClassName('info-content-5')[0].children[4].children[0].src = "/"+filterObj[i].ImagePath;
                 
-              }else if (! document.getElementsByClassName('info-content-5')[0].children[0].innerHTML === " " && (values["ImagePath"]).includes(".gif")){
+              }else if (! document.getElementsByClassName('info-content-5')[0].children[0].innerHTML === " " && (filterObj[i].ImagePath !== undefined) && (filterObj[i].ImagePath).includes(".gif")){
                 
-                document.getElementsByClassName('info-content-5')[0].children[4].children[0].src = "/"+values["ImagePath"];
+                document.getElementsByClassName('info-content-5')[0].children[4].children[0].src = "/"+filterBj[i].ImagePath;
                 
+              }else{
+
+                document.getElementsByClassName('info-content-5')[0].children[3].style.display = "none";
               }
 
-              tObjects.push(values["Objects"]);
-            }
-            
-            
-        });
-        break
-      }
+              tObjects.push(filterObj[i].Objects);
+
+         break
     }
-        
-  }
+}
   
-  
+  // segmented created 
   document.getElementsByClassName('objects')[0].children[0].innerHTML = Math.max(...tObjects) + " Decentralized Objects";
   document.getElementsByClassName('objects')[0].children[2].innerHTML = Math.max(...tObjects) -5 <= 0 ? 0 : Math.max(...tObjects) -5;
+  
+  
+  // clear the objects states 
+  pusher.unbind();
+  weblocal.clear();
+  console.log('local cache free now ...', weblocal.length)
+
+
+  // annymous function 
+  function PopUnusedObjects(object){
+
+    return object;
+  }

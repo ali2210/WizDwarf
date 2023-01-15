@@ -1205,6 +1205,10 @@ func GetFileSize(filename ...string) string {
 	return fmt.Sprintf("%d", properties.Size()/1024) + "KiB"
 }
 
+//  @paran filename as string
+//  @return string
+
+// @@ This function return date and time when file created
 func GetFileCreationTime(filename string) string {
 
 	var properties fs.FileInfo
@@ -1234,6 +1238,9 @@ func GetFileCreationTime(filename string) string {
 	return properties.ModTime().String()
 }
 
+// @param value as int64 ; return array of string map and error
+// @@ This function retreive data from database within time. In case execution fails or queries will not process due to short time,
+// @@ it'll fail and stop the executation of db
 func GetQProteins(value int64) ([]map[string]interface{}, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
@@ -1261,6 +1268,7 @@ func GetQProteins(value int64) ([]map[string]interface{}, error) {
 	return descriptor, nil
 }
 
+// Documentts Credentials
 type DocumentCredentials struct {
 	Filename     []string
 	Passphrase   string
@@ -1269,6 +1277,9 @@ type DocumentCredentials struct {
 	SizeOf       []string
 	TextView     [][]byte
 }
+
+// @param id as string final and return document credentials and error
+// @@ this function reterive images credentidals
 
 func ImagesCryptoSignature(id ...string) (*DocumentCredentials, error) {
 
@@ -1331,17 +1342,23 @@ func ImagesCryptoSignature(id ...string) (*DocumentCredentials, error) {
 	return doc, nil
 }
 
-func ProteinsCryptoSignature(value int64) (*DocumentCredentials, error) {
+// @param value as int64 and return document credentials, number of objects  and error
+// @@ this function reterive non media files (json )
+
+func ProteinsCryptoSignature(value int64) (*DocumentCredentials, int64, error) {
 
 	content, err := GetQProteins(value)
 	if err != nil {
 		log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
-		return &DocumentCredentials{}, err
+		return &DocumentCredentials{}, -1, err
 	}
 
 	filename := []string{}
 	var link []interface{}
 	var passphase []interface{}
+	var keys []string
+
+	values := make([]string, value)
 
 	for i := range content {
 
@@ -1375,26 +1392,25 @@ func ProteinsCryptoSignature(value int64) (*DocumentCredentials, error) {
 	if err != nil {
 
 		log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
-		return &DocumentCredentials{}, err
+		return &DocumentCredentials{}, -1, err
 	}
-
-	var keys []string
-	var values []string
 
 	for i := range list_keys {
 
 		iterate := reflect.ValueOf(list_keys[i]).MapRange()
 		for iterate.Next() {
 
-			if reflect.DeepEqual(iterate.Value().Interface().(string), link) && strings.Contains(iterate.Key().String(), "Value") {
-
-				values = append(values, iterate.Value().Interface().(string))
-			}
-
-			if strings.Contains(iterate.Key().String(), "Key") {
+			if reflect.DeepEqual(iterate.Key().String(), "Key") {
 
 				keys = append(keys, iterate.Value().Interface().(string))
 			}
+
+			if reflect.DeepEqual(iterate.Key().String(), "Value") && !reflect.DeepEqual(iterate.Value().Interface().(string), link) {
+
+				values = append(values, iterate.Value().Interface().(string))
+
+			}
+
 		}
 
 	}
@@ -1402,7 +1418,7 @@ func ProteinsCryptoSignature(value int64) (*DocumentCredentials, error) {
 	files, err := os.ReadDir("app_data/")
 	if err != nil {
 		log.Fatalln("Error:", error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
-		return &DocumentCredentials{}, err
+		return &DocumentCredentials{}, -1, err
 	}
 
 	for i := range content {
@@ -1414,13 +1430,13 @@ func ProteinsCryptoSignature(value int64) (*DocumentCredentials, error) {
 			errs, access := iobject.StoreJCredentials(seed, []string{"heavy cancel window wild supply replace oppose until canvas lava lamp muffin"}...)
 			if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) && access != nil {
 				log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
-				return &DocumentCredentials{}, err
+				return &DocumentCredentials{}, -1, err
 			}
 
 			errs = iobject.DownloadObject(iobject.GetUplinkProject())
 			if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) {
 				log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
-				return &DocumentCredentials{}, err
+				return &DocumentCredentials{}, -1, err
 			}
 
 			log.Println("Data is already moved...", filename)
@@ -1435,6 +1451,8 @@ func ProteinsCryptoSignature(value int64) (*DocumentCredentials, error) {
 
 	var documents [][]byte
 
+	counter := 0
+
 	for direc := range files {
 
 		for i := range content {
@@ -1443,10 +1461,12 @@ func ProteinsCryptoSignature(value int64) (*DocumentCredentials, error) {
 
 				size = append(size, GetFileSize([]string{"app_data/" + filename[i] + ".json"}...))
 
+				counter += 1
+
 				read, err := os.ReadFile("app_data/" + filename[i] + ".json")
 				if err != nil {
 
-					return &DocumentCredentials{}, err
+					return &DocumentCredentials{}, -1, err
 				}
 
 				view = read
@@ -1457,14 +1477,11 @@ func ProteinsCryptoSignature(value int64) (*DocumentCredentials, error) {
 		}
 	}
 
-	doc := &DocumentCredentials{
+	return &DocumentCredentials{
 		Filename:     filename,
 		Passphrase:   seed,
 		ReflectKey:   keys,
 		ReflectValue: values,
 		SizeOf:       size,
-		TextView:     documents,
-	}
-
-	return doc, nil
+		TextView:     documents}, int64(counter), nil
 }
