@@ -18,7 +18,7 @@
 <body>
   <div class='main-dashboard-div'>
 		<nav class="navbar navbar-expand-md navbar-light custom-navbar">
-		  <a class="navbar-brand" href="#">
+		  <a class="navbar-brand" href="/">
 			<img src="/images/logo.png" alt="Logo" class="logo">
 		  </a>
 		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
@@ -27,7 +27,7 @@
 		  <div class="collapse navbar-collapse" id="navbarNavDropdown" style="position: absolute;left: 37pc;">
 			<ul class="navbar-nav">
 			  <li class="nav-item active pl-3">
-				<a class="nav-link" href="/">
+				<a class="nav-link" href="/dashboard">
 				  <i class="fa fa-home icon-light" aria-hidden="true"></i>
 				</a>
 			  </li>
@@ -103,19 +103,19 @@
             <input type="text" class="small-div" name="geo-marker" id="geo-marker" readonly/>
           </div>
         <button type="submit" class="btn btn-success mb-2 submit-button" data-toggle="popover"
-          title="submit your genetic file ">
+          title="submit your genetic file " disabled>
           <i class="fa fa-check-circle" aria-hidden="true"></i>
         </button>
     </form>
   </div>
-  <div class="search-container" style="display: flex;position: absolute;top: 6pc;left: 68pc;">
+  <!-- <div class="search-container" style="display: flex;position: absolute;top: 6pc;left: 68pc;">
     <form class="search-form" id="search-form" action="" method="post">
       <button type="submit" class="searched" style="position: absolute;left: 9pc;border: none;background: transparent;color: slategray;z-index: 2;visibility: hidden;">
         <i class="fa fa-check"></i>
       </button>
       <input type="text" placeholder="Search..." id="searched" autocomplete="on" class="peers" style="position: inherit;border: none;border-radius: 10pc;color: slategray;">
     </form>
-  </div>
+  </div> -->
   </div>
   
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
@@ -299,12 +299,8 @@
     // Keys
     const FORTMATIC_API_KEY = 'pk_test_7B12425D6845E31A';
     const FORTMATIC_API_Prod = 'pk_live_FB9BC8CDD0A5884D';
-    const ToAddress = '0x1E919035e637e36eC998c2568bA0697D11133a8f'; 
+    const ToAddress = '0x13428695c639da47bfef6dd7238dc8d8a675aba6'; 
 
-
-    
-    
-    
     // verified button event
     vbtn.addEventListener('click', ()=>{
       
@@ -333,7 +329,9 @@
             // user fortmatic account created from user 'email address'
         
             fsdk.configure({
+              
               primaryLoginOption: 'email' 
+            
             }).then(()=>{
               
               // if user have email account created and also login then verified button props
@@ -368,7 +366,9 @@
 
 
                 web3eth.eth.getBalance(account[0]).then((balance)=>{
+
                     let tnx = balance < Tovalue ? true : false;
+                    
                     if (!tnx){ alert('Transaction is not possible , because you have low balance'); return}
                 })
               
@@ -376,18 +376,27 @@
                 web3eth.eth.getCoinbase().then((coinbase)=>{
                 
                   address.value = tnxParam.from;
-                    fsdk.user.deposit().then(()=>{
-                      web3eth.eth.sendTransaction(tnxParam).once('transactionHash', (hash) => { 
-                      }).once('receipt', (receipt) => { 
+                    
+                  fsdk.user.deposit().then(()=>{
+                      
+                    web3eth.eth.sendTransaction(tnxParam).once('transactionHash', (hash) => {}).once('receipt', (receipt) => { 
+                        
                         alert(' Congratulations , Transaction is almost completed. ');
+                        
+                        submitBtn.removeAttribute('disabled');
+                      
                       });
 
                     }).catch(()=>{
-                      alert("Transaction is not completed check your balance ");
+                      
+                      alert("Transaction is not completed because of low balance");
+                    
                     });
 
                   }).catch((error)=>{
+                    
                     alert('Make sure your address linked with coinbase', coinbase);
+                  
                   });
 
               }).catch(()=>{
@@ -405,14 +414,14 @@
 
   
   </script>
-  <script>
+  <!-- <script>
     const _p01 = document.getElementsByClassName('search-container')[0];
     const _b01 = document.getElementsByClassName('searched')[0];
 
     _p01.addEventListener('change', (event)=>{
       _b01.style.visibility = 'visible';
     });
-  </script>
+  </script> -->
 </body>
 
 </html>

@@ -678,6 +678,10 @@ func existing(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type ControlDataType struct {
+	Avatar string
+}
+
 func profile(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -686,6 +690,8 @@ func profile(w http.ResponseWriter, r *http.Request) {
 
 	// page renderer
 	temp := template.Must(template.ParseFiles("profile.html"))
+
+	controlHandler := ControlDataType{}
 
 	// to find app have information
 	data, update, err := piplines.Firebase_Gatekeeper(w, r, user.New_User{Email: _email, Password: _secret})
@@ -705,8 +711,52 @@ func profile(w http.ResponseWriter, r *http.Request) {
 
 	var ID string
 
+	files, err := os.ReadDir("app_data/")
+	if err != nil {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
+		cacheObject.Set_Key("Path:", "No Directory Found")
+
+		value, err := cacheObject.Get_Key("Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Error(value)
+		return
+
+	}
+
+	if !reflect.DeepEqual(update, user.Updated_User{}) {
+
+		ID = update.ID
+
+	} else {
+
+		ID = data.ID
+	}
+
+	meta, _, _ := piplines.GetDocuments([]string{ID}...)
+
+	for list := range files {
+
+		if strings.Contains("app_data/"+files[list].Name(), meta) {
+
+			controlHandler.Avatar = "/" + meta
+
+			break
+		}
+
+		if !strings.Contains(meta, "app_data/"+files[list].Name()) {
+
+			controlHandler.Avatar = "/images/png-transparent-fox-low-poly-animal-digital-art-arctic-fox-dog-car-polygon.png"
+			break
+		}
+
+	}
+
 	// web request "get"
 	if r.Method == "GET" {
+
 		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
 
 		value, err := cacheObject.Get_Key("Route_Path:")
@@ -717,7 +767,8 @@ func profile(w http.ResponseWriter, r *http.Request) {
 		}
 
 		logformat.Trace(value)
-		temp.Execute(w, "Profile")
+
+		temp.Execute(w, controlHandler)
 
 	} else if r.Method == "POST" {
 
@@ -816,6 +867,7 @@ func analysis(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	webpage := template.Must(template.ParseFiles("analysis.html"))
+	var meta string
 
 	if reflect.DeepEqual(visualizeReport.UVinfo, openweathermap.UVIndexInfo{}) {
 
@@ -883,8 +935,10 @@ func analysis(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	meta, mapData, _ := piplines.GetDocuments([]string{ID}...)
-	contKey, contVae := piplines.ReflectMaps(mapData)
+	// (*** second parameter ****  )
+
+	meta, _, _ = piplines.GetDocuments([]string{ID}...)
+	// contKey, contVae := piplines.ReflectMaps(mapData)
 
 	for list := range files {
 
@@ -897,10 +951,13 @@ func analysis(w http.ResponseWriter, r *http.Request) {
 
 		if !strings.Contains(meta, "app_data/"+files[list].Name()) {
 
+			visualizeReport.Avatar_Path = "/images/png-transparent-fox-low-poly-animal-digital-art-arctic-fox-dog-car-polygon.png"
+			break
+
 			// ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 			// defer cancel()
 
-			log.Println("Key:", contKey, "Value:", contVae)
+			// log.Println("Key:", contKey, "Value:", contVae)
 
 			// inter, num := fireclient.New(ctx, piplines.Firestore_Reference()).Get(contKey, []string{contVae}...)
 
@@ -2357,7 +2414,7 @@ func dvault(w http.ResponseWriter, r *http.Request) {
 		ID:   ID,
 	}
 
-	// console.log("content: ...",(document.getElementsByClassName('info-content-1')[0].children[4].children[1].innerHTML).substring((document.getElementsByClassName('info-content-1')[0].children[4].children[1].innerHTML.length)-5000, (document.getElementsByClassName('info-content-1')[0].children[4].children[1].innerHTML.length)-1),"file:", document.getElementsByClassName('info-content-1')[0].children[4].children[0].innerHTML)
+	
 
 	pusherCred := pusher.Client{
 		AppID:   APP_CHANNEL_ID,

@@ -22,7 +22,7 @@
 <body>
   <div class='main-dashboard-div'>
 		<nav class="navbar navbar-expand-md navbar-light custom-navbar" style=" background-color: #ededed;display: flex;">
-		  <a class="navbar-brand" href="#">
+		  <a class="navbar-brand" href="/">
 			<img src="/images/logo.png" alt="Logo" class="logo">
 		  </a>
 		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
@@ -31,7 +31,7 @@
 		  <div class="collapse navbar-collapse" id="navbarNavDropdown" style="position: absolute;left: 37pc;">
 			<ul class="navbar-nav">
 			  <li class="nav-item active pl-3">
-				<a class="nav-link" href="/">
+				<a class="nav-link" href="/dashboard">
 				  <i class="fa fa-home icon-light" aria-hidden="true"></i>
 				</a>
 			  </li>
@@ -68,7 +68,9 @@
 
   <div class="profile-image-form" style="position: relative; top:-90pc;">
     <form class="profile-form" action="/dashboard/profile" enctype="multipart/form-data" method="post">
-      <div class="avatar" name="avato-pic" id="avato-pics"></div>  
+      <div class="avatar" name="avato-pic" id="avato-pics">
+        <img src="{{ .Avatar}}" alt="Avatar" style="display:unset;transform-style: preserve-3d;transform: scale(1.0);position: relative;top: 1pc;left: 21px;z-index: 2;">
+      </div>  
       <div class="photoBtn" style=" position: absolute;top: 31pc;left: 45pc;transform: scale(1.7);">
         <p>
           <button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapsePhoto" aria-expanded="false" aria-controls="collapsePhoto" title="upload your profile picture" style="position: absolute;top: -41px;left: -27px;">
@@ -336,6 +338,7 @@
 
       if (pi_wave === end){
        
+        _d03.children[0].style.display = 'none;'
         // adjust few design tweeks after user will shared picture 
         _d03.append(preview);
         
@@ -686,83 +689,7 @@
 
   });
   
-    // _b04 allow you to add filter in your picture frame
-    // _b04.addEventListener('click', ()=>{
-    //     alert(' Filter Option is not enabled. Please wait for upcoming update');
-    // });
-
-    // _d05.children[1].addEventListener('change', ()=>{
-      
-    //   if (_count >= 0 && _count <  100) {
-      
-    //     Proceed(_standard_invoice);
-                  
-    //   }else if (_count >= 100 && _count < 500) {
-
-    //     Proceed(_mostly_invoice);
-      
-    //   }else if ( _count >= 500){
-
-    //     Proceed(_prenium_invoice);
-    //   }else{
-
-    //     alert("No key will be attached with content!"); return;
-      
-    //   }
-
-    // });
-
-
-    // function Proceed(early){
-        
-    //   var fort_wallet, web3eth = null;
-    //   fort_wallet = new Fortmatic(API_KEY);
-
-    //   // create provider object for web3
-    //   web3eth = new Web3(fort_wallet.getProvider());
-                  
-    //   // create batch process object for transaction
-    //   var batch = new web3eth.eth.BatchRequest();
-  
-    //   // if user browser have formatic gateway access then login user account. If account is not created then create
-    //   if(!fort_wallet.getProvider().isFortmatic){alert('Fortmatic is not installed'); return}
-                  
-    //       console.log("application connect with fortmatic provider");
-    //       console.log(web3eth.currentProvider.enable());
-
-    //       fort_wallet.user.login().then(()=>{
-                        
-    //           var isLogin = fort_wallet.user.isLoggedIn();
-                          
-    //           // when a user login , get the public address
-    //           if(!isLogin){alert("Fortnight account login Fail"); return}
-                
-    //             web3eth.eth.getAccounts().then((account)=>{
-                             
-    //               // read user account information
-    //               web3eth.eth.getBalance(account[0]).then((balance)=>{
-                                
-    //                 // if user account have zero balance
-    //                 let balance_status = balance > early ? true : false;
-
-    //                 if(!balance_status) {alert("You have " + balance + " balance." ); return}
-
-    //                 var txs = {
-    //                                   to : '0x55057eb78fDbF783C961b4AAd6A5f8BC60cab44B',
-    //                                   from : account[0],
-    //                                   value : web3eth.utils.toWei(early, 'ether'),
-    //                           }
-
-    //                 batch.add(web3eth.eth.sendTransaction.request(txs), (error, signed)=>{
-    //                     if (error) throw error;
-    //                       console.log("message signed: " + signed);
-    //                 });
-
-    //                 batch.execute();
-    //               });
-    //           });
-    //       });
-    //   }
+    
 
   </script>
 </body>

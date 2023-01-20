@@ -4,8 +4,7 @@ const options = {
   cluster :"mt1",
 };
 
-// constant message 
-const message = "File Editor added in upcomming build v-0.1.2.b ";
+
 
 // entries for web cache ... This is used for further processing..... 
 const key_entries = [];
@@ -80,19 +79,16 @@ channel.bind("tnxs", (data) => {
 
         for (let i = 0; i < value["values"].length; i++){
 
-          
-
             values_entries.push(value["values"][i]);
             weblocal.setItem(i, JSON.stringify(values_entries[i]));
-          
-                            
+                                      
         }
 
         key_entries.push(value["keys"]);
 
         weblocal.setItem("key", JSON.stringify(key_entries[0]));
         //count = value["values"].length;    
-
+        location.reload();
     });
 
 
@@ -121,11 +117,15 @@ for (let i =0; i < weblocal.length; i++){
 arr.forEach(value =>{
 
   if (value !== null){ 
+    
     filterObj = arr.filter(PopUnusedObjects).map(object => {
+      
       return object
+    
     })
   }
 });
+
 
 
 
@@ -163,7 +163,8 @@ for (let i =0; i < filterObj.length; i++){
                     }
 
 
-                    tObjects.push(filterObj[i].Objects);                              
+                    tObjects.push(filterObj[i].Objects);
+                                                  
                     
                     // peer id 
                     document.getElementsByClassName('info')[0].innerHTML = 'Peer ID : ' + weblocal.getItem("key"); 
@@ -172,7 +173,6 @@ for (let i =0; i < filterObj.length; i++){
           
           case 1:
             
-  
                   document.getElementsByClassName('info-content-2')[0].children[0].innerHTML = filterObj[i].CDR_LINK;
                   document.getElementsByClassName('info-content-2')[0].children[1].innerHTML = filterObj[i].SizeOf;
                   document.getElementsByClassName('info-content-2')[0].children[2].innerHTML = filterObj[i].Access;
@@ -197,7 +197,7 @@ for (let i =0; i < filterObj.length; i++){
                   }
 
                   tObjects.push(filterObj[i].Objects);
-
+                  
             break
         
           case 2: 
@@ -229,7 +229,7 @@ for (let i =0; i < filterObj.length; i++){
               }
 
               tObjects.push(filterObj[i].Objects);
-
+              
          break  
         case 3: 
         
@@ -262,7 +262,7 @@ for (let i =0; i < filterObj.length; i++){
               }
 
               tObjects.push(filterObj[i].Objects);
-  
+              
          break
         case 4: 
             
@@ -292,7 +292,7 @@ for (let i =0; i < filterObj.length; i++){
               }
 
               tObjects.push(filterObj[i].Objects);
-
+              
          break
     }
 }
@@ -300,13 +300,9 @@ for (let i =0; i < filterObj.length; i++){
   // segmented created 
   document.getElementsByClassName('objects')[0].children[0].innerHTML = Math.max(...tObjects) + " Decentralized Objects";
   document.getElementsByClassName('objects')[0].children[2].innerHTML = Math.max(...tObjects) -5 <= 0 ? 0 : Math.max(...tObjects) -5;
-  
-  
-  // clear the objects states 
-  pusher.unbind();
-  weblocal.clear();
-  console.log('local cache free now ...', weblocal.length)
 
+  
+  
 
   // annymous function 
   function PopUnusedObjects(object){
