@@ -51,6 +51,7 @@
       <p class="line-1 anim-typewriter">&#128567; Most Welcome, Good To See You ! &#128519;</p>
     </header>
   </div>
+  <div class="advertisement"></div>
   <div class="container-1">
     <img src="https://www.accademia.org/wp-content/uploads/2014/01/david-head-760x506.jpg" alt="Polychromatic" class="polychromatic"/>
     <div class="container2">
@@ -59,7 +60,7 @@
           <br>
       </div>
       <p>
-        The universe begin in a polychromatic pattern. Someone want to paint his dreams. 
+        The universe follow the polychromatic pattern, Be an observer 
       </p>
     </div>
     <img src="/images/logo.png" alt="WizDwarfs" class="img-logo"/>
@@ -77,11 +78,10 @@
     
     <footer class="foot-mark">
 			<p class="line" style="position: relative;top: 111px;">
-			  &copy; 2022 - WisdomEnigma Inc
-			  wizdwarfs@gmail.com
+			  &copy; 2023 - WisdomEnigma Inc
 			</p>
-			<div class="channel">
-				<div class="fb">
+			<div class="channel" style="position: absolute;display: flex;top: 18px;left:64pc;border-radius: 11px;width: 20pc;">
+				<div class="fb" style="display: flex;">
 					<a href="https://www.facebook.com/wizdwarfs" alt="Facebook" target="_blank" style="color:floralwhite;">
 						<i class="fa fa-facebook" aria-hidden="true"></i>
 					</a>
@@ -101,15 +101,51 @@
 						<i class="fa fa-reddit-alien" aria-hidden="true"></i>
 					</a>
 				</div>
+        <div class="github" style="display: flex;position: absolute;left: 7pc;">
+          <a href="https://github.com/WisdomEnigma/" alt="github" target="_blank" style="color:floralwhite;">
+            <i class="fa fa-github" aria-hidden="true"></i>
+          </a>
+        </div>
+        <div class="youtube" style="display: flex;position: absolute;left: 9pc;">
+          <a href="https://www.youtube.com/channel/UCziNXOl_swLu-SXWWmjFVNA" alt="youtube" target="_blank" style="color:floralwhite;">
+            <i class="fa fa-youtube-play" aria-hidden="true"></i>
+          </a>
+        </div>
 			</div>
-			<div class="terms" style="position: relative;top: 3pc;left: -46pc;height: 2pc;">
+    </div>
+			<div class="terms" style="position: relative;top: 3pc;height: 2pc;left: -32pc;display: flex;">
 				<i class="fa fa-file-text-o" aria-hidden="true"></i>
 				<a href="/terms" alt="Terms and conditions" style="color:floralwhite;position: relative;top: -3px;left: 11px;">Terms and conditions</a>
 			</div>
-      <div class="blogspot" style="position: absolute;top: 5pc;left: 11px;color: floralwhite">
+      <div class="blogspot" style="position: absolute;top: 5pc;left: 9.5pc;color: floralwhite; display:flex;">
         <i class="fa fa-link"aria-hidden="true"> </i>
         <a href="https://www.buymeacoffee.com/ali2210" style="color:floralwhite; position: relative; left: 5px;"> Blogspot </a>
       </div>
 		  </footer>
   </body>
+  <script>
+      const adsFragment = document.createDocumentFragment();
+      const ads = document.createElement('iframe');
+      ads.src = "/images/company.png";
+      ads.name = "adsPublish";
+      ads.width = "3000";
+      ads.height = "200";
+      
+
+      const textNode = document.createElement('div');
+      textNode.innerHTML = "Decentralized Molecular Bank!";
+      textNode.style.position = "absolute";
+      textNode.style.left = "20rem";
+      textNode.style.top = "20rem";
+      textNode.style.fontSize = "large";
+      textNode.style.color ="black";
+
+      adsFragment.appendChild(textNode);
+
+      
+
+      adsFragment.appendChild(ads);
+      document.getElementsByClassName('advertisement')[0].appendChild(adsFragment);
+
+  </script>
 </html>

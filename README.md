@@ -54,7 +54,7 @@ Genome Sequencing processing Mind Maps
                   
                   $ git clone https://github.com/ali2210/WizDwarf.git && cd WizDwarf/
                   
-                  $ docker run --rm -hostname=wizdwarfs -p 127.0.0.1:5000:5000 -v /app/app_data --net=host -it  wisdomenigma/wizdwarfs-v0.0.1     
+                  $ docker run --rm -hostname=wizdwarfs -p 127.0.0.1:5000:5000 -v /app/app_data --net=host -it  wizdwarfs/wizdwarfs-v0.0.2     
 
       ** Composer ** 
                   
@@ -103,11 +103,11 @@ Genome Sequencing processing Mind Maps
 
                      ctrl + shift + T (Open new terminal) 
 
-                     $ docker build -t wisdomenigma/wizdwarfs-v0.0.1 .
+                     $ docker build -t wizdwarfs/wizdwarfs-v0.0.2 .
 
                      wait for compilation and run docker image like this
                      
-                     $ docker run --rm -hostname=wizdwarfs -p 127.0.0.1:5000:5000 -v /app/app_data --net=host -it  wisdomenigma/wizdwarfs-v0.0.1
+                     $ docker run --rm -hostname=wizdwarfs -p 127.0.0.1:5000:5000 -v /app/app_data --net=host -it  wisdomenigma/wizdwarfs-v0.0.2
 
                      Make sure Developer Mode is enabled, Open browser and type 127.0.0.1:5000/
 
@@ -123,7 +123,7 @@ Genome Sequencing processing Mind Maps
               Open creds.hcl replace token like this 
               Token_Auth = " " and save the project
 
-              $ docker build -t wisdomenigma/wizdwarfs-v0.0.1 . or re-download from dockerHub
+              $ docker build -t wisdomenigma/wizdwarfs-v0.0.2 . or re-download from dockerHub
 
 ## API
 
@@ -190,15 +190,35 @@ Genome Sequencing processing Mind Maps
    https://app.slack.com/client/T02AQ62EHHR/C02ALUWQ4LV/93ae0ff54319133c57487e772c8e0f1045690945 <span>,</span>
 
    <object>
-              <a href='https://app.element.io/#/room/!XdCqKpBpqSSgLLcNPI:matrix.org' target='blank'>Element<a> <span>,</span>
+              <a href='https://app.element.io/#/room/!XdCqKpBpqSSgLLcNPI:matrix.org' target='blank'>Element<a> <span>,</span> </object>
    <object>            
-              <a href='https://www.reddit.com/r/wizdwarfs/a'> wizdwarfs_reddit
-
+              <a href='https://www.reddit.com/r/wizdwarfs/a'> wizdwarfs_reddit </a>
+   </object>
 
 
 ## Legal Business Option
 
-       Those entrepreneurs or distributors whom are interested in legal business options will contact us @ wizdwarfs.gmail.com . We care our customers with our heart and mind. Public Investors will invest in our business and earn capital gain profit. Payment is accepted only in bitcoin.  
+       A happy customer is more precious than Gold mine. Payment is accepted only in bitcoin.  Distributors will owe licences, brand trademarks, copyright through legal business option.
 
 
+## Licencing 
 
+       This project is licensed under the Mozilla Public License (http://www.mozilla.org/MPL/). Distributors and royallty, copyright and other rights are included in license file. This software owe by WisdomEnigma, Inc
+
+
+## FAQ
+
+  1. How charts is render on web-page ? 
+      Refresh webpage after wait for few seconds (~3s). Because data is shared between servers on client request.
+
+  2. "EMPTY OUTPUT "  will be printed on console when app initate ?
+      Application process is not terminate completely, before re initate application wait for it to finish this task. Expected time 1 minute.
+
+  3.  Application is not started with vault after remove configurations ?
+       Make sure data directory exists in vault directory. Otherwise, create manually and re-compile the dockerfile.
+
+  4. How to get vault token and where it has been saved to initate the app?
+      Please follow up Vault-Deploy instructions. Once you will get token store in creds.hcl (token field) & re-compile the dockerfile.  
+
+  5. Why wallet is not render any document ?
+       Refresh webpage after wait for few seconds (~3s). Because data is shared between servers on client request. Once page refresh all data will prefectly render on your web page.

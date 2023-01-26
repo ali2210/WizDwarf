@@ -218,8 +218,6 @@ func main() {
 		fmt.Println(" ****************************************************************************************")
 	}
 
-	log.Println("Token : ...", hcldeclare.Token_Auth)
-
 	if reflect.DeepEqual(hcldeclare.Token_Auth, " ") {
 
 		GEO_Index_KEY = piplines.Extractor(hcldeclare.Weatherapi, hcldeclare.Weatherapi[0:40])[3:]
