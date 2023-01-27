@@ -14,8 +14,8 @@ require (
 	github.com/biogo/biogo v1.0.2
 	github.com/briandowns/openweathermap v0.16.0
 	github.com/emojisum/emojisum/emoji v0.0.0-20211123161002-dddcd7a159ed
-	github.com/fauna/faunadb-go/v4 v4.2.0
 	github.com/fogleman/ribbon v0.0.0-20191101191537-568057efb726
+	github.com/golang/protobuf v1.5.2
 	github.com/goombaio/namegenerator v0.0.0-20181006234301-989e774b106e
 	github.com/gorilla/mux v1.7.4
 	github.com/gorilla/sessions v1.2.0
@@ -29,10 +29,14 @@ require (
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.19.0
 	github.com/pusher/pusher-http-go v4.0.1+incompatible
-	golang.org/x/net v0.0.0-20220812174116-3211cb980234
+	github.com/sethvargo/go-diceware v0.3.0
+	golang.org/x/net v0.1.0
 	google.golang.org/api v0.62.0
 	google.golang.org/protobuf v1.28.1
+	storj.io/uplink v1.9.0
 )
+
+require github.com/go-test/deep v1.0.7 // indirect
 
 require (
 	cloud.google.com/go v0.99.0 // indirect
@@ -42,6 +46,7 @@ require (
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/armon/go-metrics v0.4.0 // indirect
 	github.com/armon/go-radix v1.0.0 // indirect
+	github.com/calebcase/tmpfile v1.0.3 // indirect
 	github.com/cenkalti/backoff/v3 v3.2.2 // indirect
 	github.com/census-instrumentation/opencensus-proto v0.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
@@ -51,11 +56,13 @@ require (
 	github.com/envoyproxy/protoc-gen-validate v0.6.2 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
+	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
-	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/gax-go/v2 v2.1.1 // indirect
+	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
@@ -75,7 +82,7 @@ require (
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hashicorp/vault/sdk v0.5.3 // indirect
 	github.com/hashicorp/yamux v0.1.1 // indirect
-	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
+	github.com/klauspost/cpuid/v2 v2.1.2 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/minio/blake2b-simd v0.0.0-20160723061019-3f5f724cb5b1 // indirect
@@ -97,16 +104,21 @@ require (
 	github.com/pierrec/lz4 v2.6.1+incompatible // indirect
 	github.com/plutov/paypal v2.0.5+incompatible // indirect
 	github.com/ryanuber/go-glob v1.0.0 // indirect
+	github.com/spacemonkeygo/monkit/v3 v3.0.19 // indirect
+	github.com/vivint/infectious v0.0.0-20200605153912-25a574ae18a3 // indirect
 	github.com/zclconf/go-cty v1.10.0 // indirect
+	github.com/zeebo/blake3 v0.2.3 // indirect
+	github.com/zeebo/errs v1.3.0 // indirect
 	gitlab.com/NebulousLabs/errors v0.0.0-20200929122200-06c536cf6975 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
-	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
+	golang.org/x/crypto v0.1.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
-	golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab // indirect
-	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/sync v0.1.0 // indirect
+	golang.org/x/sys v0.1.0 // indirect
+	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/time v0.0.0-20220722155302-e5dcc9cfc0b9 // indirect
-	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
+	golang.org/x/xerrors v0.0.0-20220517211312-f3a8303e98df // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20220815135757-37a418bb8959 // indirect
 	google.golang.org/grpc v1.48.0 // indirect
@@ -114,4 +126,6 @@ require (
 	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
+	storj.io/common v0.0.0-20221101132628-f2f1c7a50597 // indirect
+	storj.io/drpc v0.0.32 // indirect
 )

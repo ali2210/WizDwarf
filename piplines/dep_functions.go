@@ -2,8 +2,10 @@
 Redistribution , contribution and improve codebase under license
 convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
 
+// Package or module
 package piplines
 
+// Libaries
 import (
 	"crypto/ecdsa"
 	"crypto/ed25519"
@@ -17,10 +19,10 @@ import (
 	"image/gif"
 	"image/jpeg"
 	"image/png"
+	"io/fs"
 	"io/ioutil"
 	"log"
 	"math"
-	rdn "math/rand"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -33,25 +35,27 @@ import (
 
 	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
-	skynet "github.com/SkynetLabs/go-skynet/v2"
+	error_codes "github.com/ali2210/wizdwarf/errors_codes"
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
-	"github.com/ali2210/wizdwarf/other/bucket"
-	"github.com/ali2210/wizdwarf/other/bucket/proto"
-	"github.com/ali2210/wizdwarf/other/collection"
+	"github.com/ali2210/wizdwarf/other/bucket/fireclient"
+	dbucket "github.com/ali2210/wizdwarf/other/bucket/storj_bucket"
+	dbucketerror "github.com/ali2210/wizdwarf/other/bucket/storj_bucket/bucket"
+	"github.com/sethvargo/go-diceware/diceware"
+
+	// "github.com/ali2210/wizdwarf/other/bucket/fireclient"
+	"github.com/ali2210/wizdwarf/other/cloudmedia"
+	"github.com/ali2210/wizdwarf/other/cloudmedia/media"
 	"github.com/ali2210/wizdwarf/other/crypto"
 	cryptos "github.com/ali2210/wizdwarf/other/crypto"
 	wizdate "github.com/ali2210/wizdwarf/other/date_time"
-	"github.com/ali2210/wizdwarf/other/fauna"
-	"github.com/ali2210/wizdwarf/other/fauna/store"
 	"github.com/ali2210/wizdwarf/other/parser"
 	imglib "github.com/ali2210/wizdwarf/other/parser/parse_image"
 	biosubtypes "github.com/ali2210/wizdwarf/other/proteins"
-	"github.com/ali2210/wizdwarf/other/users"
-	"github.com/ali2210/wizdwarf/piplines/protos"
+	user "github.com/ali2210/wizdwarf/other/users/register"
 	"github.com/biogo/biogo/alphabet"
 	"github.com/gorilla/sessions"
 	linkcid "github.com/ipfs/go-cid"
-	multihash "github.com/multiformats/go-multihash"
+
 	"github.com/nfnt/resize"
 	"golang.org/x/net/context"
 	"google.golang.org/api/option"
@@ -75,17 +79,19 @@ var parse_date string
 var user_Id string
 
 // Meta-picture information
-var pic_src string
 var pic_time string
 var pic_tags string
-var pic_id string
+
 var chain map[string]string
 var cdr map[string]string = make(map[string]string, 1)
-
-var count int64 = 0
+var ImageMeta *media.IMAGE_METADATA
+var link linkcid.Cid
 
 //  Molecular data; hold genomes sequence value
 var genes []string
+
+// session cache
+//var profiler user.New_User
 
 // Signed key hold paticular state of an object called lock
 type SignedKey struct {
@@ -96,37 +102,23 @@ type SignedKey struct {
 
 // User will add their profile picture on the profile. User shared picture have different parameters such as upload time ; resize image etc.
 // User currently add jpeg, png and gif to the profile picture. Profile store on private blockchain. Each Shared Picture key attached to the keys;
-
 // Keys are generated one time; All the keys store in your account meta-wallet .
+// @param responsewriter and request object
+// @return string and error
 
-func AvatarUpload(r *http.Request, user_id string) {
+func AvatarUpload(r *http.Request, user_id string) (string, error) {
 
 	//  Set the buffer size for the picture file contents
 	r.ParseMultipartForm(10 << 50)
 
-	// Initialize counter request number with 0 ; when the request execute first time
-	if count == 0 {
-
-		protos.Initial(&protos.Pricing_Call_Request{CRequest: 0})
-	}
-
-	// Otherwise increcment counter request number; even if the request execute first time
-	if strings.Contains(r.FormValue("cdrlink"), "on") && count >= 0 {
-
-		count = protos.Inc()
-
-	}
-
-	protos.Incement()
-
 	// Get the picture file from HtmlContent
-	file, fileHandle, err := r.FormFile("profile-input")
+	File, Handler, err := r.FormFile("profile-input")
 
 	if err != nil {
-		log.Fatalln("Error File Handle :", err)
-		return
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_FILE_NOT_FOUND)
+		return " ", err
 	}
-	defer file.Close()
+	defer File.Close()
 
 	// Get today year, month and date . This help to generate image metadata which is helpful when images store in the collections.
 	// Get Date from html Form
@@ -135,20 +127,20 @@ func AvatarUpload(r *http.Request, user_id string) {
 	// Parse calendar format
 	year, err := wizdate.Year(today)
 	if err != nil {
-		log.Println("Error parsing year: ", err)
-		return
+		log.Println(error_codes.Operation_ERROR_CODE__DUMP)
+		return " ", err
 	}
 
 	month, err := wizdate.Month(today)
 	if err != nil {
 		log.Println("Error parsing month: ", err)
-		return
+		return " ", err
 	}
 
 	date, err := wizdate.Date(today)
 	if err != nil {
 		log.Println("Error parsing date: ", err)
-		return
+		return " ", err
 	}
 
 	// Calendar Get Today function hold information about picture such when will last avatar changed
@@ -160,49 +152,49 @@ func AvatarUpload(r *http.Request, user_id string) {
 	// As calendar return date, month, year, timezone and time (hour, second & minute). Avatars created in unqiue timespace
 	hr, err := strconv.Atoi(time_utc[11:13])
 	if err != nil {
-		log.Fatalln("Error parsing hr: ", err)
-		return
+		log.Fatalln(error_codes.Operation_ERROR_CODE__DUMP)
+		return " ", err
 	}
 
 	mns, err := strconv.Atoi(time_utc[14:16])
 	if err != nil {
-		log.Fatalln("Error parsing mns: ", err)
-		return
+		log.Fatalln(error_codes.Operation_ERROR_CODE__DUMP)
+		return " ", err
 	}
 
 	// store avatars timespace instance
 	create_pic_time := fmt.Sprintf("%d:%d", (hr), (mns))
 
 	// meta-information about picture
-	pic_src = fileHandle.Filename
+	// pic_src = fileHandle.Filename
 	parse_date = calendar
 	user_Id = user_id
 	pic_time = create_pic_time
+	var pic_tag string
 
 	// Seed is an upper bound on the number of timeframes available for a avatar
-	rdn.Seed(time.Now().UnixNano())
+	// rdn.Seed(time.Now().UnixNano())
 
-	parse_num := strconv.Itoa(rdn.Intn(512))
+	// parse_num := strconv.Itoa(rdn.Intn(512))
 
-	if str := strings.Join(parser.ParseTags(fileHandle.Filename), " "); str != "" {
+	if str := strings.Join(parser.ParseTags(Handler.Filename), " "); str != "" {
 		if n := strings.Compare(str, " "); n != -1 {
-			pic_tags = str
-			pic_id = str + "-" + parse_num
+			pic_tag = str
 		}
 	}
 
-	hash_color := ""
-	var result interface{}
-	var status int
+	//hash_color := ""
+	// var result interface{}
+	// var status int
 	var _temp_avatar *os.File
 	var width, height int = 200, 200
 
 	// shared document have typesystem or discard shared data
-	ok, err := regexp.MatchString(".[a-z]+", fileHandle.Filename)
+	ok, err := regexp.MatchString(".[a-z]+", Handler.Filename)
 	if err != nil {
 
-		log.Fatalln("Error File name :", err)
-		return
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_FILE_NAMING_CONVERSION)
+		return " ", err
 	}
 
 	// scale-up level (SUL); how much scale is needed for shared content
@@ -211,21 +203,21 @@ func AvatarUpload(r *http.Request, user_id string) {
 	value, err := strconv.Atoi(kvalue)
 	if err != nil {
 
-		log.Fatalf("poor data format: %v", err)
-		return
+		log.Fatalln(error_codes.Operation_ERROR_CODE_GARBAGE_VALUE)
+		return " ", err
 	}
 
-	if strings.Contains(fileHandle.Filename, ".png") && ok {
+	if strings.Contains(Handler.Filename, ".png") && ok {
 
 		// unique digital print for shared resources
-		hash_color = imglib.PNG_Color_Hash(&file)
+		_ = imglib.PNG_Color_Hash(&File)
 
 		// store contents in memory
-		_temp_avatar, err = parser.CreateFile(fileHandle, &file)
+		_temp_avatar, err = parser.CreateFile([]string{Handler.Filename}...)
 		if err != nil {
 
-			log.Fatalln("Error create file:", err)
-			return
+			log.Fatalln(error_codes.File_BAD_REQUEST_CODE_WRITE_FAILED)
+			return " ", err
 		}
 
 		// re-create the avatar
@@ -233,8 +225,8 @@ func AvatarUpload(r *http.Request, user_id string) {
 		err := encoder.Encode(_temp_avatar, imglib.GetImageDecoder())
 		if err != nil {
 
-			log.Fatalln("Error encoding image:", err)
-			return
+			log.Fatalln(error_codes.Operation_ERROR_CODE__DUMP)
+			return " ", err
 		}
 
 		// resize avatar image
@@ -244,51 +236,68 @@ func AvatarUpload(r *http.Request, user_id string) {
 		err = encoder.Encode(_temp_avatar, resizer)
 		if err != nil {
 
-			log.Fatalln("Error encoding image:", err)
-			return
+			log.Fatalln(error_codes.Operation_ERROR_CODE__DUMP)
+			return " ", err
 		}
 
 		// check whether application have user sessions credentials
-		if reflect.DeepEqual(user_id, "") {
-
-			log.Fatalln("User information is not accessible:", user_id)
-			return
+		if reflect.DeepEqual(user_id, " ") {
+			log.Fatalln(error_codes.Operation_ERROR_CODE_EMPTY_INPUT)
+			return " ", errors.New("user session expired")
 		}
 
 		// store in ledger
-		generator := imglib.Metadata(_temp_avatar.Name(), hash_color, user_id, Firestore_Reference())
+		// generator := imglib.Metadata(_temp_avatar.Name(), hash_color, user_id, Firestore_Reference())
 
-		if reflect.DeepEqual(generator, bucket.Err) {
+		// if reflect.DeepEqual(generator, bucket.Err) {
 
-			log.Fatalln(" Error metadata is not created for image")
-			return
+		// 	log.Fatalln(" Error metadata is not created for image")
+		// 	return
+		// }
+
+		// // read document from ledger
+		// result, status = imglib.GetMetadata(hash_color, user_id, Firestore_Reference())
+
+		// var null_interface interface{}
+		// if reflect.DeepEqual(result, null_interface) {
+
+		// 	log.Fatalln(" This content already in your bucket! ")
+		// 	return
+		// }
+
+		// if !reflect.DeepEqual(result, null_interface) && status == 1 {
+
+		// 	log.Fatalln(" Your Avatar metadata is already created", status)
+		// 	return
+		// }
+
+		words, err := diceware.Generate(12)
+		if err != nil {
+			return " ", err
 		}
 
-		// read document from ledger
-		result, status = imglib.GetMetadata(hash_color, user_id, Firestore_Reference())
+		log.Println("Your Passphrase is: ", words, "please save it somewhere on your computer. It'll generated by application one time only (OTP)")
 
-		var null_interface interface{}
-		if reflect.DeepEqual(result, null_interface) {
-
-			log.Fatalln(" This content already in your bucket! ")
-			return
+		ImageMeta = &media.IMAGE_METADATA{
+			Name:      _temp_avatar.Name(),
+			Type:      "png",
+			Created:   create_pic_time,
+			Tokens:    media.TOKEN_CATEGORY_FUNGIABLE_TOKEN,
+			Timeline:  time_utc,
+			Tags:      pic_tag,
+			MyProfile: true,
+			Signature: words,
 		}
 
-		if !reflect.DeepEqual(result, null_interface) && status == 1 {
+	} else if strings.Contains(Handler.Filename, ".jpeg") && ok {
 
-			log.Fatalln(" Your Avatar metadata is already created", status)
-			return
-		}
+		_ = imglib.JPEG_Color_Hash(File)
 
-	} else if strings.Contains(fileHandle.Filename, ".jpeg") && ok {
-
-		hash_color = imglib.JPEG_Color_Hash(file)
-
-		_temp_avatar, err = parser.CreateFile(fileHandle, &file)
+		_temp_avatar, err = parser.CreateFile([]string{Handler.Filename}...)
 		if err != nil {
 
-			log.Fatalln("Error create file:", err)
-			return
+			log.Fatalln(error_codes.File_BAD_REQUEST_CODE_WRITE_FAILED)
+			return " ", err
 		}
 
 		op1 := float64(value)
@@ -296,8 +305,8 @@ func AvatarUpload(r *http.Request, user_id string) {
 		err = jpeg.Encode(_temp_avatar, imglib.GetImageDecoder(), &jpeg.Options{Quality: int(math.Mod(op1, jpeg.DefaultQuality))})
 		if err != nil {
 
-			log.Fatalln("Error encoding image:", err)
-			return
+			log.Fatalln(error_codes.Operation_ERROR_CODE__DUMP)
+			return " ", err
 		}
 
 		resizer := resize.Resize(uint(width+value), uint(height+value), imglib.GetImageDecoder(), resize.Lanczos3)
@@ -305,55 +314,72 @@ func AvatarUpload(r *http.Request, user_id string) {
 		err = jpeg.Encode(_temp_avatar, resizer, &jpeg.Options{Quality: int(math.Mod(op1, jpeg.DefaultQuality))})
 		if err != nil {
 
-			log.Fatalln("Error resolution image:", err)
-			return
+			log.Fatalln(error_codes.Operation_ERROR_CODE_GARBAGE_VALUE)
+			return " ", err
 		}
 
-		if reflect.DeepEqual(user_id, "") {
-
-			log.Fatalln("User:", user_id)
-			return
+		if reflect.DeepEqual(user_id, " ") {
+			log.Fatalln(error_codes.Operation_ERROR_CODE_EMPTY_INPUT)
+			return " ", errors.New("user session expired")
 		}
 
-		generator := imglib.Metadata(_temp_avatar.Name(), hash_color, user_id, Firestore_Reference())
+		// generator := imglib.Metadata(_temp_avatar.Name(), hash_color, user_id, Firestore_Reference())
 
-		if reflect.DeepEqual(generator, bucket.Err) {
+		// if reflect.DeepEqual(generator, bucket.Err) {
 
-			log.Fatalln(" Error metadata is not created for image")
-			return
+		// 	log.Fatalln(" Error metadata is not created for image")
+		// 	return
+		// }
+
+		// result, status = imglib.GetMetadata(hash_color, user_id, Firestore_Reference())
+
+		// var null_interface interface{}
+		// if reflect.DeepEqual(result, null_interface) {
+
+		// 	log.Fatalln(" This content already in your bucket! ")
+		// 	return
+		// }
+
+		// if !reflect.DeepEqual(result, null_interface) && status == 1 {
+
+		// 	log.Fatalln(" Your Avatar metadata is already created", status)
+		// 	return
+		// }
+
+		words, err := diceware.Generate(12)
+		if err != nil {
+			return " ", err
 		}
 
-		result, status = imglib.GetMetadata(hash_color, user_id, Firestore_Reference())
+		log.Println("Your Passphrase is: ", words, "please save it somewhere on your computer. It'll generated by application one time only (OTP)")
 
-		var null_interface interface{}
-		if reflect.DeepEqual(result, null_interface) {
-
-			log.Fatalln(" This content already in your bucket! ")
-			return
+		ImageMeta = &media.IMAGE_METADATA{
+			Name:      _temp_avatar.Name(),
+			Type:      "jpeg",
+			Created:   create_pic_time,
+			Tokens:    media.TOKEN_CATEGORY_FUNGIABLE_TOKEN,
+			Timeline:  time_utc,
+			Tags:      pic_tag,
+			MyProfile: true,
+			Signature: words,
 		}
 
-		if !reflect.DeepEqual(result, null_interface) && status == 1 {
+	} else if strings.Contains(Handler.Filename, ".gif") && ok {
 
-			log.Fatalln(" Your Avatar metadata is already created", status)
-			return
-		}
+		_ = imglib.GIF_Color_Hash(File)
 
-	} else if strings.Contains(fileHandle.Filename, ".gif") && ok {
-
-		hash_color = imglib.GIF_Color_Hash(file)
-
-		_temp_avatar, err = parser.CreateFile(fileHandle, &file)
+		_temp_avatar, err = parser.CreateFile([]string{Handler.Filename}...)
 		if err != nil {
 
-			log.Fatalln("Error create file:", err)
-			return
+			log.Fatalln(error_codes.File_BAD_REQUEST_CODE_WRITE_FAILED)
+			return " ", err
 		}
 
 		err = gif.Encode(_temp_avatar, imglib.GetImageDecoder(), &gif.Options{NumColors: 256, Quantizer: nil, Drawer: nil})
 		if err != nil {
 
-			log.Fatalln("Error encoding image:", err)
-			return
+			log.Fatalln(error_codes.Operation_ERROR_CODE__DUMP)
+			return " ", err
 		}
 
 		resizer := resize.Resize(uint(width+value), uint(height+value), imglib.GetImageDecoder(), resize.Lanczos3)
@@ -361,144 +387,140 @@ func AvatarUpload(r *http.Request, user_id string) {
 		err = gif.Encode(_temp_avatar, resizer, &gif.Options{NumColors: 256, Quantizer: nil, Drawer: nil})
 		if err != nil {
 
-			log.Fatalln("Error resolution image:", err)
-			return
+			log.Fatalln(error_codes.Operation_ERROR_CODE__DUMP)
+			return " ", err
 		}
 
-		if reflect.DeepEqual(user_id, "") {
+		if reflect.DeepEqual(user_id, " ") {
 
-			log.Fatalln("User:", user_id)
-			return
+			log.Fatalln(error_codes.Operation_ERROR_CODE_EMPTY_INPUT)
+			return " ", errors.New("user session expired")
 		}
 
-		generator := imglib.Metadata(_temp_avatar.Name(), hash_color, user_id, Firestore_Reference())
+		// generator := imglib.Metadata(_temp_avatar.Name(), hash_color, user_id, Firestore_Reference())
 
-		if reflect.DeepEqual(generator, bucket.Err) {
+		// if reflect.DeepEqual(generator, bucket.Err) {
 
-			log.Fatalln(" Error metadata is not created for image")
-			return
+		// 	log.Fatalln(" Error metadata is not created for image")
+		// 	return
+		// }
+
+		// result, status = imglib.GetMetadata(hash_color, user_id, Firestore_Reference())
+
+		// var null_interface interface{}
+		// if reflect.DeepEqual(result, null_interface) {
+
+		// 	log.Fatalln(" This content already in your bucket! ")
+		// 	return
+		// }
+
+		// if !reflect.DeepEqual(result, null_interface) && status == 1 {
+
+		// 	log.Fatalln(" Your Avatar metadata is already created", status)
+		// 	return
+		// }
+
+		words, err := diceware.Generate(12)
+		if err != nil {
+			return " ", err
 		}
 
-		result, status = imglib.GetMetadata(hash_color, user_id, Firestore_Reference())
+		log.Println("Your Passphrase is: ", words, "please save it somewhere on your computer. It'll generated by application one time only (OTP)")
 
-		var null_interface interface{}
-		if reflect.DeepEqual(result, null_interface) {
-
-			log.Fatalln(" This content already in your bucket! ")
-			return
-		}
-
-		if !reflect.DeepEqual(result, null_interface) && status == 1 {
-
-			log.Fatalln(" Your Avatar metadata is already created", status)
-			return
+		ImageMeta = &media.IMAGE_METADATA{
+			Name:      _temp_avatar.Name(),
+			Type:      "gif",
+			Created:   create_pic_time,
+			Tokens:    media.TOKEN_CATEGORY_FUNGIABLE_TOKEN,
+			Timeline:  time_utc,
+			Tags:      pic_tag,
+			MyProfile: true,
+			Signature: words,
 		}
 
 	} else {
 
-		log.Fatalln(" Error image format is not supported:")
-		return
+		log.Fatalln(error_codes.Operation_ERROR_CODE_GARBAGE_VALUE)
+		return " ", err
 	}
 
-	OpenSkyChain(_temp_avatar.Name())
+	OpenSkyChain(ImageMeta)
 
 	defer _temp_avatar.Close()
+	return _temp_avatar.Name(), nil
 }
 
 // Sky Data Center have following properties. It's provide best solution for Decentralize Content storage ; just like ipfs & pinta;
 // Each content store in public ledger which means every content access through key signature called CDR-link.
 // CDR_Link is similar to URL , however cdr-link generated based on content that user want to located
-
-func SkyDataCenter(client skynet.SkynetClient, file string) bool {
+// @param skynet client ; file name & file type
+// @return boolean
+func SkyDataCenter(media_file *media.IMAGE_METADATA) bool {
 
 	// application store user picture in the app_data directory
-	path, err := os.Stat("app_data/")
-	if err != nil {
+
+	if strings.Contains(media_file.Type, " ") && strings.Contains(media_file.Name, " ") {
+
+		log.Fatalln(error_codes.Operation_ERROR_CODE_EMPTY_INPUT)
 		return false
 	}
 
-	// Application storage path
-	if !path.IsDir() {
+	// if reflect.DeepEqual(client, skynet.SkynetClient{}) {
+	// 	log.Fatalln(error_codes.Operation_ERROR_CODE_EMPTY_INPUT)
+	// 	return false
+	// }
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	iobject := dbucket.New_Bucket(ctx, media_file.Name, "avatars")
+
+	errs, access := iobject.StoreJCredentials(strings.Join(media_file.Signature, " "), []string{"chief inner hint orient crane mobile pattern rude moon approve train cheap"}...)
+	if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) && access != nil {
+		log.Fatal(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
 		return false
 	}
 
-	// skynet portal option
-	options := skynet.DefaultUploadOptions
-	options.APIKey = "skynetdwarfs"
-	options.CustomUserAgent = "Sia-Agent"
+	var str string
+	if strings.HasPrefix(media_file.Name, "app_data/") {
+		str = strings.Trim(media_file.Name, "app_data/")
+	}
 
-	// upload file to storage
-	sia_object_url, err := client.UploadFile(file, options)
-	if err != nil {
+	errs = iobject.StoreObject(strings.Join(media_file.GetSignature(), " "), media_file.Created, str, "", []string{"chief inner hint orient crane mobile pattern rude moon approve train cheap"}...)
+	if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) {
+		log.Fatal(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
 		return false
 	}
+
+	// errs, url := cloudmedia.NewDlinkObject(&client, "app_data/").Generate(file, []string{filetype}...)
+	// if errs != dlink.Errors_NONE {
+	// 	log.Fatalln(errs, error_codes.Router_ERROR_CODE_EMPTY_RESPONSE)
+	// 	return false
+	// }
 
 	// high order function this function takes cdr convert into bytes with netwiork identifical code and then apply hash sha-256
 	// Result -- breakable
-	hash_data := sha256.Sum256([]byte(strings.Trim(sia_object_url, "sia://")))
 
-	// this function also high order function which convert hash of bytes into encoded string
-	// fog(c) = f(g(x)) mathematical notion of high order function
-	// encoded string in hex format which mus be decode as string in hex format
-	decoder, err := hex.DecodeString(hex.EncodeToString(hash_data[:]))
-	if err != nil {
-		return false
-	}
+	cdr, cid := cryptos.FilePrints([]string{media_file.Created}...)
 
-	// EncodeName function takes decoder which is already in hex format and then apply x11 crypto algorithm.
-	// with x11 breakable signature into unbreakable
-	encodetype, err := multihash.EncodeName(decoder, "x11")
-	if err != nil {
-		log.Printf("Error Signature : %v", err.Error())
-		return false
-	}
-
-	// This is an higher order function encodeName value as encode string in hex format.
-	// multihash hex string apply on encoded string in hex format.
-	encodex11, err := multihash.FromHexString(hex.EncodeToString(encodetype))
-	if err != nil {
-		return false
-	}
-
-	// generate new cid.. The specification of this function require two parameters (codeType & other one is hash algorithm)
-	// merkel tree (dag) data serilaization (protocol buffer [https://en.wikipedia.org/wiki/Protocol_Buffers])
-	// & hash algorithm
-
-	cid := linkcid.NewCidV1(linkcid.DagProtobuf, encodex11)
-
-	// check whether cid version is 0. For this application cid version must be 1
-	if version := cid.Version(); version != 1 {
-		return false
-	}
-
-	// create protocol buffer map object
-	// map key which we had calculated before cid because key must be in string
-	// value should be cdr link
-
-	cdr = make(map[string]string, 1)
-
-	cdr[cid.String()] = sia_object_url
 	Set_cdr(cid.String())
 
-	errs := fauna.Content_X(cid.String(), sia_object_url).ConnectFaunaLedger(&store.Endpoint_Info{
-		API_Key: fauna.WizNetHook,
-		Address: "https://db.fauna.com:443",
-	})
-	if reflect.DeepEqual(errs.State, store.Error_ERROR) {
+	link = cid
 
-		log.Fatalln(errs.Description, errs.State)
-		return false
-	}
+	ImageMeta.Cdr = make(map[string]string, 1)
+	ImageMeta.Cdr = cdr
+
+	log.Println("Signature created .....", Get_cdr()[5:10]+"****")
 
 	return true
 }
 
-// Download Content is a special function that downloads shared resources
-func Download_Content_ownership(File string, client bucket.Bucket_Service) *proto.QState {
+// Download Content is a special function that will get copy of your content
+// @param File , client Bucket service
+// func Download_Content_ownership(File string, client bucket.Bucket_Service) *proto.QState {
 
-	return client.Download(&proto.Query{ByName: File})
-
-}
+// 	return client.Download(&proto.Query{ByName: File})
+// }
 
 // Mapper take stream as interface , key is used to decode the kv value.
 
@@ -511,6 +533,9 @@ func Download_Content_ownership(File string, client bucket.Bucket_Service) *prot
     * }
 */
 
+// Mapper is a specified function that will return value aginst paticular key
+// @param map set and key
+// @return interface (any)
 func Mapper(stream map[string]interface{}, key string) interface{} {
 
 	var occ interface{}
@@ -522,11 +547,14 @@ func Mapper(stream map[string]interface{}, key string) interface{} {
 	return occ
 }
 
-// Update Profile Information will update user profile .
-func UpdateProfileInfo(member *users.Visitors) bool {
+// This function provide gateway services. User credentils update through gateway.
+// @param Protocol Updated User Message
+// @return boolean .
+func UpdateProfileInfo(member user.Updated_User) bool {
 
-	err := cloud.UpdateUserDetails(GetDBClientRef(), *member)
+	_, err := cloud.UpdateUserDetails(GetDBClientRef(), member)
 	if err != nil {
+		log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
 		return false
 	}
 	return true
@@ -539,7 +567,9 @@ func Set_cdr(c string) { CDRL = c }
 
 func Get_cdr() string { return CDRL }
 
-// Trust Request is digital contract signature certificate
+// Trust Request ensure that both parties are trusted and ready to complete the pending transaction.
+// @param message , validator and request command (string)
+// @return edsca public and error
 func TrustRequest(message, verifier, request string) (bool, *ed25519.PrivateKey, error) {
 
 	// contain check whether request have pass-key ,
@@ -554,7 +584,7 @@ func TrustRequest(message, verifier, request string) (bool, *ed25519.PrivateKey,
 		// bind keys with message
 		bind_message, err := crypto.ASED25519(message, AleKey)
 		if err != nil {
-			log.Printf(" Error message binding fail %v", err.Error())
+			log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
 			return false, &AleKey, err
 		}
 
@@ -570,7 +600,7 @@ func TrustRequest(message, verifier, request string) (bool, *ed25519.PrivateKey,
 		// generate keys
 		BbKey, AleKey, err := cryptos.BKED25519()
 		if err != nil {
-			log.Printf(" Error generating key: %v", err.Error())
+			log.Fatalln(error_codes.Operation_ERROR_CODE__DUMP)
 			return false, &AleKey, err
 		}
 
@@ -579,6 +609,7 @@ func TrustRequest(message, verifier, request string) (bool, *ed25519.PrivateKey,
 
 		// bind message verification against key
 		if verify := cryptos.BVED25519(BbKey, bindMessage, []byte(message)); verify {
+			log.Fatalln(error_codes.Operation_ERROR_CODE_GARBAGE_VALUE)
 			return verify, &AleKey, nil
 		}
 
@@ -587,6 +618,9 @@ func TrustRequest(message, verifier, request string) (bool, *ed25519.PrivateKey,
 	}
 }
 
+// This function specified codons that exist in user genetic material
+// @param string
+// @return map set string
 func Active_Proteins(str string) map[string]string {
 	i, j := 0, 3
 
@@ -608,6 +642,9 @@ func Active_Proteins(str string) map[string]string {
 	return chain
 }
 
+// This function specified codons that exist in user genetic material
+// @param string
+// @return map set Aminochain
 func AminoChains(str string) map[string]biosubtypes.Aminochain {
 
 	// initalization & declaration of local attributes
@@ -637,91 +674,83 @@ func AminoChains(str string) map[string]biosubtypes.Aminochain {
 	return chain
 }
 
+// This function ensure whole codon either hold three proteins or none
+// @param string and int
+// @return boolean
 func threepairs(str string, i int) bool {
 	return !strings.Contains(str[i:i+1], " ") && !strings.Contains(str[i+1:i+2], " ") && !strings.Contains(str[i+2:i+3], " ")
 }
 
-func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member users.Visitors) (*users.Visitors, error) {
+// This function act as gateway services which allow to connect application with database . However , this method will only allow search functionality.
+// @param responsewriter, user credentials and request object
+// @return user credentials  and error message
+func Firebase_Gatekeeper(w http.ResponseWriter, r *http.Request, member user.New_User) (*user.New_User, *user.Updated_User, error) {
 
-	var mapper map[string]interface{}
-	var profile users.Visitors
-	data, err := cloud.SearchUser(GetDBClientRef(), member)
-	if reflect.DeepEqual(data, mapper) && err != nil {
-		log.Println("no account on our server")
-		return &profile, errors.New("no account on our server")
+	docIterator, err := cloud.SearchUser(GetDBClientRef(), member)
+	if err != nil && !docIterator.Doc_status {
+		log.Fatalln(error_codes.Router_ERROR_CODE_EMPTY_RESPONSE)
+		return &user.New_User{}, &user.Updated_User{}, errors.New("no account on our server")
 	}
 
-	query, err := json.Marshal(data)
-	if err != nil {
-		return &profile, err
+	if !reflect.DeepEqual(docIterator.Update, user.Updated_User{}) {
+		return &user.New_User{}, &docIterator.Update, nil
 	}
 
-	err = json.Unmarshal(query, &profile)
-	if err != nil {
-		return &profile, err
-	}
-	return &profile, nil
+	return &docIterator.Profile, &user.Updated_User{}, nil
 }
 
-func AddNewProfile(response http.ResponseWriter, request *http.Request, user users.Visitors, im string) (*firestore.DocumentRef, bool, error) {
+// This function is another gateway service which allow to create new credentials on our database
+// @param responsewriter, request and user credentials
+func AddNewProfile(response http.ResponseWriter, request *http.Request, add user.New_User) (*firestore.DocumentRef, bool, error) {
 
-	var member users.Visitors
-	var replicate *firestore.DocumentRef
+	// var member user.New_User
+	var document *firestore.DocumentRef
+	var err error
 
 	// user data accrording to json schema
-	data, err := json.Marshal(user)
+	data, err := json.Marshal(add)
 	if err != nil {
-		return replicate, false, err
+		log.Fatalln(error_codes.JSON_CODE_MARSHAL_ERROR)
+		return &firestore.DocumentRef{}, false, err
 	}
 
-	err = json.Unmarshal(data, &user)
+	err = json.Unmarshal(data, &add)
 	if err != nil {
-		return replicate, false, err
+		log.Fatalln(error_codes.JSON_CODE_UNMARSHAL_ERROR)
+		return &firestore.DocumentRef{}, false, err
 	}
 
 	// search data if there is
-	candidate, err := Firebase_Gatekeeper(response, request, user)
+	candidate, _, err := Firebase_Gatekeeper(response, request, add)
 	if err != nil {
-		return replicate, false, err
-
+		log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+		return &firestore.DocumentRef{}, false, err
 	}
 
 	// search data doesn't exist
-	if reflect.DeepEqual(candidate, &member) {
+	if reflect.DeepEqual(candidate, &user.New_User{}) {
 
-		member.Id = im
-		member.Name = user.Name
-		member.Email = user.Email
-		member.Password = user.Password
-		member.LastName = user.LastName
-		if user.Eve {
-			member.Eve = user.Eve
-		} else {
-			member.Eve = user.Eve
-		}
-		member.Address = user.Address
-		member.Appartment = user.Appartment
-		member.City = user.City
-		member.Zip = user.Zip
-		member.Country = user.Country
-
-		// add user data in your dataabse
-		document, _, err := cloud.AddUser(GetDBClientRef(), member)
+		document, _, err = cloud.AddUser(GetDBClientRef(), add)
 		if err != nil {
-			return replicate, false, err
+			log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+			return &firestore.DocumentRef{}, false, err
 		}
 
-		replicate = document
-		return document, true, nil
-	} else {
-		return replicate, false, err
 	}
+
+	return document, true, nil
+
 }
+
+// This function allow you to connect with cloud db .
+// @return client
 
 func Firestore_Reference() *firestore.Client {
 
 	_, err := os.Stat("config/" + GetKeyFile())
 	if os.IsExist(err) {
+
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_READ_FAILED)
 		return &firestore.Client{}
 	}
 
@@ -729,63 +758,64 @@ func Firestore_Reference() *firestore.Client {
 
 	firebase_connect, err := firebase.NewApp(context.Background(), &firebase.Config{ProjectID: GetProjectID()}, option.WithCredentialsFile(Firestore_Rf))
 	if err != nil {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_FILE_PERMISSION_FAILED)
 		return &firestore.Client{}
 	}
 
 	client, err := firebase_connect.Firestore(context.Background())
 	if err != nil {
+		log.Fatalln(error_codes.Operation_ERROR_CODE__DUMP)
 		return &firestore.Client{}
 	}
 	return client
 
 }
 
+// String convesion to integer
 func StringInt(s string) (int, error) {
 
 	i, err := strconv.Atoi(s)
 	if err != nil {
+		log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
 		return 0, err
 	}
 	return i, nil
 
 }
 
-// func IsEvm(hash, addressexp string, clientInstance *ethclient.Client) bool {
-
-// 	expression := regexp.MustCompile(addressexp)
-// 	v := expression.MatchString(hash)
-
-// 	address := common.HexToAddress(hash)
-// 	bytecode, err := clientInstance.CodeAt(contxt.Background(), address, nil)
-// 	if err != nil {
-// 		return
-// 	}
-
-// 	contract := len(bytecode) > 0
-// 	return contract
-// }
-
+// This function allow you to create session
+// @param  string message
+// @return session
 func Web_Token(unique string) *sessions.CookieStore {
 	return sessions.NewCookieStore([]byte(unique))
 }
 
+// This function allow user to store file in application directory
+// @param responsewriter, request and file name
 func MountDisk(w http.ResponseWriter, r *http.Request, filename string) os.FileInfo {
 	f, err := os.OpenFile(filename+".txt", os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
+
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_READ_FAILED)
 		return nil
 	}
 
 	finfo, err := f.Stat()
 	if err != nil {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_FILE_PATH_ERROR)
 		return nil
 	}
 	return finfo
 }
 
+// This function will generate salt bit which will used in validate or transaction
+// @param responserwriter, request and messages
+// @return string messages and edsca key
 func Signx(w http.ResponseWriter, r *http.Request, h1, h2 string) (string, string, *ecdsa.PrivateKey) {
 
 	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 	if err != nil {
+		log.Fatalln(error_codes.Operation_ERROR_CODE__DUMP)
 		return "", "", &ecdsa.PrivateKey{}
 	}
 
@@ -800,6 +830,7 @@ func Signx(w http.ResponseWriter, r *http.Request, h1, h2 string) (string, strin
 
 	reader, s, err := ecdsa.Sign(rand.Reader, privateKey, hash[:])
 	if err != nil {
+		log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
 		return "", "", &ecdsa.PrivateKey{}
 	}
 
@@ -807,18 +838,23 @@ func Signx(w http.ResponseWriter, r *http.Request, h1, h2 string) (string, strin
 
 }
 
+// @param message string
+// @return byte vector and error
 func RFiles(filename string) ([]byte, error) {
 
 	body, err := ioutil.ReadFile(filename)
 
 	if err != nil {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_READ_FAILED)
 		return []byte{}, err
 	}
 
 	return []byte(body), nil
 }
 
-func Presence(w http.ResponseWriter, r *http.Request, regexp_emal, regexp_pss bool, user users.Visitors) (bool, *SignedKey) {
+// @param responsewriter, request and user credentials
+// @return boolean and signature
+func Presence(w http.ResponseWriter, r *http.Request, regexp_emal, regexp_pss bool, add user.New_User) (bool, *SignedKey) {
 
 	code := SignedKey{}
 
@@ -826,9 +862,13 @@ func Presence(w http.ResponseWriter, r *http.Request, regexp_emal, regexp_pss bo
 		return false, &SignedKey{}
 	}
 
-	code.Reader, code.Signed, code.Tx = Signx(w, r, hex.EncodeToString([]byte(user.Email)), hex.EncodeToString([]byte(user.Password)))
+	code.Reader, code.Signed, code.Tx = Signx(w, r, hex.EncodeToString([]byte(add.Email)), hex.EncodeToString([]byte(add.Password)))
 	return true, &code
 }
+
+// Mounted will store content in the app directory to complete futher processing
+// @param responsewriter & request
+// @return string message & error message
 
 func Mounted(w http.ResponseWriter, r *http.Request) (string, error) {
 	r.ParseMultipartForm(10 << 50)
@@ -836,46 +876,49 @@ func Mounted(w http.ResponseWriter, r *http.Request) (string, error) {
 	var upldFile *os.File = nil
 	file, handler, err := r.FormFile("fileSeq")
 	if err != nil {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_FILE_NOT_FOUND)
 		return "", err
 	}
 	defer file.Close()
 
 	if handler.Size >= (500000 * 1024) {
+		log.Fatalln(error_codes.Operation_ERROR_CODE_OVERFLOW_STATE)
 		return "", err
 	}
 
 	if _, err := os.Stat(handler.Filename); os.IsExist(err) {
+
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_FILE_PATH_ERROR)
 		return "", err
 	}
 
 	path, err := os.Stat("app_data/")
 	if err != nil {
+
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_FILE_PATH_ERROR)
 		return "", err
 	}
 
 	if !path.IsDir() {
-		return "", err
-	}
 
-	path, err = os.Stat("app_data/")
-
-	if err != nil {
-		return "", err
-	}
-
-	if !path.IsDir() {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
 		return "", err
 	}
 
 	// upload file by user...
 	upldFile, err = ioutil.TempFile(filepath.Dir("app_data/"), "apps-"+"*.txt")
 	if err != nil {
+
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_READ_FAILED)
 		return "", err
 	}
+
 	defer upldFile.Close()
 
 	_, err = upldFile.Stat()
 	if err != nil {
+
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_FILE_PATH_ERROR)
 		return "", err
 	}
 
@@ -884,11 +927,14 @@ func Mounted(w http.ResponseWriter, r *http.Request) (string, error) {
 	// file convert into bytes
 	bytesFile, err := ioutil.ReadAll(file)
 	if err != nil {
+
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_READ_FAILED)
 		return "", err
 	}
 
 	_, err = upldFile.Write(bytesFile)
 	if err != nil {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_WRITE_FAILED)
 		return "", err
 	}
 
@@ -900,56 +946,47 @@ func Mounted(w http.ResponseWriter, r *http.Request) (string, error) {
 *  To keep user privacy , Encrypted-Channels accept stream of data.
 *  Onces the data transfer complete this path completely closed.
  */
-func OpenSkyChain(file string) bool {
+
+//  @param file string
+// @return boolean
+func OpenSkyChain(media_file *media.IMAGE_METADATA) bool {
 
 	/*
 	* Create serialized message object [@Protocol-Buffers is used here].
 	* This Object create metadata & image file store in database. [@Firestore]
 	 */
 
-	// Create firestore object
-	gallery_firestore_object := &collection.Gallery_Stream_Server{}
-
-	// Get Firestore client object
-	collection.Firestore_Picture_Client = Firestore_Reference()
-
-	// create decentralize skynet storage object
-	client := skynet.New()
-
 	// Store user-picture file in the storage directory
-	if ok := SkyDataCenter(client, file); ok {
+	if ok := SkyDataCenter(media_file); ok {
 
 		// picture metadata
-		storage := &collection.Pictures{}
-		storage.PicTime = pic_time
-		storage.PicSrc = pic_src
-		storage.PicId = pic_id
-		storage.PicDate = parse_date
-		storage.UserAgentId = user_Id
-		storage.PicTags = pic_tags
-		storage.CDR = make(map[string]string, 1)
-		storage.CDR = cdr
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+		defer cancel()
 
-		// encrypt image and allocate space in ledger
-		_ = gallery_firestore_object.NewPictures(context.Background(), storage)
+		if err := cloudmedia.NewDc_1(ctx, Firestore_Reference()).PutData(ImageMeta, user_Id); err != nil {
+			log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE, err)
+			return false
+		}
 
-		// proof of content in ledger
-		search := gallery_firestore_object.SearchPictures(context.Background(), &collection.Compressed{UserAgentId: storage.UserAgentId, PicId: storage.PicId})
-
-		// proof returns status about the object. If the object has not already existed then throw an error
-		if !search.IsP2PAddress {
-			return !search.IsP2PAddress
+		if bucket_state := fireclient.New(ctx, Firestore_Reference()).Store(link.String(), ImageMeta.Cdr[Get_cdr()], user_Id); bucket_state != 0 {
+			log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE, bucket_state)
+			return false
 		}
 
 		return true
 	}
+
 	return false
 }
+
+// @param user genetic content and matcher file
+// @return string vectors and error message
 
 func ReadAllow(serverFile *os.File, userFile os.FileInfo) ([]string, []string, error) {
 
 	seq, err := RFiles(userFile.Name())
 	if err != nil {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_READ_FAILED)
 		return []string{}, []string{}, err
 	}
 
@@ -964,7 +1001,8 @@ func ReadAllow(serverFile *os.File, userFile os.FileInfo) ([]string, []string, e
 
 	pathogen, err := RFiles(serverFile.Name())
 	if err != nil {
-		println("Error in read file", err)
+
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_READ_FAILED)
 		return []string{}, []string{}, err
 	}
 
@@ -981,6 +1019,8 @@ func ReadAllow(serverFile *os.File, userFile os.FileInfo) ([]string, []string, e
 
 }
 
+// @param byte message
+// @return string message
 func ToRunes(seq byte) string {
 
 	if seq >= 65 && seq < 91 {
@@ -989,15 +1029,14 @@ func ToRunes(seq byte) string {
 	return string(alphabet.Letter(seq))
 }
 
-// func blockSession(id int) *sessions.CookieStore {
-
-// 	return sessions.NewCookieStore([]byte(strconv.Itoa(id)))
-// }
-
+// calculate risk analysis on the user shared data
+// @param responsewriter, request, choices , data and risk algorithm params
+// @return error message
 func Data_Predicition(w http.ResponseWriter, r *http.Request, fname, choose string, file *os.File, algo info.Levenshtein) error {
 
 	i, err := strconv.Atoi(choose)
 	if err != nil {
+		log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
 		return err
 	}
 	if (i > 0 && i < 6) && (fname != " ") {
@@ -1008,6 +1047,7 @@ func Data_Predicition(w http.ResponseWriter, r *http.Request, fname, choose stri
 		// read document and convert into managable format for processing
 		Usr, Virus, err := ReadAllow(file, svrFile)
 		if err != nil {
+			log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
 			return err
 		}
 
@@ -1021,7 +1061,6 @@ func Data_Predicition(w http.ResponseWriter, r *http.Request, fname, choose stri
 		distance := GetEditParameters().EditDistanceStrings(Virus, Usr)
 
 		SetBioAlgoParameters(algo.Result(distance, len(Usr)), fname, algo.CalcualtePercentage(algo.GetProbParameter()))
-
 
 		return err
 	} else if i == 0 {
@@ -1041,20 +1080,408 @@ func SetGenes(gene []string) {
 // get genes
 func GetGenes() []string { return genes }
 
+// @param directory path and file name message
+// @return File and error message
 func Open_SFiles(path, filename string) (*os.File, error) {
 
 	fileinfo, err := os.Stat(path)
 	if err != nil {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_FILE_PATH_ERROR)
 		return nil, err
 	}
 	if !fileinfo.IsDir() {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
 		return nil, err
 	}
 
 	file, err := os.Open(filename)
 	if err != nil {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_READ_FAILED)
 		return nil, err
 	}
 	defer file.Close()
 	return file, nil
+}
+
+// GetDocuments is a specified algorithm that will copy image from public ledger
+// @param vector string of session
+// @return string and interface
+func GetDocuments(session_id ...string) (string, interface{}, []string) {
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	var newInter interface{}
+	var mapper map[string]interface{}
+	var err error
+
+	mapper, err = cloudmedia.NewDc_1(ctx, Firestore_Reference()).GetData(&media.IMAGE_METADATA{
+		Name:      "",
+		Type:      "",
+		Created:   "",
+		Tokens:    media.TOKEN_CATEGORY_FUNGIABLE_TOKEN,
+		MyProfile: false,
+		Cdr:       cdr,
+		Timeline:  "",
+		Tags:      pic_tags,
+		Signature: []string{},
+	}, session_id[0])
+	if err != nil {
+		log.Fatalln(error_codes.Router_ERROR_CODE_EMPTY_RESPONSE)
+		return " ", newInter, []string{}
+	}
+
+	if reflect.DeepEqual(mapper, map[string]interface{}{}) {
+		log.Fatalln(error_codes.Router_ERROR_CODE_EMPTY_RESPONSE)
+		return " ", newInter, []string{}
+	}
+
+	lists := reflect.ValueOf(mapper).MapRange()
+	var name string = ""
+	var dlinks interface{}
+	sign := make([]string, 12)
+
+	for lists.Next() {
+
+		if reflect.DeepEqual(lists.Key().String(), "Name") {
+			name = lists.Value().Elem().String()
+		}
+
+		if reflect.DeepEqual(lists.Key().String(), "CDR_LINK") {
+
+			dlinks = lists.Value().Interface()
+		}
+
+		if reflect.DeepEqual(lists.Key().String(), "Passphrase") {
+
+			sign, _ = lists.Value().Interface().([]string)
+		}
+	}
+
+	return name, dlinks, sign
+
+}
+
+// Get Documents return in interface which is used only when there a function which will extract values from set. Here ReflectMaps come in action
+// @param interface
+// @return string values
+func ReflectMaps(i interface{}) (string, string) {
+
+	var nullify interface{}
+	if reflect.DeepEqual(i, nullify) {
+		log.Fatalln(error_codes.Operation_ERROR_CODE_EMPTY_OUTPUT)
+		return "", ""
+	}
+
+	reflex := reflect.ValueOf(i).MapRange()
+	var key, value string = "", ""
+
+	for reflex.Next() {
+
+		key = reflex.Key().Interface().(string)
+		value = reflex.Value().Interface().(string)
+	}
+
+	return key, value
+}
+
+// Read File size
+// @param string as final
+// @return string message
+func GetFileSize(filename ...string) string {
+
+	files, err := os.ReadDir("app_data/")
+	if err != nil || len(files) == 0 && !strings.Contains(filename[0], " ") {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
+		return " "
+	}
+
+	properties, err := os.Stat(filename[0])
+	if err != nil && reflect.DeepEqual(properties, nil) {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_READ_FAILED)
+		return " "
+	}
+
+	return fmt.Sprintf("%d", properties.Size()/1024) + "KiB"
+}
+
+//  @paran filename as string
+//  @return string
+
+// @@ This function return date and time when file created
+func GetFileCreationTime(filename string) string {
+
+	var properties fs.FileInfo
+	var err error
+
+	files, err := os.ReadDir("app_data/")
+	if err != nil {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
+		return ""
+	}
+
+	for entries, _ := range files {
+
+		if strings.Contains("app_data/"+files[entries].Name(), filename) {
+
+			properties, err = os.Stat("app_data/" + files[entries].Name())
+			if err != nil {
+				log.Fatalln(error_codes.File_BAD_REQUEST_CODE_READ_FAILED)
+				return ""
+			}
+		}
+	}
+
+	if reflect.DeepEqual(properties, nil) {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_FILE_PATH_ERROR)
+	}
+	return properties.ModTime().String()
+}
+
+// @param value as int64 ; return array of string map and error
+// @@ This function retreive data from database within time. In case execution fails or queries will not process due to short time,
+// @@ it'll fail and stop the executation of db
+func GetQProteins(value int64) ([]map[string]interface{}, error) {
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	var nullify []map[string]interface{}
+
+	// descriptor, err := cloudmedia.NewMediaDescriptor(ctx, Firestore_Reference()).GetMediaFile(&media.MediaStream{
+	// 	Name:         "",
+	// 	IdentityCode: id[0],
+	// 	Datecreated:  "",
+	// 	Path:         "app_data/",
+	// 	Category:     media.Descriptor_Category_Text,
+	// 	Signature:    []string{""},
+	// 	Cdrlink:      "",
+	// })
+
+	descriptor, err := cloudmedia.NewMediaDescriptor(ctx, Firestore_Reference()).GetAll(value)
+
+	if err != nil {
+		log.Fatalln(error_codes.DATABASE_ERRORS_DOCUMENT_READ_ERROR)
+		return nullify, err
+	}
+
+	return descriptor, nil
+}
+
+// Documentts Credentials
+type DocumentCredentials struct {
+	Filename     []string
+	Passphrase   string
+	ReflectKey   []string
+	ReflectValue []string
+	SizeOf       []string
+	TextView     [][]byte
+}
+
+// @param id as string final and return document credentials and error
+// @@ this function reterive images credentidals
+
+func ImagesCryptoSignature(id ...string) (*DocumentCredentials, error) {
+
+	filename, value, signature := GetDocuments([]string{id[0]}...)
+
+	img_name, img_src := ReflectMaps(value)
+
+	files, err := os.ReadDir("app_data/")
+	if err != nil {
+		log.Fatalln("Error:", error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
+		return &DocumentCredentials{}, err
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	if len(files) == 0 && !strings.Contains(filename, " ") && !(strings.Contains(filename, ".txt")) {
+
+		iobject := dbucket.New_Bucket(ctx, filename, "avatars")
+
+		errs, access := iobject.StoreJCredentials(strings.Join(signature, " "), []string{"chief inner hint orient crane mobile pattern rude moon approve train cheap"}...)
+		if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) && access != nil {
+			log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+			return &DocumentCredentials{}, err
+		}
+
+		errs = iobject.DownloadObject(iobject.GetUplinkProject())
+		if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) {
+			log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+			return &DocumentCredentials{}, err
+		}
+
+		log.Println("Data is already moved...", filename)
+
+	}
+
+	var view []byte
+	var sizeof []string
+	for direc := range files {
+
+		if strings.Contains("app_data/"+files[direc].Name(), filename) && (!strings.Contains(filename, ".json")) {
+			// img_path = "/" + filename
+
+			sizeof = append(sizeof, GetFileSize([]string{filename}...))
+			view = []byte{}
+			break
+		}
+
+	}
+
+	doc := &DocumentCredentials{
+		Filename:     []string{filename},
+		Passphrase:   strings.Join(signature, ""),
+		ReflectKey:   []string{img_name},
+		ReflectValue: []string{img_src},
+		SizeOf:       sizeof,
+		TextView:     [][]byte{view},
+	}
+
+	return doc, nil
+}
+
+// @param value as int64 and return document credentials, number of objects  and error
+// @@ this function reterive non media files (json )
+
+func ProteinsCryptoSignature(value int64) (*DocumentCredentials, int64, error) {
+
+	content, err := GetQProteins(value)
+	if err != nil {
+		log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+		return &DocumentCredentials{}, -1, err
+	}
+
+	filename := []string{}
+	var link []interface{}
+	var passphase []interface{}
+	var keys []string
+
+	values := make([]string, value)
+
+	for i := range content {
+
+		reflectIterator := reflect.ValueOf(content[i]).MapRange()
+
+		for reflectIterator.Next() {
+
+			if reflect.DeepEqual(reflectIterator.Key().String(), "Filename") {
+				filename = append(filename, reflectIterator.Value().Elem().String())
+			}
+
+			if reflect.DeepEqual(reflectIterator.Key().String(), "CDR_LINK") {
+
+				link = append(link, reflectIterator.Value().Elem().String())
+			}
+
+			if reflect.DeepEqual(reflectIterator.Key().String(), "Passphrase") && !reflect.DeepEqual(reflectIterator.Value().Interface(), nil) {
+
+				passphase = append(passphase, reflectIterator.Value().Interface().(interface{}))
+			}
+		}
+
+	}
+
+	seed := fmt.Sprintf("%v", passphase[0])
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	list_keys, err := fireclient.New(ctx, Firestore_Reference()).GetAll()
+	if err != nil {
+
+		log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+		return &DocumentCredentials{}, -1, err
+	}
+
+	for i := range list_keys {
+
+		iterate := reflect.ValueOf(list_keys[i]).MapRange()
+		for iterate.Next() {
+
+			if reflect.DeepEqual(iterate.Key().String(), "Key") {
+
+				keys = append(keys, iterate.Value().Interface().(string))
+			}
+
+			if reflect.DeepEqual(iterate.Key().String(), "Value") && !reflect.DeepEqual(iterate.Value().Interface().(string), link) {
+
+				values = append(values, iterate.Value().Interface().(string))
+
+			}
+
+		}
+
+	}
+
+	files, err := os.ReadDir("app_data/")
+	if err != nil {
+		log.Fatalln("Error:", error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
+		return &DocumentCredentials{}, -1, err
+	}
+
+	for i := range content {
+
+		if len(files) == 0 && !strings.Contains(filename[i], " ") && (strings.Contains(filename[i], ".json")) {
+
+			iobject := dbucket.New_Bucket(ctx, filename[i], "amino-chemical")
+
+			errs, access := iobject.StoreJCredentials(seed, []string{"heavy cancel window wild supply replace oppose until canvas lava lamp muffin"}...)
+			if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) && access != nil {
+				log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+				return &DocumentCredentials{}, -1, err
+			}
+
+			errs = iobject.DownloadObject(iobject.GetUplinkProject())
+			if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) {
+				log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+				return &DocumentCredentials{}, -1, err
+			}
+
+			log.Println("Data is already moved...", filename)
+
+		}
+
+	}
+
+	var view []byte
+
+	var size []string
+
+	var documents [][]byte
+
+	counter := 0
+
+	for direc := range files {
+
+		for i := range content {
+
+			if reflect.DeepEqual(files[direc].Name(), filename[i]+".json") {
+
+				size = append(size, GetFileSize([]string{"app_data/" + filename[i] + ".json"}...))
+
+				counter += 1
+
+				read, err := os.ReadFile("app_data/" + filename[i] + ".json")
+				if err != nil {
+
+					return &DocumentCredentials{}, -1, err
+				}
+
+				view = read
+
+				documents = append(documents, view)
+
+			}
+		}
+	}
+
+	return &DocumentCredentials{
+		Filename:     filename,
+		Passphrase:   seed,
+		ReflectKey:   keys,
+		ReflectValue: values,
+		SizeOf:       size,
+		TextView:     documents}, int64(counter), nil
 }

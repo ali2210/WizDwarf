@@ -13,14 +13,6 @@ ENV PORT=5000
 ENV HOST=wizdwarfs
 
 
-# project variables
-# ENV GEOCOORDINATE="7efdb33c59a74e09352479b21657aee8"
-# ENV Registry_PUSHER_KEY="65993b3c66b5317411a5"
-# ENV Registry_CHANNEL_ID="1265511" 
-# ENV Registry_CHANNEL_SCRECT="4f8bf3faf121d9c8dadf"
-# ENV Registry_CHANNEL_CLUSTER_ID="mt1"
-
-
 # app workspace
 
 RUN mkdir /app

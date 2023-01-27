@@ -4,6 +4,7 @@ import (
 	"github.com/gyozatech/noodlog"
 )
 
+// @return noodlog.Logger
 func New() *noodlog.Logger {
 	return noodlog.NewLogger().SetConfigs(noodlog.Configs{
 		LogLevel:             noodlog.LevelTrace,

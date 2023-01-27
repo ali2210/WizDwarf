@@ -66,6 +66,9 @@ github.com/biogo/biogo/feat
 # github.com/briandowns/openweathermap v0.16.0
 ## explicit; go 1.13
 github.com/briandowns/openweathermap
+# github.com/calebcase/tmpfile v1.0.3
+## explicit; go 1.13
+github.com/calebcase/tmpfile
 # github.com/cenkalti/backoff/v3 v3.2.2
 ## explicit; go 1.12
 github.com/cenkalti/backoff/v3
@@ -144,15 +147,20 @@ github.com/envoyproxy/protoc-gen-validate/validate
 # github.com/fatih/color v1.13.0
 ## explicit; go 1.13
 github.com/fatih/color
-# github.com/fauna/faunadb-go/v4 v4.2.0
-## explicit; go 1.16
-github.com/fauna/faunadb-go/v4/faunadb
 # github.com/fogleman/ribbon v0.0.0-20191101191537-568057efb726
 ## explicit
 github.com/fogleman/ribbon/pdb
 # github.com/fsnotify/fsnotify v1.5.4
 ## explicit; go 1.16
 github.com/fsnotify/fsnotify
+# github.com/go-test/deep v1.0.7
+## explicit; go 1.13
+# github.com/gogo/protobuf v1.3.2
+## explicit; go 1.15
+github.com/gogo/protobuf/jsonpb
+github.com/gogo/protobuf/proto
+github.com/gogo/protobuf/sortkeys
+github.com/gogo/protobuf/types
 # github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da
 ## explicit
 github.com/golang/groupcache/lru
@@ -177,6 +185,8 @@ github.com/google/go-cmp/cmp/internal/diff
 github.com/google/go-cmp/cmp/internal/flags
 github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
+# github.com/google/uuid v1.3.0
+## explicit
 # github.com/googleapis/gax-go/v2 v2.1.1
 ## explicit; go 1.11
 github.com/googleapis/gax-go/v2
@@ -185,6 +195,8 @@ github.com/googleapis/gax-go/v2/apierror/internal/proto
 # github.com/goombaio/namegenerator v0.0.0-20181006234301-989e774b106e
 ## explicit
 github.com/goombaio/namegenerator
+# github.com/gopherjs/gopherjs v1.17.2
+## explicit; go 1.17
 # github.com/gorilla/mux v1.7.4
 ## explicit; go 1.12
 github.com/gorilla/mux
@@ -292,8 +304,8 @@ github.com/hashicorp/yamux
 # github.com/ipfs/go-cid v0.1.0
 ## explicit; go 1.15
 github.com/ipfs/go-cid
-# github.com/klauspost/cpuid/v2 v2.0.9
-## explicit; go 1.13
+# github.com/klauspost/cpuid/v2 v2.1.2
+## explicit; go 1.15
 github.com/klauspost/cpuid/v2
 # github.com/logpacker/PayPal-Go-SDK v2.0.5+incompatible
 ## explicit
@@ -412,6 +424,16 @@ github.com/pusher/pusher-http-go
 # github.com/ryanuber/go-glob v1.0.0
 ## explicit
 github.com/ryanuber/go-glob
+# github.com/sethvargo/go-diceware v0.3.0
+## explicit; go 1.14
+github.com/sethvargo/go-diceware/diceware
+# github.com/spacemonkeygo/monkit/v3 v3.0.19
+## explicit; go 1.13
+github.com/spacemonkeygo/monkit/v3
+github.com/spacemonkeygo/monkit/v3/monotime
+# github.com/vivint/infectious v0.0.0-20200605153912-25a574ae18a3
+## explicit; go 1.12
+github.com/vivint/infectious
 # github.com/zclconf/go-cty v1.10.0
 ## explicit; go 1.12
 github.com/zclconf/go-cty/cty
@@ -421,6 +443,21 @@ github.com/zclconf/go-cty/cty/function/stdlib
 github.com/zclconf/go-cty/cty/gocty
 github.com/zclconf/go-cty/cty/json
 github.com/zclconf/go-cty/cty/set
+# github.com/zeebo/blake3 v0.2.3
+## explicit; go 1.13
+github.com/zeebo/blake3
+github.com/zeebo/blake3/internal/alg
+github.com/zeebo/blake3/internal/alg/compress
+github.com/zeebo/blake3/internal/alg/compress/compress_pure
+github.com/zeebo/blake3/internal/alg/compress/compress_sse41
+github.com/zeebo/blake3/internal/alg/hash
+github.com/zeebo/blake3/internal/alg/hash/hash_avx2
+github.com/zeebo/blake3/internal/alg/hash/hash_pure
+github.com/zeebo/blake3/internal/consts
+github.com/zeebo/blake3/internal/utils
+# github.com/zeebo/errs v1.3.0
+## explicit; go 1.12
+github.com/zeebo/errs
 # gitlab.com/NebulousLabs/errors v0.0.0-20200929122200-06c536cf6975
 ## explicit
 gitlab.com/NebulousLabs/errors
@@ -446,20 +483,21 @@ go.opencensus.io/trace/tracestate
 # go.uber.org/atomic v1.10.0
 ## explicit; go 1.18
 go.uber.org/atomic
-# golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa
+# golang.org/x/crypto v0.1.0
 ## explicit; go 1.17
+golang.org/x/crypto/argon2
 golang.org/x/crypto/blake2b
 golang.org/x/crypto/blake2s
 golang.org/x/crypto/cryptobyte
 golang.org/x/crypto/cryptobyte/asn1
 golang.org/x/crypto/ed25519
+golang.org/x/crypto/internal/alias
 golang.org/x/crypto/internal/poly1305
-golang.org/x/crypto/internal/subtle
 golang.org/x/crypto/nacl/secretbox
 golang.org/x/crypto/pbkdf2
 golang.org/x/crypto/salsa20/salsa
 golang.org/x/crypto/sha3
-# golang.org/x/net v0.0.0-20220812174116-3211cb980234
+# golang.org/x/net v0.1.0
 ## explicit; go 1.17
 golang.org/x/net/context
 golang.org/x/net/context/ctxhttp
@@ -481,12 +519,17 @@ golang.org/x/oauth2/google/internal/externalaccount
 golang.org/x/oauth2/internal
 golang.org/x/oauth2/jws
 golang.org/x/oauth2/jwt
-# golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab
+# golang.org/x/sync v0.1.0
+## explicit
+golang.org/x/sync/errgroup
+golang.org/x/sync/semaphore
+# golang.org/x/sys v0.1.0
 ## explicit; go 1.17
 golang.org/x/sys/cpu
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
-# golang.org/x/text v0.3.7
+golang.org/x/sys/windows
+# golang.org/x/text v0.4.0
 ## explicit; go 1.17
 golang.org/x/text/encoding
 golang.org/x/text/encoding/charmap
@@ -511,8 +554,8 @@ golang.org/x/text/unicode/norm
 # golang.org/x/time v0.0.0-20220722155302-e5dcc9cfc0b9
 ## explicit
 golang.org/x/time/rate
-# golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
-## explicit; go 1.11
+# golang.org/x/xerrors v0.0.0-20220517211312-f3a8303e98df
+## explicit; go 1.17
 golang.org/x/xerrors
 golang.org/x/xerrors/internal
 # google.golang.org/api v0.62.0
@@ -722,3 +765,66 @@ gopkg.in/tomb.v1
 # gopkg.in/yaml.v2 v2.4.0
 ## explicit; go 1.15
 gopkg.in/yaml.v2
+# storj.io/common v0.0.0-20221101132628-f2f1c7a50597
+## explicit; go 1.17
+storj.io/common/base58
+storj.io/common/context2
+storj.io/common/encryption
+storj.io/common/errs2
+storj.io/common/experiment
+storj.io/common/fpath
+storj.io/common/grant
+storj.io/common/identity
+storj.io/common/internal/hmacsha512
+storj.io/common/macaroon
+storj.io/common/memory
+storj.io/common/netutil
+storj.io/common/paths
+storj.io/common/pb
+storj.io/common/peertls
+storj.io/common/peertls/extensions
+storj.io/common/peertls/tlsopts
+storj.io/common/pkcrypto
+storj.io/common/ranger
+storj.io/common/readcloser
+storj.io/common/rpc
+storj.io/common/rpc/rpccache
+storj.io/common/rpc/rpcpeer
+storj.io/common/rpc/rpcpool
+storj.io/common/rpc/rpcstatus
+storj.io/common/rpc/rpctracing
+storj.io/common/signing
+storj.io/common/socket
+storj.io/common/storj
+storj.io/common/storj/location
+storj.io/common/sync2
+storj.io/common/useragent
+storj.io/common/uuid
+storj.io/common/version
+# storj.io/drpc v0.0.32
+## explicit; go 1.17
+storj.io/drpc
+storj.io/drpc/drpcconn
+storj.io/drpc/drpcctx
+storj.io/drpc/drpcdebug
+storj.io/drpc/drpcenc
+storj.io/drpc/drpcerr
+storj.io/drpc/drpcmanager
+storj.io/drpc/drpcmetadata
+storj.io/drpc/drpcmigrate
+storj.io/drpc/drpcsignal
+storj.io/drpc/drpcstream
+storj.io/drpc/drpcwire
+storj.io/drpc/internal/drpcopts
+# storj.io/uplink v1.9.0
+## explicit; go 1.17
+storj.io/uplink
+storj.io/uplink/internal/telemetryclient
+storj.io/uplink/private/ecclient
+storj.io/uplink/private/eestream
+storj.io/uplink/private/metaclient
+storj.io/uplink/private/piecestore
+storj.io/uplink/private/storage/streams
+storj.io/uplink/private/stream
+storj.io/uplink/private/testuplink
+storj.io/uplink/private/version

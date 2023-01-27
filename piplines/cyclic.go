@@ -1,7 +1,8 @@
+// package
 package piplines
 
 //  one-way call
-
+// libaries
 import (
 	//firebase "firebase.google.com/go"
 
@@ -15,8 +16,10 @@ import (
 	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
 	"github.com/ali2210/wizdwarf/other/users"
 	"github.com/hashicorp/vault/api"
+	"storj.io/uplink"
 )
 
+// inter-variables these variables are used to complete or required during the execution state
 var (
 	appName *firestore.Client
 	cloud   users.DBFirestore
@@ -25,16 +28,19 @@ var (
 	Algo info.Levenshtein
 )
 
+// Constants
 const (
 	ConfigFilename string = "htickets-cb4d0-firebase-adminsdk-orfdf-b3528d7d65.json"
 	ProjectID      string = "htickets-cb4d0"
 )
 
+// @return client cloud db
 func SetDBClientRef() *firestore.Client {
 	appName = Firestore_Reference()
 	return appName
 }
 
+// @return client cloud db
 func GetDBClientRef() *firestore.Client {
 	if appName == (&firestore.Client{}) {
 		return (&firestore.Client{})
@@ -42,6 +48,7 @@ func GetDBClientRef() *firestore.Client {
 	return appName
 }
 
+// @return credentials
 func SetDBCollect() users.DBFirestore {
 	cloud = users.NewCloudInstance()
 	return cloud
@@ -55,6 +62,7 @@ func GetDBCollect() users.DBFirestore {
 	return cloud
 }
 
+// @return string message
 func GetKeyFile() string {
 	if ConfigFilename == "" {
 		return ""
@@ -69,6 +77,7 @@ func GetProjectID() string {
 	return ProjectID
 }
 
+// @return bio.LevenTable
 func GetEditParameters() bio.LevenTable {
 	var matx bio.LevenTable
 	if reflect.DeepEqual(Edit, matx) {
@@ -82,11 +91,14 @@ func SetEditParameters() bio.LevenTable {
 	return Edit
 }
 
+// Run algorithm parameters
+// @param probablity, percentage (float) & infectitious name
 func SetBioAlgoParameters(prob float32, pattern_name string, percent float32) {
 
 	Algo = info.Levenshtein{Probablity: prob, Name: pattern_name, Percentage: percent}
 }
 
+// @return info.Levenshtein
 func GetBioAlgoParameters() info.Levenshtein {
 
 	if reflect.DeepEqual((info.Levenshtein{}), Algo) {
@@ -95,11 +107,15 @@ func GetBioAlgoParameters() info.Levenshtein {
 	return Algo
 }
 
+// Extractor function extract pepper from salt
+// @param input and pattern string message
+// @return string message
 func Extractor(in, pattern string) string {
 
 	return strings.Trim(in, pattern)
 }
 
+// This struct will parse hcl content
 type HCLDeclaration struct {
 	Weatherapi  string `hcl:"Weatherapi"`
 	Channel_key string `hcl:"Channel_key"`
@@ -109,16 +125,20 @@ type HCLDeclaration struct {
 	Token_Auth  string `hcl:"Token_Auth"`
 }
 
+// Global Variables
 var v_wrapper vault_wraper.Vault_Services
 
+// PutKv allow to store credentials in vault
+// @param hcl parser object, vault secrets path & vault client
+// @return error message
 func PutKV(object *HCLDeclaration, path string, client *api.Client) error {
 
 	if reflect.DeepEqual(object, &HCLDeclaration{}) {
-		return errors.Unwrap(errors.New("Object field must not be empty"))
+		return errors.Unwrap(errors.New("object field must not be empty"))
 	}
 
 	if reflect.DeepEqual(client, &api.Client{}) {
-		return errors.Unwrap(errors.New("Vault client is not running in background or vault credentials had not submit yet."))
+		return errors.Unwrap(errors.New("vault client is not running in background or vault credentials had not submit yet"))
 	}
 
 	v_wrapper = vault_wraper.NewClient(client)
@@ -139,6 +159,9 @@ func PutKV(object *HCLDeclaration, path string, client *api.Client) error {
 	return err
 }
 
+// GetKv retreive vault secrets
+// @param vault path
+// @return interface (any) and eror message
 func GetKV(path string) (interface{}, error) {
 
 	keygen, err := v_wrapper.GetKeygen(vault_wraper.Keygen{
@@ -150,8 +173,13 @@ func GetKV(path string) (interface{}, error) {
 	}
 
 	if reflect.DeepEqual(keygen.Data["data"], map[string]interface{}{}) {
-		return map[string]interface{}{}, errors.Unwrap(errors.New("secrets vault is empty.."))
+		return map[string]interface{}{}, errors.Unwrap(errors.New("secrets vault is empty"))
 	}
 
 	return keygen.Data["data"], nil
 }
+
+var app *uplink.Project
+
+func SetAppLink(project *uplink.Project) { app = project }
+func GetAppLink() *uplink.Project        { return app }

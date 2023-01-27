@@ -77,19 +77,14 @@
     display: flex;
     position: relative;
     justify-content: center;
-    top: 191pc;
+    top: 10pc;    
     background-color: black;
     color: whitesmoke;
     height: 9pc;
-  }
+    border-radius: 20px;
+    }
   
-  .channel{
-    position: absolute;
-    display: flex;
-    top: 18px;
-    left:73pc;
-    border-radius: 11px;
-  }
+ 
   
   .insta{
     position : absolute;
@@ -107,15 +102,11 @@
   .reddit{
     position : absolute;
     display: flex;
-    left: 77px;
-  }
+    left: 4px;
+    top: 86px;
+    }
   
-
-  /* .buymecoffee{
-    display: flex;
-    position : absolute;
-    left: 47px;
-  } */
+    
 
   .col{
     display: flex;

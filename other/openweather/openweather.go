@@ -29,6 +29,7 @@ type DataVisualization struct {
 	Record      Man
 
 	Probab_Event float32
+	Avatar_Path  string
 }
 
 // Coodinates have fields {Longituide and Latitude},

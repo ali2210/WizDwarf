@@ -5,6 +5,7 @@ import (
 
 	bio "github.com/ali2210/wizdwarf/other/bioinformatics"
 	"github.com/ali2210/wizdwarf/other/users"
+	"github.com/hashicorp/vault/api"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -51,6 +52,59 @@ var _ = Describe("Piplines cyclic testing", func() {
 					Percentage float64
 					Name       string
 				}{}))
+			})
+		})
+	})
+})
+
+var _ = Describe("Vault test suits running", func() {
+
+	// Before running vault tests
+	BeforeEach(func() {
+		When("Parser code analysis tests", func() {
+			Context("Parser returns empty credentials", func() {
+				It("Should empty credentials succeed", func() {
+					Expect(HCLDeclaration{
+						Weatherapi:  "",
+						Channel_key: "",
+						Channel_id:  "",
+						Secret:      "",
+						Cluster_ID:  "",
+						Token_Auth:  "",
+					}).Should(BeEmpty())
+				})
+			})
+		})
+		When("Pepper extraction from salt message", func() {
+			Context("Let's started on on some text", func() {
+				It("Should extract salt message or function will throw exception", func() {
+					Expect(Extractor("Hello, world!", "world")).ShouldNot(BeEmpty())
+				})
+			})
+		})
+	})
+	AfterEach(func() {
+		When("When data should be empty", func() {
+			Context("data is empty", func() {
+				It("should be empty", func() {
+					Expect(PutKV(&HCLDeclaration{
+						Weatherapi:  "",
+						Channel_key: "",
+						Channel_id:  "",
+						Secret:      "",
+						Cluster_ID:  "",
+						Token_Auth:  "",
+					}, " ", &api.Client{})).Should(BeNil())
+				})
+			})
+		})
+		When("When data is not provided", func() {
+			Context("Does vault return no data", func() {
+				It("returns no data", func() {
+					value, err := GetKV("")
+					Expect(err).Should(BeNil())
+					Expect(value).To(BeEmpty())
+				})
 			})
 		})
 	})

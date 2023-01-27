@@ -1,0 +1,48 @@
+
+syntax = "proto3";
+package media;
+
+// option go_package = "github.com/ali2210/wizdwarf/other/cloudmedia/media";
+
+message IMAGE_METADATA {
+    
+    string name = 1;
+    string type = 2;
+    string created = 3;
+    TOKEN_CATEGORY tokens = 4;
+    bool MyProfile = 5;
+    map<string,string> cdr = 6;
+    string timeline = 7;
+    string tags = 8;
+    repeated string Signature = 9;
+}
+
+message MediaStream {
+
+    string name = 1;
+    string identity_code = 2;
+    string datecreated = 3;
+    string path = 4;
+    Descriptor_Category category = 5;
+    repeated string Signature = 6;
+    string cdrlink = 7;
+}
+
+enum TOKEN_CATEGORY {
+
+    NON_FUNGIABLE_TOKEN = 0;
+    FUNGIABLE_TOKEN = 1;
+    SOUL_BOUND_TOKEN = 2;
+}
+
+enum Descriptor_Category {
+
+    Text = 0;
+    Video = 1;
+    Audio = 2;
+    Image = 3;
+}
+
+
+
+

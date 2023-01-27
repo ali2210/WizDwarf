@@ -18,7 +18,7 @@ convensions. @contact Ali Hassan AliMatrixCode@protonmail.com  -->
     rel="stylesheet">
   <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
   <link rel="stylesheet" type="text/css" href="/css/login.css">
-  <title>WizDwarfs</title>
+  <title>Wizdwarfs</title>
 </head>
 
 <body style=" background-color: white;">
@@ -78,7 +78,12 @@ convensions. @contact Ali Hassan AliMatrixCode@protonmail.com  -->
   </script>
   <script type="text/javascript">
 
-      
+    // weblocal "browser cache"
+    const weblocal = window.localStorage;
+
+    weblocal.length > 0 ?  weblocal.clear() : weblocal.getItem(0);
+
+    // credentials states 
     const pass_option = document.getElementsByClassName('form-check-input')[0];
     const email = document.getElementsByClassName('emailclass')[0];
     const password = document.getElementsByClassName('passclass')[0];

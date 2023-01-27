@@ -3,7 +3,7 @@
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>WizDwarfs</title>
+    <title>Wizdwarfs</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
@@ -19,7 +19,7 @@
 <body>
       <div class='main-dashboard-div'>
         <nav class="navbar navbar-expand-md navbar-light custom-navbar">
-          <a class="navbar-brand" href="/home">
+          <a class="navbar-brand" href="/">
             <img src="/images/logo.png" alt="Logo" class="logo">
           </a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
@@ -28,7 +28,7 @@
             <div class="collapse navbar-collapse" id="navbarNavDropdown" style="position: absolute;left: 37pc;">
             <ul class="navbar-nav">
               <li class="nav-item active pl-3">
-              <a class="nav-link" href="/">
+              <a class="nav-link" href="/dashboard">
                 <i class="fa fa-home icon-light" aria-hidden="true"></i>
               </a>
               </li>
@@ -38,9 +38,10 @@
                 <i class="fa fa-envelope" aria-hidden="true"></i>
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item active" href="#" title="These message will dispear after few seconds."><i class="fa fa-message" aria-hidden="true"></i> Conversation </a>
-				        <a class="dropdown-item" href="#" title="Gossips"> <i class="fa fa-users" aria-hidden="true"></i> Groups </a>
-                <a class="dropdown-item" href="#" title="All your peers address store here "> <i class="fa fa-address-book"> </i> Peers </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item active" href="/messages" title="Private.  These message will dispear after few seconds."><i class="fa fa-envelope-o" aria-hidden="true"></i> Private </a>
+                  <a class="dropdown-item" href="/messages" title="Gossips"> <i class="fa fa-comments-o" aria-hidden="true"></i> Public </a>
+                </div>
               </div>
               </li>
               <li class="nav-item dropdown pl-3">

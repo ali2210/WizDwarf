@@ -2,8 +2,10 @@
 Redistribution , contribution and improve codebase under license
 convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
 
+// package
 package main
 
+// Libraries
 import (
 	"context"
 	"encoding/json"
@@ -19,23 +21,35 @@ import (
 	"strings"
 	"time"
 
-	"cloud.google.com/go/firestore"
-	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
-	"github.com/ali2210/wizdwarf/other/bucket"
-	"github.com/ali2210/wizdwarf/other/bucket/proto"
-	logcache "github.com/ali2210/wizdwarf/other/cache_logs"
+	"github.com/ali2210/wizdwarf/other/bucket/fireclient"
 	cryptos "github.com/ali2210/wizdwarf/other/crypto"
-	timer "github.com/ali2210/wizdwarf/other/date_time"
 	genetics "github.com/ali2210/wizdwarf/other/genetic"
-	genome "github.com/ali2210/wizdwarf/other/genetic/binary"
 	"github.com/ali2210/wizdwarf/other/jsonpb"
 	"github.com/ali2210/wizdwarf/other/jsonpb/jsonledit"
-	"github.com/ali2210/wizdwarf/other/logformatter"
-	"github.com/ali2210/wizdwarf/other/molecules"
 	"github.com/ali2210/wizdwarf/other/parser"
 	"github.com/ali2210/wizdwarf/other/proteins"
+	secrets "github.com/ali2210/wizdwarf/other/secrets/secretsparam"
+
+	dbucketerror "github.com/ali2210/wizdwarf/other/bucket/storj_bucket/bucket"
+	"github.com/sethvargo/go-diceware/diceware"
+
+	"cloud.google.com/go/firestore"
+	"github.com/SkynetLabs/go-skynet/v2"
+	error_codes "github.com/ali2210/wizdwarf/errors_codes"
+	info "github.com/ali2210/wizdwarf/other/bioinformatics/model"
+	"github.com/ali2210/wizdwarf/other/bucket"
+	dbucket "github.com/ali2210/wizdwarf/other/bucket/storj_bucket"
+	logcache "github.com/ali2210/wizdwarf/other/cache_logs"
+	"github.com/ali2210/wizdwarf/other/cloudmedia"
+	"github.com/ali2210/wizdwarf/other/cloudmedia/dlink"
+	"github.com/ali2210/wizdwarf/other/cloudmedia/media"
+	timer "github.com/ali2210/wizdwarf/other/date_time"
+	genome "github.com/ali2210/wizdwarf/other/genetic/binary"
+	"github.com/ali2210/wizdwarf/other/logformatter"
+	"github.com/ali2210/wizdwarf/other/molecules"
 	"github.com/ali2210/wizdwarf/other/proteins/binary"
 	websession "github.com/ali2210/wizdwarf/other/session"
+	user "github.com/ali2210/wizdwarf/other/users/register"
 	"github.com/ali2210/wizdwarf/piplines"
 	connection "github.com/alimasyhur/is-connect"
 	"github.com/briandowns/openweathermap"
@@ -61,44 +75,48 @@ const VAULT_ADDRESS string = "http://127.0.0.1:8200"
 // Variables
 
 var (
-	emailexp     string                = "([A-Z][a-z]|[0-9])*[@][a-z]*"
-	passexp      string                = "([A-Z][a-z]*[0-9])*"
-	addressexp   string                = "(^0x[0-9a-fA-F]{40}$)"
+	emailexp string = "([A-Z][a-z]|[0-9])*[@][a-z]*"
+	passexp  string = "([A-Z][a-z]*[0-9])*"
+	// addressexp   string                = "(^0x[0-9a-fA-F]{40}$)"
 	userSessions *sessions.CookieStore = nil //user level
 	// publicAddress     string                = ""
 	// edit              bio.LevenTable        = SetEditParameters()
-	algo                   info.Levenshtein
-	visualizeReport        weather.DataVisualization = weather.DataVisualization{}
-	accountID              string                    = " "
-	accountKey             string                    = " "
-	accountVisitEmail      string                    = " "
-	signed_msg             string                    = " "
-	address_wallet         string                    = " "
-	File                   string                    = ""
-	sumof                  int64                     = 0
+	algo            info.Levenshtein
+	visualizeReport weather.DataVisualization = weather.DataVisualization{}
+	// accountID              string                    = " "
+	// accountKey             string = " "
+	// accountVisitEmail      string = " "
+	signed_msg             string = " "
+	address_wallet         string = " "
+	File                   string = ""
+	sumof                  int64  = 0
 	sb                     []string
 	mss                    []float64
 	occ                    []int64
 	count                  int = 0
 	aminochain             []*binary.Micromolecule
-	profiler               *users.Visitors = &users.Visitors{}
-	GEO_Index_KEY          string          = ""
-	APP_CHANNEL_KEY        string          = " "
-	APP_CHANNEL_ID         string          = " "
-	APP_CHANNEL_SECRET     string          = " "
-	APP_CHANNEL_CLUSTER_ID string          = " "
-	SECRET_TOKEN           string          = " "
+	GEO_Index_KEY          string = ""
+	APP_CHANNEL_KEY        string = " "
+	APP_CHANNEL_ID         string = " "
+	APP_CHANNEL_SECRET     string = " "
+	APP_CHANNEL_CLUSTER_ID string = " "
+	SECRET_TOKEN           string = " "
 	_start                 time.Time
-	CONNECTIVITY           string = ""
+	CONNECTIVITY           string = " "
 	client                 *api.Client
 	hcldeclare             piplines.HCLDeclaration
+	evolve                 int64  = 1
+	updateInfo             bool   = false
+	_secret                string = " "
+	_email                 string = " "
 )
 
 var (
-	cacheObject                   = logcache.New(logcache.GetBigcached_config())
-	logformat                     = logformatter.New()
-	AppName     *firestore.Client = piplines.SetDBClientRef()
-	Cloud       users.DBFirestore = piplines.SetDBCollect()
+	cacheObject                    = logcache.New(logcache.GetBigcached_config())
+	logformat                      = logformatter.New()
+	AppName      *firestore.Client = piplines.SetDBClientRef()
+	Cloud        users.DBFirestore = piplines.SetDBCollect()
+	updated_info user.Updated_User = user.Updated_User{}
 )
 
 func main() {
@@ -181,7 +199,7 @@ func main() {
 		log.Println(emoji_values[12], " Firebase Configuration complete ... [well-done]")
 		log.Println(emoji_values[13], " Private IP-Address Configuration complete ... [well-done]")
 		log.Println(emoji_values[14], " Protocol-Buffer v3 Configuration complete ... [well-done]")
-		log.Println(emoji_values[16], " FAUNA DB Connected ... [well-done]")
+		log.Println(emoji_values[16], " Salt and Pepper added ... [well-done]")
 		log.Println(emoji_values[17], " Channel communication Configuration complete ... [well-done]")
 		log.Println(emoji_values[18], " Data Events are encrypted.   ... [well-done]")
 		log.Println(emoji_values[19], " UI Webboard Configuration complete ... [well-done]")
@@ -227,7 +245,14 @@ func main() {
 
 		client.SetToken(SECRET_TOKEN)
 
-		err = piplines.PutKV(&piplines.HCLDeclaration{Weatherapi: geoApi, Channel_key: channelKey, Channel_id: channelId, Secret: channelSecret, Cluster_ID: channelCluster, Token_Auth: ""}, Secret_path, client)
+		err = piplines.PutKV(&piplines.HCLDeclaration{
+			Weatherapi:  geoApi,
+			Channel_key: channelKey,
+			Channel_id:  channelId,
+			Secret:      channelSecret,
+			Cluster_ID:  channelCluster,
+			Token_Auth:  "",
+		}, Secret_path, client)
 		if err != nil {
 			log.Fatalln(" Error :", err)
 			return
@@ -290,10 +315,13 @@ func main() {
 	routing.HandleFunc("/dashboard", dashboard)
 	routing.HandleFunc("/dashbaord/setting", setting)
 	routing.HandleFunc("/dashboard/profile", profile)
+	routing.HandleFunc("/dashboard/profile/edit", update)
+	routing.HandleFunc("/dashboard/profile/view", view)
 	routing.HandleFunc("/logout", logout)
 	routing.HandleFunc("/messages", messages)
 	routing.HandleFunc("/error", distorted)
 	routing.HandleFunc("/visualize", visualize)
+	routing.HandleFunc("/dashboard/dvault", dvault)
 	// routing.HandleFunc("/feedback", customerViews)
 	routing.HandleFunc("/terms", terms)
 	routing.HandleFunc("/analysis", analysis)
@@ -329,6 +357,9 @@ func main() {
 	routing.PathPrefix("/js/").Handler(js)
 	gltf := http.StripPrefix("/models/", http.FileServer(http.Dir("./models")))
 	routing.PathPrefix("/models/").Handler(gltf)
+
+	docker_files := http.StripPrefix("/app_data/", http.FileServer(http.Dir("./app_data")))
+	routing.PathPrefix("/app_data/").Handler(docker_files)
 
 	// tcp connection
 	err := http.ListenAndServe(":5000", routing)
@@ -409,19 +440,22 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("register.html"))
 
 	// user query interface
-	user := users.Visitors{
-		Name:       "",
-		LastName:   "",
-		Eve:        false,
-		Address:    "",
-		Appartment: "",
-		Zip:        "",
-		City:       "",
-		Country:    "",
-		Email:      "",
-		Password:   "",
-		PhoneNo:    "",
-		Twitter:    "",
+	user := user.New_User{
+		Name:            "",
+		Email:           "",
+		Password:        "",
+		Lastname:        "",
+		Address:         "",
+		Phone:           "",
+		Zip:             "",
+		City:            "",
+		State:           "",
+		Gender:          0,
+		ID:              "",
+		Friends:         0,
+		Inspire:         0,
+		Lead:            0,
+		SocialEvolution: 0,
 	}
 
 	// route actions
@@ -440,18 +474,17 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 
 		// html form
 		user.Name = r.FormValue("uname")
-		user.LastName = r.FormValue("ufname")
-		user.Address = r.FormValue("address")
-		user.Appartment = r.FormValue("add")
+		user.Lastname = r.FormValue("ufname")
+		user.Address = r.FormValue("address") + r.FormValue("add")
 		user.City = r.FormValue("inputCity")
-		user.Country = r.FormValue("co")
+		user.State = r.FormValue("co")
 		user.Zip = r.FormValue("inputZip")
 		user.Email = r.FormValue("email")
 		user.Password = r.FormValue("password")
 		if r.FormValue("gender") == "on" {
-			user.Eve = true
+			user.Gender = 1
 		} else {
-			user.Eve = false
+			user.Gender = 0
 		}
 
 		// user email and email pattern both are same, means email created according to email rule.
@@ -488,8 +521,8 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// encrypted user information
-		hash, encrypted := piplines.Presence(w, r, regex_Email, regex_Pass, user)
-		if !hash {
+		ok, encrypted := piplines.Presence(w, r, regex_Email, regex_Pass, user)
+		if !ok {
 			w.WriteHeader(http.StatusBadRequest)
 			distorted(w, r)
 
@@ -504,8 +537,14 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		user.Friends = int64(0)
+		user.Inspire = int64(0)
+		user.Lead = int64(0)
+		user.SocialEvolution = int64(2)
+		user.ID = encrypted.Reader
+
 		// in case your account have been created ....
-		if _, ok, err := piplines.AddNewProfile(w, r, user, encrypted.Reader); ok && err == nil {
+		if _, ok, err := piplines.AddNewProfile(w, r, user); ok && err == nil {
 
 			// route return Ok callback
 			w.WriteHeader(http.StatusOK)
@@ -532,7 +571,7 @@ func existing(w http.ResponseWriter, r *http.Request) {
 	temp := template.Must(template.ParseFiles("login.html"))
 
 	// initalization of user interface
-	user := users.Visitors{}
+	add := user.New_User{}
 
 	// route actions
 	if r.Method == "GET" {
@@ -550,12 +589,12 @@ func existing(w http.ResponseWriter, r *http.Request) {
 		// user query parameters
 		r.ParseForm()
 
-		user.Email = r.FormValue("email")
-		user.Password = r.FormValue("password")
+		add.Email = r.FormValue("email")
+		add.Password = r.FormValue("password")
 
 		// match email patten with email addresss
 		exp := regexp.MustCompile(emailexp)
-		ok := exp.MatchString(user.Email)
+		ok := exp.MatchString(add.Email)
 		if !ok {
 
 			w.WriteHeader(http.StatusBadRequest)
@@ -573,8 +612,8 @@ func existing(w http.ResponseWriter, r *http.Request) {
 
 		// match password pattern against password
 		reg := regexp.MustCompile(passexp)
-		okx := reg.MatchString(user.Password)
-		if !okx && len(user.Password) >= 7 {
+		okx := reg.MatchString(add.Password)
+		if !okx && len(add.Password) >= 7 {
 
 			w.WriteHeader(http.StatusBadRequest)
 			distorted(w, r)
@@ -589,29 +628,20 @@ func existing(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		_secret = add.Password
+		_email = add.Email
+
 		// Search Data in DB
-		data, err := piplines.Firebase_Gatekeeper(w, r, user)
-		if reflect.DeepEqual(data, &users.Visitors{Eve: false}) && err == nil {
+		data, update, err := piplines.Firebase_Gatekeeper(w, r, add)
+		var ID string
+		if !reflect.DeepEqual(data, &user.New_User{}) && err != nil {
 
-			w.WriteHeader(http.StatusBadRequest)
-			distorted(w, r)
+			ID = data.ID
 
-			cacheObject.Set_Key("DB connection:", "No information about user")
-			value, err := cacheObject.Get_Key("DB connection:")
-			if err != nil {
-				return
-			}
+		} else {
 
-			logformat.Error(value)
-
-			return
+			ID = update.ID
 		}
-
-		accountID = data.Id
-
-		accountVisitEmail = data.Email
-		accountKey = data.Password
-		profiler = data
 
 		// account interface
 		act := websession.Cookies{}
@@ -620,7 +650,7 @@ func existing(w http.ResponseWriter, r *http.Request) {
 		if userSessions == nil {
 
 			// initialize the web session
-			userSessions = piplines.Web_Token(data.Id)
+			userSessions = piplines.Web_Token(ID)
 
 			// valid the session data
 			act.SetContextSession(userSessions, w, r)
@@ -648,27 +678,30 @@ func existing(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type ControlDataType struct {
+	Avatar string
+}
+
 func profile(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
-	// short live variable called visitor
-	var member users.Visitors
-
 	// page renderer
 	temp := template.Must(template.ParseFiles("profile.html"))
 
-	w.WriteHeader(http.StatusBadRequest)
-	distorted(w, r)
+	controlHandler := ControlDataType{}
+
 	// to find app have information
-	visit, err := Cloud.GetDocumentById(AppName, *profiler)
+	data, update, err := piplines.Firebase_Gatekeeper(w, r, user.New_User{Email: _email, Password: _secret})
 	if err != nil {
 		cacheObject.Set_Key("Internal:", err.Error())
 
 		value, err := cacheObject.Get_Key("Internal:")
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 			return
 		}
 
@@ -676,122 +709,95 @@ func profile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// encode information with json schema
-	data, err := json.Marshal(visit)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		distorted(w, r)
-		cacheObject.Set_Key("Internal:", err.Error())
+	var ID string
 
-		value, err := cacheObject.Get_Key("Internal:")
+	files, err := os.ReadDir("app_data/")
+	if err != nil {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
+		cacheObject.Set_Key("Path:", "No Directory Found")
+
+		value, err := cacheObject.Get_Key("Path:")
 		if err != nil {
 			return
 		}
 
 		logformat.Error(value)
 		return
+
 	}
 
-	// proper encoding over data streams
-	err = json.Unmarshal(data, &member)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		distorted(w, r)
-		cacheObject.Set_Key("Internal:", err.Error())
+	if !reflect.DeepEqual(update, user.Updated_User{}) {
 
-		value, err := cacheObject.Get_Key("Internal:")
-		if err != nil {
-			return
+		ID = update.ID
+
+	} else {
+
+		ID = data.ID
+	}
+
+	meta, _, _ := piplines.GetDocuments([]string{ID}...)
+
+	for list := range files {
+
+		if strings.Contains("app_data/"+files[list].Name(), meta) {
+
+			controlHandler.Avatar = "/" + meta
+
+			break
 		}
 
-		logformat.Error(value)
-		return
+		if !strings.Contains(meta, "app_data/"+files[list].Name()) {
+
+			controlHandler.Avatar = "/images/png-transparent-fox-low-poly-animal-digital-art-arctic-fox-dog-car-polygon.png"
+			break
+		}
+
 	}
 
 	// web request "get"
 	if r.Method == "GET" {
+
 		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
 
 		value, err := cacheObject.Get_Key("Route_Path:")
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 			return
 		}
 
 		logformat.Trace(value)
-		temp.Execute(w, member)
+
+		temp.Execute(w, controlHandler)
+
 	} else if r.Method == "POST" {
 
+		if !reflect.DeepEqual(update, user.Updated_User{}) {
+
+			ID = update.ID
+
+		} else {
+
+			ID = data.ID
+		}
+
 		// user add profile picture resolution must be less 2kb
-		piplines.AvatarUpload(r, member.Id)
+		if filename, err := piplines.AvatarUpload(r, ID); err != nil && strings.Contains(filename, " ") {
+			cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
 
-		// update users information
-		user := users.Visitors{}
+			value, err := cacheObject.Get_Key("Route_Path:")
+			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				distorted(w, r)
+				return
+			}
 
-		// users information hold
-		user.Id = member.Id
-		user.Password = member.Password
-		user.Email = member.Email
-
-		if strings.Contains(r.FormValue("name"), " ") {
-			user.Name = member.Name
-		} else {
-			user.Name = r.FormValue("name")
+			logformat.Trace(value)
 		}
 
-		if strings.Contains(r.FormValue("lastname"), " ") {
-			user.LastName = member.LastName
-		} else {
-			user.LastName = r.FormValue("lastname")
-		}
-
-		if strings.Contains(r.FormValue("address"), " ") {
-			user.Address = member.Address
-		} else {
-			user.Address = r.FormValue("address")
-		}
-
-		if strings.Contains(r.FormValue("appartment"), " ") {
-			user.Appartment = member.Appartment
-		} else {
-			user.Appartment = r.FormValue("appartment")
-		}
-		if strings.Contains(r.FormValue("zip"), " ") {
-			user.Zip = member.Zip
-		} else {
-			user.Zip = r.FormValue("zip")
-		}
-
-		if strings.Contains(r.FormValue("city"), " ") {
-			user.City = member.City
-		} else {
-			user.City = r.FormValue("city")
-		}
-
-		if strings.Contains(r.FormValue("country"), " ") {
-			user.Country = member.Country
-		} else {
-			user.Country = r.FormValue("country")
-		}
-
-		if strings.Contains(r.FormValue("tweet"), " ") {
-			user.Twitter = member.Twitter
-		} else {
-			user.Twitter = r.FormValue("tweet")
-		}
-
-		if strings.Contains(r.FormValue("phone"), " ") {
-			user.PhoneNo = member.PhoneNo
-		} else {
-			user.PhoneNo = r.FormValue("phone")
-		}
-
-		// user information completed and store in database
-		if status_profile := piplines.UpdateProfileInfo(&user); status_profile {
-
-			w.WriteHeader(http.StatusOK)
-			return
-		}
-
+		w.WriteHeader(http.StatusOK)
+		r.Method = "GET"
+		dashboard(w, r)
 	}
 
 }
@@ -861,12 +867,136 @@ func analysis(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	webpage := template.Must(template.ParseFiles("analysis.html"))
+	var meta string
 
 	if reflect.DeepEqual(visualizeReport.UVinfo, openweathermap.UVIndexInfo{}) {
+
+		log.Fatalln(" Error : no information")
 		w.WriteHeader(http.StatusBadRequest)
 		distorted(w, r)
+		cacheObject.Set_Key("Bad:", "Bad Request")
 
+		value, err := cacheObject.Get_Key("Bad:")
+		if err != nil {
+			return
+		}
+
+		logformat.Error(value)
 		return
+	}
+
+	data, update, err := piplines.Firebase_Gatekeeper(w, r, user.New_User{Email: _email, Password: _secret})
+	if err != nil {
+		cacheObject.Set_Key("Internal:", err.Error())
+
+		value, err := cacheObject.Get_Key("Internal:")
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
+			cacheObject.Set_Key("Token:", "Web token are not created")
+
+			value, err := cacheObject.Get_Key("Token:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
+			return
+
+		}
+
+		logformat.Error(value)
+		return
+	}
+
+	var ID string
+
+	if !reflect.DeepEqual(update, user.Updated_User{}) {
+
+		ID = update.ID
+
+	} else {
+
+		ID = data.ID
+	}
+
+	files, err := os.ReadDir("app_data/")
+	if err != nil {
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
+		cacheObject.Set_Key("Path:", "No Directory Found")
+
+		value, err := cacheObject.Get_Key("Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Error(value)
+		return
+
+	}
+
+	// (*** second parameter ****  )
+
+	meta, _, _ = piplines.GetDocuments([]string{ID}...)
+	// contKey, contVae := piplines.ReflectMaps(mapData)
+
+	for list := range files {
+
+		if strings.Contains("app_data/"+files[list].Name(), meta) {
+
+			visualizeReport.Avatar_Path = "/" + meta
+
+			break
+		}
+
+		if !strings.Contains(meta, "app_data/"+files[list].Name()) {
+
+			visualizeReport.Avatar_Path = "/images/png-transparent-fox-low-poly-animal-digital-art-arctic-fox-dog-car-polygon.png"
+			break
+
+			// ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+			// defer cancel()
+
+			// log.Println("Key:", contKey, "Value:", contVae)
+
+			// inter, num := fireclient.New(ctx, piplines.Firestore_Reference()).Get(contKey, []string{contVae}...)
+
+			// if num != 0 {
+			// 	log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+			// 	return
+			// }
+
+			// _, resource := piplines.ReflectMaps(inter)
+
+			// log.Println("Value:", inter, "Resources:", resource)
+
+			// if strings.Contains(contKey, " ") && !strings.Contains(contVae, resource) {
+
+			// 	log.Fatalln(error_codes.Operation_ERROR_CODE_MISMATCH_STATE)
+			// 	return
+			// }
+
+			// iobject := dbucket.New_Bucket(ctx, meta, "avatars")
+
+			// errs, access := iobject.StoreJCredentials(strings.Join(signature, " "), []string{"chief inner hint orient crane mobile pattern rude moon approve train cheap"}...)
+			// if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) && access != nil {
+			// 	log.Fatalln(error_codes.CHANNEL_ERROR_CHANNEL_CLOSED)
+			// 	return
+			// }
+
+			// if strings.Contains(meta, ".png") {
+
+			// 	str := strings.Trim(meta, ".png")
+			// 	str = strings.Trim(meta, "app_data/")
+			// 	err := iobject.DownloadObject(iobject.GetUplinkProject(), " ", []string{str}...)
+			// 	if err != nil {
+
+			// 		log.Fatalln(error_codes.DATABASE_ERRORS_DOCUMENT_READ_ERROR)
+			// 		return
+			// 	}
+			// }
+
+		}
 	}
 
 	// Check whether genome exist or not. If yes and probablity value will be less or equal to 5 then. No worry
@@ -947,24 +1077,12 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
 
 	temp := template.Must(template.ParseFiles("computation.html"))
+	var ID string
+	var NAME string
+	var Email string
+	_start = time.Now()
 
-	userProfile, err := Cloud.GetDocumentById(AppName, *profiler)
-	if err != nil && userProfile != nil {
-
-		w.WriteHeader(http.StatusBadRequest)
-		distorted(w, r)
-		cacheObject.Set_Key("Internal:", err.Error())
-
-		value, err := cacheObject.Get_Key("Internal:")
-		if err != nil {
-			return
-		}
-
-		logformat.Error(value)
-		return
-	}
-
-	query_json, err := json.Marshal(userProfile)
+	data, update, err := piplines.Firebase_Gatekeeper(w, r, user.New_User{Email: _email, Password: _secret})
 	if err != nil {
 
 		w.WriteHeader(http.StatusBadRequest)
@@ -980,11 +1098,218 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = json.Unmarshal(query_json, &profiler)
-	if err != nil {
+	life := genome.Lifecode{}
+
+	if !reflect.DeepEqual(update, &user.Updated_User{}) {
+
+		ID = update.ID
+		NAME = update.Name
+		Email = update.Email
+	} else {
+
+		ID = data.ID
+		NAME = data.Name
+		Email = data.Email
+	}
+
+	visualizeReport.Record = weather.Man{Name: NAME, Email: Email}
+
+	// firestore credentials
+	genetics.Client = piplines.Firestore_Reference()
+
+	// generate ed25519 key
+	cdr, _ := cryptos.PKK25519(update.ID)
+	genetics.Pkk = fmt.Sprintf("%x", cdr)
+
+	// genetics object
+	// rece_gen := genetics.New()
+
+	// genetics data string
+	life.Genes = strings.Join(piplines.GetGenes(), "")
+	life.Pkk = genetics.Pkk
+
+	// create trust object ... trust verified whom that content .
+	ok, key, err := piplines.TrustRequest(life.Pkk, address_wallet, signed_msg)
+	if !ok && err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		distorted(w, r)
 		cacheObject.Set_Key("Internal:", err.Error())
+
+		value, err := cacheObject.Get_Key("Internal:")
+		if err != nil {
+
+			return
+		}
+
+		logformat.Error(value)
+		return
+	}
+
+	// genetics database
+	// status := rece_gen.AddCode(context.Background(), &life)
+	// if status.ErrorCode == binaries.Errors_Error {
+
+	// 	w.WriteHeader(http.StatusBadRequest)
+	// 	distorted(w, r)
+	// 	cacheObject.Set_Key("Internal:", status.ErrorCode.String())
+
+	// 	value, err := cacheObject.Get_Key("Internal:")
+	// 	if err != nil {
+	// 		return
+	// 	}
+
+	// 	logformat.Error(value)
+	// 	return
+	// }
+
+	// get all proteins symbols
+	listProteinsName := piplines.Active_Proteins(life.Genes)
+
+	// get all amino table
+	listProteins := piplines.AminoChains(life.Genes)
+	ribbon := make(map[string]map[string]proteins.Aminochain)
+
+	// read map values
+	iterate := reflect.ValueOf(listProteinsName).MapRange()
+
+	// create new marcomolecules which hold molecule state for a while
+
+	aminochain = make([]*binary.Micromolecule, len(life.Genes))
+
+	// iterate over map values
+	for iterate.Next() {
+
+		// store map value in other map
+		ribbon[listProteinsName[iterate.Value().String()]] = listProteins
+
+		// get polypeptide information in structured data
+		extraction := molecules.Genome_Extract(ribbon, listProteinsName, iterate.Value().String())
+
+		// if the information return void space or empty field then discard , otherwise hold that state
+		if molecules.GetMoleculesState(extraction) && molecules.GetCompositionState(extraction) {
+			aminochain = append(aminochain, extraction)
+		}
+
+	}
+
+	var Ckk string = ""
+
+	// compare provided key hold key state and they key is also generated by machine
+	if !reflect.DeepEqual(key.Public(), " ") && len(key.Seed()) == 32 {
+		Ckk = fmt.Sprintf("%x", key.Public())
+	}
+
+	s := make([]string, len(life.Genes))
+	for j := range aminochain {
+		if str := molecules.Make_string(aminochain[j]); str != " " {
+			s = append(s, str)
+		}
+	}
+
+	sb = make([]string, len(aminochain))
+	occ = make([]int64, len(aminochain))
+	mss = make([]float64, len(aminochain))
+
+	// iterate_over aminochain
+	for i := range aminochain {
+
+		// check aminochain have execpted type
+		if molecules.Molecular(aminochain[i]) && s[i] != " " {
+			abundance, syms := molecules.Abundance(aminochain[i], strings.Join(s, ""), i)
+			if reflect.DeepEqual(aminochain[i].Symbol, syms) {
+				aminochain[i].Abundance = int64(abundance)
+				count += 1
+			}
+
+			sb = append(sb, molecules.Symbol(aminochain[i]))
+			mss = append(mss, molecules.Mass(aminochain[i]))
+			occ = append(occ, molecules.Occurance(aminochain[i]))
+
+			// marshal the protos message
+			protoc, err := jsonpb.ProtojsonMarshaler(aminochain[i])
+			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				distorted(w, r)
+				cacheObject.Set_Key("Internal:", err.Error())
+
+				value, err := cacheObject.Get_Key("Internal:")
+				if err != nil {
+					return
+				}
+
+				logformat.Error(value)
+				return
+			}
+
+			// unmarhal the protos message
+			err = jsonpb.ProtojsonUnmarshaler(protoc, aminochain[i])
+			if err != nil {
+
+				w.WriteHeader(http.StatusBadRequest)
+				distorted(w, r)
+				cacheObject.Set_Key("Internal:", err.Error())
+
+				value, err := cacheObject.Get_Key("Internal:")
+				if err != nil {
+
+					return
+				}
+
+				logformat.Error(value)
+				return
+			}
+
+			// which protein exist in abudance
+			sumof = sumof + proteins.Total_chain_filter(aminochain[i].Abundance)
+		}
+	}
+
+	// This param either contribute in file processing or file content that want to be store in batch mode
+	jsonFile := &jsonledit.FileDescriptor{}
+	jsonFile.Types = ".json"
+	jsonFile.Names = parser.Generator()
+	jsonFile.Molecule = aminochain
+	jsonFile.Occurance = sumof
+
+	// create a new .json file with these parameters and write data stream in file
+	proteins.CreateNewJSONFile(jsonFile)
+
+	cdrs, cid := cryptos.FilePrints([]string{(*jsonFile).Names}...)
+
+	// additional param
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	if !reflect.DeepEqual(update, user.Updated_User{}) {
+
+		// each transaction param before storing in physical database.
+		bucket.Key = update.ID
+		bucket.Composite = Ckk
+
+	} else {
+
+		// each transaction param before storing in physical database.
+		bucket.Key = data.ID
+		bucket.Composite = Ckk
+
+	}
+
+	iobject := dbucket.New_Bucket(ctx, (*jsonFile).Names, "amino-chemical")
+
+	words, err := diceware.Generate(12)
+	if err != nil {
+		return
+	}
+
+	log.Println("Your Passphrase is: ", words, "please save it somewhere on your computer. It'll generated by application one time only (OTP)")
+
+	errs, access := iobject.StoreJCredentials(strings.Join(words, " "), []string{"heavy cancel window wild supply replace oppose until canvas lava lamp muffin"}...)
+	if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) && access != nil {
+
+		w.WriteHeader(http.StatusBadRequest)
+		distorted(w, r)
+
+		cacheObject.Set_Key("Internal:", errs.String())
 
 		value, err := cacheObject.Get_Key("Internal:")
 		if err != nil {
@@ -995,7 +1320,49 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	visualizeReport.Record = weather.Man{Name: profiler.Name, Email: profiler.Email}
+	errs = iobject.StoreObject(strings.Join(words, " "), life.Pkk, jsonFile.Names, jsonFile.Types, []string{"heavy cancel window wild supply replace oppose until canvas lava lamp muffin"}...)
+	if reflect.DeepEqual(errs, dbucketerror.Bucket_Error_Category_Error) {
+
+		w.WriteHeader(http.StatusBadRequest)
+		distorted(w, r)
+
+		cacheObject.Set_Key("Internal:", errs.String())
+
+		value, err := cacheObject.Get_Key("Internal:")
+		if err != nil {
+			return
+		}
+
+		logformat.Error(value)
+		return
+	}
+
+	// additional param
+	ctxs, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	if bucket_state := fireclient.New(ctxs, piplines.Firestore_Reference()).Store(cid.String(), cdrs[cid.String()], ID); bucket_state != 0 {
+		log.Fatalln("Error:", error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE, bucket_state)
+		return
+	}
+
+	// additional param
+	context, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	err = cloudmedia.NewMediaDescriptor(context, piplines.Firestore_Reference()).AddMediaFile(&media.MediaStream{
+		Name:         (*jsonFile).Names,
+		Datecreated:  piplines.GetFileCreationTime((*jsonFile).Names),
+		IdentityCode: ID,
+		Category:     media.Descriptor_Category_Text,
+		Path:         "app_data/",
+		Signature:    words,
+		Cdrlink:      cdrs[cid.String()],
+	})
+	if err != nil {
+		log.Fatalln("Error : ", error_codes.DATABASE_ERRORS_DOCUMENT_CREATE_ERROR)
+		return
+	}
 
 	if r.Method == "GET" {
 
@@ -1008,217 +1375,11 @@ func visualize(w http.ResponseWriter, r *http.Request) {
 
 		logformat.Trace(value)
 
-		_start = time.Now()
-
-		// firestore credentials
-		genetics.Client = piplines.Firestore_Reference()
-
-		// generate ed25519 key
-		cdr, _ := cryptos.PKK25519(profiler.Id)
-		genetics.Pkk = fmt.Sprintf("%x", cdr)
-
-		// genetics object
-		// rece_gen := genetics.New()
-
-		life := genome.Lifecode{}
-
-		// genetics data string
-		life.Genes = strings.Join(piplines.GetGenes(), "")
-		life.Pkk = genetics.Pkk
-
-		// create trust object ... trust verified whom that content .
-		ok, key, err := piplines.TrustRequest(life.Pkk, address_wallet, signed_msg)
-		if !ok && err != nil {
-
-			w.WriteHeader(http.StatusBadRequest)
-			distorted(w, r)
-			cacheObject.Set_Key("Internal:", err.Error())
-
-			value, err := cacheObject.Get_Key("Internal:")
-			if err != nil {
-
-				return
-			}
-
-			logformat.Error(value)
-			return
-		}
-
-		// genetics database
-		// status := rece_gen.AddCode(context.Background(), &life)
-		// if status.ErrorCode == binaries.Errors_Error {
-
-		// 	w.WriteHeader(http.StatusBadRequest)
-		// 	distorted(w, r)
-		// 	cacheObject.Set_Key("Internal:", status.ErrorCode.String())
-
-		// 	value, err := cacheObject.Get_Key("Internal:")
-		// 	if err != nil {
-		// 		return
-		// 	}
-
-		// 	logformat.Error(value)
-		// 	return
-		// }
-
-		// get all proteins symbols
-		listProteinsName := piplines.Active_Proteins(life.Genes)
-
-		// get all amino table
-		listProteins := piplines.AminoChains(life.Genes)
-		ribbon := make(map[string]map[string]proteins.Aminochain)
-
-		// read map values
-		iterate := reflect.ValueOf(listProteinsName).MapRange()
-
-		// create new marcomolecules which hold molecule state for a while
-
-		aminochain = make([]*binary.Micromolecule, len(life.Genes))
-
-		// iterate over map values
-		for iterate.Next() {
-
-			// store map value in other map
-			ribbon[listProteinsName[iterate.Value().String()]] = listProteins
-
-			// get polypeptide information in structured data
-			extraction := molecules.Genome_Extract(ribbon, listProteinsName, iterate.Value().String())
-
-			// if the information return void space or empty field then discard , otherwise hold that state
-			if molecules.GetMoleculesState(extraction) && molecules.GetCompositionState(extraction) {
-				aminochain = append(aminochain, extraction)
-			}
-
-		}
-
-		var Ckk string = ""
-
-		// compare provided key hold key state and they key is also generated by machine
-		if !reflect.DeepEqual(key.Public(), " ") && len(key.Seed()) == 32 {
-			Ckk = fmt.Sprintf("%x", key.Public())
-		}
-
-		s := make([]string, len(life.Genes))
-		for j := range aminochain {
-			if str := molecules.Make_string(aminochain[j]); str != " " {
-				s = append(s, str)
-			}
-		}
-
-		sb = make([]string, len(aminochain))
-		occ = make([]int64, len(aminochain))
-		mss = make([]float64, len(aminochain))
-
-		// iterate_over aminochain
-		for i := range aminochain {
-
-			// check aminochain have execpted type
-			if molecules.Molecular(aminochain[i]) && s[i] != " " {
-				abundance, syms := molecules.Abundance(aminochain[i], strings.Join(s, ""), i)
-				if reflect.DeepEqual(aminochain[i].Symbol, syms) {
-					aminochain[i].Abundance = int64(abundance)
-					count += 1
-				}
-
-				sb = append(sb, molecules.Symbol(aminochain[i]))
-				mss = append(mss, molecules.Mass(aminochain[i]))
-				occ = append(occ, molecules.Occurance(aminochain[i]))
-
-				// marshal the protos message
-				data, err := jsonpb.ProtojsonMarshaler(aminochain[i])
-				if err != nil {
-					w.WriteHeader(http.StatusBadRequest)
-					distorted(w, r)
-					cacheObject.Set_Key("Internal:", err.Error())
-
-					value, err := cacheObject.Get_Key("Internal:")
-					if err != nil {
-						return
-					}
-
-					logformat.Error(value)
-					return
-				}
-
-				// unmarhal the protos message
-				err = jsonpb.ProtojsonUnmarshaler(data, aminochain[i])
-				if err != nil {
-
-					w.WriteHeader(http.StatusBadRequest)
-					distorted(w, r)
-					cacheObject.Set_Key("Internal:", err.Error())
-
-					value, err := cacheObject.Get_Key("Internal:")
-					if err != nil {
-
-						return
-					}
-
-					logformat.Error(value)
-					return
-				}
-
-				// which protein exist in abudance
-				sumof = sumof + proteins.Total_chain_filter(aminochain[i].Abundance)
-			}
-		}
-
-		// This param either contribute in file processing or file content that want to be store in batch mode
-		jsonFile := &jsonledit.FileDescriptor{}
-		jsonFile.Types = ".json"
-		jsonFile.Names = parser.Generator()
-		jsonFile.Molecule = aminochain
-		jsonFile.Occurance = sumof
-
-		// create a new .json file with these parameters and write data stream in file
-		proteins.CreateNewJSONFile(jsonFile)
-
-		// additional param
-		context := context.Background()
-		client := bucket.New_Client(&context)
-		bucket.Client = piplines.Firestore_Reference()
-
-		// each transaction param before storing in physical database.
-		bucket.Key = profiler.Id
-		bucket.Composite = Ckk
-
-		// creating decentalize & dynamic links of the content
-		iobject := client.New_Bucket(&proto.Object{Name: jsonFile.Names, Types: jsonFile.Types, Content: jsonFile.Molecule})
-		if iobject.Istatus == proto.Object_Status_ERROR {
-			w.WriteHeader(http.StatusBadRequest)
-			distorted(w, r)
-
-			cacheObject.Set_Key("Internal:", iobject.Istatus.String())
-
-			value, err := cacheObject.Get_Key("Internal:")
-			if err != nil {
-				return
-			}
-
-			logformat.Error(value)
-			return
-		}
-
-		File = jsonFile.Names + jsonFile.Types
-
-		//prev_object := client.Preview(&proto.Query{ByName: file})
-		//log.Println("prev_object:", prev_object)
-
-		//w.WriteHeader(http.StatusOK)
-
 		temp.Execute(w, visualizeReport)
-	} else if r.Method != "POST" {
-		w.WriteHeader(http.StatusBadRequest)
-		distorted(w, r)
-		cacheObject.Set_Key("Internal:", err.Error())
-		value, err := cacheObject.Get_Key("Internal:")
-		if err != nil {
+	}
 
-			return
-		}
-
-		logformat.Error(value)
-		panic("method not supported")
+	if r.Method != "GET" {
+		return
 	}
 
 }
@@ -1561,6 +1722,8 @@ func terms(w http.ResponseWriter, r *http.Request) {
 
 		value, err := cacheObject.Get_Key("Route_Path:")
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 			return
 		}
 
@@ -1583,6 +1746,8 @@ func logout(w http.ResponseWriter, r *http.Request) {
 
 		value, err := cacheObject.Get_Key("Route_Path:")
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
 			return
 		}
 
@@ -1592,7 +1757,7 @@ func logout(w http.ResponseWriter, r *http.Request) {
 
 		act.SetContextSession(userSessions, w, r)
 
-		if !reflect.DeepEqual(hcldeclare.Token_Auth, "") {
+		if !reflect.DeepEqual(hcldeclare.Token_Auth, " ") {
 			client.ClearToken()
 			client.ClientTimeout()
 		}
@@ -1616,6 +1781,679 @@ func logout(w http.ResponseWriter, r *http.Request) {
 
 		existing(w, r)
 	}
+}
+
+func update(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
+
+	if r.Method == "POST" {
+
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
+
+		r.ParseForm()
+
+		updated_info.Name = r.FormValue("name")
+
+		if strings.Contains(r.FormValue("sufix"), "Mr") {
+			updated_info.Suffix = user.Respecful_Mr
+			updated_info.Gender = user.Traits_MAN
+		} else if strings.Contains(r.FormValue("sufix"), "mr") {
+			updated_info.Suffix = user.Respecful_Mr
+			updated_info.Gender = user.Traits_MAN
+		} else if strings.Contains(r.FormValue("sufix"), "Mrs") {
+			updated_info.Suffix = user.Respecful_Mrs
+			updated_info.Gender = user.Traits_WOMEN
+		} else if strings.Contains(r.FormValue("sufix"), "mrs") {
+			updated_info.Suffix = user.Respecful_Mrs
+			updated_info.Gender = user.Traits_WOMEN
+		} else if strings.Contains(r.FormValue("sufix"), "Ms") {
+			updated_info.Suffix = user.Respecful_Ms
+			updated_info.Gender = user.Traits_WOMEN
+		} else if strings.Contains(r.FormValue("sufix"), "ms") {
+			updated_info.Suffix = user.Respecful_Ms
+			updated_info.Gender = user.Traits_WOMEN
+		} else {
+
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
+			cacheObject.Set_Key("Internal:", err.Error())
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
+			log.Fatalln(error_codes.Operation_ERROR_CODE_MISMATCH_STATE)
+			return
+		}
+
+		updated_info.Lastname = r.FormValue("family")
+		updated_info.Address = r.FormValue("home")
+		updated_info.Zip = r.FormValue("zip")
+
+		state := strings.Split(r.FormValue("city"), ",")
+		updated_info.City, updated_info.State = state[0], state[1]
+
+		if strings.Contains(r.FormValue("status"), "Single") {
+			updated_info.Status = user.Relationship_Single
+		} else if strings.Contains(r.FormValue("status"), "single") {
+			updated_info.Status = user.Relationship_Single
+		} else if strings.Contains(r.FormValue("status"), "Maried") {
+			updated_info.Status = user.Relationship_Maried
+		} else if strings.Contains(r.FormValue("status"), "maried") {
+			updated_info.Status = user.Relationship_Maried
+		} else if strings.Contains(r.FormValue("status"), "Widow") {
+			updated_info.Status = user.Relationship_Widow
+		} else if strings.Contains(r.FormValue("status"), "widow") {
+			updated_info.Status = user.Relationship_Widow
+		} else if strings.Contains(r.FormValue("status"), "Divoced") {
+			updated_info.Status = user.Relationship_Divoced
+		} else if strings.Contains(r.FormValue("status"), "divoced") {
+			updated_info.Status = user.Relationship_Divoced
+		} else {
+
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
+			cacheObject.Set_Key("Internal:", err.Error())
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
+			log.Fatalln(error_codes.Operation_ERROR_CODE_MISMATCH_STATE)
+			return
+		}
+
+		updated_info.Zip = r.FormValue("zip")
+		updated_info.University = r.FormValue("alumni")
+		updated_info.Circulum = r.FormValue("programme")
+
+		num, _ := strconv.Atoi(r.FormValue("research"))
+		if err != nil {
+
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
+			cacheObject.Set_Key("Internal:", err.Error())
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
+			log.Fatalln(error_codes.Operation_ERROR_CODE_GARBAGE_VALUE)
+			return
+		}
+
+		updated_info.Published = int64(num)
+		updated_info.Citation = r.FormValue("citation")
+		updated_info.Company = r.FormValue("work")
+		updated_info.Date = r.FormValue("joined")
+		updated_info.Email = r.FormValue("email")
+		updated_info.Phone = r.FormValue("phone")
+		updated_info.Achievements = r.FormValue("achievement")
+
+		data, update, err := piplines.Firebase_Gatekeeper(w, r, user.New_User{Email: updated_info.Email, Password: _secret})
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
+			cacheObject.Set_Key("Internal:", err.Error())
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
+			log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+			return
+		}
+
+		if reflect.DeepEqual(update, &user.Updated_User{}) {
+
+			updated_info.ID = data.ID
+			updated_info.Friends = data.Friends
+			updated_info.Inspire = data.Inspire
+			updated_info.Lead = data.Lead
+			updated_info.Password = data.Password
+			updated_info.SocialEvolution = (evolve + data.SocialEvolution)
+			log.Println("INFO :", updated_info, update)
+
+			if !reflect.DeepEqual(update, &updated_info) {
+
+				ok := piplines.UpdateProfileInfo(updated_info)
+				updateInfo = false
+				log.Println("Account information update successdully ..... ")
+				if !ok {
+					w.WriteHeader(http.StatusBadRequest)
+					distorted(w, r)
+					cacheObject.Set_Key("Internal:", err.Error())
+
+					value, err := cacheObject.Get_Key("Internal:")
+					if err != nil {
+						return
+					}
+
+					logformat.Error(value)
+					log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+					return
+				}
+			}
+		}
+
+		if !reflect.DeepEqual(update, &user.Updated_User{}) {
+
+			updated_info.ID = update.ID
+			updated_info.Friends = update.Friends
+			updated_info.Inspire = update.Inspire
+			updated_info.Lead = update.Lead
+			updated_info.Password = update.Password
+			updated_info.SocialEvolution = (evolve + update.SocialEvolution)
+
+			ok := piplines.UpdateProfileInfo(updated_info)
+			updateInfo = true
+			log.Println("Account update successdully ..... ")
+			if !ok {
+				w.WriteHeader(http.StatusBadRequest)
+				distorted(w, r)
+				cacheObject.Set_Key("Internal:", err.Error())
+
+				value, err := cacheObject.Get_Key("Internal:")
+				if err != nil {
+					return
+				}
+
+				logformat.Error(value)
+				log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+				return
+			}
+
+		}
+		w.WriteHeader(http.StatusOK)
+		r.Method = "GET"
+		view(w, r)
+
+	}
+}
+
+func view(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
+
+	// webpage route
+	webpge := template.Must(template.ParseFiles("viewprofile.html"))
+
+	data, update, err := piplines.Firebase_Gatekeeper(w, r, user.New_User{Email: _email, Password: _secret})
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+		distorted(w, r)
+		cacheObject.Set_Key("Internal:", err.Error())
+
+		value, err := cacheObject.Get_Key("Internal:")
+		if err != nil {
+			return
+		}
+
+		logformat.Error(value)
+		return
+
+	}
+
+	files, err := os.ReadDir("app_data/")
+	if err != nil {
+
+		log.Fatalln(error_codes.File_BAD_REQUEST_CODE_DIRECTORY_NOT_FOUND)
+		w.WriteHeader(http.StatusBadRequest)
+		log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+		distorted(w, r)
+		cacheObject.Set_Key("Internal:", err.Error())
+
+		value, err := cacheObject.Get_Key("Internal:")
+		if err != nil {
+			return
+		}
+
+		logformat.Error(value)
+		return
+	}
+
+	if !reflect.DeepEqual(update, &user.Updated_User{}) && updateInfo {
+
+		meta, mapData, _ := piplines.GetDocuments([]string{update.ID}...)
+		contKey, contVae := piplines.ReflectMaps(mapData)
+
+		for list := range files {
+
+			if strings.Contains("app_data/"+files[list].Name(), meta) {
+
+				update.Link = "/" + meta
+				break
+			}
+
+			if !strings.Contains(meta, "app_data/"+files[list].Name()) {
+
+				ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+				defer cancel()
+
+				inter, num := fireclient.New(ctx, piplines.Firestore_Reference()).Get(contKey, contVae, update.ID)
+
+				if num != 0 {
+					log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+					w.WriteHeader(http.StatusBadRequest)
+					log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+					distorted(w, r)
+					cacheObject.Set_Key("Internal:", err.Error())
+
+					value, err := cacheObject.Get_Key("Internal:")
+					if err != nil {
+						return
+					}
+
+					logformat.Error(value)
+					return
+				}
+
+				_, resource := piplines.ReflectMaps(inter)
+
+				if strings.Contains(contKey, " ") && !strings.Contains(contVae, resource) {
+
+					log.Fatalln(error_codes.Operation_ERROR_CODE_MISMATCH_STATE)
+					w.WriteHeader(http.StatusBadRequest)
+					log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+					distorted(w, r)
+					cacheObject.Set_Key("Internal:", err.Error())
+
+					value, err := cacheObject.Get_Key("Internal:")
+					if err != nil {
+						return
+					}
+
+					logformat.Error(value)
+					return
+				}
+
+				client := skynet.New()
+
+				if dlinkerr := cloudmedia.NewDlinkObject(&client, "app_data/").Get(meta, contVae); dlinkerr != dlink.Errors_NONE {
+
+					log.Fatalln(dlinkerr)
+					w.WriteHeader(http.StatusBadRequest)
+					log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+					distorted(w, r)
+					cacheObject.Set_Key("Internal:", err.Error())
+
+					value, err := cacheObject.Get_Key("Internal:")
+					if err != nil {
+						return
+					}
+
+					logformat.Error(value)
+					return
+				}
+
+				log.Println("File download successfully... open mounted directory", meta)
+				update.Link = "/" + meta
+				break
+			}
+		}
+
+		if r.Method == "GET" {
+
+			cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+			value, err := cacheObject.Get_Key("Route_Path:")
+			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				distorted(w, r)
+				cacheObject.Set_Key("Internal:", err.Error())
+
+				value, err := cacheObject.Get_Key("Internal:")
+				if err != nil {
+					return
+				}
+
+				logformat.Error(value)
+				return
+			}
+
+			logformat.Trace(value)
+			webpge.Execute(w, update)
+		}
+
+	} else {
+
+		meta, mapData, _ := piplines.GetDocuments([]string{data.ID}...)
+		contKey, contVae := piplines.ReflectMaps(mapData)
+
+		for list := range files {
+
+			if strings.Contains("app_data/"+files[list].Name(), meta) {
+
+				data.Link = "/" + meta
+
+				break
+			}
+
+			if !strings.Contains(meta, "app_data/"+files[list].Name()) {
+
+				ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+				defer cancel()
+
+				inter, num := fireclient.New(ctx, piplines.Firestore_Reference()).Get(contKey, contVae, data.ID)
+
+				if num != 0 {
+					log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+					w.WriteHeader(http.StatusBadRequest)
+					log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+					distorted(w, r)
+					cacheObject.Set_Key("Internal:", err.Error())
+
+					value, err := cacheObject.Get_Key("Internal:")
+					if err != nil {
+						return
+					}
+
+					logformat.Error(value)
+					return
+				}
+
+				_, resource := piplines.ReflectMaps(inter)
+
+				if strings.Contains(contKey, " ") && !strings.Contains(contVae, resource) {
+
+					log.Fatalln(error_codes.Operation_ERROR_CODE_MISMATCH_STATE)
+					w.WriteHeader(http.StatusBadRequest)
+					log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+					distorted(w, r)
+					cacheObject.Set_Key("Internal:", err.Error())
+
+					value, err := cacheObject.Get_Key("Internal:")
+					if err != nil {
+						return
+					}
+
+					logformat.Error(value)
+					return
+				}
+
+				client := skynet.New()
+
+				if dlinkerr := cloudmedia.NewDlinkObject(&client, "app_data/").Get(meta, contVae); dlinkerr != dlink.Errors_NONE {
+
+					log.Fatalln(dlinkerr)
+					w.WriteHeader(http.StatusBadRequest)
+					log.Fatalln(error_codes.Operation_ERROR_CODE_UNEXPECTED_STATE)
+					distorted(w, r)
+					cacheObject.Set_Key("Internal:", err.Error())
+
+					value, err := cacheObject.Get_Key("Internal:")
+					if err != nil {
+						return
+					}
+
+					logformat.Error(value)
+					return
+				}
+
+				log.Println("File download successfully... open mounted directory", meta)
+				data.Link = "/" + meta
+				break
+			}
+		}
+
+		if r.Method == "GET" {
+
+			cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+			value, err := cacheObject.Get_Key("Route_Path:")
+			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				distorted(w, r)
+				cacheObject.Set_Key("Internal:", err.Error())
+
+				value, err := cacheObject.Get_Key("Internal:")
+				if err != nil {
+					return
+				}
+
+				logformat.Error(value)
+				return
+			}
+
+			logformat.Trace(value)
+
+			webpge.Execute(w, data)
+		}
+
+	}
+
+	if r.Method != "GET" {
+
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			distorted(w, r)
+			cacheObject.Set_Key("Internal:", err.Error())
+
+			value, err := cacheObject.Get_Key("Internal:")
+			if err != nil {
+				return
+			}
+
+			logformat.Error(value)
+			return
+		}
+		logformat.Trace(value)
+		return
+	}
+
+}
+
+func dvault(w http.ResponseWriter, r *http.Request) {
+
+	// user request headers
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length")
+
+	// webpage route
+	webpge := template.Must(template.ParseFiles("dvault.html"))
+
+	data, update, err := piplines.Firebase_Gatekeeper(w, r, user.New_User{Email: _email, Password: _secret})
+	if err != nil {
+		return
+	}
+
+	// ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	// defer cancel()
+
+	// const docname string = "ContentAddress"
+	// list, err := manager.NewSecretsInstance(ctx, piplines.Firestore_Reference()).GetAllDocuments([]string{docname}...)
+	// if err != nil {
+	// 	log.Fatalln("Error:", error_codes.DATABASE_ERRORS_DOCUMENT_READ_ERROR)
+	// 	return
+	// }
+
+	var ID string
+	var imagecred []*piplines.DocumentCredentials
+	// var contentcred *piplines.DocumentCredentials
+
+	old, updated := piplines.GetID(update, data)
+	if !reflect.DeepEqual(update, &user.Updated_User{}) {
+		ID = old.ID
+
+	} else {
+
+		ID = updated.ID
+	}
+
+	files, err := os.ReadDir("app_data/")
+	if err != nil {
+		return
+	}
+
+	counter, jcounter := 0, 0
+
+	// Keys directly proportional to files in app_data directory
+	for file := range files {
+
+		if strings.Contains(files[file].Name(), ".png") {
+
+			counter += 1
+		} else if strings.Contains(files[file].Name(), ".gif") {
+			counter += 1
+		} else if strings.Contains(files[file].Name(), ".jpeg") {
+			counter += 1
+		} else if strings.Contains(files[file].Name(), ".json") {
+			jcounter += 1
+		} else {
+			continue
+		}
+	}
+
+	for i := 0; i < counter; i++ {
+
+		cred, err := piplines.ImagesCryptoSignature([]string{ID}...)
+		if err != nil {
+			return
+		}
+
+		imagecred = append(imagecred, cred)
+
+	}
+
+	wallet := make([]*secrets.Vault_Params, jcounter)
+
+	contentcred, ranger, err := piplines.ProteinsCryptoSignature(int64(jcounter))
+	if err != nil {
+		return
+	}
+
+	for item := range imagecred {
+
+		for _, index := range imagecred[item].Filename {
+
+			if !reflect.DeepEqual((*imagecred[item]), nil) && !strings.Contains(index, ".json") {
+
+				for i := 0; i < counter; i++ {
+
+					wallet = append(wallet, &secrets.Vault_Params{
+
+						CDR_LINK:    (*imagecred[item]).ReflectKey[i],
+						TEXT:        string((*imagecred[item]).TextView[i]),
+						IsImage:     true,
+						SizeOf:      (*imagecred[item]).SizeOf[i],
+						Access:      "public",
+						Objects:     fmt.Sprintf("%d", counter),
+						ImagePath:   (*imagecred[item]).Filename[i],
+						ContentView: []string{""},
+					})
+
+					// pictures = append(pictures, &secrets.Content_Vault{SharedImages: (*imagecred[item]).Filename})
+				}
+
+			}
+
+		}
+
+	}
+
+	var word []string
+	var str []string
+
+	for i := range (*contentcred).TextView {
+
+		str = append(str, string((*contentcred).TextView[i][1000:]), "*")
+
+		word = append(word, strings.Join(str, " "))
+	}
+
+	for index := range wallet {
+
+		for item := range imagecred {
+
+			if !reflect.DeepEqual((*imagecred[item]).ReflectKey, (*contentcred).ReflectKey) && !reflect.DeepEqual(imagecred, nil) && index >= 0 && index < int(ranger) {
+
+				wallet = append(wallet, &secrets.Vault_Params{
+
+					CDR_LINK:  (*contentcred).ReflectKey[index],
+					IsImage:   false,
+					SizeOf:    (*contentcred).SizeOf[index],
+					Access:    "private",
+					Objects:   fmt.Sprintf("%d", jcounter),
+					ImagePath: "",
+					// ContentView: word,
+				})
+
+			}
+
+		}
+
+	}
+
+	list_wallet := &secrets.List_Vault{
+		List: wallet,
+		ID:   ID,
+	}
+
+	pusherCred := pusher.Client{
+		AppID:   APP_CHANNEL_ID,
+		Key:     APP_CHANNEL_KEY,
+		Secret:  APP_CHANNEL_SECRET,
+		Cluster: APP_CHANNEL_CLUSTER_ID,
+		Secure:  true,
+	}
+
+	if err := pusherCred.TriggerMulti([]string{"keygen"}, "tnxs", map[string]interface{}{
+		"keys":   list_wallet.ID,
+		"values": list_wallet.List,
+	}); err != nil {
+		log.Fatalln("Erorr:", error_codes.CHANNEL_ERROR_CHANNEL_CLOSED)
+		return
+	}
+
+	if r.Method == "GET" {
+
+		cacheObject.Set_Key("Route_Path:", "%"+r.URL.Path+"%"+r.Method)
+
+		value, err := cacheObject.Get_Key("Route_Path:")
+		if err != nil {
+			return
+		}
+
+		logformat.Trace(value)
+
+		webpge.Execute(w, "Keygen")
+		return
+	}
+
+	if !(r.Method == "HEAD") {
+
+		log.Println("Method:", r.Method)
+
+		webpge.Execute(w, "head")
+
+		return
+	}
+
 }
 
 func stop_codon(w http.ResponseWriter, r *http.Request) {

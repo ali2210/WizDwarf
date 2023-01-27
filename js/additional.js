@@ -1,4 +1,3 @@
-
 const marker_location = document.getElementsByClassName('location-div')[0];
 var option = {
   enableHighAccuracy: true,
@@ -33,5 +32,3 @@ marker_location.children[0].addEventListener("click", function(){
 function error(err){
   console.warn(`ERROR(${err.code}): ${err.message}`);
 };
-
-

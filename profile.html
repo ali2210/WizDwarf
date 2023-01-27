@@ -4,7 +4,7 @@
 <head>
   <meta charset='utf-8'>
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-  <title>WizDwarfs</title>
+  <title>Wizdwarfs</title>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -22,7 +22,7 @@
 <body>
   <div class='main-dashboard-div'>
 		<nav class="navbar navbar-expand-md navbar-light custom-navbar" style=" background-color: #ededed;display: flex;">
-		  <a class="navbar-brand" href="#">
+		  <a class="navbar-brand" href="/">
 			<img src="/images/logo.png" alt="Logo" class="logo">
 		  </a>
 		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
@@ -31,7 +31,7 @@
 		  <div class="collapse navbar-collapse" id="navbarNavDropdown" style="position: absolute;left: 37pc;">
 			<ul class="navbar-nav">
 			  <li class="nav-item active pl-3">
-				<a class="nav-link" href="/">
+				<a class="nav-link" href="/dashboard">
 				  <i class="fa fa-home icon-light" aria-hidden="true"></i>
 				</a>
 			  </li>
@@ -41,8 +41,8 @@
 				  <i class="fa fa-envelope" aria-hidden="true"></i>
 				</a>
 				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-				  <a class="dropdown-item active" href="#" title="Private.  These message will dispear after few seconds."><i class="fa fa-envelope-o" aria-hidden="true"></i> Private </a>
-				  <a class="dropdown-item" href="#" title="Gossips"> <i class="fa fa-comments-o" aria-hidden="true"></i> Public </a>
+				  <a class="dropdown-item active" href="/messages" title="Private.  These message will dispear after few seconds."><i class="fa fa-envelope-o" aria-hidden="true"></i> Private </a>
+				  <a class="dropdown-item" href="/messages" title="Gossips"> <i class="fa fa-comments-o" aria-hidden="true"></i> Public </a>
 				</div>
 			  </li>
 			  <li class="nav-item dropdown pl-3">
@@ -54,7 +54,7 @@
 				  <a class="dropdown-item active" href="/dashboard/profile" title="User will edit any information in the profile"><i class="fa fa-sliders" aria-hidden="true"></i>
 					Edit Your Profile
           </a>
-          <a class="dropdown-item" href="#" title="User Preferences "><i class="fa fa-cogs" aria-hidden="true"></i>
+          <a class="dropdown-item" href="/dashbaord/setting" title="User Preferences "><i class="fa fa-cogs" aria-hidden="true"></i>
           Preferences
           </a>
 				  <a class="dropdown-item" href="/logout" title="Lock the account"><i class="fa fa-sign-out icon icon-light"
@@ -64,46 +64,134 @@
 			</ul>
 		  </div>
 	</nav>
+  </div>
 
-  <div class="profile-image-form">
+  <div class="profile-image-form" style="position: relative; top:-90pc;">
     <form class="profile-form" action="/dashboard/profile" enctype="multipart/form-data" method="post">
       <div class="avatar" name="avato-pic" id="avato-pics">
-        <div class="photoBtn" style=" position: absolute;top: 267px ;left: 92px;transform: scale(1.7);">
-          <p>
-            <button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapsePhoto" aria-expanded="false" aria-controls="collapsePhoto" title="upload your profile picture">
-              <i class="fa fa-picture-o" aria-hidden="true"></i>
-            </button>
-          </p>
-          <div class="collapse" id="collapsePhoto">
-            <div class="card card-body" style="position: absolute; top: 40px; left: -207px; border-radius:35px; box-shadow: 5px 5px whitesmoke; height:325px; overflow: auto; width: 38rem; display: flex;">
-              <h5 class="card-title"></h5>
-                <div class="float-card">
-                  <input type="file" class="myphotos" name="profile-input" accept="images/*">
-                  <div class="line"></div>
-                  <div class="photo-preview"></div>
-                  <button type="button" class="btn btn-light btns-links" title="Avatar Filters">
-                    <i class="fa fa-filter" aria-hidden="true" style="color: slategray;"></i>
-                  </button>
-                  <button type="submit" class="btn btn-light uploads" title="avatar">
-                    <i class="fa fa-check-square" aria-hidden="true" style="color: slategray;"></i>
-                  </button>
-                  <button class="btn btn-light zoomin" type="button" title="Zoom in" style="position: relative;top: -215px;left: 241px;transform: scale(0.6);">
-                    <i class="fa fa-plus" aria-hidden="true" style="color: slategray;"></i>
-                  </button>
-                  <button class="btn btn-light zoomout" type="button" title="Zoom out" style="position: relative;top: -215px;left: 295px;transform: scale(0.6);">
-                    <i class="fa fa-minus" aria-hidden="true" style="color: slategray;"></i>
-                  </button>
-                  <input type="number" placeholder="0000" class="aspect-ratio" name="aspect-ratio" value="0" id="aspect-ratio" readOnly="true" style="position: relative;top: -210px;left: 189px;transform: scale(0.6);width: 5pc;color: silver;border-radius: 10px;border: none;font-size: x-large;">
-                  <input class="date-picker" name="date" type="date" style="visibility: visible;">
-                  <img name="profile-avatar" class="avatars"/>
-                  <div class="hyerlink">
-                    <i class="fa fa-link" aria-hidden="true"> </i> <input class="cdr" type="checkbox" name="cdrlink"/> View CDR_LINK
-                  </div>
+        <img src="{{ .Avatar}}" alt="Avatar" style="display:unset;transform-style: preserve-3d;transform: scale(1.0);position: relative;top: 1pc;left: 21px;z-index: 2;">
+      </div>  
+      <div class="photoBtn" style=" position: absolute;top: 31pc;left: 45pc;transform: scale(1.7);">
+        <p>
+          <button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapsePhoto" aria-expanded="false" aria-controls="collapsePhoto" title="upload your profile picture" style="position: absolute;top: -41px;left: -27px;">
+            <i class="fa fa-picture-o" aria-hidden="true"> Upload your Picture </i>
+          </button>
+        </p>
+        <div class="collapse" id="collapsePhoto">
+          <div class="card card-body" style="position: absolute; top: 40px; left: -207px; border-radius:35px; box-shadow: 5px 5px whitesmoke; height:325px; overflow: auto; width: 38rem; display: flex;">
+            <h5 class="card-title"></h5>
+              <div class="float-card">
+                <input type="file" class="myphotos" name="profile-input" accept="images/*">
+                <div class="line"></div>
+                <div class="photo-preview"></div>
+                <button type="button" class="btn btn-light btns-links" title="Avatar Filters">
+                  <i class="fa fa-filter" aria-hidden="true" style="color: slategray;"></i>
+                </button>
+                <button type="submit" class="btn btn-light uploads" title="avatar">
+                  <i class="fa fa-check-square" aria-hidden="true" style="color: slategray;"></i>
+                </button>
+                <button class="btn btn-light zoomin" type="button" title="Zoom in" style="position: relative;top: -215px;left: 241px;transform: scale(0.6);">
+                  <i class="fa fa-plus" aria-hidden="true" style="color: slategray;"></i>
+                </button>
+                <button class="btn btn-light zoomout" type="button" title="Zoom out" style="position: relative;top: -215px;left: 295px;transform: scale(0.6);">
+                  <i class="fa fa-minus" aria-hidden="true" style="color: slategray;"></i>
+                </button>
+                <input type="number" placeholder="0000" class="aspect-ratio" name="aspect-ratio" value="0" id="aspect-ratio" readOnly="true" style="position: relative;top: -210px;left: 189px;transform: scale(0.6);width: 5pc;color: silver;border-radius: 10px;border: none;font-size: x-large;">
+                <input class="date-picker" name="date" type="date" style="visibility: visible;">
+                <img name="profile-avatar" class="avatars"/>
+                <!-- <div class="hyerlink">
+                  <i class="fa fa-link" aria-hidden="true"> </i> <input class="cdr" type="checkbox" name="cdrlink"/> View CDR_LINK
+                </div> -->
                 </div>
-            </div>
-          </div>  
+          </div>
+      </div>
+      </div>
     </form>
   </div>
+  
+  <section class="editor" style="position: relative;top: -13pc;left: -50px;">
+    <div class="container">
+      <ul class="nav flex-column">
+        <li class="nav-item">
+              <i class="fa fa-user" aria-hidden="true" style="color: slategray;"> Biography </i>
+              <span class="badge badge-success" style="display:none"> 0 </span>
+        </li>
+        <li class="nav-item">
+          <i class="fa fa-users" aria-hidden="true" style="color: slategray;"> Family </i>
+          <span class="badge badge-danger" style="display:none;"> 0 </span>
+        </li>
+        <li class="nav-item">
+          <i class="fa fa-home" aria-hidden="true" style="color: slategray;"> Address </i>
+          <span class="badge badge-danger" style="display:none"> 0 </span>
+        </li>
+        <li class="nav-item">
+          <i class="fa fa-graduation-cap" aria-hidden="true" style="color: slategray;"> Education </i>
+          <span class="badge badge-danger" style="display:none"> 0 </span>
+        </li>
+        <li class="nav-item">
+          <i class="fa fa-university" aria-hidden="true" style="color: slategray;"> Research </i>
+          <span class="badge badge-danger" style="display:none"> 0 </span>
+        </li>
+        <li class="nav-item">
+          <i class="fa fa-heart" aria-hidden="true" style="color: slategray;"> Relationship </i>
+          <span class="badge badge-danger" style="display:none"> 0 </span>
+        </li>
+        <li class="nav-item">
+          <i class="fa fa-building" aria-hidden="true" style="color: slategray;"> Work </i>
+          <span class="badge badge-danger" style="display:none"> 0 </span>
+        </li>
+        <li class="nav-item">
+          <i class="fa fa-at" aria-hidden="true" style="color: slategray;"> Contact </i>
+          <span class="badge badge-danger" style="display:none"> 0 </span>
+        </li>
+        <li class="nav-item">
+          <i class="fa fa-trophy" aria-hidden="true" style="color: slategray;"> Achievements </i>
+          <span class="badge badge-danger" style="display:none"> 0 </span>
+        </li>
+      </ul>
+      <form class="edit-form" action="/dashboard/profile/edit" method="post">
+        <div class="name" style="position: relative;top: -17pc;left: 20pc;">
+          <input type="text" class="name" placeholder="First Name" id="name" name="name" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: large;">
+          <input type="text" class="sufix" placeholder="Mr" id="sufix" name="sufix" style="width: 9pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+        </div>
+        <div class="family" style="position: relative;top: -15pc;left: 20pc;">
+          <input type="text" class="family" placeholder="Family Name" id="family" name="family" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="text" class="relationship" placeholder="Relationship Status" name="status" id="relationship" style="width: 9pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+        </div>
+        <div class="address" style="position: relative;top: -13pc;left: 20pc;">
+          <input type="text" class="address" placeholder="Home Address" id="home" name="home" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="zip" class="zip" placeholder="Zip-Code" id="zip" name="zip" style="width: 9pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="text" class="city" placeholder="LA,USA" id="city" name="city" style="width: 9pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+        </div>
+        <div class="education" style="position: relative;top: -11pc;left: 20pc;">
+          <input type="text" class="education" placeholder="Alumni" id="alumni" name="alumni" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="text" class="programme" placeholder="Computer Science" id="programme" name="programme" style="width: 10pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+        </div>
+        <div class="research" style="position: relative;top: -9pc;left: 20pc;">
+          <input type="number" class="research" placeholder="Research Already Published" id="research" name="research" min="0" max="1"style="width: 15pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="url" class="research-profile" placeholder="Citation / Researcher Profile Link" id="citation" name="citation" style="width: 18pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+        </div>
+        <div class="work" style="position: relative;top: -7pc;left: 20pc;">
+          <input type="text" class="work" placeholder="Company name" id="work" name="work" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="date" class="joined" placeholder="Joined Date" id="joined" name="joined" style="width: 10pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+        </div>
+        <div class="contact" style="position: relative;top: -5pc;left: 20pc;">
+          <input type="email" class="email" placeholder=" Email Address" id="email" name="email" style="width: 26pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+          <input type="tel" class="phone" placeholder="Phone Number" id="phone" name="phone" style="width: 10pc;border-radius: 10px;height: 4pc;cursor: text;color: slategray;font-size: medium;">
+        </div>
+        <div class="achievement" style="position: relative;top: -3pc;left: 20pc;">
+          <input type="text" class="achievement" name="achievement" placeholder=" Your Achievements" id="achievement" style="width: 50pc;border-radius: 10px;height: 10pc;cursor: text;color: slategray;font-size: medium;">
+          <span style="width: 50pc;border-radius: 10px;height: 10pc;cursor: text;color: slategray;font-size: medium; position:absolute; top: 7pc; left: 45pc;">0/300</span>
+        </div>
+        <div class="complete" style="position: absolute;left: 47pc;">
+          <button type="submit" class="btn btn-success" style="width:10pc;">
+            <i class="fa fa-edit" aria-hidden="true"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+  
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
     </script>
@@ -120,7 +208,7 @@
     const _b01 = document.getElementsByClassName('zoomin')[0];
     const _b02 = document.getElementsByClassName('zoomout')[0];
     const _b03 = document.getElementsByClassName('uploads')[0];
-    const _b04 = document.getElementsByClassName('btns-links')[0];
+    // const _b04 = document.getElementsByClassName('btns-links')[0];
     const _b05 = document.getElementsByClassName('photoBtn')[0];
     
 
@@ -128,12 +216,25 @@
     const _d02 = document.getElementsByClassName('line')[0];
     const _d03 = document.getElementsByClassName('avatar')[0];
     const _d04 = document.getElementsByClassName('main-dashboard-div')[0];
-    const _d05 = document.getElementsByClassName('hyerlink')[0];
+    const _d05 = document.getElementsByClassName('editor')[0];
+    // const _d05 = document.getElementsByClassName('hyerlink')[0];
 
     const _pp01 = document.getElementsByClassName('photo-preview')[0];
+    const _n01 = document.getElementsByClassName('flex-column')[0];
 
     const _i01 = document.getElementsByClassName('aspect-ratio')[0];
     const _i02 = document.getElementsByClassName('myphotos')[0];
+    const _i03 = document.getElementsByClassName('name')[0];
+    const _i04 = document.getElementsByClassName('family')[0];
+    const _i05 = document.getElementsByClassName('address')[0];
+    const _i06 = document.getElementsByClassName('education')[0];
+    const _i07 = document.getElementsByClassName('research')[0];
+    const _i08 = document.getElementsByClassName('sufix')[0];
+    const _i09 = document.getElementsByClassName('work')[0];
+    const _i10 = document.getElementsByClassName('contact')[0];
+    const _i11 = document.getElementsByClassName('achievement')[0];
+    
+
     const _bx00 = document.getElementsByClassName('date-picker')[0];
     
     // global parameters
@@ -180,11 +281,12 @@
       preview.style.left = '19px';
       preview.style.borderRadius = '48px';
 
-      _d04.style.width = '190vh';
-      _d04.style.height = '10vh';
+      // _d04.style.width = '190vh';
+      // _d04.style.height = '10vh';
 
       
       _d01.children[2].appendChild(preview);
+
       
     });
 
@@ -236,6 +338,7 @@
 
       if (pi_wave === end){
        
+        _d03.children[0].style.display = 'none;'
         // adjust few design tweeks after user will shared picture 
         _d03.append(preview);
         
@@ -250,10 +353,12 @@
         _bx00.style.left = '4px';
         _bx00.style.width = '23pc';
 
-        _d05.style.position = 'absolute';
-        _d05.style.top = '5pc';
-        _d05.style.left = '29pc';
-        _d05.style.color = 'slategray';
+        _d05.style.top = '-45pc';
+
+        // _d05.style.position = 'absolute';
+        // _d05.style.top = '5pc';
+        // _d05.style.left = '29pc';
+        // _d05.style.color = 'slategray';
 
         _d03.append(_d01);  
         
@@ -266,83 +371,325 @@
       
     }
 
-    // _b04 allow you to add filter in your picture frame
-    _b04.addEventListener('click', ()=>{
-        alert(' Filter Option is not enabled. Please wait for upcoming update');
-    });
+    var complete_ratio = 0;
+    var epoch = 1;
 
-    _d05.children[1].addEventListener('change', ()=>{
-      
-      if (_count >= 0 && _count <  100) {
-      
-        Proceed(_standard_invoice);
-                  
-      }else if (_count >= 100 && _count < 500) {
+    // Family
 
-        Proceed(_mostly_invoice);
-      
-      }else if ( _count >= 500){
-
-        Proceed(_prenium_invoice);
-      }else{
-
-        alert("No key will be attached with content!"); return;
-      
+    _i04.children[0].addEventListener('change', (event)=>{
+ 
+      if (event.target.value.length <= 0){
+        _n01.children[1].children[1].style.display = 'unset';
+        _n01.children[1].children[1].innerHTML = epoch.toString();
+        // alert(" Family Name required!");
+        return;
+      }else if (event.target.value.length > 0){
+          complete_ratio = complete_ratio + 1;
       }
-
-    });
-
-
-    function Proceed(early){
-        
-      var fort_wallet, web3eth = null;
-      fort_wallet = new Fortmatic(API_KEY);
-
-      // create provider object for web3
-      web3eth = new Web3(fort_wallet.getProvider());
-                  
-      // create batch process object for transaction
-      var batch = new web3eth.eth.BatchRequest();
   
-      // if user browser have formatic gateway access then login user account. If account is not created then create
-      if(!fort_wallet.getProvider().isFortmatic){alert('Fortmatic is not installed'); return}
-                  
-          console.log("application connect with fortmatic provider");
-          console.log(web3eth.currentProvider.enable());
+    });
 
-          fort_wallet.user.login().then(()=>{
-                        
-              var isLogin = fort_wallet.user.isLoggedIn();
-                          
-              // when a user login , get the public address
-              if(!isLogin){alert("Fortnight account login Fail"); return}
-                
-                web3eth.eth.getAccounts().then((account)=>{
-                             
-                  // read user account information
-                  web3eth.eth.getBalance(account[0]).then((balance)=>{
-                                
-                    // if user account have zero balance
-                    let balance_status = balance > early ? true : false;
+    // Relationship
 
-                    if(!balance_status) {alert("You have " + balance + " balance." ); return}
-
-                    var txs = {
-                                      to : '0x55057eb78fDbF783C961b4AAd6A5f8BC60cab44B',
-                                      from : account[0],
-                                      value : web3eth.utils.toWei(early, 'ether'),
-                              }
-
-                    batch.add(web3eth.eth.sendTransaction.request(txs), (error, signed)=>{
-                        if (error) throw error;
-                          console.log("message signed: " + signed);
-                    });
-
-                    batch.execute();
-                  });
-              });
-          });
+    _i04.children[1].addEventListener('change', (event)=>{
+ 
+      if (event.target.value.length <= 0){
+      
+        _n01.children[5].children[1].style.display = 'unset';
+        _n01.children[5].children[1].innerHTML = epoch.toString();
+          // alert(" Family Name required!");
+        return;
+      }else if (event.target.value.length.length > 0){
+          complete_ratio = complete_ratio + 1;
       }
+  
+    });
+
+
+    // Address 
+    _i05.children[0].addEventListener('change', (event)=>{
+      
+      if (event.target.value.length.length <= 0){
+        _n01.children[2].children[1].style.display = 'unset';
+        _n01.children[2].children[1].innerHTML = epoch.toString();
+        // alert(" Address Field required!");
+        return;
+      }else if (event.target.value.length.length > 0){
+          complete_ratio = complete_ratio + 1;
+      }
+
+    });
+
+    // Zip 
+    _i05.children[1].addEventListener('change', (event)=>{
+      
+      if (event.target.value.length.length <= 0){
+        _n01.children[2].children[1].style.display = 'unset';
+        _n01.children[2].children[1].innerHTML = epoch.toString();
+        // alert("Zip code has not provided!");
+        return;
+      }else if (event.target.value.length.length > 0){
+          complete_ratio = complete_ratio + 1;
+      }
+
+    });
+
+    // State
+    _i05.children[2].addEventListener('change', (event)=>{
+
+      if (event.target.value.length <= 0){
+        _n01.children[2].children[1].style.display = 'unset';
+        _n01.children[2].children[1].innerHTML = epoch.String();
+        // alert("Country name has not updated!");
+        return;
+      }else if (event.target.value.length > 0){
+          complete_ratio = complete_ratio + 1;
+      }
+
+    });
+
+
+    // Education
+    _i06.children[0].addEventListener('change', (event)=>{
+
+      if (event.target.value.length <= 0){
+  
+        _n01.children[3].children[1].style.display = 'unset';
+        
+        _n01.children[3].children[1].innerHTML = epoch.toString();
+        // alert("University Field required!");
+        return;
+      }else if (event.target.value.length > 0){
+          complete_ratio = complete_ratio + 1;
+      }
+
+    });
+
+    // Programme
+    _i06.children[1].addEventListener('change', (event)=>{
+
+      if (event.target.value.length <= 0){
+
+  
+        _n01.children[3].children[1].style.display = 'unset';
+        
+        _n01.children[3].children[1].innerHTML = epoch.toString();
+        // alert("University Field required!");
+      return;
+    }else if (event.target.value.length > 0){
+          complete_ratio = complete_ratio + 1;
+    }
+
+  });
+
+
+    // Research
+  _i07.children[0].addEventListener('change', (event)=>{
+
+    if (event.target.value.length.length <= 0){
+  
+      _n01.children[4].children[1].style.display = 'unset';
+      
+      _n01.children[4].children[1].innerHTML = epoch.toString();
+  
+      // alert(" Num of Publishication required!");
+      return;
+    }else if (event.target.value.length.length > 0){
+          complete_ratio = complete_ratio + 1;
+    }
+
+    if (_i07.children[0].value < _i07.children[0].min){
+      alert('Citation number will be `1`...');
+      return;
+    }
+    
+    if(_i07.children[0].value > _i07.children[0].max ){
+      alert('Citation number will be `1`...');
+      return;
+    } 
+  });
+
+  // Citation
+  _i07.children[1].addEventListener('change', (event)=>{
+
+    if (event.target.value.length <= 0){
+
+      _n01.children[4].children[1].style.display = 'unset';
+      
+      _n01.children[4].children[1].innerHTML = epoch.toString();
+
+        // alert(" Num of Publishication required!");
+      return;
+    }else if (event.target.value.length > 0){
+          complete_ratio = complete_ratio + 1;
+      }
+
+  });
+
+  // Company
+
+  _i09.children[0].addEventListener('change', (event)=>{
+
+    if (event.target.value.length <= 0){
+
+      _n01.children[6].children[1].style.display = 'unset';
+
+      _n01.children[6].children[1].innerHTML = epoch.toString();
+
+      // alert(" Company Name required!");
+
+      return;
+    }else if (event.target.value.length > 0){
+          complete_ratio = complete_ratio + 1;
+      }
+
+  });
+
+  // Joined
+  _i09.children[1].addEventListener('change', (event)=>{
+
+  
+    if (event.target.value.length <= 0){
+
+      _n01.children[6].children[1].style.display = 'unset';
+      
+      _n01.children[6].children[1].innerHTML = epoch.toString();
+
+      // alert(" Company Name required!");
+
+      return;
+    }else if (event.target.value.length > 0){
+          complete_ratio = complete_ratio + 1;
+      }
+
+  });
+
+  // Email
+  _i10.children[0].addEventListener('change', (event)=>{
+
+    if (event.target.value.length <= 0){
+
+      _n01.children[7].children[1].style.display = 'unset';
+
+      _n01.children[7].children[1].innerHTML = epoch.toString();
+
+      // alert(" Email required!");
+
+      return;
+
+    }else if (event.target.value.length > 0){
+          complete_ratio = complete_ratio + 1;
+      }
+
+  });
+
+  // Phone
+  _i10.children[1].addEventListener('change', (event)=>{
+
+    if (event.target.value.length <= 0){
+ 
+      _n01.children[7].children[1].style.display = 'unset';
+  
+      _n01.children[7].children[1].innerHTML = epoch.toString();
+ 
+      // alert(" Email required!");
+ 
+      return;
+
+    }else if (event.target.value.length > 0){
+          complete_ratio = complete_ratio + 1;
+      }
+
+  });
+
+
+  // Achievements
+  _i11.children[0].addEventListener('change', (event)=>{
+
+    if (event.target.value.length <= 0){
+
+      _n01.children[8].children[1].style.display = 'unset';
+
+      _n01.children[8].children[1].innerHTML = epoch.toString();
+
+      // alert(" Achievements required!");
+
+      return;
+
+    }else if (event.target.value.length > 0){
+
+      complete_ratio = complete_ratio + 1;
+
+    }
+
+    _i11.children[1].innerHTML = _i11.children[0].value.length.toString()+"/300";
+
+  });
+
+
+  // Status
+
+  _i03.children[1].addEventListener('change', (event)=>{
+  
+    if (event.target.value.length <= 0){
+  
+      _n01.children[0].children[1].className = 'badge badge-danger';
+  
+      _n01.children[0].children[1].style.display = 'unset';
+    
+      _n01.children[0].children[1].innerHTML = epoch.toString();
+
+      // alert(" Señor Field required!");
+
+      return;
+    }else if (event.target.value.length > 0){
+      complete_ratio = complete_ratio + 1;
+    }
+
+  });
+
+
+  // Name
+
+  _i03.children[0].addEventListener('change', (event)=>{
+
+    if (event.target.value.length <= 0){
+
+      _n01.children[0].children[1].className = 'badge badge-danger';
+
+      _n01.children[0].children[1].style.display = 'unset';
+
+      _n01.children[0].children[1].innerHTML = epoch.toString();
+
+      // alert(" Señor Field required!");
+
+      return;
+
+    }else if (event.target.value.length > 0){
+          complete_ratio = complete_ratio + 1;
+      }
+
+    if (complete_ratio < 7){
+
+      _n01.children[0].children[1].style.display = 'unset';
+
+      _n01.children[0].children[1].innerHTML = (11 - complete_ratio).toString();
+
+      alert("Sorry, Your biography is incomplete");
+      return;
+    }else{
+
+      _n01.children[0].children[1].className = 'badge badge-success';
+      _n01.children[0].children[1].style.display = 'unset';
+      _n01.children[0].children[1].innerHTML = (11 - complete_ratio).toString();
+      return;
+    }
+
+    complete_ratio = 0;
+
+  });
+  
+    
 
   </script>
 </body>

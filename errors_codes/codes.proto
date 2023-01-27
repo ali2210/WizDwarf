@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package error_codes;
+
+
+enum File_BAD_REQUEST_CODE{
+
+    FILE_NOT_FOUND = 0;
+    DIRECTORY_NOT_FOUND = 1;
+    SAME_FILE_NAME = 2;
+    FILE_PERMISSION_FAILED = 3;
+    FILE_CLOSED = 4;
+    WRITE_FAILED = 5;
+    READ_FAILED = 6;
+    SYNC_FAILED = 7;
+    FILE_NAMING_CONVERSION = 8;
+    FILE_PATH_ERROR = 9;
+}
+
+enum FileDescriptor{
+    
+    READ_ONLY = 0;
+    WRITE_ONLY = 1;
+    CHDIR = 2;
+    CHMOD = 3;
+}
+
+enum Router_ERROR_CODE{
+
+    BLANK_URL = 0;
+    ERR_MALICIOUS_URL = 1;
+    EMPTY_RESPONSE = 2;
+    EMPTY_REQUEST = 3;
+    HIJACK_URL = 4;
+}
+
+enum Operation_ERROR_CODE{
+
+    EMPTY_INPUT = 0;
+    EMPTY_OUTPUT = 1;
+    GARBAGE_VALUE = 2;
+    _DUMP = 3;
+    UNEXPECTED_STATE = 4;
+    OVERFLOW_STATE = 5;
+    UNDERFLOW_STATE = 6;
+    MISMATCH_STATE = 7;
+}
+
+enum OPTION_CODE{ 
+    NONE = 0; 
+    OK = 1; 
+    ERROR = 2;
+}
+
+enum JSON_CODE{ 
+    MARSHAL_ERROR = 0; 
+    UNMARSHAL_ERROR = 1; 
+}
+
+enum DATABASE_ERRORS{ 
+
+    CLIENT_CONNECTION_ERROR = 0;
+    ALREADY_DOCUMENT_EXISTS = 1;
+    DOCUMENT_CREATE_ERROR = 2;
+    DOCUMENT_DELETE_ERROR = 3;
+    DOCUMENT_SEARCH_ERROR = 4;
+    DOCUMENT_UPDATE_ERROR = 5;
+    DOCUMENT_ITERATION_ERROR = 6;
+    DOCUMENT_READ_ERROR = 7;
+    DOCUMENT_WRITE_ERROR = 8;
+}
+
+enum CHANNEL_ERROR {
+    CHANNEL_CLOSED = 0;
+    CHANNEL_BUFFER_GARBAGE = 1;
+    CHANNEL_QUEUE_ERROR = 2;
+}

@@ -1,0 +1,41 @@
+/* This codebase desgin according to mozilla open source license.
+Redistribution , contribution and improve codebase under license 
+convensions. @contact Ali Hassan AliMatrixCode@protonmail.com */
+
+.main-dashboard-div {
+    background-color: transparent;
+    font-family: 'Lato', sans-serif;
+    height: 100vh;
+  }
+  
+  .icon-light {
+    color: black;
+    margin-right: 5px;
+  }
+  
+  .dropdown-menu {
+    left: 30px;
+  }
+  
+  .h4 {
+    margin: 20px 0px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 20px;
+  }
+  
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .logo {
+    height: 60px;
+  }
+  
+  .custom-navbar {
+    background-color: #ededed;
+    position: absolute;
+    top: 3px;
+    width: 100%;
+  }

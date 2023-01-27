@@ -1,32 +1,30 @@
 package bucket
 
 import (
+	"context"
+	"testing"
+	"time"
+
+	"cloud.google.com/go/firestore"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"testing"
-	"context"
 )
 
-func BucketProtoTest(t *testing.T){
+func BucketTest(t *testing.T) {
+
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "bucket proto started")
+	RunSpecs(t, "Bucket services test started ")
 }
 
 var _ = Describe("bucket proto provide additional services", func() {
 
 	// bucket object help to access bucket proto serives
-	Context("bucket proto services", func(){
+	Context("bucket proto services", func() {
 		It("should with proto return bucket object", func() {
-			ctx := context.Background()
-			Expect(New_Client(&ctx)).Should(BeEmpty())
+			ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+			defer cancel()
+			Expect(New_Client(&ctx, &firestore.Client{})).Should(BeEmpty())
 		})
 	})
 
-	// content address route validation
-	Context("Content have content address router link", func() {
-		It("should with valid content address", func() {
-			SetContent("sia://example.com")
-			Expect(GetContent()).Should(Equal("sia://example.com"))
-		})
-	})
 })

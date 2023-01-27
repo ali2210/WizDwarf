@@ -136,31 +136,14 @@
 .fluids{
 	margin-top: 20px;
 }
+
+
 .mycontainer{
 	letter-spacing: 3px;
 	font-variant: small-caps;
 	flex-direction: column;
 }
 
-
-/* .foot-mark{
-	display: flex;
-	position: relative;
-	justify-content: center;
-	margin-top: 40px;
-	background-color: black;
-	color: whitesmoke;
-	width: 1346px;
-	left: -45px;
-	border-radius: 11px;
-} */
-
-.terms{
-	position: absolute;
-	display: flex;
-	top:38px;
-	color: whitesmoke;
-}
 
 .foot-mark{
 	display: flex;
@@ -173,13 +156,6 @@
 	border-radius: 20px;
   }
   
-  .channel{
-	position: absolute;
-	display: flex;
-	top: 18px;
-	left:73pc;
-	border-radius: 11px;
-  }
   
   .insta{
 	position : absolute;
@@ -197,5 +173,21 @@
   .reddit{
 	position : absolute;
 	display: flex;
-	left: 77px;
+	left: 4px;
+	top: 86px;
   }
+
+  /* .github{
+	position : absolute;
+	display: flex;
+	right: -35px;
+	top:88px;
+  }
+
+  .youtube{
+	
+    position: relative;
+    left: 5pc;
+    top: 6pc;
+    display: flex;
+  } */
