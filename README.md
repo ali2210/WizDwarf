@@ -58,7 +58,7 @@ Genome Sequencing processing Mind Maps
 
       ** Composer ** 
                   
-                  $ wget https://github.com/ali2210/WizDwarf/blob/master/docker-compose.yml && docker compose up 
+                  $ wget https://github.com/ali2210/WizDwarf/blob/master/docker-compose.yml && docker-compose up 
 
 
 ## For Enterprise
